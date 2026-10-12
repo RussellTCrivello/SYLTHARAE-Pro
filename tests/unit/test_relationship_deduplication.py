@@ -14,6 +14,35 @@ import pytest
 
 from database.services.dedup_service import DeduplicationService
 from database.migrations.m0013_relationship_deduplication import upgrade as m0013_upgrade
+from database.migrations.m0038_redundant_enforcement_removal import upgrade as m0038_upgrade
+
+
+def restore_canonical_hash_contexts(conn):
+    """Leave the shared session database with the schema the migrations define.
+
+    These tests simulate the pre-m0013 world by dropping the uniqueness of
+    ``hash_contexts``, then replay m0013's upgrade to prove that its
+    consolidation logic is what removes duplicate relationships. m0013 is a
+    historical migration and must keep re-creating its own constraint name
+    (``uq_hash_contexts_hash_source_side``); the current schema's name is
+    ``uq_hash_contexts_identity`` (m0011), and m0038 removed the duplicate.
+
+    Replaying m0013 alone therefore leaves the session database with the
+    canonical uniqueness missing and the retired constraint back in place -
+    every later test in the same session sees a schema that no migration
+    produces (test_bootstrap_migrations' required-index check and
+    test_redundant_enforcement_removal's survivor guard fail on it). So restore
+    the current state exactly: state the canonical constraint, then apply
+    m0038's removal again.
+    """
+    m0013_upgrade(conn)
+    with conn.cursor() as cur:
+        cur.execute("ALTER TABLE hash_contexts DROP CONSTRAINT IF EXISTS uq_hash_contexts_identity")
+        cur.execute("ALTER TABLE hash_contexts ADD CONSTRAINT uq_hash_contexts_identity"
+                    " UNIQUE (hash_id, source_id, side_id)")
+    # Refuses (RuntimeError) if a survivor is missing or shape-drifted; every
+    # survivor is present here, so this only removes the duplicate again.
+    m0038_upgrade(conn)
 
 
 @pytest.fixture()
@@ -238,7 +267,7 @@ class TestDeduplicationService:
                 assert cur.fetchone()[0] == c_id1
         finally:
             db_conn.rollback()
-            m0013_upgrade(db_conn)
+            restore_canonical_hash_contexts(db_conn)
             db_conn.commit()
 
 
@@ -294,5 +323,33 @@ class TestMigration0013:
                 assert cur.fetchone()[0] == c_id1
         finally:
             db_conn.rollback()
-            m0013_upgrade(db_conn)
+            restore_canonical_hash_contexts(db_conn)
             db_conn.commit()
+
+def test_the_cleanup_restores_the_canonical_constraint(db_conn):
+    """Pin the coupling that made two later integration tests fail.
+
+    Dropping the uniqueness, replaying m0013 and *not* replaying m0038's
+    removal leaves `uq_hash_contexts_identity` missing and the retired
+    `uq_hash_contexts_hash_source_side` back in place - a schema no migration
+    produces, which is what `test_bootstrap_migrations` and
+    `test_redundant_enforcement_removal` were failing on when they ran after
+    this module in the same session. Both names are checked: a missing
+    canonical constraint and a resurrected retired one are different mistakes
+    with the same root cause.
+    """
+    with db_conn.cursor() as cur:
+        cur.execute("ALTER TABLE hash_contexts DROP CONSTRAINT IF EXISTS uq_hash_contexts_identity")
+        cur.execute("ALTER TABLE hash_contexts DROP CONSTRAINT IF EXISTS uq_hash_contexts_hash_source_side")
+        assert _hash_contexts_unique_names(cur) == set()
+    restore_canonical_hash_contexts(db_conn)
+    db_conn.commit()
+    with db_conn.cursor() as cur:
+        assert _hash_contexts_unique_names(cur) == {"uq_hash_contexts_identity"}
+
+
+def _hash_contexts_unique_names(cur):
+    cur.execute(
+        "SELECT c.conname FROM pg_constraint c JOIN pg_class t ON t.oid = c.conrelid"
+        " WHERE t.relname = 'hash_contexts' AND c.contype = 'u'")
+    return {row[0] for row in cur.fetchall()}

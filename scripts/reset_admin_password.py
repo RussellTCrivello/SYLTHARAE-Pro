@@ -33,7 +33,7 @@ Safety rails - it refuses rather than guesses:
   log in with was demoted (this is the recovery path for a lost admin role).
 * The target must be active. Use ``--activate`` if it was deactivated.
 * If no accounts exist at all, nothing is reset: start the server, and the
-  first-run bootstrap creates the initial administrator (see docs/INSTALL.md).
+  first-run bootstrap creates the initial administrator (see docs/OPERATIONS.md, "First run").
 
 Exit codes: 0 success, 2 account not found, 3 refused (role/inactive/other),
 4 database not reachable, 1 unexpected error.
@@ -116,8 +116,8 @@ def _describe_target() -> None:
 def _print_accounts(service) -> None:
     users = service.list_users()
     if not users:
-        print("No accounts exist yet - start the server and the first-run")
-        print("bootstrap creates the initial administrator (docs/INSTALL.md, Step 7).")
+        print("No accounts exist yet - start the server and the first-run bootstrap")
+        print("creates the initial administrator (see docs/OPERATIONS.md, 'First run').")
         return
     print(f"{'id':>4}  {'username':<24} {'role':<8} {'active':<7} must change")
     for user in users:
@@ -162,7 +162,7 @@ def _reset(args) -> int:
     if account_count == 0:
         print("[error] there are no accounts to recover.")
         print("        Start the server once: the first-run bootstrap creates the initial")
-        print("        administrator (see docs/INSTALL.md, Step 7-8).")
+        print("        administrator (see docs/OPERATIONS.md, 'First run').")
         return 2
 
     user = service.get_user_by_username(username)
@@ -252,7 +252,8 @@ def main(argv=None) -> int:
         description="Reset the administrator password of a local SYLTHARAE install.",
         epilog=(
             "Run with --list first if you are not sure of the account name. "
-            "See docs/INSTALL.md (E11) for the full recovery procedure."
+            "See docs/OPERATIONS.md (Recovering an administrator password) for the "
+            "full procedure."
         ),
     )
     parser.add_argument(

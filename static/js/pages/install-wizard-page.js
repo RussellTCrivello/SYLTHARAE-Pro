@@ -208,7 +208,7 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
                     '<i class="bi bi-exclamation-triangle-fill"></i><div>' +
                     '<strong>Some checks failed.</strong> You can still proceed, but ' +
                     'you may need to install missing components before the database step ' +
-                    'will succeed. See INSTALL.md for help.</div></div>';
+                    'will succeed. See docs/OPERATIONS.md for help.</div></div>';
             }
         } catch(e) {
             renderInstallAlert(

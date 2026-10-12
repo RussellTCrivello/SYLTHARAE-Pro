@@ -371,8 +371,8 @@ def test_signals_api_returns_place_candidates_and_validates_detector(pg_db, tena
     assert {p["place_key"] for p in tripoli["places"]} == {"wikidata:Q3579", "wikidata:Q168954"}
     both = viewer.get(f"/api/content/{hash_id}/signals").get_json()
     detectors = {s["detector"] for s in both["signals"]}
-    assert "places" in detectors and detectors <= {"temporal", "places"}
-    assert set(both["runs"]) == {"temporal", "places"}
+    assert "places" in detectors and detectors <= {"temporal", "places", "identifiers"}
+    assert set(both["runs"]) == {"temporal", "places", "identifiers"}
     assert viewer.get(f"/api/content/{hash_id}/signals?detector=ner").status_code == 400
     assert client.get(f"/api/content/{hash_id}/signals?detector=places").status_code in (401, 302)
 

@@ -135,16 +135,32 @@ def _analyst(app):
 
 class TestOverHttp:
     def test_both_definitions_are_listed_with_their_contracts(self, app):
+        """The catalog offers the *active* version of each report family.
+
+        Keyword Intelligence and Category Analysis were revised after they
+        shipped; the first versions stay in the registry (runs recorded
+        against them must keep rendering) but are not offered as new work,
+        which is what ``status="superseded"`` means and what
+        ``tools/verify/runtime_check_keyness.py`` pins for term_keyness.
+        """
+        from core.reporting import REGISTRY
+
         c, _ = _analyst(app)
         body = c.get("/api/reports/definitions").get_json()
         items = {d["key"]: d for d in body["items"]}
-        ki = items["keyword_intelligence@1"]
+        superseded = {f"{d.report_id}@{d.version}" for d in REGISTRY.reports
+                      if d.status == "superseded"}
+        assert superseded, "the registry still carries superseded versions"
+        assert not (superseded & set(items)), (
+            "a superseded version is never offered: "
+            f"{sorted(superseded & set(items))}")
+        ki = items["keyword_intelligence@2"]
         assert ki["unit"] == "keyword"
         assert [d["key"] for d in ki["datasets"]] == \
             ["keyword_intelligence.matches@1"]
         assert ki["datasets"][0]["semantics"] == "capped"
         assert ki["title"] and ki["help"]["title"]
-        ca = items["category_analysis@1"]
+        ca = items["category_analysis@2"]
         assert ca["unit"] == "category"
         assert ca["datasets"][0]["row_limit"] == 1000
 
@@ -221,7 +237,7 @@ class TestOverHttp:
                       ).status_code == 200
         body = v.get("/api/reports/definitions").get_json()
         keys = [d["key"] for d in body["items"]]
-        assert "keyword_intelligence@1" in keys, "viewer role is a reader role"
+        assert "keyword_intelligence@2" in keys, "viewer role is a reader role"
         assert app.test_client().get("/api/reports/definitions").status_code in (401, 302)
 
     def test_json_artifact_manifest_and_audit_digest(self, app, corpus, sync_jobs):
@@ -241,8 +257,15 @@ class TestOverHttp:
         assert download.status_code == 200
         manifest = c.get(f"/api/reports/artifacts/{aid}/manifest").get_json()
         body = manifest.get("manifest", manifest)
+        from core.reporting import REGISTRY
+
         assert body["report"]["id"] == "keyword_intelligence"
-        assert body["report"]["version"] == 1
+        # The run is submitted without a version, so it resolves to the active
+        # one; the manifest records what actually ran, not what is current now.
+        assert body["report"]["version"] == \
+            REGISTRY.report("keyword_intelligence").version == 2
+        assert run["report_version"] == body["report"]["version"], (
+            "the manifest names the version the run used")
         assert body["report"]["unit"] == "keyword"
         assert record["manifest"]["artifact"]["sha256"] == record["sha256"]
         assert body["artifact"]["sha256"] == record["sha256"]

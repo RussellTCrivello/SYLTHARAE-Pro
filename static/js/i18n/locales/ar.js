@@ -19,6 +19,8 @@ window.I18N_UI_PACKS['ar'] = {
     "Analyzing folder...": "جارٍ تحليل المجلد...",
     "API error": "خطأ API",
     "Applied": "تم التطبيق",
+    "Batch report": "تقرير الدفعة",
+    "Open batch report": "فتح تقرير الدفعة",
     "archive safety": "سلامة الأرشيف",
     "Are you sure you want to clear all global CSS?": "هل تريد بالتأكيد مسح كافة أنماط CSS العامة؟",
     "Are you sure you want to delete this file?": "هل تريد بالتأكيد حذف هذا الملف؟",

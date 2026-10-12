@@ -272,7 +272,11 @@ REGISTRY: Tuple[Interface, ...] = (
         "into the project for use without network access.",
         Domain.ANALYZE, "map_viewer_page", "bi-map",
         dependencies=("archives", "file_library"),
-        help_topic="analyze/map-viewer", keyboard_shortcut="g m",
+        # "g m" belongs to Monitoring, which was declared first: two interfaces
+        # cannot share a sequence (validate_registry rejects it, and a user
+        # pressing it would land on whichever the palette listed first). The
+        # map takes the domain word - geography - rather than its page name.
+        help_topic="analyze/map-viewer", keyboard_shortcut="g g",
     ),
     _if(
         "batch_analysis", "Batch Analysis",

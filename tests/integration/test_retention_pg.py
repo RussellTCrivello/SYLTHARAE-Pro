@@ -126,8 +126,10 @@ def _job_count(pg_db, prefix):
 
 def _alert(cur, age_days):
     cur.execute(
+        # 'info' is a real NotificationType value: m0039 enforces the
+        # vocabulary, so a made-up type is refused by the schema now.
         "INSERT INTO alerts (type, priority, title, message, created_at)"
-        " VALUES ('retention-test', 'low', %s, 'seeded',"
+        " VALUES ('info', 'low', %s, 'seeded',"
         " CURRENT_TIMESTAMP - make_interval(days => %s)) RETURNING id",
         (f"retention {_U} alert {uuid.uuid4().hex[:8]}", age_days))
     return cur.fetchone()[0]

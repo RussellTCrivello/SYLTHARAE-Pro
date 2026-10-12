@@ -293,7 +293,11 @@ def _render_xlsx(document, dataset_key, t):
         analysis_sheet.append([t.gettext("Name"), t.gettext("Field"), t.gettext("Value"),
                                t.gettext("Status"), t.gettext("Analysis")])
         for a in analyses:
-            title = t.gettext(a["title"]) if a.get("title") else a["analysis_key"]
+            # Read into a local first: the title is stored data, and a message
+            # extractor walks a translation call's arguments for string
+            # constants - a lookup key would be offered as a message (NARR-02).
+            analysis_title = a.get("title")
+            title = t.gettext(analysis_title) if analysis_title else a["analysis_key"]
             state = (t.gettext("measured") if a["state"] == "measured"
                      else t.gettext("not measurable (%(reason)s)", reason=a["reason"]))
             for voice in _analysis_text(a, t):
@@ -401,13 +405,15 @@ def _render_html(document, dataset_key, t):
              f"<title>{e(title)} - run {e(run['id'])}</title>",
              f"<style>{_HTML_STYLE}</style></head><body>",
              f"<h1>{e(title)}</h1>"]
-    if report.get("description"):
-        parts.append(f'<p class="lede"><bdi>{e(t.gettext(report["description"]))}</bdi></p>')
-    if report.get("help_summary"):
+    report_description = report.get("description")
+    if report_description:
+        parts.append(f'<p class="lede"><bdi>{e(t.gettext(report_description))}</bdi></p>')
+    help_summary = report.get("help_summary")
+    if help_summary:
         parts.append(
             f'<section class="basis" aria-label="{e(t.gettext("Method"))}">'
             f"<h2>{e(t.gettext('Method'))}</h2>"
-            f"<p><bdi>{e(t.gettext(report['help_summary']))}</bdi></p></section>")
+            f"<p><bdi>{e(t.gettext(help_summary))}</bdi></p></section>")
     parts.append(f"<h2>{e(t.gettext('Provenance'))}</h2><table><tbody>")
     for label, value in _provenance_pairs(document):
         shown = ('<span class="none">(none)</span>' if value is None
@@ -417,7 +423,8 @@ def _render_html(document, dataset_key, t):
     if document.get("analyses"):
         parts.append(f"<h2>{e(t.gettext('Analysis'))}</h2>")
     for a in document.get("analyses", ()):
-        parts.append(f"<h3><bdi>{e(t.gettext(a['title']) if a.get('title') else a['analysis_key'])}"
+        analysis_title = a.get("title")
+        parts.append(f"<h3><bdi>{e(t.gettext(analysis_title) if analysis_title else a['analysis_key'])}"
                      "</bdi></h3>")
         state = (t.gettext("measured") if a["state"] == "measured"
                  else t.gettext("not measurable (%(reason)s)", reason=a["reason"]))

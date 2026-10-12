@@ -185,13 +185,18 @@ def render_entry_dossier(document: Dict[str, Any], t: Any, *,
 
     parts.append(f'<p class="kicker">{e("SYLTHARAE")}</p>')
     parts.append(f"<h1>{e(title)}</h1>")
-    if report.get("description"):
-        parts.append(f'<p class="lede"><bdi>{e(t.gettext(report["description"]))}</bdi></p>')
-    if report.get("help_summary"):
+    # The registry's own text is stored data; it is read into locals before
+    # the translation call so the extractor cannot offer the lookup keys
+    # ("description", "help_summary") as messages (NARR-02).
+    report_description = report.get("description")
+    if report_description:
+        parts.append(f'<p class="lede"><bdi>{e(t.gettext(report_description))}</bdi></p>')
+    help_summary = report.get("help_summary")
+    if help_summary:
         parts.append(
             f'<section class="basis" aria-label="{e(t.gettext("Method"))}">'
             f"<h2>{e(t.gettext('Method'))}</h2>"
-            f"<p><bdi>{e(t.gettext(report['help_summary']))}</bdi></p></section>"
+            f"<p><bdi>{e(t.gettext(help_summary))}</bdi></p></section>"
         )
 
     count_text = t.gettext(

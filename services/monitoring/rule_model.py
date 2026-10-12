@@ -92,8 +92,19 @@ _SIGNAL_ARGS = {
     "methods": "method", "orientations": "orientation", "place_keys": "place_key",
     "hash_ids": "hash_id",
 }
-_SIGNAL_SCALARS = {"evidence_text": "evidence_text", "event_from": "event_from",
+_SIGNAL_SCALARS = {"evidence_text": "evidence_text", "surface_text": "surface_text",
+                   "value_text": "value_text", "event_from": "event_from",
                    "event_to": "event_to"}
+#: The match-mode half of each text filter. ``SignalFilter.canonical()`` is
+#: what ``RuleDefinition.canonical()`` stores in the database, so a stored
+#: filter always carries these keys - and ``parse_signal_filter`` refused them,
+#: which made every rule (and every scenario condition) unreadable from its own
+#: stored form. The Explorer's own parser reads the same argument names, so
+#: passing them through keeps "a rule accepts exactly what the Explorer
+#: accepts": a mode is only meaningful next to its text, exactly as
+#: ``parse_filter`` treats it.
+_SIGNAL_MODES = {"evidence_mode": "evidence_mode", "surface_mode": "surface_mode",
+                 "value_mode": "value_mode"}
 
 
 class RuleDefinitionError(ValueError):
@@ -128,7 +139,8 @@ def parse_signal_filter(payload: Any) -> SignalFilter:
     own parser (so a rule accepts exactly what the Explorer accepts)."""
     if payload in (None, {}):
         return SignalFilter()
-    payload = _object(payload, "signals", list(_SIGNAL_ARGS) + list(_SIGNAL_SCALARS))
+    payload = _object(payload, "signals",
+                      list(_SIGNAL_ARGS) + list(_SIGNAL_SCALARS) + list(_SIGNAL_MODES))
     args = MultiDict()
     for key, arg in _SIGNAL_ARGS.items():
         values = payload.get(key)
@@ -141,6 +153,13 @@ def parse_signal_filter(payload: Any) -> SignalFilter:
                 raise RuleDefinitionError(f"signals.{key} values must be strings")
             args.add(arg, str(v))
     for key, arg in _SIGNAL_SCALARS.items():
+        value = payload.get(key)
+        if value is None:
+            continue
+        if not isinstance(value, str):
+            raise RuleDefinitionError(f"signals.{key} must be a string")
+        args.add(arg, value)
+    for key, arg in _SIGNAL_MODES.items():
         value = payload.get(key)
         if value is None:
             continue

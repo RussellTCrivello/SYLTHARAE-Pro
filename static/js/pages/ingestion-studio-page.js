@@ -1113,7 +1113,7 @@ function renderJobs(target, jobs) {
     const lang = (document.documentElement.lang || 'en').split('-')[0];
     const report = (finished && isIngest)
       ? `<a class="ing-link-btn" href="${reportBase}${encodeURIComponent(job.job_id)}?lang=${encodeURIComponent(lang)}"
-            target="_blank" rel="noopener" title="${msg('Open batch report')}">${msg('Report')}</a>`
+            target="_blank" rel="noopener" title="${msg('Open batch report')}">${msg('Batch report')}</a>`
       : '';
     const src = job.classification_source || '—';
     const side = job.classification_side || '—';

@@ -19,6 +19,8 @@ window.I18N_UI_PACKS['fa'] = {
     "Analyzing folder...": "در حال تحلیل پوشه...",
     "API error": "خطای API",
     "Applied": "اعمال شد",
+    "Batch report": "گزارش دسته",
+    "Open batch report": "باز کردن گزارش دسته",
     "archive safety": "ایمنی بایگانی",
     "Are you sure you want to clear all global CSS?": "مطمئن هستید که می‌خواهید همه CSS سراسری را پاک کنید؟",
     "Are you sure you want to delete this file?": "مطمئن هستید که می‌خواهید این فایل را حذف کنید؟",

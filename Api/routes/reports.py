@@ -118,7 +118,10 @@ def analysis_to_api(analysis, registry):
         return format_decimal(value, format="#,##0.00")
 
     try:
-        title = _(registry.analysis(analysis["analysis_key"]).title)
+        # Through a local: the analysis title is registry data, and a lookup
+        # inside a translation call is extracted as the key (NARR-02).
+        definition_title = registry.analysis(analysis["analysis_key"]).title
+        title = _(definition_title)
     except ReportNotFound:
         title = analysis["analysis_key"]
     return dict(analysis, title=title,

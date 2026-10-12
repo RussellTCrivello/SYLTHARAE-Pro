@@ -169,11 +169,11 @@ DESC_ROWS: tuple[tuple[str, str, str, str, str], ...] = (
         "Scenariji (slučajevi prema uvjetima signala i dokumenata, jedan ishod po dokumentu, obavezan dry-run prije aktivacije, append-only povijest) i pravila nadzora. Obavijesti samo vlasniku.",
     ),
     (
-        "Bring material in - one file, a folder, or a path on the server - and follow the jobs it creates. The old /upload page redirects here.",
-        "إدخال المادة — ملفًا أو مجلدًا أو مسارًا على الخادم — ومتابعة المهام التي ينشئها. صفحة /upload القديمة تُعاد توجيهها هنا.",
-        "הכנסת חומר — קובץ, תיקייה או נתיב בשרת — ומעקב אחר המשימות שנוצרות. /upload הישן מפנה לכאן.",
-        "ورود ماده — یک فایل، پوشه یا مسیر روی سرور — و پیگیری کارهای ایجادشده. /upload قدیمی به اینجا هدایت می‌شود.",
-        "Unos materijala — datoteka, mapa ili put na poslužitelju — i praćenje stvorenih poslova. Stari /upload preusmjerava ovdje.",
+        "Bring material in - one file, a folder, or a path on the server - and follow the jobs it creates. Each finished intake has a dedicated printable batch report. The old /upload page redirects here.",
+        "إدخال المادة — ملفًا أو مجلدًا أو مسارًا على الخادم — ومتابعة المهام التي ينشئها. لكل عملية إدخال مكتملة تقرير دفعي قابل للطباعة خاص بها. صفحة /upload القديمة تُعاد توجيهها هنا.",
+        "הכנסת חומר — קובץ, תיקייה או נתיב בשרת — ומעקב אחר המשימות שנוצרות. לכל קליטה שהסתיימה דוח אצווה להדפסה נפרד. /upload הישן מפנה לכאן.",
+        "ورود ماده — یک فایل، پوشه یا مسیر روی سرور — و پیگیری کارهای ایجادشده. هر ورودی تکمیل‌شده گزارش دسته‌ای قابل چاپ اختصاصی دارد. /upload قدیمی به اینجا هدایت می‌شود.",
+        "Unos materijala — datoteka, mapa ili put na poslužitelju — i praćenje stvorenih poslova. Svaki dovršeni unos ima vlastito ispisivo izvješće serije. Stari /upload preusmjerava ovdje.",
     ),
     (
         "Structured imports: validate, preview and resolve before anything is stored.",
@@ -225,11 +225,11 @@ DESC_ROWS: tuple[tuple[str, str, str, str, str], ...] = (
         "Detaljno izvještavanje o pohranjenom i obrađenom.",
     ),
     (
-        "Registered, versioned reports: choose one, give its parameters (or a saved search), run it as a background job and read the result - every dataset from one database snapshot, with counts and any shortening stated.",
-        "تقارير مسجّلة ذات إصدارات: اختر واحدًا، حدّد معاملاته (أو بحثًا محفوظًا)، شغّله كمهمة خلفية واقرأ النتيجة — كل مجموعة بيانات من لقطة قاعدة واحدة مع العدّ وأي اختصار مذكور.",
-        "דוחות רשומים וגרסתיים: בחר, הגדר פרמטרים (או חיפוש שמור), הרץ ברקע וקרא תוצאה — כל מערך מצילום DB אחד עם ספירות וקיצורים מצוינים.",
-        "گزارش‌های ثبت‌شده و نسخه‌دار: یکی را انتخاب کنید، پارامتر (یا جستجوی ذخیره‌شده) بدهید، در پس‌زمینه اجرا و نتیجه را بخوانید — هر مجموعه از یک snapshot پایگاه با شمارش و کوتاه‌سازی اعلام‌شده.",
-        "Registrirana verzionirana izvješća: odaberite, zadajte parametre (ili spremljenu pretragu), pokrenite u pozadini i pročitajte rezultat — svaki skup iz jednog snimka baze s brojevima i navedenim skraćivanjem.",
+        "Registered, versioned reports: choose one, give its parameters (or a saved search), run it as a background job and read the result - every dataset from one database snapshot, with counts and any shortening stated. The Full Entry Report and its live printable dossier belong here.",
+        "تقارير مسجّلة ذات إصدارات: اختر واحدًا، حدّد معاملاته (أو بحثًا محفوظًا)، شغّله كمهمة خلفية واقرأ النتيجة — كل مجموعة بيانات من لقطة قاعدة واحدة مع العدّ وأي اختصار مذكور. تقرير المدخل الكامل وملفه الحيّ القابل للطباعة ينتميان إلى هنا.",
+        "דוחות רשומים וגרסתיים: בחר, הגדר פרמטרים (או חיפוש שמור), הרץ ברקע וקרא תוצאה — כל מערך מצילום DB אחד עם ספירות וקיצורים מצוינים. דוח הרשומה המלא ותיק ההדפסה החי שלו שייכים לכאן.",
+        "گزارش‌های ثبت‌شده و نسخه‌دار: یکی را انتخاب کنید، پارامتر (یا جستجوی ذخیره‌شده) بدهید، در پس‌زمینه اجرا و نتیجه را بخوانید — هر مجموعه از یک snapshot پایگاه با شمارش و کوتاه‌سازی اعلام‌شده. گزارش کامل مدخل و پروندهٔ چاپی زندهٔ آن به اینجا تعلق دارند.",
+        "Registrirana verzionirana izvješća: odaberite, zadajte parametre (ili spremljenu pretragu), pokrenite u pozadini i pročitajte rezultat — svaki skup iz jednog snimka baze s brojevima i navedenim skraćivanjem. Potpuno izvješće zapisa i njegov živi ispisivi dosje pripadaju ovamo.",
     ),
     (
         "The reporting system at a glance: the report versions your role can read, the runs by measured outcome (yours, or everyone's for an administrator), the artifacts made from them, and the schedules that fire next. Every number is counted from the stored runs - never assumed.",

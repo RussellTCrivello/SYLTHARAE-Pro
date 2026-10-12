@@ -119,7 +119,7 @@ REVIEWED: Dict[str, Tuple[str, str]] = {
 }
 
 #: Same project, a different wheel: opencv-python-headless is the documented
-#: substitute on servers without libGL (docs/INSTALL.md).
+#: substitute on servers without libGL (docs/CONFIGURATION.md).
 ALTERNATIVES: Dict[str, str] = {"opencv-python": "opencv-python-headless"}
 
 

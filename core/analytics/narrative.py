@@ -261,13 +261,22 @@ def render(narrative: Mapping[str, Any], gettext: Callable[[str], str],
         params = {k: (fmt(v) if isinstance(v, (int, float)) and not isinstance(v, bool)
                       else ("" if v is None else str(v)))
                   for k, v in record["params"].items()}
+        # The sentence's own text is read out of the record into locals before
+        # it reaches a translation call. ``gettext``/``ngettext`` are extraction
+        # keywords, and the extractor walks the arguments for string constants,
+        # so the dict *keys* used here ("msgid", "msgid_plural") were offered to
+        # every catalog as a sentence to translate: a plural pair no runtime
+        # path ever looks up, which ``msgmerge`` then carried a wrong
+        # translation into (NARR-02).
+        singular = record["msgid"]
         if record.get("msgid_plural") is not None:
             if ngettext is None:
                 raise NarrativeError(f"{record.get('key')}: plural sentence needs ngettext")
-            template = ngettext(record["msgid"], record["msgid_plural"],
+            plural = record["msgid_plural"]
+            template = ngettext(singular, plural,
                                 int(record["params"][record["count"]]))
         else:
-            template = gettext(record["msgid"])
+            template = gettext(singular)
         return template % params
 
     lines = []

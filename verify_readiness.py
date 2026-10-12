@@ -198,8 +198,15 @@ REQUIRED_INDEXES = {
     "idx_words_hashs_word_id", "idx_words_hashs_hash_id",
     "idx_keywords_hashs_keyword_id", "idx_paths_context_id",
     "idx_paths_file_name", "idx_paths_file_path",
-    "idx_titles_content_hash_id", "idx_hashs_hash",
-    "uq_hash_contexts_hash_source_side",
+    "idx_titles_content_hash_id",
+    # The uniqueness behind hashs(hash) and hash_contexts(hash_id, source_id,
+    # side_id). m0038 removed the second name of each pair
+    # (`idx_hashs_hash`, `uq_hash_contexts_hash_source_side`): they were exact
+    # duplicates of these two and every duplicate was maintained on every
+    # write. If a check fails here, the surviving constraint is gone and the
+    # invariant is unenforced - which is exactly what this check is for.
+    "hashs_hash_key",
+    "uq_hash_contexts_identity",
 }
 
 

@@ -85,6 +85,32 @@ populated (by the installer, for example) still takes effect —
 | --- | --- | --- |
 | `INGESTION_ROOTS` | empty | Semicolon-separated absolute directories the server may read from disk (Windows: `C:\data;D:\inbox`, POSIX: `/data/evidence;/srv/inbox`). Empty disables server-path ingestion; drag-and-drop upload still works. `core/path_safety.py` confines every server-path read to these roots. |
 
+## OCR engines
+
+Images and scanned PDFs are read through whichever engine is available.
+`core/ocr/engines.py` selects in a fixed order — **tesseract** (through
+`pytesseract`) first, then **rapidocr** (`rapidocr_onnxruntime`, PP-OCRv4 on
+ONNX Runtime). A host with neither does not fail the import: those files are
+stored with `ocr_required_engine_unavailable` and marked retryable, so the text
+can be extracted later once an engine is installed. The engines, their versions
+and any missing language packs are reported by
+`python3 tools/ci/ocr_selfcheck.py` (`--json` for machine-readable output).
+
+| Variable | Default | Read by | Notes |
+| --- | --- | --- | --- |
+| `TESSERACT_CMD` | unset | `core/ocr/engines.py::_tesseract_candidates` | Absolute path to the tesseract binary when it is installed but not on `PATH` — the usual case on Windows, where the installer writes `C:\Program Files\Tesseract-OCR\tesseract.exe` and does not always extend `PATH`. When set it always wins; unset, the code probes `PATH` and the standard install locations (`/usr/bin`, `/usr/local/bin`, `/opt/homebrew/bin`). |
+| `TESSDATA_PREFIX` | unset | tesseract itself (not this application) | Directory holding tesseract's `*.traineddata` language packs (`eng`, `heb`, `ara`). Set it when the packs live outside the installation's default `tessdata` directory; without the language packs, Hebrew and Arabic scans read as missing languages rather than as text. |
+
+**The `cv2` packaging trap.** `opencv-python` (the GUI build) and
+`opencv-python-headless` unpack into the same `cv2` directory, and
+`rapidocr-onnxruntime` declares `opencv-python` as a dependency whereas this
+project pins the headless build (`requirements.txt`). Whichever is installed
+last owns the files: on a headless server the GUI build then fails with
+`ImportError: libGL.so.1: cannot open shared object file`, rapidocr is reported
+as unusable and OCR degrades to "engine unavailable" with no other symptom.
+Check with `python3 -c "import cv2"`; repair with
+`pip uninstall -y opencv-python && pip install --no-deps --force-reinstall opencv-python-headless`.
+
 ## Data directory and logging
 
 | Variable | Default | Notes |

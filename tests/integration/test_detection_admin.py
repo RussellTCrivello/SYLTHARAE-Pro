@@ -255,7 +255,9 @@ def test_api_status_runs_and_page_for_admin(pg_db, admin_client):
     resp = admin_client.get("/api/signals/detection/status")
     assert resp.status_code == 200
     body = resp.get_json()
-    assert {d["detector"] for d in body["detectors"]} == {"temporal", "places"}
+    # The three detectors the registry registers (Api/routes/signals.py names
+    # them: temporal, places, identifiers).
+    assert {d["detector"] for d in body["detectors"]} == {"temporal", "places", "identifiers"}
     runs = admin_client.get("/api/signals/detection/runs?limit=5").get_json()
     assert runs["success"] is True and len(runs["items"]) <= 5
     bad = admin_client.get("/api/signals/detection/runs?status=bogus")

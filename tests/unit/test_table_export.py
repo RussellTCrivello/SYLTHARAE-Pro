@@ -129,7 +129,11 @@ class TestTheExportEndpoint:
     def test_geolocation_export_xlsx_honors_chosen_columns(self, admin_client, monkeypatch):
         from Api.routes import exports
 
-        monkeypatch.setattr(exports, "_geolocation_rows", lambda: [{
+        # The export handler reads its rows from the registry entry, which holds
+        # the function itself; patching the module attribute would leave the
+        # spec pointing at the original (and query the database). Same
+        # convention as the words/categories exports in this file.
+        monkeypatch.setitem(exports.EXPORT_SPECS["geolocation"], "rows", lambda: [{
             "id": 1,
             "coordinates": "40.712800°N, 74.006000°W",
             "latitude": 40.7128,
