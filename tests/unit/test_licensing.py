@@ -194,9 +194,53 @@ def test_every_page_links_to_the_source_and_shows_the_real_version(web_app, monk
     assert f"Version {version.__version__}" in " ".join(page.split())
     assert "2.0.0" not in page
 
-    login = web_app.test_client().get("/auth/login").get_data(as_text=True)
-    assert f'href="{DEFAULT_SOURCE_CODE_URL}"' in login
-    assert version.__version__ in login
+    # A first-run install redirects every request to the setup wizard
+    # (Api/routes/setup.py), so the client has to follow the redirect a browser
+    # follows - otherwise this asserts against the empty 302 body and the
+    # source offer is "checked" nowhere. The assertions themselves are
+    # unchanged: the page the user ends up on must carry both.
+    login = web_app.test_client().get("/auth/login", follow_redirects=True)
+    assert login.status_code == 200
+    page = login.get_data(as_text=True)
+    assert f'href="{DEFAULT_SOURCE_CODE_URL}"' in page
+    assert version.__version__ in page
+
+
+def test_the_first_run_setup_page_offers_the_source_and_the_version(web_app, monkeypatch):
+    """AGPL section 13 must reach the only page a fresh install shows.
+
+    Until this was repaired, `templates/Setup/install_wizard.html` rendered
+    neither the source link nor the running version, and the setup gate sends
+    every request there until the system is initialized - so an operator
+    evaluating the software was offered no source at all, on the one screen
+    they could reach. Rendered directly rather than through the redirect so the
+    assertion is the template's own behaviour in any initialization state.
+    """
+    from flask import render_template
+
+    from apps.web.app import DEFAULT_SOURCE_CODE_URL
+
+    monkeypatch.delenv("SOURCE_CODE_URL", raising=False)
+    with web_app.test_request_context("/setup"):
+        web_app.preprocess_request()
+        page = render_template("Setup/install_wizard.html")
+    assert f'href="{DEFAULT_SOURCE_CODE_URL}"' in page
+    assert f"Version {version.__version__}" in " ".join(page.split())
+    assert "2.0.0" not in page
+
+
+def test_the_setup_page_refuses_a_non_http_source_url(web_app, monkeypatch):
+    """The setup page cannot be turned into a javascript: link either."""
+    from flask import render_template
+
+    from apps.web.app import DEFAULT_SOURCE_CODE_URL
+
+    monkeypatch.setenv("SOURCE_CODE_URL", "javascript:alert(1)")
+    with web_app.test_request_context("/setup"):
+        web_app.preprocess_request()
+        page = render_template("Setup/install_wizard.html")
+    assert "javascript:" not in page
+    assert f'href="{DEFAULT_SOURCE_CODE_URL}"' in page
 
 
 def test_source_code_url_is_configurable_and_http_only(web_app, monkeypatch):

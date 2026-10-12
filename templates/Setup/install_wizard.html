@@ -623,10 +623,23 @@
            ============================================================ */
         .wizard-footer{
             padding:16px 28px 22px;
-            display:flex;justify-content:space-between;gap:12px;
+            display:flex;justify-content:space-between;align-items:center;gap:12px;
             border-top:1px solid var(--line-soft);
             background:linear-gradient(0deg,#ffffff,#fbfcfe);
         }
+        /* AGPL-3.0 section 13 source offer, sized not to compete with the
+           Back/Next controls. */
+        .wizard-footer .footer-licence{
+            margin:0;font-size:.78rem;color:var(--ink-500);text-align:center;
+        }
+        .wizard-footer .footer-licence a{color:var(--brand-1);text-decoration:none;font-weight:600}
+        .wizard-footer .footer-licence a:hover{text-decoration:underline}
+        .wizard-header .header-release{
+            display:flex;flex-direction:column;align-items:flex-end;gap:2px;
+            font-size:.75rem;color:var(--ink-500);line-height:1.25;text-align:right;
+        }
+        .wizard-header .header-release a{color:var(--brand-1);font-weight:600;text-decoration:none}
+        .wizard-header .header-release a:hover{text-decoration:underline}
 
         /* ============================================================
            Inline validation error (Step 3)
@@ -682,6 +695,14 @@
             </div>
         </div>
         <span class="header-chip"><i class="bi bi-shield-check"></i> Guided setup</span>
+        {# AGPL-3.0 section 13: the source offer must reach the setup screen too,
+           because on a fresh install it is the only page a user sees. Same
+           markup and wording as the login page; href goes through |e and the
+           value is validated (http/https only) in apps/web/app.py. #}
+        <span class="header-release">
+            <a href="{{ source_code_url|e }}" rel="noopener" target="_blank">{{ _('Source code') }}</a>
+            <span class="header-version">(AGPL-3.0) {{ _('Version') }} {{ version }}</span>
+        </span>
     </header>
 
     <!-- Stepper -->
@@ -1084,6 +1105,12 @@
         <button type="button" class="btn-wiz btn-back" id="btn-back" disabled>
             <i class="bi bi-arrow-left"></i> Back
         </button>
+        {# AGPL-3.0 section 13, second placement: the wizard body scrolls, so the
+           offer also sits in the always-visible footer. #}
+        <p class="footer-licence">
+            <a href="{{ source_code_url|e }}" rel="noopener" target="_blank">{{ _('Source code') }}</a>
+            (AGPL-3.0) {{ _('Version') }} {{ version }}
+        </p>
         <button type="button" class="btn-wiz btn-next" id="btn-next">
             Next <i class="bi bi-arrow-right"></i>
         </button>
