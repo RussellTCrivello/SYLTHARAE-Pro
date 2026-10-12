@@ -306,7 +306,12 @@ def upload_checks(s, phase, src, side):
     if not check(f"[{phase}] staged upload submitted for ingestion", r.status_code in (200, 201, 202), r.text[:200]):
         return
     wait_job(s, r, f"[{phase}] upload ingestion finished")
-    r = s.get("/api/search", params={"query": word})
+    # ``include_snippets`` matters: the fast engine defers snippet building
+    # (``snippets_pending: true``) and returns the file name as the snippet, so
+    # the word this check looks for is not in the response yet. Asking for
+    # snippets is what makes "the content token resolves to this file" a
+    # statement the response can carry.
+    r = s.get("/api/search", params={"query": word, "include_snippets": "true"})
     ids = sorted({hit.get("file_id") or hit.get("id") for hit in _hits(r) if word in json.dumps(hit)} - {None})
     if not check(f"[{phase}] search finds the uploaded file", r.status_code == 200 and ids, r.text[:200]):
         return
