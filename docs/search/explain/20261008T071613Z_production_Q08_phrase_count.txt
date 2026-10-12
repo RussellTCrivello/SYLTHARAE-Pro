@@ -1,0 +1,73 @@
+Aggregate  (cost=1742.94..1742.95 rows=1 width=8) (actual time=43.764..43.774 rows=1.00 loops=1)
+  Output: count(DISTINCT p.id)
+  Buffers: shared hit=572
+  ->  Sort  (cost=1738.30..1740.62 rows=929 width=4) (actual time=43.761..43.771 rows=0.00 loops=1)
+        Output: p.id
+        Sort Key: p.id
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=572
+        ->  Hash Left Join  (cost=46.66..1692.50 rows=929 width=4) (actual time=43.756..43.765 rows=0.00 loops=1)
+              Output: p.id
+              Inner Unique: true
+              Hash Cond: (hc.hash_id = h.id)
+              Filter: ((p.file_name ~~* '%annual financial report%'::text) OR ((p.file_type)::text ~~* '%annual financial report%'::text) OR (ANY (hc.source_id = (hashed SubPlan 2).col1)) OR (ANY (hc.side_id = (hashed SubPlan 4).col1)) OR (ANY (h.id = (hashed SubPlan 6).col1)) OR (ANY (h.id = (hashed SubPlan 8).col1)))
+              Rows Removed by Filter: 990
+              Buffers: shared hit=572
+              ->  Hash Left Join  (cost=20.83..175.35 rows=991 width=38) (actual time=0.176..0.615 rows=990.00 loops=1)
+                    Output: p.id, p.file_name, p.file_type, hc.source_id, hc.side_id, hc.hash_id
+                    Inner Unique: true
+                    Hash Cond: (p.context_id = hc.id)
+                    Buffers: shared hit=148
+                    ->  Seq Scan on public.paths p  (cost=0.00..151.91 rows=991 width=30) (actual time=0.015..0.296 rows=990.00 loops=1)
+                          Output: p.id, p.file_name, p.file_type, p.context_id
+                          Buffers: shared hit=142
+                    ->  Hash  (cost=12.59..12.59 rows=659 width=16) (actual time=0.152..0.158 rows=705.00 loops=1)
+                          Output: hc.source_id, hc.side_id, hc.id, hc.hash_id
+                          Buckets: 1024  Batches: 1  Memory Usage: 42kB
+                          Buffers: shared hit=6
+                          ->  Seq Scan on public.hash_contexts hc  (cost=0.00..12.59 rows=659 width=16) (actual time=0.006..0.072 rows=705.00 loops=1)
+                                Output: hc.source_id, hc.side_id, hc.id, hc.hash_id
+                                Buffers: shared hit=6
+              ->  Hash  (cost=17.59..17.59 rows=659 width=4) (actual time=0.100..0.101 rows=705.00 loops=1)
+                    Output: h.id
+                    Buckets: 1024  Batches: 1  Memory Usage: 33kB
+                    Buffers: shared hit=11
+                    ->  Seq Scan on public.hashs h  (cost=0.00..17.59 rows=659 width=4) (actual time=0.008..0.057 rows=705.00 loops=1)
+                          Output: h.id
+                          Buffers: shared hit=11
+              SubPlan 2
+                ->  Seq Scan on public.sources _search_source  (cost=0.00..1.04 rows=1 width=4) (actual time=0.007..0.008 rows=0.00 loops=1)
+                      Output: _search_source.id
+                      Filter: ((_search_source.name)::text ~~* '%annual financial report%'::text)
+                      Rows Removed by Filter: 3
+                      Buffers: shared hit=1
+              SubPlan 4
+                ->  Seq Scan on public.sides _search_side  (cost=0.00..1.04 rows=1 width=4) (actual time=0.011..0.011 rows=0.00 loops=1)
+                      Output: _search_side.id
+                      Filter: ((_search_side.name)::text ~~* '%annual financial report%'::text)
+                      Rows Removed by Filter: 3
+                      Buffers: shared hit=1
+              SubPlan 6
+                ->  Seq Scan on public.contents_raw cr  (cost=0.00..21.74 rows=1 width=4) (actual time=27.284..27.284 rows=0.00 loops=1)
+                      Output: cr.hash_id
+                      Filter: (cr.content ~~* '%annual financial report%'::text)
+                      Rows Removed by Filter: 332
+                      Buffers: shared hit=181
+              SubPlan 8
+                ->  Nested Loop  (cost=0.29..734.18 rows=6 width=4) (actual time=14.977..14.977 rows=0.00 loops=1)
+                      Output: _search_wp.hash_id
+                      Buffers: shared hit=230
+                      ->  Seq Scan on public.words w  (cost=0.00..712.80 rows=4 width=4) (actual time=14.975..14.975 rows=0.00 loops=1)
+                            Output: w.id, w.word
+                            Filter: (w.word ~~* '%annual financial report%'::text)
+                            Rows Removed by Filter: 39355
+                            Buffers: shared hit=230
+                      ->  Index Only Scan using idx_words_hashs_word_hash on public.words_hashs _search_wp  (cost=0.29..5.32 rows=2 width=8) (never executed)
+                            Output: _search_wp.word_id, _search_wp.hash_id
+                            Index Cond: (_search_wp.word_id = w.id)
+                            Heap Fetches: 0
+                            Index Searches: 0
+Planning:
+  Buffers: shared hit=55
+Planning Time: 1.682 ms
+Execution Time: 43.927 ms

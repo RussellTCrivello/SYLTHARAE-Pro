@@ -1,0 +1,95 @@
+Aggregate  (cost=4159.14..4159.15 rows=1 width=8) (actual time=387.293..387.300 rows=1.00 loops=1)
+  Output: count(DISTINCT p.id)
+  Buffers: shared hit=187422
+  ->  Sort  (cost=4154.34..4156.74 rows=960 width=4) (actual time=387.291..387.297 rows=0.00 loops=1)
+        Output: p.id
+        Sort Key: p.id
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=187422
+        ->  Hash Left Join  (cost=46.66..4106.78 rows=960 width=4) (actual time=387.283..387.289 rows=0.00 loops=1)
+              Output: p.id
+              Inner Unique: true
+              Hash Cond: (hc.hash_id = h.id)
+              Filter: ((to_tsvector('english'::regconfig, COALESCE(p.file_name, ''::text)) @@ to_tsquery('rep[a-z]{2,4}:*'::text)) OR (p.file_name ~~* '%rep[a-z]{2,4}%'::text) OR EXISTS(SubPlan 2) OR (p.file_name ~~* '%rep[a-z]{2,4}%'::text) OR ((p.file_type)::text ~~* '%rep[a-z]{2,4}%'::text) OR (ANY (hc.source_id = (hashed SubPlan 4).col1)) OR (ANY (hc.side_id = (hashed SubPlan 6).col1)) OR (ANY (h.id = (hashed SubPlan 8).col1)) OR (ANY (h.id = (hashed SubPlan 10).col1)))
+              Rows Removed by Filter: 990
+              Buffers: shared hit=187422
+              ->  Hash Left Join  (cost=20.83..175.35 rows=991 width=42) (actual time=0.127..1.018 rows=990.00 loops=1)
+                    Output: p.id, p.file_name, p.context_id, p.file_type, hc.source_id, hc.side_id, hc.hash_id
+                    Inner Unique: true
+                    Hash Cond: (p.context_id = hc.id)
+                    Buffers: shared hit=148
+                    ->  Seq Scan on public.paths p  (cost=0.00..151.91 rows=991 width=30) (actual time=0.020..0.487 rows=990.00 loops=1)
+                          Output: p.id, p.file_name, p.context_id, p.file_type
+                          Buffers: shared hit=142
+                    ->  Hash  (cost=12.59..12.59 rows=659 width=16) (actual time=0.101..0.101 rows=705.00 loops=1)
+                          Output: hc.source_id, hc.side_id, hc.id, hc.hash_id
+                          Buckets: 1024  Batches: 1  Memory Usage: 42kB
+                          Buffers: shared hit=6
+                          ->  Seq Scan on public.hash_contexts hc  (cost=0.00..12.59 rows=659 width=16) (actual time=0.005..0.049 rows=705.00 loops=1)
+                                Output: hc.source_id, hc.side_id, hc.id, hc.hash_id
+                                Buffers: shared hit=6
+              ->  Hash  (cost=17.59..17.59 rows=659 width=4) (actual time=0.084..0.085 rows=705.00 loops=1)
+                    Output: h.id
+                    Buckets: 1024  Batches: 1  Memory Usage: 33kB
+                    Buffers: shared hit=11
+                    ->  Seq Scan on public.hashs h  (cost=0.00..17.59 rows=659 width=4) (actual time=0.005..0.041 rows=705.00 loops=1)
+                          Output: h.id
+                          Buffers: shared hit=11
+              SubPlan 2
+                ->  Nested Loop  (cost=8.87..1206.64 rows=1 width=0) (actual time=0.346..0.346 rows=0.00 loops=990)
+                      Inner Unique: true
+                      Buffers: shared hit=186850
+                      InitPlan 1
+                        ->  Index Scan using hash_contexts_pkey on public.hash_contexts hc0  (cost=0.28..8.29 rows=1 width=4) (actual time=0.001..0.001 rows=1.00 loops=990)
+                              Output: hc0.hash_id
+                              Index Cond: (hc0.id = p.context_id)
+                              Index Searches: 990
+                              Buffers: shared hit=2970
+                      ->  Index Scan using idx_words_hashs_hash_id on public.words_hashs wp  (cost=0.29..13.58 rows=210 width=4) (actual time=0.001..0.009 rows=60.88 loops=990)
+                            Output: wp.word_id
+                            Index Cond: (wp.hash_id = (InitPlan 1).col1)
+                            Index Searches: 990
+                            Buffers: shared hit=3073
+                      ->  Index Scan using words_pkey on public.words w  (cost=0.29..5.63 rows=1 width=4) (actual time=0.005..0.005 rows=0.00 loops=60269)
+                            Output: w.id, w.word
+                            Index Cond: (w.id = wp.word_id)
+                            Filter: ((to_tsvector('english'::regconfig, w.word) @@ to_tsquery('rep[a-z]{2,4}:*'::text)) OR (w.word ~~* '%rep[a-z]{2,4}%'::text))
+                            Rows Removed by Filter: 1
+                            Index Searches: 60269
+                            Buffers: shared hit=180807
+              SubPlan 4
+                ->  Seq Scan on public.sources _search_source  (cost=0.00..1.04 rows=1 width=4) (actual time=0.045..0.045 rows=0.00 loops=1)
+                      Output: _search_source.id
+                      Filter: ((_search_source.name)::text ~~* '%rep[a-z]{2,4}%'::text)
+                      Rows Removed by Filter: 3
+                      Buffers: shared hit=1
+              SubPlan 6
+                ->  Seq Scan on public.sides _search_side  (cost=0.00..1.04 rows=1 width=4) (actual time=0.009..0.009 rows=0.00 loops=1)
+                      Output: _search_side.id
+                      Filter: ((_search_side.name)::text ~~* '%rep[a-z]{2,4}%'::text)
+                      Rows Removed by Filter: 3
+                      Buffers: shared hit=1
+              SubPlan 8
+                ->  Seq Scan on public.contents_raw cr  (cost=0.00..21.74 rows=1 width=4) (actual time=25.529..25.529 rows=0.00 loops=1)
+                      Output: cr.hash_id
+                      Filter: (cr.content ~~* '%rep[a-z]{2,4}%'::text)
+                      Rows Removed by Filter: 332
+                      Buffers: shared hit=181
+              SubPlan 10
+                ->  Nested Loop  (cost=0.29..734.18 rows=6 width=4) (actual time=12.440..12.441 rows=0.00 loops=1)
+                      Output: _search_wp.hash_id
+                      Buffers: shared hit=230
+                      ->  Seq Scan on public.words w_1  (cost=0.00..712.80 rows=4 width=4) (actual time=12.438..12.439 rows=0.00 loops=1)
+                            Output: w_1.id, w_1.word
+                            Filter: (w_1.word ~~* '%rep[a-z]{2,4}%'::text)
+                            Rows Removed by Filter: 39355
+                            Buffers: shared hit=230
+                      ->  Index Only Scan using idx_words_hashs_word_hash on public.words_hashs _search_wp  (cost=0.29..5.32 rows=2 width=8) (never executed)
+                            Output: _search_wp.word_id, _search_wp.hash_id
+                            Index Cond: (_search_wp.word_id = w_1.id)
+                            Heap Fetches: 0
+                            Index Searches: 0
+Planning:
+  Buffers: shared hit=69
+Planning Time: 1.534 ms
+Execution Time: 387.508 ms

@@ -1,0 +1,15 @@
+Aggregate  (cost=0.02..0.03 rows=1 width=8) (actual time=0.097..0.097 rows=1.00 loops=1)
+  Output: count(DISTINCT p.id)
+  Buffers: shared hit=3
+  ->  Sort  (cost=0.01..0.02 rows=0 width=4) (actual time=0.095..0.095 rows=0.00 loops=1)
+        Output: p.id
+        Sort Key: p.id
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=3
+        ->  Result  (cost=0.00..0.00 rows=0 width=4) (actual time=0.001..0.001 rows=0.00 loops=1)
+              Output: p.id
+              One-Time Filter: false
+Planning:
+  Buffers: shared hit=165
+Planning Time: 6.910 ms
+Execution Time: 0.117 ms

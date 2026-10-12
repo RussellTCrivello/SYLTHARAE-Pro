@@ -1,0 +1,11 @@
+Aggregate  (cost=0.02..0.03 rows=1 width=8) (actual time=0.015..0.015 rows=1.00 loops=1)
+  Output: count(DISTINCT p.id)
+  ->  Sort  (cost=0.01..0.02 rows=0 width=4) (actual time=0.012..0.012 rows=0.00 loops=1)
+        Output: p.id
+        Sort Key: p.id
+        Sort Method: quicksort  Memory: 25kB
+        ->  Result  (cost=0.00..0.00 rows=0 width=4) (actual time=0.001..0.001 rows=0.00 loops=1)
+              Output: p.id
+              One-Time Filter: false
+Planning Time: 0.294 ms
+Execution Time: 0.035 ms

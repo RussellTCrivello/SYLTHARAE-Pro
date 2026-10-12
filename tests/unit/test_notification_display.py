@@ -1,0 +1,210 @@
+"""Accuracy contract for the shared notification display formatter.
+
+The four API routes used to carry four independent copies of the
+title/message translation logic.  Scan-created duplicate notifications
+(``metadata.duplicate_count``) were rendered by the similarity branch and
+surfaced as "Found 0 similar file(s) with similarity >= 80%" - the UI showed
+a message that matched neither the stored row nor reality.  These tests lock
+the shared formatter's behaviour: every number shown must come from live
+metadata/dates, never from stale creation-time snapshots or fabricated
+defaults.
+"""
+
+from __future__ import annotations
+
+import sys
+from datetime import date, datetime, timedelta
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from core.monitoring.notification_display import (  # noqa: E402
+    display_payload,
+    format_title_message,
+)
+from core.monitoring.notification_service import (  # noqa: E402
+    Notification,
+    NotificationPriority,
+    NotificationType,
+)
+
+
+def gettext_stub(text, **kwargs):
+    """Identity translation with % interpolation (flask_babel-compatible)."""
+    return text % kwargs if kwargs else text
+
+
+def make_notification(**overrides) -> Notification:
+    defaults = dict(
+        id=1,
+        type=NotificationType.INFO,
+        priority=NotificationPriority.MEDIUM,
+        title="Stored title",
+        message="Stored message",
+        file_id=10,
+        file_name="report.docx",
+        file_path="/data/report.docx",
+        event_date=None,
+        metadata={},
+        created_at=datetime(2026, 1, 1, 12, 0, 0),
+        read=False,
+        dismissed=False,
+    )
+    defaults.update(overrides)
+    return Notification(**defaults)
+
+
+def test_duplicate_notification_renders_as_duplicate_with_real_counts():
+    """Scan duplicates must show duplicate_count + file names, not '0 similar'."""
+    n = make_notification(
+        type=NotificationType.SIMILAR_FILES,
+        title="Duplicate Files Detected: a.docx",
+        message="Found 3 duplicate file(s) with the same hash. Files: a.docx, b.docx, c.docx",
+        file_name="a.docx",
+        metadata={
+            "hash": "abc123",
+            "duplicate_count": 3,
+            "file_ids": [1, 2, 3],
+            "file_names": ["a.docx", "b.docx", "c.docx"],
+            "file_paths": ["/x/a.docx", "/x/b.docx", "/x/c.docx"],
+        },
+    )
+    title, message = format_title_message(n, gettext_stub)
+
+    assert title == "Duplicate Files Detected: a.docx"
+    assert "Found 3 duplicate file(s) with the same hash" in message
+    assert "a.docx, b.docx, c.docx" in message
+    # The old translation branch leaked similarity wording into duplicates:
+    assert "similar" not in message.lower()
+    assert "≥" not in message and "80%" not in message
+
+
+def test_duplicate_notification_caps_long_file_lists():
+    names = [f"f{i}.txt" for i in range(9)]
+    n = make_notification(
+        type=NotificationType.SIMILAR_FILES,
+        file_name=names[0],
+        metadata={"hash": "h", "duplicate_count": 9, "file_names": names},
+    )
+    _, message = format_title_message(n, gettext_stub)
+    assert "Found 9 duplicate file(s)" in message
+    assert "f0.txt, f1.txt, f2.txt, f3.txt, f4.txt" in message
+    assert "... and 4 more" in message
+
+
+def test_duplicate_without_file_names_keeps_count_only():
+    n = make_notification(
+        type=NotificationType.SIMILAR_FILES,
+        file_name="a.docx",
+        metadata={"hash": "h", "duplicate_count": 2},
+    )
+    _, message = format_title_message(n, gettext_stub)
+    assert message == "Found 2 duplicate file(s) with the same hash"
+
+
+def test_similarity_notification_still_renders_threshold_message():
+    n = make_notification(
+        type=NotificationType.SIMILAR_FILES,
+        file_name="b.docx",
+        metadata={"similar_count": 4, "similarity_threshold": 0.75},
+    )
+    title, message = format_title_message(n, gettext_stub)
+    assert title == "Similar Files Detected: b.docx"
+    assert message == "Found 4 similar file(s) with similarity ≥ 75%"
+
+
+def test_future_date_days_until_is_recomputed_from_event_date():
+    """metadata.days_until is frozen at creation; the display must be live."""
+    n = make_notification(
+        type=NotificationType.FUTURE_DATE,
+        event_date=date.today() + timedelta(days=5),
+        metadata={"days_until": 999, "context": "meeting on ..."},
+    )
+    title, message = format_title_message(n, gettext_stub)
+    assert title == f"Future Date Detected: {(date.today() + timedelta(days=5)).isoformat()}"
+    assert "(5 days away)" in message
+    assert "999" not in message
+
+
+def test_future_date_in_the_past_drops_the_countdown_phrase():
+    n = make_notification(
+        type=NotificationType.FUTURE_DATE,
+        event_date=date.today() - timedelta(days=2),
+        metadata={"days_until": 10},
+    )
+    _, message = format_title_message(n, gettext_stub)
+    assert "days away" not in message
+
+
+def test_info_notifications_pass_through_stored_text_verbatim():
+    n = make_notification(
+        type=NotificationType.INFO,
+        title="Ingest finished",
+        message="14 of 15 files stored",
+    )
+    title, message = format_title_message(n, gettext_stub)
+    assert title == "Ingest finished"
+    assert message == "14 of 15 files stored"
+
+
+def test_warning_title_normalised_only_when_missing():
+    n = make_notification(type=NotificationType.WARNING, title="Watch out", message="details")
+    title, message = format_title_message(n, gettext_stub)
+    assert title == "Watch out"
+    assert message == "details"
+
+    blank = make_notification(type=NotificationType.WARNING, title="same", message="same")
+    title, _ = format_title_message(blank, gettext_stub)
+    assert title == "Warning"
+
+
+def test_batch_complete_count_comes_from_metadata():
+    n = make_notification(
+        type=NotificationType.BATCH_COMPLETE,
+        title="Batch Processing Complete",
+        metadata={"batch_count": 42},
+    )
+    _, message = format_title_message(n, gettext_stub)
+    assert message == "Batch processing completed: 42 file(s) processed"
+
+
+def test_display_payload_carries_every_field():
+    n = make_notification(event_date=date(2030, 5, 1))
+    payload = display_payload(n, gettext_stub)
+    assert set(payload) == {
+        "id", "type", "priority", "title", "message", "file_id", "file_name",
+        "file_path", "event_date", "metadata", "created_at", "read", "dismissed",
+        "addressed", "rule_id", "scenario_id",
+    }
+    assert payload["event_date"] == "2030-05-01"
+    # A system-wide notification: addressed to nobody in particular, no rule.
+    assert payload["addressed"] is False and payload["rule_id"] is None
+    assert payload["scenario_id"] is None
+    assert payload["type"] == "info"
+
+
+def test_every_display_string_is_in_every_catalog():
+    """Every translate("...") string of notification_display is translated in
+    ar/he/fa/hr with the same placeholders (the template coverage audit does
+    not scan Python, so a new notification type could ship in English)."""
+    import ast
+    import re
+    from pathlib import Path
+
+    from babel.messages.pofile import read_po
+
+    root = Path(__file__).resolve().parents[2]
+    source = (root / "core/monitoring/notification_display.py").read_text(encoding="utf-8")
+    msgids = {node.args[0].value for node in ast.walk(ast.parse(source))
+              if isinstance(node, ast.Call) and getattr(node.func, "id", None) == "translate"
+              and node.args and isinstance(node.args[0], ast.Constant)}
+    assert len(msgids) > 30
+    placeholders = lambda text: sorted(re.findall(r"%\(\w+\)s", text))   # noqa: E731
+    for lang in ("ar", "he", "fa", "hr"):
+        with open(root / "translations" / lang / "LC_MESSAGES" / "messages.po", "rb") as fh:
+            catalog = read_po(fh, locale=lang)
+        missing = sorted(m for m in msgids if not (catalog.get(m) and catalog.get(m).string))
+        assert not missing, f"[{lang}] untranslated notification strings: {missing}"
+        wrong = sorted(m for m in msgids if placeholders(catalog.get(m).string) != placeholders(m))
+        assert not wrong, f"[{lang}] placeholder mismatch: {wrong}"

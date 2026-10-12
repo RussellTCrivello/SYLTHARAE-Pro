@@ -1,0 +1,13 @@
+Aggregate  (cost=206.18..206.19 rows=1 width=8) (actual time=0.490..0.490 rows=1.00 loops=1)
+  Output: count(DISTINCT p.id)
+  Buffers: shared hit=142
+  ->  Sort  (cost=201.23..203.70 rows=991 width=4) (actual time=0.401..0.437 rows=990.00 loops=1)
+        Output: p.id
+        Sort Key: p.id
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=142
+        ->  Seq Scan on public.paths p  (cost=0.00..151.91 rows=991 width=4) (actual time=0.011..0.290 rows=990.00 loops=1)
+              Output: p.id
+              Buffers: shared hit=142
+Planning Time: 0.147 ms
+Execution Time: 0.505 ms

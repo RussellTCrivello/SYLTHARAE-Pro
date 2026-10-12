@@ -1,0 +1,13 @@
+Bitmap Heap Scan on public.words  (cost=8.60..16.06 rows=2 width=15) (actual time=0.072..0.105 rows=2.00 loops=1)
+  Output: word, id
+  Recheck Cond: (words.word = ANY ('{report,finance}'::text[]))
+  Heap Blocks: exact=2
+  Buffers: shared hit=6
+  ->  Bitmap Index Scan on idx_words_word  (cost=0.00..8.60 rows=2 width=0) (actual time=0.056..0.056 rows=2.00 loops=1)
+        Index Cond: (words.word = ANY ('{report,finance}'::text[]))
+        Index Searches: 2
+        Buffers: shared hit=4
+Planning:
+  Buffers: shared hit=48
+Planning Time: 0.176 ms
+Execution Time: 0.116 ms

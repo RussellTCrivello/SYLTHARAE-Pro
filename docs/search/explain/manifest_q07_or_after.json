@@ -1,0 +1,149 @@
+{
+  "recorded_at": "2026-10-08T07:21:45.329719+00:00",
+  "probe": {
+    "host": "localhost",
+    "port": "5432",
+    "database": "analysis",
+    "user": "postgres",
+    "password_configured": true,
+    "connected": true,
+    "path_count": 990
+  },
+  "captures": [
+    {
+      "label": "production/Q07_boolean_or/count",
+      "path": "docs\\search\\explain\\20261008T072145Z_production_Q07_boolean_or_count.txt",
+      "sql_fingerprint": "1937de106083f3ea",
+      "plan_bytes": 8052,
+      "planning_time_ms": 3.183,
+      "execution_time_ms": 131.931,
+      "shared_hit_blocks": 55,
+      "shared_read_blocks": null,
+      "temp_read_blocks": null,
+      "temp_written_blocks": null,
+      "scan_type": "Seq Scan",
+      "join_strategy": "Nested Loop",
+      "sort_strategy": "Sort",
+      "actual_rows": "2",
+      "estimated_rows": "2",
+      "expensive_nodes": [
+        {
+          "line": "->  Hash Left Join  (cost=46.66..2274.36 rows=990 width=4) (actual time=81.143..131.717 rows=30.00 loops=1)",
+          "actual_time_ms_end": 131.717,
+          "table_hint": null
+        },
+        {
+          "line": "->  Seq Scan on public.contents_raw cr  (cost=0.00..23.98 rows=1 width=4) (actual time=0.804..80.740 rows=29.00 loops=1)",
+          "actual_time_ms_end": 80.74,
+          "table_hint": "contents_raw"
+        },
+        {
+          "line": "->  Seq Scan on public.words w  (cost=0.00..1002.48 rows=15 width=4) (actual time=0.536..47.267 rows=59.00 loops=1)",
+          "actual_time_ms_end": 47.267,
+          "table_hint": "words"
+        },
+        {
+          "line": "->  Hash Left Join  (cost=20.83..175.35 rows=991 width=38) (actual time=0.145..0.632 rows=990.00 loops=1)",
+          "actual_time_ms_end": 0.632,
+          "table_hint": null
+        },
+        {
+          "line": "->  Seq Scan on public.paths p  (cost=0.00..151.91 rows=991 width=30) (actual time=0.013..0.317 rows=990.00 loops=1)",
+          "actual_time_ms_end": 0.317,
+          "table_hint": "paths"
+        },
+        {
+          "line": "->  Seq Scan on public.hash_contexts hc  (cost=0.00..12.59 rows=659 width=16) (actual time=0.006..0.053 rows=705.00 loops=1)",
+          "actual_time_ms_end": 0.053,
+          "table_hint": null
+        },
+        {
+          "line": "->  Seq Scan on public.hashs h  (cost=0.00..17.59 rows=659 width=4) (actual time=0.008..0.046 rows=705.00 loops=1)",
+          "actual_time_ms_end": 0.046,
+          "table_hint": "hashs"
+        },
+        {
+          "line": "->  Seq Scan on public.sources _search_source  (cost=0.00..1.04 rows=1 width=4) (actual time=0.008..0.008 rows=0.00 loops=1)",
+          "actual_time_ms_end": 0.008,
+          "table_hint": null
+        }
+      ],
+      "query_class": "boolean_or",
+      "query_id": "Q07",
+      "query": "report OR invoice OR contract OR memo",
+      "stage": "count",
+      "short_circuit": null,
+      "engine": "PG_LITERAL"
+    },
+    {
+      "label": "production/Q07_boolean_or/candidate_generation",
+      "path": "docs\\search\\explain\\20261008T072146Z_production_Q07_boolean_or_candidate_generation.txt",
+      "sql_fingerprint": "7a9b6bd8814b5cf1",
+      "plan_bytes": 19861,
+      "planning_time_ms": 5.981,
+      "execution_time_ms": 178.157,
+      "shared_hit_blocks": 191,
+      "shared_read_blocks": null,
+      "temp_read_blocks": null,
+      "temp_written_blocks": null,
+      "scan_type": "Seq Scan",
+      "join_strategy": "Nested Loop",
+      "sort_strategy": "Sort",
+      "actual_rows": "2",
+      "estimated_rows": "2",
+      "expensive_nodes": [
+        {
+          "line": "->  Hash Left Join  (cost=48.79..2909295.67 rows=990 width=209) (actual time=127.365..177.813 rows=30.00 loops=1)",
+          "actual_time_ms_end": 177.813,
+          "table_hint": null
+        },
+        {
+          "line": "->  Seq Scan on public.contents_raw cr  (cost=0.00..23.98 rows=1 width=4) (actual time=0.837..75.863 rows=29.00 loops=1)",
+          "actual_time_ms_end": 75.863,
+          "table_hint": "contents_raw"
+        },
+        {
+          "line": "->  Seq Scan on public.words w  (cost=0.00..1002.48 rows=15 width=4) (actual time=0.558..46.843 rows=59.00 loops=1)",
+          "actual_time_ms_end": 46.843,
+          "table_hint": "words"
+        },
+        {
+          "line": "->  Seq Scan on public.words _rel_w_1  (cost=0.00..712.80 rows=4 width=4) (actual time=1.270..13.898 rows=1.00 loops=1)",
+          "actual_time_ms_end": 13.898,
+          "table_hint": "words"
+        },
+        {
+          "line": "->  Seq Scan on public.words _rel_w  (cost=0.00..712.80 rows=4 width=4) (actual time=0.167..12.690 rows=37.00 loops=1)",
+          "actual_time_ms_end": 12.69,
+          "table_hint": "words"
+        },
+        {
+          "line": "->  Seq Scan on public.words _rel_w_3  (cost=0.00..712.80 rows=4 width=4) (actual time=1.086..12.115 rows=11.00 loops=1)",
+          "actual_time_ms_end": 12.115,
+          "table_hint": "words"
+        },
+        {
+          "line": "->  Seq Scan on public.words _rel_w_2  (cost=0.00..712.80 rows=4 width=4) (actual time=0.677..11.948 rows=10.00 loops=1)",
+          "actual_time_ms_end": 11.948,
+          "table_hint": "words"
+        },
+        {
+          "line": "->  Hash Left Join  (cost=22.96..190.03 rows=991 width=156) (actual time=0.167..0.931 rows=990.00 loops=1)",
+          "actual_time_ms_end": 0.931,
+          "table_hint": null
+        }
+      ],
+      "query_class": "boolean_or",
+      "query_id": "Q07",
+      "query": "report OR invoice OR contract OR memo",
+      "stage": "candidate_generation",
+      "short_circuit": null,
+      "engine": "PG_LITERAL"
+    }
+  ],
+  "track": "PG_LITERAL_diagnosis",
+  "commit": null,
+  "schema": "m0036_words_hashs_word_hash_index",
+  "corpus_size": 990,
+  "database_version": ""
+}

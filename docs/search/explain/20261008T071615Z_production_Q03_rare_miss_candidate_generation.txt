@@ -1,0 +1,29 @@
+Limit  (cost=0.01..0.02 rows=1 width=209) (actual time=0.033..0.034 rows=0.00 loops=1)
+  Output: id, file_name, file_path, file_type, file_size, file_date, file_status, date_creation, (COALESCE(name, 'Unknown'::character varying)), (COALESCE(name, 'Unknown'::character varying)), source_id, side_id, ((COALESCE(CASE WHEN (file_name ~~* '%xylophonezzzz%'::text) THEN 2.0 WHEN EXISTS(SubPlan 1) THEN 1.0 ELSE 0.0 END, '0'::numeric))::double precision)
+  Buffers: shared hit=12
+  ->  Unique  (cost=0.01..0.02 rows=1 width=209) (actual time=0.032..0.033 rows=0.00 loops=1)
+        Output: id, file_name, file_path, file_type, file_size, file_date, file_status, date_creation, (COALESCE(name, 'Unknown'::character varying)), (COALESCE(name, 'Unknown'::character varying)), source_id, side_id, ((COALESCE(CASE WHEN (file_name ~~* '%xylophonezzzz%'::text) THEN 2.0 WHEN EXISTS(SubPlan 1) THEN 1.0 ELSE 0.0 END, '0'::numeric))::double precision)
+        Buffers: shared hit=12
+        ->  Sort  (cost=0.01..0.02 rows=0 width=209) (actual time=0.032..0.032 rows=0.00 loops=1)
+              Output: id, file_name, file_path, file_type, file_size, file_date, file_status, date_creation, (COALESCE(name, 'Unknown'::character varying)), (COALESCE(name, 'Unknown'::character varying)), source_id, side_id, ((COALESCE(CASE WHEN (file_name ~~* '%xylophonezzzz%'::text) THEN 2.0 WHEN EXISTS(SubPlan 1) THEN 1.0 ELSE 0.0 END, '0'::numeric))::double precision)
+              Sort Key: ((COALESCE(CASE WHEN (file_name ~~* '%xylophonezzzz%'::text) THEN 2.0 WHEN EXISTS(SubPlan 1) THEN 1.0 ELSE 0.0 END, '0'::numeric))::double precision) DESC, file_date DESC, id, file_name, file_path, file_type, file_size, file_status, date_creation, (COALESCE(name, 'Unknown'::character varying)), (COALESCE(name, 'Unknown'::character varying)), source_id, side_id
+              Sort Method: quicksort  Memory: 25kB
+              Buffers: shared hit=12
+              ->  Result  (cost=0.00..0.00 rows=0 width=209) (actual time=0.001..0.001 rows=0.00 loops=1)
+                    Output: id, file_name, file_path, file_type, file_size, file_date, file_status, date_creation, COALESCE(name, 'Unknown'::character varying), COALESCE(name, 'Unknown'::character varying), source_id, side_id, (COALESCE(CASE WHEN (file_name ~~* '%xylophonezzzz%'::text) THEN 2.0 WHEN EXISTS(SubPlan 1) THEN 1.0 ELSE 0.0 END, '0'::numeric))::double precision
+                    One-Time Filter: false
+                    SubPlan 1
+                      ->  Nested Loop  (cost=0.29..734.09 rows=1 width=0) (never executed)
+                            Inner Unique: true
+                            ->  Seq Scan on public.words _rel_w  (cost=0.00..712.80 rows=4 width=4) (never executed)
+                                  Output: _rel_w.id, _rel_w.word
+                                  Filter: (_rel_w.word ~~* '%xylophonezzzz%'::text)
+                            ->  Index Only Scan using idx_words_hashs_word_hash on public.words_hashs _rel_wp  (cost=0.29..5.31 rows=1 width=4) (never executed)
+                                  Output: _rel_wp.word_id, _rel_wp.hash_id
+                                  Index Cond: ((_rel_wp.word_id = _rel_w.id) AND (_rel_wp.hash_id = id))
+                                  Heap Fetches: 0
+                                  Index Searches: 0
+Planning:
+  Buffers: shared hit=520
+Planning Time: 14.830 ms
+Execution Time: 0.082 ms

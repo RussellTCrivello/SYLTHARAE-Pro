@@ -1,0 +1,197 @@
+Limit  (cost=2909344.93..2909345.81 rows=25 width=209) (actual time=177.841..177.865 rows=25.00 loops=1)
+  Output: p.id, p.file_name, p.file_path, p.file_type, p.file_size, p.file_date, p.file_status, p.date_creation, (COALESCE(s.name, 'Unknown'::character varying)), (COALESCE(si.name, 'Unknown'::character varying)), hc.source_id, hc.side_id, ((COALESCE((((CASE WHEN (p.file_name ~~* '%report%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 2).col1)) THEN 1.0 ELSE 0.0 END + CASE WHEN (p.file_name ~~* '%invoice%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 4).col1)) THEN 1.0 ELSE 0.0 END) + CASE WHEN (p.file_name ~~* '%contract%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 6).col1)) THEN 1.0 ELSE 0.0 END) + CASE WHEN (p.file_name ~~* '%memo%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 8).col1)) THEN 1.0 ELSE 0.0 END), '0'::numeric))::double precision)
+  Buffers: shared hit=2032
+  ->  Unique  (cost=2909344.93..2909379.58 rows=990 width=209) (actual time=177.840..177.863 rows=25.00 loops=1)
+        Output: p.id, p.file_name, p.file_path, p.file_type, p.file_size, p.file_date, p.file_status, p.date_creation, (COALESCE(s.name, 'Unknown'::character varying)), (COALESCE(si.name, 'Unknown'::character varying)), hc.source_id, hc.side_id, ((COALESCE((((CASE WHEN (p.file_name ~~* '%report%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 2).col1)) THEN 1.0 ELSE 0.0 END + CASE WHEN (p.file_name ~~* '%invoice%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 4).col1)) THEN 1.0 ELSE 0.0 END) + CASE WHEN (p.file_name ~~* '%contract%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 6).col1)) THEN 1.0 ELSE 0.0 END) + CASE WHEN (p.file_name ~~* '%memo%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 8).col1)) THEN 1.0 ELSE 0.0 END), '0'::numeric))::double precision)
+        Buffers: shared hit=2032
+        ->  Sort  (cost=2909344.93..2909347.41 rows=990 width=209) (actual time=177.839..177.853 rows=25.00 loops=1)
+              Output: p.id, p.file_name, p.file_path, p.file_type, p.file_size, p.file_date, p.file_status, p.date_creation, (COALESCE(s.name, 'Unknown'::character varying)), (COALESCE(si.name, 'Unknown'::character varying)), hc.source_id, hc.side_id, ((COALESCE((((CASE WHEN (p.file_name ~~* '%report%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 2).col1)) THEN 1.0 ELSE 0.0 END + CASE WHEN (p.file_name ~~* '%invoice%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 4).col1)) THEN 1.0 ELSE 0.0 END) + CASE WHEN (p.file_name ~~* '%contract%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 6).col1)) THEN 1.0 ELSE 0.0 END) + CASE WHEN (p.file_name ~~* '%memo%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 8).col1)) THEN 1.0 ELSE 0.0 END), '0'::numeric))::double precision)
+              Sort Key: ((COALESCE((((CASE WHEN (p.file_name ~~* '%report%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 2).col1)) THEN 1.0 ELSE 0.0 END + CASE WHEN (p.file_name ~~* '%invoice%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 4).col1)) THEN 1.0 ELSE 0.0 END) + CASE WHEN (p.file_name ~~* '%contract%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 6).col1)) THEN 1.0 ELSE 0.0 END) + CASE WHEN (p.file_name ~~* '%memo%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 8).col1)) THEN 1.0 ELSE 0.0 END), '0'::numeric))::double precision) DESC, p.file_date DESC, p.id, p.file_name, p.file_path, p.file_type, p.file_size, p.file_status, p.date_creation, (COALESCE(s.name, 'Unknown'::character varying)), (COALESCE(si.name, 'Unknown'::character varying)), hc.source_id, hc.side_id
+              Sort Method: quicksort  Memory: 29kB
+              Buffers: shared hit=2032
+              ->  Hash Left Join  (cost=48.79..2909295.67 rows=990 width=209) (actual time=127.365..177.813 rows=30.00 loops=1)
+                    Output: p.id, p.file_name, p.file_path, p.file_type, p.file_size, p.file_date, p.file_status, p.date_creation, COALESCE(s.name, 'Unknown'::character varying), COALESCE(si.name, 'Unknown'::character varying), hc.source_id, hc.side_id, (COALESCE((((CASE WHEN (p.file_name ~~* '%report%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 2).col1)) THEN 1.0 ELSE 0.0 END + CASE WHEN (p.file_name ~~* '%invoice%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 4).col1)) THEN 1.0 ELSE 0.0 END) + CASE WHEN (p.file_name ~~* '%contract%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 6).col1)) THEN 1.0 ELSE 0.0 END) + CASE WHEN (p.file_name ~~* '%memo%'::text) THEN 2.0 WHEN (ANY (h.id = (hashed SubPlan 8).col1)) THEN 1.0 ELSE 0.0 END), '0'::numeric))::double precision
+                    Inner Unique: true
+                    Hash Cond: (hc.hash_id = h.id)
+                    Filter: ((p.file_name ~~* '%report%'::text) OR (p.file_name ~~* '%invoice%'::text) OR (p.file_name ~~* '%contract%'::text) OR (p.file_name ~~* '%memo%'::text) OR ((p.file_type)::text ~~* '%report%'::text) OR ((p.file_type)::text ~~* '%invoice%'::text) OR ((p.file_type)::text ~~* '%contract%'::text) OR ((p.file_type)::text ~~* '%memo%'::text) OR (ANY (hc.source_id = (hashed SubPlan 10).col1)) OR (ANY (hc.source_id = (hashed SubPlan 12).col1)) OR (ANY (hc.source_id = (hashed SubPlan 14).col1)) OR (ANY (hc.source_id = (hashed SubPlan 16).col1)) OR (ANY (hc.side_id = (hashed SubPlan 18).col1)) OR (ANY (hc.side_id = (hashed SubPlan 20).col1)) OR (ANY (hc.side_id = (hashed SubPlan 22).col1)) OR (ANY (hc.side_id = (hashed SubPlan 24).col1)) OR (ANY (h.id = (hashed SubPlan 26).col1)) OR (ANY (h.id = (hashed SubPlan 28).col1)))
+                    Rows Removed by Filter: 960
+                    Buffers: shared hit=2032
+                    ->  Hash Left Join  (cost=22.96..190.03 rows=991 width=156) (actual time=0.167..0.931 rows=990.00 loops=1)
+                          Output: p.id, p.file_name, p.file_path, p.file_type, p.file_size, p.file_date, p.file_status, p.date_creation, hc.source_id, hc.side_id, hc.hash_id, s.name, si.name
+                          Inner Unique: true
+                          Hash Cond: (hc.side_id = si.id)
+                          Buffers: shared hit=150
+                          ->  Hash Left Join  (cost=21.90..182.69 rows=991 width=147) (actual time=0.158..0.785 rows=990.00 loops=1)
+                                Output: p.id, p.file_name, p.file_path, p.file_type, p.file_size, p.file_date, p.file_status, p.date_creation, hc.source_id, hc.side_id, hc.hash_id, s.name
+                                Inner Unique: true
+                                Hash Cond: (hc.source_id = s.id)
+                                Buffers: shared hit=149
+                                ->  Hash Left Join  (cost=20.83..175.35 rows=991 width=141) (actual time=0.143..0.635 rows=990.00 loops=1)
+                                      Output: p.id, p.file_name, p.file_path, p.file_type, p.file_size, p.file_date, p.file_status, p.date_creation, hc.source_id, hc.side_id, hc.hash_id
+                                      Inner Unique: true
+                                      Hash Cond: (p.context_id = hc.id)
+                                      Buffers: shared hit=148
+                                      ->  Seq Scan on public.paths p  (cost=0.00..151.91 rows=991 width=133) (actual time=0.020..0.337 rows=990.00 loops=1)
+                                            Output: p.id, p.file_name, p.file_path, p.file_type, p.file_size, p.file_date, p.file_status, p.date_creation, p.context_id
+                                            Buffers: shared hit=142
+                                      ->  Hash  (cost=12.59..12.59 rows=659 width=16) (actual time=0.118..0.118 rows=705.00 loops=1)
+                                            Output: hc.source_id, hc.side_id, hc.id, hc.hash_id
+                                            Buckets: 1024  Batches: 1  Memory Usage: 42kB
+                                            Buffers: shared hit=6
+                                            ->  Seq Scan on public.hash_contexts hc  (cost=0.00..12.59 rows=659 width=16) (actual time=0.007..0.055 rows=705.00 loops=1)
+                                                  Output: hc.source_id, hc.side_id, hc.id, hc.hash_id
+                                                  Buffers: shared hit=6
+                                ->  Hash  (cost=1.03..1.03 rows=3 width=10) (actual time=0.011..0.012 rows=3.00 loops=1)
+                                      Output: s.name, s.id
+                                      Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                      Buffers: shared hit=1
+                                      ->  Seq Scan on public.sources s  (cost=0.00..1.03 rows=3 width=10) (actual time=0.009..0.009 rows=3.00 loops=1)
+                                            Output: s.name, s.id
+                                            Buffers: shared hit=1
+                          ->  Hash  (cost=1.03..1.03 rows=3 width=13) (actual time=0.007..0.008 rows=3.00 loops=1)
+                                Output: si.name, si.id
+                                Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                Buffers: shared hit=1
+                                ->  Seq Scan on public.sides si  (cost=0.00..1.03 rows=3 width=13) (actual time=0.005..0.006 rows=3.00 loops=1)
+                                      Output: si.name, si.id
+                                      Buffers: shared hit=1
+                    ->  Hash  (cost=17.59..17.59 rows=659 width=4) (actual time=0.091..0.091 rows=705.00 loops=1)
+                          Output: h.id
+                          Buckets: 1024  Batches: 1  Memory Usage: 33kB
+                          Buffers: shared hit=11
+                          ->  Seq Scan on public.hashs h  (cost=0.00..17.59 rows=659 width=4) (actual time=0.004..0.045 rows=705.00 loops=1)
+                                Output: h.id
+                                Buffers: shared hit=11
+                    SubPlan 2
+                      ->  Nested Loop  (cost=0.29..734.18 rows=6 width=4) (actual time=0.181..12.812 rows=68.00 loops=1)
+                            Output: _rel_wp.hash_id
+                            Buffers: shared hit=307
+                            ->  Seq Scan on public.words _rel_w  (cost=0.00..712.80 rows=4 width=4) (actual time=0.167..12.690 rows=37.00 loops=1)
+                                  Output: _rel_w.id, _rel_w.word
+                                  Filter: (_rel_w.word ~~* '%report%'::text)
+                                  Rows Removed by Filter: 39318
+                                  Buffers: shared hit=230
+                            ->  Index Only Scan using idx_words_hashs_word_hash on public.words_hashs _rel_wp  (cost=0.29..5.32 rows=2 width=8) (actual time=0.002..0.003 rows=1.84 loops=37)
+                                  Output: _rel_wp.word_id, _rel_wp.hash_id
+                                  Index Cond: (_rel_wp.word_id = _rel_w.id)
+                                  Heap Fetches: 2
+                                  Index Searches: 37
+                                  Buffers: shared hit=77
+                    SubPlan 4
+                      ->  Nested Loop  (cost=0.29..734.18 rows=6 width=4) (actual time=13.913..13.915 rows=0.00 loops=1)
+                            Output: _rel_wp_1.hash_id
+                            Buffers: shared hit=232
+                            ->  Seq Scan on public.words _rel_w_1  (cost=0.00..712.80 rows=4 width=4) (actual time=1.270..13.898 rows=1.00 loops=1)
+                                  Output: _rel_w_1.id, _rel_w_1.word
+                                  Filter: (_rel_w_1.word ~~* '%invoice%'::text)
+                                  Rows Removed by Filter: 39354
+                                  Buffers: shared hit=230
+                            ->  Index Only Scan using idx_words_hashs_word_hash on public.words_hashs _rel_wp_1  (cost=0.29..5.32 rows=2 width=8) (actual time=0.012..0.012 rows=0.00 loops=1)
+                                  Output: _rel_wp_1.word_id, _rel_wp_1.hash_id
+                                  Index Cond: (_rel_wp_1.word_id = _rel_w_1.id)
+                                  Heap Fetches: 0
+                                  Index Searches: 1
+                                  Buffers: shared hit=2
+                    SubPlan 6
+                      ->  Nested Loop  (cost=0.29..734.18 rows=6 width=4) (actual time=0.703..12.025 rows=12.00 loops=1)
+                            Output: _rel_wp_2.hash_id
+                            Buffers: shared hit=254
+                            ->  Seq Scan on public.words _rel_w_2  (cost=0.00..712.80 rows=4 width=4) (actual time=0.677..11.948 rows=10.00 loops=1)
+                                  Output: _rel_w_2.id, _rel_w_2.word
+                                  Filter: (_rel_w_2.word ~~* '%contract%'::text)
+                                  Rows Removed by Filter: 39345
+                                  Buffers: shared hit=230
+                            ->  Index Only Scan using idx_words_hashs_word_hash on public.words_hashs _rel_wp_2  (cost=0.29..5.32 rows=2 width=8) (actual time=0.005..0.006 rows=1.20 loops=10)
+                                  Output: _rel_wp_2.word_id, _rel_wp_2.hash_id
+                                  Index Cond: (_rel_wp_2.word_id = _rel_w_2.id)
+                                  Heap Fetches: 3
+                                  Index Searches: 10
+                                  Buffers: shared hit=24
+                    SubPlan 8
+                      ->  Nested Loop  (cost=0.29..734.18 rows=6 width=4) (actual time=1.121..12.216 rows=11.00 loops=1)
+                            Output: _rel_wp_3.hash_id
+                            Buffers: shared hit=253
+                            ->  Seq Scan on public.words _rel_w_3  (cost=0.00..712.80 rows=4 width=4) (actual time=1.086..12.115 rows=11.00 loops=1)
+                                  Output: _rel_w_3.id, _rel_w_3.word
+                                  Filter: (_rel_w_3.word ~~* '%memo%'::text)
+                                  Rows Removed by Filter: 39344
+                                  Buffers: shared hit=230
+                            ->  Index Only Scan using idx_words_hashs_word_hash on public.words_hashs _rel_wp_3  (cost=0.29..5.32 rows=2 width=8) (actual time=0.007..0.007 rows=1.00 loops=11)
+                                  Output: _rel_wp_3.word_id, _rel_wp_3.hash_id
+                                  Index Cond: (_rel_wp_3.word_id = _rel_w_3.id)
+                                  Heap Fetches: 0
+                                  Index Searches: 11
+                                  Buffers: shared hit=23
+                    SubPlan 10
+                      ->  Seq Scan on public.sources _search_source  (cost=0.00..1.04 rows=1 width=4) (actual time=0.004..0.004 rows=0.00 loops=1)
+                            Output: _search_source.id
+                            Filter: ((_search_source.name)::text ~~* '%report%'::text)
+                            Rows Removed by Filter: 3
+                            Buffers: shared hit=1
+                    SubPlan 12
+                      ->  Seq Scan on public.sources _search_source_1  (cost=0.00..1.04 rows=1 width=4) (actual time=0.003..0.003 rows=0.00 loops=1)
+                            Output: _search_source_1.id
+                            Filter: ((_search_source_1.name)::text ~~* '%invoice%'::text)
+                            Rows Removed by Filter: 3
+                            Buffers: shared hit=1
+                    SubPlan 14
+                      ->  Seq Scan on public.sources _search_source_2  (cost=0.00..1.04 rows=1 width=4) (actual time=0.003..0.003 rows=0.00 loops=1)
+                            Output: _search_source_2.id
+                            Filter: ((_search_source_2.name)::text ~~* '%contract%'::text)
+                            Rows Removed by Filter: 3
+                            Buffers: shared hit=1
+                    SubPlan 16
+                      ->  Seq Scan on public.sources _search_source_3  (cost=0.00..1.04 rows=1 width=4) (actual time=0.003..0.003 rows=0.00 loops=1)
+                            Output: _search_source_3.id
+                            Filter: ((_search_source_3.name)::text ~~* '%memo%'::text)
+                            Rows Removed by Filter: 3
+                            Buffers: shared hit=1
+                    SubPlan 18
+                      ->  Seq Scan on public.sides _search_side  (cost=0.00..1.04 rows=1 width=4) (actual time=0.003..0.004 rows=0.00 loops=1)
+                            Output: _search_side.id
+                            Filter: ((_search_side.name)::text ~~* '%report%'::text)
+                            Rows Removed by Filter: 3
+                            Buffers: shared hit=1
+                    SubPlan 20
+                      ->  Seq Scan on public.sides _search_side_1  (cost=0.00..1.04 rows=1 width=4) (actual time=0.004..0.004 rows=0.00 loops=1)
+                            Output: _search_side_1.id
+                            Filter: ((_search_side_1.name)::text ~~* '%invoice%'::text)
+                            Rows Removed by Filter: 3
+                            Buffers: shared hit=1
+                    SubPlan 22
+                      ->  Seq Scan on public.sides _search_side_2  (cost=0.00..1.04 rows=1 width=4) (actual time=0.003..0.004 rows=0.00 loops=1)
+                            Output: _search_side_2.id
+                            Filter: ((_search_side_2.name)::text ~~* '%contract%'::text)
+                            Rows Removed by Filter: 3
+                            Buffers: shared hit=1
+                    SubPlan 24
+                      ->  Seq Scan on public.sides _search_side_3  (cost=0.00..1.04 rows=1 width=4) (actual time=0.003..0.004 rows=0.00 loops=1)
+                            Output: _search_side_3.id
+                            Filter: ((_search_side_3.name)::text ~~* '%memo%'::text)
+                            Rows Removed by Filter: 3
+                            Buffers: shared hit=1
+                    SubPlan 26
+                      ->  Seq Scan on public.contents_raw cr  (cost=0.00..23.98 rows=1 width=4) (actual time=0.837..75.863 rows=29.00 loops=1)
+                            Output: cr.hash_id
+                            Filter: ((cr.content ~~* '%report%'::text) OR (cr.content ~~* '%invoice%'::text) OR (cr.content ~~* '%contract%'::text) OR (cr.content ~~* '%memo%'::text))
+                            Rows Removed by Filter: 303
+                            Buffers: shared hit=463
+                    SubPlan 28
+                      ->  Nested Loop  (cost=0.29..1079.10 rows=22 width=4) (actual time=0.571..47.186 rows=91.00 loops=1)
+                            Output: _search_wp.hash_id
+                            Buffers: shared hit=354
+                            ->  Seq Scan on public.words w  (cost=0.00..1002.48 rows=15 width=4) (actual time=0.558..46.843 rows=59.00 loops=1)
+                                  Output: w.id, w.word
+                                  Filter: ((w.word ~~* '%report%'::text) OR (w.word ~~* '%invoice%'::text) OR (w.word ~~* '%contract%'::text) OR (w.word ~~* '%memo%'::text))
+                                  Rows Removed by Filter: 39296
+                                  Buffers: shared hit=230
+                            ->  Index Only Scan using idx_words_hashs_word_hash on public.words_hashs _search_wp  (cost=0.29..5.09 rows=2 width=8) (actual time=0.004..0.004 rows=1.54 loops=59)
+                                  Output: _search_wp.word_id, _search_wp.hash_id
+                                  Index Cond: (_search_wp.word_id = w.id)
+                                  Heap Fetches: 5
+                                  Index Searches: 59
+                                  Buffers: shared hit=124
+Planning:
+  Buffers: shared hit=191
+Planning Time: 5.981 ms
+Execution Time: 178.157 ms
