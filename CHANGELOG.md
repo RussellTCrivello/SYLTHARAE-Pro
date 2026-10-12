@@ -230,6 +230,41 @@ disposable databases, not applied to a deployment.
   the measurements are quoted as taken, with the note that the successor index
   answers the same plan.
 
+### Verified in this revision
+
+Everything here was run, not reasoned about; the commands are in
+`docs/TESTING.md` and `docs/OPERATIONS.md`.
+
+* **The documented live protocol passes end to end** against a real server
+  (Waitress, `FLASK_ENV=production`, `TRUSTED_PROXY_COUNT=1`, PostgreSQL 16.2):
+  the setup wizard installs a **fresh empty database** over HTTP (39 migrations
+  applied, `.env` written, a second install refused with 409) - 4/4 checks;
+  `run1` - 53/53; restart; `run2` - 53/53. The pass covers login/CSRF/security
+  headers, ingestion of text/CSV/DOCX/ZIP/PNG with OCR provenance, duplicate
+  suppression on re-ingestion, upload staging, search (including the deferred
+  snippet path), per-file analysis, original-file download, the event stream,
+  settings/search exports, and the analyst lifecycle (created, gated until the
+  password change, denied admin settings, old password refused, logout,
+  session invalidation) with the audit log recording the real client address.
+* **A fresh database migrates two ways**: by the wizard (above) and by the
+  application at startup (`Applied schema migrations 0001…0039 … schema now at
+  version 0039`), and a restart reports `Database schema is up to date
+  (version 0039)`. The startup also prints the m0039 vocabularies as enforced
+  (`alerts.type: 12 allowed values, 0 row(s) validated by ck_alerts_type`, and
+  the same for `alerts.priority`, `jobs.status`, `job_events.event_type`).
+* **Administrator password recovery works on a live database**:
+  `scripts/reset_admin_password.py --list`-style reporting found the account (and
+  its failed-login count), reset the password, revoked sessions, cleared the
+  lockout, and exited 0; the temporary password then forced a change
+  (`403 password_change_required`), and changing it cleared the flag.
+* **This environment needs `waitress` for the production shape**
+  (`pip install -e ".[server]"`). Without it the application warns, states the
+  remediation and falls back to the development server, which discloses its own
+  version in the `Server` header (`Werkzeug/3.1.9 Python/3.11.2`); under Waitress
+  the header is the application's own `SYLTHARAE` (`apps/web/serve.py`, `ident=`).
+  Deploying without the `.[server]` extra is therefore a real, visible downgrade
+  in header hygiene, not only a performance one.
+
 ### Known issues at this revision
 
 Recorded so this changelog is not mistaken for a stability claim:
