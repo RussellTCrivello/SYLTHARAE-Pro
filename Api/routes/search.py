@@ -500,7 +500,8 @@ def register_search_routes(app):
                 return jsonify({'error': "sort_order must be 'asc' or 'desc'"}), 400
             try:
                 page = max(1, int(data.get('page', 1) or 1))
-                per_page = min(max(1, int(data.get('per_page', 50) or 50)), 200)
+                # 500 is the largest page size the results UI offers (20/50/100/200/500).
+                per_page = min(max(1, int(data.get('per_page', 50) or 50)), 500)
             except (TypeError, ValueError):
                 return jsonify({'error': 'page and per_page must be whole numbers'}), 400
             use_fulltext = _request_bool(data, 'use_fulltext', True)

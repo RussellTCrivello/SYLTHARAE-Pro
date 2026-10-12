@@ -357,7 +357,9 @@ def parse(payload: Optional[Dict[str, Any]]) -> SearchExportRequest:
 
     try:
         page = max(int(payload.get("page", 1) or 1), 1)
-        per_page = min(max(int(payload.get("per_page", 50) or 50), 1), 200)
+        # Same ceiling as the results page-size control (20/50/100/200/500),
+        # so "Current page only" exports exactly the rows on screen.
+        per_page = min(max(int(payload.get("per_page", 50) or 50), 1), 500)
     except (TypeError, ValueError):
         raise ExportRequestError("page and per_page must be whole numbers.") from None
 

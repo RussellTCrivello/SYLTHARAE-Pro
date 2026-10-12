@@ -219,6 +219,16 @@ disposable databases, not applied to a deployment.
 
 ### Changed
 
+* **Advanced search results viewport.** On desktop (1200px and wider) the results
+  header and pagination stay in place while the result list scrolls on its own;
+  the search controls above scroll in their own region. Narrower screens keep the
+  normal page flow.
+* **Results per page.** The advanced search offers 20, 50, 100, 200 or 500 results
+  per page (default 20). The search API and the "Current page only" export accept
+  up to 500 (previously 200). Larger pages are rendered in full; list virtualization
+  is not implemented (see `docs/search/PERFORMANCE_ARCHITECTURE.md`).
+
+
 * `verify_readiness.py` pins the surviving index and constraint names
   (`hashs_hash_key`, `uq_hash_contexts_identity`) instead of the duplicates
   m0038 removed.

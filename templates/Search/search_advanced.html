@@ -14,6 +14,8 @@
 <!-- Page header (slim, theme-aware — the search bar below is the  -->
 <!-- visual hero, not this banner).                                -->
 <!-- ============================================================ -->
+<div class="search-page-shell">
+<div class="search-page-top">
 <header class="search-header">
     <div class="search-header-content">
         <h1 class="search-logo">
@@ -376,6 +378,8 @@
     </div>
 </div>
 
+</div><!-- /.search-page-top -->
+
 <!-- Search Results Section -->
 <div id="searchResultsSection" class="search-results-section" style="display: none;">
     <div class="results-header">
@@ -401,6 +405,17 @@
                     title="{{ _('Save this search so you can re-run it any time') }}">
                 <i class="bi bi-bookmark-plus me-1" aria-hidden="true"></i>{{ _('Save') }}
             </button>
+            <div class="results-per-page">
+                <label class="results-per-page-label" for="resultsPerPage">{{ _('Per Page:') }}</label>
+                <select class="form-select form-select-sm results-per-page-select" id="resultsPerPage"
+                        data-on-change="changeResultsPerPage(this.value)">
+                    <option value="20" selected>20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                    <option value="500">500</option>
+                </select>
+            </div>
             <select class="form-select form-select-sm results-sort" id="sortBy" data-on-change="sortResults()" aria-label="{{ _('Sort') }}">
 
                 <option value="relevance">{{ _('Sort: Relevance') }}</option>
@@ -665,6 +680,7 @@
     </div>
 </div>
 
+</div><!-- /.search-page-shell -->
 <!-- Loading Overlay -->
 <div id="searchLoadingOverlay" class="loading-overlay" style="display: none;">
     <div class="loading-spinner-wrapper">
