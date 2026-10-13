@@ -19,6 +19,23 @@ function t(key, fallback, dict) {
 }
 
 /**
+ * Format a stored file date for display in the viewer's local calendar.
+ * A date-only value ("2026-10-13") must be built as a LOCAL date: passing it
+ * straight to new Date() parses it as UTC midnight, which shows the previous
+ * day in every timezone west of UTC (the list page showed 10/13 while the
+ * detail page showed 10/12). Full timestamps are converted normally.
+ */
+export function formatFileDate(value, fallback = 'N/A') {
+    if (!value) return fallback;
+    const text = String(value);
+    const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
+    const date = dateOnly
+        ? new Date(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3]))
+        : new Date(text);
+    return Number.isNaN(date.getTime()) ? text : date.toLocaleDateString();
+}
+
+/**
  * @param {object} file
  * @param {object} [tr]
  * @returns {string}
@@ -122,11 +139,11 @@ export function collectFileMetadataBands(file, tr = defaultTranslations) {
     const timeline = [
         {
             label: t('fileDate', 'File Date', tr),
-            value: file.file_date ? new Date(file.file_date).toLocaleDateString() : 'N/A',
+            value: formatFileDate(file.file_date, 'N/A'),
         },
         {
             label: t('dateCreated', 'Date Created', tr),
-            value: file.date_creation ? new Date(file.date_creation).toLocaleDateString() : 'N/A',
+            value: formatFileDate(file.date_creation, 'N/A'),
         },
     ];
 
@@ -309,9 +326,7 @@ function buildMetadataSpotlight(file, tr = defaultTranslations) {
 
     const wordCount = (file.word_count || 0).toLocaleString();
     const fileType = file.type || '—';
-    const fileDate = file.file_date
-        ? new Date(file.file_date).toLocaleDateString()
-        : '—';
+    const fileDate = formatFileDate(file.file_date, '—');
     const size = formatFileSize(file.size);
 
     return `
