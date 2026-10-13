@@ -128,7 +128,9 @@
     }
 
     function report(node, result) {
-        if (!result || typeof result !== 'object') {
+        if (!result || typeof result !== 'object' || result.cancelled) {
+            // A reader who closed the dialog did not ask for anything to be
+            // reported - the operation simply was not performed.
             return;
         }
         var toast = window.Toast;

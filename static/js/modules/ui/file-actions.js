@@ -169,15 +169,13 @@
                 window.open('/file/' + encodeURIComponent(file.id) + '/full-content', '_blank', 'noopener');
                 break;
             case 'original':
-                window.location.href = downloadUrl(file);
+                saveFile({url: downloadUrl(file), suggestedName: file.name});
                 break;
             case 'native':
                 openNative(file);
                 break;
             case 'saveas':
-                askName(t('saveAs', 'Save As'), file.name, (name) => {
-                    if (name) window.location.href = downloadUrl(file, name);
-                });
+                saveFile({url: downloadUrl(file), suggestedName: file.name});
                 break;
             case 'locate':
                 locate(file);
@@ -222,7 +220,9 @@
         return '<div class="empty-state" role="status">'
             + '<i class="bi bi-file-earmark-arrow-down" aria-hidden="true"></i>'
             + '<p>' + escapeHtml(t('noInlinePreview', 'This format has no preview here.')) + '</p>'
-            + '<a class="btn btn-primary" href="' + escapeHtml(downloadUrl(file)) + '">'
+            + '<a class="btn btn-primary" href="' + escapeHtml(downloadUrl(file))
+            + '" data-file-save-url="' + escapeHtml(downloadUrl(file))
+            + '" data-file-save-name="' + escapeHtml(file.name) + '">'
             + escapeHtml(t('openOriginal', 'Open Original')) + '</a></div>';
     }
 
@@ -404,7 +404,8 @@
     // The one name dialog (no browser dialogs)
     // ------------------------------------------------------------------
 
-    function askName(title, current, onConfirm) {
+    function askName(title, current, onConfirm, onCancel) {
+        let settled = false;
         let shell = document.getElementById(DIALOG_ID);
         if (!shell) {
             shell = document.createElement('div');
@@ -429,7 +430,15 @@
         const input = shell.querySelector('#fileActionsName');
         input.focus();
         input.select();
-        const close = () => { shell.hidden = true; shell.innerHTML = ''; };
+        const close = () => {
+            if (!settled) {
+                // Dismissing the dialog is a cancel, never a confirmation.
+                settled = true;
+                if (onCancel) onCancel();
+            }
+            shell.hidden = true;
+            shell.innerHTML = '';
+        };
         bindClose(shell, close);
         shell.addEventListener('click', (event) => {
             if (event.target === shell) close();
@@ -438,10 +447,109 @@
             event.preventDefault();
             const value = (input.value || '').trim();
             if (!value) return;
-            close();
+            settled = true;
+            shell.hidden = true;
+            shell.innerHTML = '';
             onConfirm(value);
         });
     }
+
+    // ------------------------------------------------------------------
+    // Save As: one flow for every download in the application
+    // ------------------------------------------------------------------
+
+    /** Ask for a file name; resolves to the name, or null when cancelled. */
+    function promptFileName(title, current) {
+        return new Promise((resolve) => {
+            askName(title, current || 'file', resolve, () => resolve(null));
+        });
+    }
+
+    /** Keep the extension the file really has, whatever the reader typed. */
+    function withExtension(name, extension) {
+        if (!extension) return name;
+        return name.toLowerCase().endsWith(extension.toLowerCase()) ? name : name + extension;
+    }
+
+    function extensionOf(name) {
+        const match = /\.[A-Za-z0-9]{1,10}$/.exec(name || '');
+        return match ? match[0] : '';
+    }
+
+    async function fetchDownload(url) {
+        const response = await fetch(url, {credentials: 'same-origin'});
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.blob();
+    }
+
+    /**
+     * Save a file the reader chose a name for.
+     *
+     * The reader is asked for the name first (prefilled, editable). Where the
+     * browser offers a real Save As dialog (Chromium, Edge) it opens, so the
+     * reader also picks the folder; elsewhere the browser downloads the file
+     * under the chosen name. `source` is either `{url}` (fetched through the
+     * application) or `{blob}` (text the page already holds).
+     *
+     * Resolves to `{ok, handled, cancelled?}` so the record-action surface can
+     * report the outcome and never follow the link a second time.
+     */
+    async function saveFile(options) {
+        const opts = options || {};
+        const extension = opts.extension || extensionOf(opts.suggestedName) || '';
+        const chosen = await promptFileName(t('saveAs', 'Save As'), opts.suggestedName || 'file');
+        if (!chosen) return {ok: true, handled: true, cancelled: true};
+        const name = withExtension(chosen.split(/[\\/]/).pop().trim() || 'file', extension);
+
+        try {
+            if (typeof window.showSaveFilePicker === 'function') {
+                const blob = opts.blob || await fetchDownload(opts.url);
+                const mime = blob.type && blob.type !== 'application/octet-stream'
+                    ? blob.type : 'application/octet-stream';
+                const accept = {};
+                accept[mime] = extension ? [extension] : [];
+                const handle = await window.showSaveFilePicker({
+                    suggestedName: name,
+                    types: extension ? [{description: name, accept: accept}] : undefined,
+                });
+                const writable = await handle.createWritable();
+                await writable.write(blob);
+                await writable.close();
+                toast(t('fileSaved', 'The file was saved.'), 'success');
+                return {ok: true, handled: true};
+            }
+            // No folder picker here: the browser saves under the chosen name.
+            const link = document.createElement('a');
+            if (opts.blob) {
+                link.href = URL.createObjectURL(opts.blob);
+                setTimeout(() => URL.revokeObjectURL(link.href), 4000);
+            } else {
+                const separator = opts.url.indexOf('?') >= 0 ? '&' : '?';
+                link.href = opts.url + separator + 'filename=' + encodeURIComponent(name);
+            }
+            link.download = name;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            return {ok: true, handled: true};
+        } catch (error) {
+            if (error && error.name === 'AbortError') {
+                // The reader closed the folder picker: nothing was saved.
+                return {ok: true, handled: true, cancelled: true};
+            }
+            toast(t('downloadFailed', 'The file could not be downloaded.'), 'error');
+            return {ok: false, handled: true};
+        }
+    }
+
+    // The preview's "Open Original" link saves through the same dialog.
+    document.addEventListener('click', (event) => {
+        const link = event.target.closest && event.target.closest('[data-file-save-url]');
+        if (!link) return;
+        event.preventDefault();
+        saveFile({url: link.getAttribute('data-file-save-url'),
+                  suggestedName: link.getAttribute('data-file-save-name') || 'file'});
+    });
 
     // ------------------------------------------------------------------
     // Wiring: one delegate serves every row on every page
@@ -462,6 +570,7 @@
 
     // Re-export for a page that wants to offer a single action directly.
     window.FileActions = {
+        saveFile,
         openPreview,
         openSplit,
         closeSplit,
