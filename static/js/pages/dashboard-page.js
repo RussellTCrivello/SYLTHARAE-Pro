@@ -643,6 +643,8 @@ function renderTopCategoriesChart(categories) {
 // Render top words cloud
 function renderTopWordsCloud(words) {
     const container = document.getElementById('topWordsCloud');
+    // The page may have been swapped out while the statistics were loading.
+    if (!container) return;
     container.innerHTML = '';
     
     words.forEach((word, index) => {
