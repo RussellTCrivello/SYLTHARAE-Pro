@@ -245,7 +245,7 @@ function renderStorageChart(chartData) {
     }
     
     const ctx = canvas.getContext('2d');
-    charts.storage = new Chart(ctx, {
+    charts.storage = createChart(ctx, {
         type: 'doughnut',
         data: {
             labels: chartData.labels,
@@ -298,7 +298,7 @@ function renderStorageTimeline(timeline) {
     }
     
     const ctx = canvas.getContext('2d');
-    charts.storageTimeline = new Chart(ctx, {
+    charts.storageTimeline = createChart(ctx, {
         type: 'line',
         data: {
             labels: timeline.map(t => t.month),
@@ -394,7 +394,7 @@ function renderSuccessRateChart(typeData) {
     }
     
     const ctx = canvas.getContext('2d');
-    charts.successRate = new Chart(ctx, {
+    charts.successRate = createChart(ctx, {
         type: 'bar',
         data: {
             labels: typeData.slice(0, 10).map(t => t.type),
@@ -445,7 +445,7 @@ function renderProcessingSpeedChart(speedData) {
     }
     
     const ctx = canvas.getContext('2d');
-    charts.processingSpeed = new Chart(ctx, {
+    charts.processingSpeed = createChart(ctx, {
         type: 'line',
         data: {
             labels: speedData.map(d => new Date(d.date).toLocaleDateString()),
@@ -543,7 +543,7 @@ function renderContentCoverageChart(coverage) {
     }
     
     const ctx = canvas.getContext('2d');
-    charts.contentCoverage = new Chart(ctx, {
+    charts.contentCoverage = createChart(ctx, {
         type: 'doughnut',
         data: {
             labels: [translations.withContent, translations.withWords, translations.noContent],
@@ -607,7 +607,7 @@ function renderTopCategoriesChart(categories) {
     const values = categories.map(c => c.file_count || c.count || 0);
     
     const ctx = canvas.getContext('2d');
-    charts.topCategories = new Chart(ctx, {
+    charts.topCategories = createChart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
@@ -697,6 +697,18 @@ let currentWordLimit = 50;
 let currentTimelinePeriod = 'month';
 
 // 🚀 OPTIMIZED: Initialize dashboard with lazy loading
+// Chart.js keeps a global registry per canvas. The page can boot more than once
+// (a full load and a soft navigation each run this module, and each copy has its
+// own `charts` map), so destroy whatever already owns the canvas before reuse.
+function createChart(ctx, config) {
+    const canvas = ctx && ctx.canvas ? ctx.canvas : ctx;
+    if (window.Chart && typeof Chart.getChart === 'function') {
+        const previous = Chart.getChart(canvas);
+        if (previous) previous.destroy();
+    }
+    return new Chart(ctx, config);
+}
+
 function bootDashboardPage() {
     console.log('Dashboard page: boot');
 
@@ -950,7 +962,7 @@ async function loadTimelineData(period) {
         }
         
         const ctx = canvas.getContext('2d');
-        charts.timeline = new Chart(ctx, {
+        charts.timeline = createChart(ctx, {
             type: 'line',
             data: {
                 labels: data.labels,
@@ -1070,7 +1082,7 @@ async function loadCategoryDistribution() {
         }
         
         const ctx = canvas.getContext('2d');
-        charts.processing = new Chart(ctx, {
+        charts.processing = createChart(ctx, {
             type: 'doughnut',
             data: {
                 labels: data.labels.slice(0, 5),
@@ -1183,7 +1195,7 @@ async function loadCategoryCharts() {
         }
         
         const pieCtx = pieCanvas.getContext('2d');
-        charts.categoryPie = new Chart(pieCtx, {
+        charts.categoryPie = createChart(pieCtx, {
             type: 'pie',
             data: {
                 labels: data.labels,
@@ -1234,7 +1246,7 @@ async function loadCategoryCharts() {
         }
         
         const barCtx = barCanvas.getContext('2d');
-        charts.categoryBar = new Chart(barCtx, {
+        charts.categoryBar = createChart(barCtx, {
             type: 'bar',
             data: {
                 labels: data.labels,
@@ -1337,7 +1349,7 @@ async function loadFileTypeDistribution() {
         }
         
         const ctx = canvas.getContext('2d');
-        charts.fileType = new Chart(ctx, {
+        charts.fileType = createChart(ctx, {
             type: 'bar',
             data: {
                 labels: data.types.map(t => t.type || 'Unknown').slice(0, 10),
