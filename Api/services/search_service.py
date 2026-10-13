@@ -1153,6 +1153,8 @@ class SearchService:
         count_mode: Optional[str] = None,
         cursor_after_score: Optional[float] = None,
         cursor_after_id: Optional[int] = None,
+        cursor_has_date: bool = False,
+        cursor_after_date: Optional[date] = None,
     ) -> Tuple[List[Dict[str, Any]], int]:
         """
         Advanced search using Google-like algorithms (BM25, query expansion, fuzzy matching).
@@ -1681,16 +1683,48 @@ class SearchService:
             keyset_params: List[Any] = []
             effective_where = where_clause
             if use_keyset and relevance_expr:
+                # The ORDER BY is ``score DESC, file_date DESC, id ASC`` (NULL
+                # dates sort first under DESC). The rows after the cursor are
+                # therefore: a lower score; or an equal score with an earlier
+                # date; or an equal score and date with a higher id. A cursor
+                # without a recorded date (legacy v2 token) keeps the original
+                # (score, id) comparison.
+                if cursor_has_date and cursor_after_date is not None:
+                    tie_clause = (
+                        "(p.file_date < %s OR "
+                        "(p.file_date = %s AND p.id > %s))"
+                    )
+                    tie_params: List[Any] = [
+                        cursor_after_date, cursor_after_date, cursor_after_id,
+                    ]
+                elif cursor_has_date:
+                    # NULL dates come first in DESC order: after a NULL-date
+                    # row come all dated rows, then NULL-date rows with a
+                    # higher id.
+                    tie_clause = (
+                        "(p.file_date IS NOT NULL OR "
+                        "(p.file_date IS NULL AND p.id > %s))"
+                    )
+                    tie_params = [cursor_after_id]
+                else:
+                    tie_clause = "p.id > %s"
+                    tie_params = [cursor_after_id]
                 effective_where = (
                     f"{where_clause} AND ("
                     f"({relevance_expr}) < %s OR "
-                    f"(({relevance_expr}) = %s AND p.id > %s)"
+                    f"(({relevance_expr}) = %s AND {tie_clause})"
                     f")"
                 )
+                # The WHERE clause is: <filters> AND (<expr> < %s OR (<expr> = %s
+                # AND <tie>)). The relevance expression has its own placeholders,
+                # so its parameters sit between the two cursor scores. Omitting
+                # them shifted every later parameter, the statement raised
+                # IndexError, and the next page came back empty.
                 keyset_params = [
                     cursor_after_score,
+                    *relevance_params,
                     cursor_after_score,
-                    cursor_after_id,
+                    *tie_params,
                 ]
 
             if use_sql_pagination:
@@ -1944,6 +1978,8 @@ class SearchService:
                     int(last["id"]),
                     sort_order,
                     query_signature=page_sig,
+                    file_date=last.get("file_date"),
+                    file_date_known=True,
                 )
 
             try:

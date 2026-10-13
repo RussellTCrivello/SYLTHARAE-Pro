@@ -26,7 +26,7 @@ from typing import Any, Dict, Optional
 from urllib.parse import urlencode
 
 from core.errors import client_error
-from core.search.cursor import parse_relevance_cursor
+from core.search.cursor import parse_relevance_cursor, parse_relevance_cursor_tiebreak
 from core.search.metrics import STORE as search_metrics_store
 from core.search.slow_capture import SLOW as slow_search_capture
 from core.search.normalize import pagination_query_signature
@@ -540,6 +540,8 @@ def register_search_routes(app):
             cursor_token = str(data.get("cursor") or "").strip() or None
             cursor_after_score: Optional[float] = None
             cursor_after_id: Optional[int] = None
+            cursor_has_date = False
+            cursor_after_date = None
             cursor_cache_key = pagination_query_signature(
                 query=query,
                 file_type=file_type,
@@ -567,6 +569,11 @@ def register_search_routes(app):
                         "error": "Cursor is invalid or does not match query/sort/filters",
                     }), 400
                 cursor_after_score, cursor_after_id, _cursor_order = parsed
+                tiebreak = parse_relevance_cursor_tiebreak(
+                    cursor_token,
+                    expected_signature=cursor_cache_key,
+                ) or (False, None)
+                cursor_has_date, cursor_after_date = tiebreak
                 offset = 0
 
             has_advanced_filters = any((
@@ -608,6 +615,8 @@ def register_search_routes(app):
                         count_mode=count_mode,
                         cursor_after_score=cursor_after_score,
                         cursor_after_id=cursor_after_id,
+                        cursor_has_date=cursor_has_date,
+                        cursor_after_date=cursor_after_date,
                     )
             elif use_fulltext and query:
                 results, total_count = SearchService.full_text_search(
