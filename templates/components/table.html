@@ -368,7 +368,7 @@
         'orderParam': order_param,
         'pageParam': page_param
     } -%}
-<div class="ut" data-unified-table="{{ table_config|tojson }}">
+<div class="ut" data-unified-table='{{ table_config|tojson }}'>
     <div class="ut-toolbar">
         <div class="ut-info" id="{{ info_dom_id }}" aria-live="polite">{% if append %}{{ _('Showing') }} <span data-ut-shown>{{ rows_shown or 0 }}</span> {{ _('of') }} <span data-ut-total>{{ total_count or 0 }}</span>{% else %}{{ info_text if info_text else '' }}{% endif %}</div>
         {% if per_page_options %}

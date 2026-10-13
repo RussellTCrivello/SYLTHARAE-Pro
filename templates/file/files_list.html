@@ -387,11 +387,11 @@
     "startPosition": start_position|default(1),
     "currentPage": page|default(1),
     "totalPages": total_pages|default(1),
-    "search": search|tojson,
-    "sourceFilter": source_filter|tojson,
-    "sideFilter": side_filter|tojson,
-    "statusFilter": status_filter|tojson,
-    "fileTypeFilter": file_type_filter|tojson
+    "search": search,
+    "sourceFilter": source_filter,
+    "sideFilter": side_filter,
+    "statusFilter": status_filter,
+    "fileTypeFilter": file_type_filter
 }|tojson }}</script>
 
 {% endblock %}
@@ -430,6 +430,6 @@
                   confirm_label=_('Remove exact repeats'),
                   cancel_label=_('Keep them'),
                   dangerous=True) }}
-<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20260929a" defer></script>
+<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261013a" defer></script>
 {#- files-list-page.js is loaded by universal-initializer.js (full load + soft-nav). -#}
 {% endblock %}

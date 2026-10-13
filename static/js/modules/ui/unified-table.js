@@ -567,7 +567,9 @@
                 node.textContent = global.UnifiedTable.fmt.number(total);
             });
         }
-        if (page + 1 >= totalPages + 1 || nowShown >= total) {
+        // An empty batch means there is nothing more to load (or the request
+        // could not be read); stop instead of asking for the same page again.
+        if (appended === 0 || page + 1 >= totalPages + 1 || nowShown >= total) {
             block.hidden = true;
         }
         if (wrapper) {
