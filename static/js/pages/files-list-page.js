@@ -116,9 +116,9 @@ async function removeSameContextDuplicates() {
 
     const confirmed = await window.ConfirmDialog.request({
         root: 'sameContextDuplicatesDialog',
-        title: translations.removeRepeatsTitle || 'Remove repeated files in the same source and side?',
+        title: translations.removeRepeatsTitle || 'Remove exact repeats in the same source and side?',
         message: (translations.removeRepeatsMessage
-            || 'Each file that repeats inside one source and one side is removed, and one copy is kept. Files from another source or side are not touched. Original files on disk are not deleted.')
+            || 'Records with the same name, content and details, in the same source and the same side, are removed; one record is kept. Records with another name, source or side are not touched. Original files on disk are not deleted.')
             + ` ${preview.to_remove} record(s) in ${preview.groups} group(s).`,
         dangerous: true,
     });
@@ -136,7 +136,7 @@ async function removeSameContextDuplicates() {
         if (window.refreshMainContent) window.refreshMainContent();
         else window.location.reload();
     } catch (_error) {
-        toast(translations.duplicateRemoveFailed || 'The repeated files could not be removed. Nothing was changed for the rest.', 'error');
+        toast(translations.duplicateRemoveFailed || 'The exact repeats could not be removed.', 'error');
     }
 }
 

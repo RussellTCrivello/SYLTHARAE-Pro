@@ -39,7 +39,7 @@ def _seed(pg_db):
         body = f"repeated body {uuid.uuid4().hex}"
         p1, h, _ = document(cur, source_id=a, side_id=s1, text=body, file_name="r.txt")
         p2, _, _ = document(cur, source_id=a, side_id=s1, text=body,
-                            file_name="r copy.txt", hash_id=h)
+                            file_name="r.txt", hash_id=h)
     conn.commit()
     conn.close()
     return p1, p2

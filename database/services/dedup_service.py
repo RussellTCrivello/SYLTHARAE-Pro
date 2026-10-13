@@ -23,11 +23,13 @@ Different folders, filenames, containers, sources, sides or import runs are
 legitimate distinct occurrences of one content: they are preserved, never
 discarded, and never duplicate the canonical content.
 
-One explicit, operator-run exception: ``remove_same_context_duplicates``
-(the files library's "remove repeats in the same source and side" action).
-It removes repeated occurrences that share one (source, side) context and
-keeps the earliest. Occurrences in a different source or side are never
-touched, and the content and its contexts always remain.
+Exact repeats are one record. Ingestion writes no second occurrence for the
+same source, same side, same file name, same content and same details (size,
+type, date), wherever the file came from. ``remove_same_context_duplicates``
+(the files library's "remove exact repeats" action) clears such repeats that
+already exist, keeping the earliest. Same content under another name, source
+or side is a different record and is never touched; the content and its
+contexts always remain.
 
 Concurrency: registration is a chain of ``ON CONFLICT DO NOTHING`` upserts
 against the unique constraints above inside one transaction, so two workers
@@ -198,6 +200,32 @@ _SQL = {
         LEFT JOIN sources s ON s.id = c.source_id
         LEFT JOIN sides si ON si.id = c.side_id
         GROUP BY c.id, h.hash, c.source_id, c.side_id, s.name, si.name
+        HAVING COUNT(*) > 1
+        ORDER BY c.id
+    """,
+    "find_same_details": """
+        SELECT p.id
+        FROM paths p
+        WHERE p.context_id = %s
+          AND p.file_name = %s
+          AND p.file_size = %s
+          AND p.file_type = %s
+          AND p.file_date = %s
+        ORDER BY p.id
+        LIMIT 1
+    """,
+    "same_context_groups": """
+        SELECT c.id, h.hash, c.source_id, c.side_id,
+               COALESCE(s.name, ''), COALESCE(si.name, ''),
+               array_agg(p.id ORDER BY p.id),
+               array_agg(p.file_name ORDER BY p.id)
+        FROM paths p
+        JOIN hash_contexts c ON c.id = p.context_id
+        JOIN hashs h ON h.id = c.hash_id
+        LEFT JOIN sources s ON s.id = c.source_id
+        LEFT JOIN sides si ON si.id = c.side_id
+        GROUP BY c.id, h.hash, c.source_id, c.side_id, s.name, si.name,
+                 p.file_name, p.file_size, p.file_type, p.file_date
         HAVING COUNT(*) > 1
         ORDER BY c.id
     """,
@@ -506,6 +534,17 @@ class DeduplicationService:
                     existing_path_id = existing[0]
 
             if existing_path_id is None:
+                # Same source, same side, same name, same content and same
+                # details is one record, whatever folder it came from.
+                cur.execute(_SQL["find_same_details"], (
+                    context_id, path_row["file_name"], path_row["file_size"],
+                    path_row["file_type"], path_row["file_date"],
+                ))
+                exact = cur.fetchone()
+                if exact is not None:
+                    existing_path_id = exact[0]
+
+            if existing_path_id is None:
                 cur.execute(_SQL["insert_path"], (
                     path_row["file_name"],
                     path_row["file_path"],
@@ -622,13 +661,13 @@ class DeduplicationService:
     # ------------------------------------------------------------------
 
     def same_context_duplicates(self) -> List[Dict[str, Any]]:
-        """Groups of occurrences that repeat inside one (source, side) context.
+        """Groups of EXACT repeats inside one (source, side) context.
 
-        A group is one ``hash_contexts`` row - one content in one source and
-        one side - that holds more than one ``paths`` occurrence. The earliest
-        occurrence (lowest id) is kept; the rest are the repetitions. Nothing
-        is read from disk and nothing else is compared: a different source or
-        side is never part of the same group.
+        An exact repeat has the same source, the same side, the same file name,
+        the same content hash and the same details (size, type, date). The
+        earliest record (lowest id) is kept; the rest are the repeats. Files
+        that only share content but have another name, or another source or
+        side, are not repeats and never appear here.
         """
         groups: List[Dict[str, Any]] = []
         with self._cursor(commit=False) as (_, cur):

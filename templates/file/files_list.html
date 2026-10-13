@@ -268,9 +268,9 @@
                     <span class="visually-hidden">{{ _('Delete') }}</span>
                 </button>
                 <button class="btn-action btn-outline-warning btn-action-icon-only" id="removeSameContextDuplicatesBtn" data-on-click="removeSameContextDuplicates()"
-                        title="{{ _('Remove repeated files in the same source and side (keeps one copy)') }}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-container="body">
+                        title="{{ _('Remove exact repeats: same name, content and details in the same source and side (keeps one)') }}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-container="body">
                     <i class="bi bi-files" aria-hidden="true"></i>
-                    <span class="visually-hidden">{{ _('Remove repeats in the same source and side') }}</span>
+                    <span class="visually-hidden">{{ _('Remove exact repeats') }}</span>
                 </button>
             </div>
             <div class="action-group">
@@ -424,10 +424,10 @@
 
 {% from 'components/confirm_dialog.html' import confirm_dialog %}
 {{ confirm_dialog(id='sameContextDuplicatesDialog',
-                  title=_('Remove repeated files in the same source and side?'),
-                  message=_('Each file that repeats inside one source and one side is removed, and one copy is kept. Files from another source or side are not touched. Original files on disk are not deleted.'),
-                  scope_label=_('Repeated files'),
-                  confirm_label=_('Remove repeats'),
+                  title=_('Remove exact repeats in the same source and side?'),
+                  message=_('Records with the same name, content and details, in the same source and the same side, are removed; one record is kept. Records with another name, source or side are not touched. Original files on disk are not deleted.'),
+                  scope_label=_('Exact repeats'),
+                  confirm_label=_('Remove exact repeats'),
                   cancel_label=_('Keep them'),
                   dangerous=True) }}
 <script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20260929a" defer></script>
