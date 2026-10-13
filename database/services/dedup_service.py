@@ -23,6 +23,12 @@ Different folders, filenames, containers, sources, sides or import runs are
 legitimate distinct occurrences of one content: they are preserved, never
 discarded, and never duplicate the canonical content.
 
+One explicit, operator-run exception: ``remove_same_context_duplicates``
+(the files library's "remove repeats in the same source and side" action).
+It removes repeated occurrences that share one (source, side) context and
+keeps the earliest. Occurrences in a different source or side are never
+touched, and the content and its contexts always remain.
+
 Concurrency: registration is a chain of ``ON CONFLICT DO NOTHING`` upserts
 against the unique constraints above inside one transaction, so two workers
 ingesting identical content concurrently converge on one canonical row and
@@ -180,6 +186,20 @@ _SQL = {
         JOIN hash_contexts c ON c.id = p.context_id
         JOIN hashs h ON h.id = c.hash_id
         WHERE p.id = %s
+    """,
+    "same_context_groups": """
+        SELECT c.id, h.hash, c.source_id, c.side_id,
+               COALESCE(s.name, ''), COALESCE(si.name, ''),
+               array_agg(p.id ORDER BY p.id),
+               array_agg(p.file_name ORDER BY p.id)
+        FROM paths p
+        JOIN hash_contexts c ON c.id = p.context_id
+        JOIN hashs h ON h.id = c.hash_id
+        LEFT JOIN sources s ON s.id = c.source_id
+        LEFT JOIN sides si ON si.id = c.side_id
+        GROUP BY c.id, h.hash, c.source_id, c.side_id, s.name, si.name
+        HAVING COUNT(*) > 1
+        ORDER BY c.id
     """,
     "delete_path": "DELETE FROM paths WHERE id = %s RETURNING context_id",
     "context_path_count": """
@@ -596,6 +616,52 @@ class DeduplicationService:
                         cur.execute(_SQL["delete_canonical"], (hash_id,))
                         result["hash_deleted"] = cur.rowcount > 0
         return result
+
+    # ------------------------------------------------------------------
+    # Same-source, same-side repetition (explicit cleanup, operator-run)
+    # ------------------------------------------------------------------
+
+    def same_context_duplicates(self) -> List[Dict[str, Any]]:
+        """Groups of occurrences that repeat inside one (source, side) context.
+
+        A group is one ``hash_contexts`` row - one content in one source and
+        one side - that holds more than one ``paths`` occurrence. The earliest
+        occurrence (lowest id) is kept; the rest are the repetitions. Nothing
+        is read from disk and nothing else is compared: a different source or
+        side is never part of the same group.
+        """
+        groups: List[Dict[str, Any]] = []
+        with self._cursor(commit=False) as (_, cur):
+            cur.execute(_SQL["same_context_groups"])
+            for (context_id, content_hash, source_id, side_id, source_name,
+                 side_name, path_ids, file_names) in cur.fetchall():
+                groups.append({
+                    "context_id": context_id,
+                    "hash": content_hash,
+                    "source_id": source_id,
+                    "side_id": side_id,
+                    "source": source_name or "",
+                    "side": side_name or "",
+                    "keep_id": path_ids[0],
+                    "remove_ids": list(path_ids[1:]),
+                    "file_names": list(file_names),
+                })
+        return groups
+
+    def remove_same_context_duplicates(self) -> Dict[str, int]:
+        """Delete every repeated occurrence inside its (source, side) context.
+
+        Each deletion goes through ``delete_path`` so the identity lifecycle
+        stays authoritative. The kept occurrence means no context or content is
+        ever emptied by this operation, so no extracted text is lost.
+        """
+        groups = self.same_context_duplicates()
+        removed = 0
+        for group in groups:
+            for path_id in group["remove_ids"]:
+                if self.delete_path(path_id, commit=True)["path_deleted"]:
+                    removed += 1
+        return {"groups": len(groups), "removed": removed}
 
     def cleanup_orphaned_hashes(self, dry_run: bool = False) -> int:
         """Remove canonical rows with zero contexts (DB-05 repair tool).

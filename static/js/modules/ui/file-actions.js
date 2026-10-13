@@ -544,6 +544,15 @@
 
     // The preview's "Open Original" link saves through the same dialog.
     document.addEventListener('click', (event) => {
+        const original = event.target.closest && event.target.closest('a[data-original-action="download"]');
+        if (original) {
+            // "Download original" on the record page: name it, then save.
+            event.preventDefault();
+            const nameNode = document.querySelector('.original-file-name');
+            saveFile({url: original.getAttribute('href'),
+                      suggestedName: (nameNode && nameNode.textContent.trim()) || 'file'});
+            return;
+        }
         const link = event.target.closest && event.target.closest('[data-file-save-url]');
         if (!link) return;
         event.preventDefault();

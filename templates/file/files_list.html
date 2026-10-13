@@ -267,6 +267,11 @@
                     <i class="bi bi-trash" aria-hidden="true"></i>
                     <span class="visually-hidden">{{ _('Delete') }}</span>
                 </button>
+                <button class="btn-action btn-outline-warning btn-action-icon-only" id="removeSameContextDuplicatesBtn" data-on-click="removeSameContextDuplicates()"
+                        title="{{ _('Remove repeated files in the same source and side (keeps one copy)') }}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-container="body">
+                    <i class="bi bi-files" aria-hidden="true"></i>
+                    <span class="visually-hidden">{{ _('Remove repeats in the same source and side') }}</span>
+                </button>
             </div>
             <div class="action-group">
                 <span class="action-label">{{ _('View:') }}</span>
@@ -417,6 +422,14 @@
 <script type="application/json" id="structured-export-i18n">{% include 'components/structured_export_i18n.json.jinja' %}</script>
 
 
+{% from 'components/confirm_dialog.html' import confirm_dialog %}
+{{ confirm_dialog(id='sameContextDuplicatesDialog',
+                  title=_('Remove repeated files in the same source and side?'),
+                  message=_('Each file that repeats inside one source and one side is removed, and one copy is kept. Files from another source or side are not touched. Original files on disk are not deleted.'),
+                  scope_label=_('Repeated files'),
+                  confirm_label=_('Remove repeats'),
+                  cancel_label=_('Keep them'),
+                  dangerous=True) }}
 <script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20260929a" defer></script>
 {#- files-list-page.js is loaded by universal-initializer.js (full load + soft-nav). -#}
 {% endblock %}
