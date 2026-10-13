@@ -2210,7 +2210,7 @@ body.sfp-no-scroll {
 
     .search-page-shell:has(.search-results-section:not([style*="display: none"])) .search-page-top {
         flex: 0 1 auto;
-        max-height: 45%;
+        max-height: 15%;
     }
 
     .search-results-section {
@@ -2221,10 +2221,18 @@ body.sfp-no-scroll {
         min-width: 0;
     }
 
-    .search-results-section > .results-header,
+    .search-results-section > .results-header {
+        flex-shrink: 0;
+    }
+
+    /* Selection bars are capped and scroll internally so they cannot take the
+       whole results area and collapse the list beneath them. */
     .search-results-section > .analyst-categorization-bar,
     .search-results-section > .selected-document-actions {
         flex-shrink: 0;
+        max-height: 6.5rem;
+        overflow-y: auto;
+        overscroll-behavior: contain;
     }
 
     .search-results-section > .results-header {
@@ -2234,7 +2242,7 @@ body.sfp-no-scroll {
 
     .search-workspace-grid {
         flex: 1 1 0;
-        min-height: 0;
+        min-height: 10rem;
         grid-template-rows: minmax(0, 1fr);
         align-items: stretch;
     }
@@ -2247,7 +2255,7 @@ body.sfp-no-scroll {
 
     #resultsContainer.results-container {
         flex: 1 1 auto;
-        min-height: 0;
+        min-height: 6rem;
         overflow-y: auto;
         overscroll-behavior: contain;
         padding-inline-end: 0.35rem;
@@ -2277,5 +2285,15 @@ body.sfp-no-scroll {
         height: 100%;
         min-height: 0;
         max-height: none;
+    }
+
+    /* The review pane's content area must keep a usable height and scroll
+       on its own when the pane is squeezed beside the results. */
+    .search-workspace-grid.is-review-open .document-review-pane {
+        overflow-y: auto;
+    }
+
+    .search-workspace-grid.is-review-open .review-pane-content {
+        min-height: 6rem;
     }
 }

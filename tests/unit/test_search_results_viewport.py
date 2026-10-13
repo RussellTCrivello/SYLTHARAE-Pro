@@ -106,3 +106,34 @@ def test_wrappers_the_layout_relies_on_exist_in_the_template():
                    'id="searchResultsSection"', 'id="resultsContainer"',
                    'id="pagination"'):
         assert marker in html, marker
+
+
+def _desktop_rule(css: str, selector: str) -> str:
+    """Return the body of ``selector``'s rule inside the desktop viewport block."""
+    viewport = css[css.index("Fixed results viewport"):]
+    index = viewport.index(selector + " {")
+    return viewport[index:viewport.index("}", index)]
+
+
+def test_selection_bars_are_capped_and_the_list_keeps_a_minimum_height():
+    # With a selection, the two bars must not take the whole results area
+    # (which collapsed the list to 0px). They are capped and scroll internally,
+    # and the list keeps a minimum height.
+    css = STYLES.read_text(encoding="utf-8")
+    viewport = css[css.index("Fixed results viewport"):]
+    bars_index = viewport.index(".search-results-section > .analyst-categorization-bar,\n    .search-results-section > .selected-document-actions {")
+    bars_rule = viewport[bars_index:viewport.index("}", bars_index)]
+    assert "max-height:" in bars_rule
+    assert "overflow-y: auto" in bars_rule
+    results = _desktop_rule(css, "#resultsContainer.results-container")
+    assert "min-height: 6rem" in results
+    assert "min-height: 0;" not in results
+
+
+def test_review_pane_content_keeps_height_and_the_pane_scrolls_on_desktop():
+    css = STYLES.read_text(encoding="utf-8")
+    viewport = css[css.index("Fixed results viewport"):]
+    pane = viewport[viewport.index(".search-workspace-grid.is-review-open .document-review-pane {\n        overflow-y: auto;"):]
+    assert pane.startswith(".search-workspace-grid.is-review-open .document-review-pane {\n        overflow-y: auto;")
+    content = viewport[viewport.index(".search-workspace-grid.is-review-open .review-pane-content {"):]
+    assert "min-height: 6rem" in content[:content.index("}")]
