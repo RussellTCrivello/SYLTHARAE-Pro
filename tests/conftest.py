@@ -236,9 +236,11 @@ def pg_db(pg_settings, tmp_path_factory):
                 data = {}
         if not isinstance(data, dict):
             data = {}
-        data["database"] = {"host": str(host_dir), "port": 5432,
-                            "database": db_name, "user": "postgres",
-                            "password": ""}
+        # Use the server pg_settings actually discovered (host, port, user,
+        # password), never a literal 5432: pgserver's port is not always 5432.
+        data["database"] = {"host": str(host_dir), "port": int(cfg["port"]),
+                            "database": db_name, "user": str(cfg["user"]),
+                            "password": str(cfg["password"])}
         settings_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
     except Exception:
         pass
@@ -269,17 +271,25 @@ def pg_db(pg_settings, tmp_path_factory):
     # default server ("connection to server at localhost:5432 failed:
     # Connection refused") even though the fixtures are pointed somewhere else.
     # Clearing it here is what makes search results reflect the test database.
-    try:
-        import Api.utils.utils as _api_utils
+    # Api/utils/__init__.py loads utils.py as ``Api.utils_module`` and the
+    # application imports through that name. ``import Api.utils.utils`` would
+    # create a second module object whose singletons nothing uses, so the reset
+    # must clear the instance the application actually holds. A stale hub
+    # created at import time (before DB_NAME was set) otherwise keeps serving
+    # the previous run's database, which is why search results depended on
+    # leftover state from the last run. Both names are cleared to be safe.
+    import sys as _sys
 
+    for _mod_name in ("Api.utils_module", "Api.utils.utils"):
+        _api_utils = _sys.modules.get(_mod_name)
+        if _api_utils is None:
+            continue
         for attr in ("_query_executor", "_query_cache"):
             if hasattr(_api_utils, attr):
                 try:
                     setattr(_api_utils, attr, None)
                 except Exception:
                     pass
-    except Exception:
-        pass
 
     # Drop any pooled connections opened against the previous configuration.
     try:
@@ -291,11 +301,13 @@ def pg_db(pg_settings, tmp_path_factory):
 
     from database.bootstrap import bootstrap_database
 
+    # Bootstrap against the discovered server. The right-hand side reads the
+    # discovered cfg before it is rebound, so port/user/password are preserved.
     cfg = {
         "host": host_dir,
-        "port": 5432,
-        "user": "postgres",
-        "password": "",
+        "port": int(cfg["port"]),
+        "user": str(cfg["user"]),
+        "password": str(cfg["password"]),
         "database": db_name,
     }
     report = bootstrap_database(cfg)
