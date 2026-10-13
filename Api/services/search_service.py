@@ -1737,7 +1737,10 @@ class SearchService:
                     limit_clause = "LIMIT %s OFFSET %s"
                     limit_params = [fetch_limit, sql_offset]
             else:
-                fetch_limit = min(limit * 3, limits.max_rank_pool)
+                # The ranked pool must reach the window being asked for: the
+                # slice below is documents[offset:offset + limit], so a pool
+                # sized from limit alone returns nothing past the first few pages.
+                fetch_limit = min(max(limit * 3, offset + limit), limits.max_rank_pool)
                 sql_offset = 0
                 limit_clause = "LIMIT %s"
                 limit_params = [fetch_limit]
