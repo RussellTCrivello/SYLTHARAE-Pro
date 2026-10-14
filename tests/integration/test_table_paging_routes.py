@@ -195,3 +195,15 @@ class TestSidesShowMore:
         ).get_data(as_text=True)
         assert len(_SIDE_ROW.findall(html)) == TOTAL - 6 * 3
         assert _CURRENT_PAGE.search(html).group(1) == "4"
+
+
+class TestPerPageOffers200:
+    def test_the_per_page_control_offers_200_and_selects_it(self, admin_client, pg_db):
+        tag = uuid.uuid4().hex[:8]
+        _seed_categories(pg_db, tag, TOTAL)
+        html = admin_client.get(
+            f"/categories?search=tpg_{tag}&sort=name&order=asc&per_page=200&page=1"
+        ).get_data(as_text=True)
+        assert re.search(r'<option value="200" selected>200</option>', html)
+        assert len(_CATEGORY_ROW.findall(html)) == TOTAL
+        assert _range(html) == (1, TOTAL, TOTAL)
