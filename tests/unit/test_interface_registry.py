@@ -430,7 +430,7 @@ class TestDeliberateAbsences:
         "sources", "sides", "keywords", "words", "categories", "email_words",
         "analyst_categorization", "classification", "import_center",
         "comprehensive_dashboard", "charts_dashboard", "import_export_console",
-        "interface_manager", "concurrency_monitor", "schedules",
+        "concurrency_monitor", "schedules",
         "retention", "reports_dashboard",
     }
 

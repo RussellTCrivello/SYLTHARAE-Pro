@@ -83,12 +83,12 @@ this document is designed not to repeat.
   before the interface was retired still resolves.
 
 <!-- BEGIN GENERATED REGISTRY TABLE -->
-- Interfaces: **35** (features declared separately: **1**)
+- Interfaces: **34** (features declared separately: **1**)
 - Endpoints owned: **81**
-- With a keyboard shortcut: **18**; with a help topic: **33**
-- By domain: ADMINISTRATION 3, ANALYZE 4, CLASSIFY 2, DISCOVER 11, INGEST 2, INTERNAL 1, OPERATE 3, REPORT 5, SETTINGS 3, WORK 1
-- By status: ACTIVE 34, DEPRECATED 1
-- By kind: INTERNAL 1, PAGE 33, SECTION 1
+- With a keyboard shortcut: **18**; with a help topic: **32**
+- By domain: ADMINISTRATION 3, ANALYZE 4, CLASSIFY 2, DISCOVER 11, INGEST 2, INTERNAL 1, OPERATE 3, REPORT 5, SETTINGS 2, WORK 1
+- By status: ACTIVE 33, DEPRECATED 1
+- By kind: INTERNAL 1, PAGE 33
 
 
 ### WORK (1)
@@ -162,12 +162,11 @@ this document is designed not to repeat.
 | `users` | User Management | ADMINISTRATION | `users_page` | — | admin | on | — | administration/users | g u | ACTIVE |
 | `audit_log` | Audit Log | ADMINISTRATION | `audit_page` | — | admin | on | — | administration/audit | g l | ACTIVE |
 
-### SETTINGS (3)
+### SETTINGS (2)
 
 | ID | Name | Domain | Route | Aliases | Role | Default | Depends on | Help | Shortcut | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `settings` | Settings | SETTINGS | `settings_page_direct` | `settings_api.settings_page` | admin | on | — | settings/overview | g , | ACTIVE |
-| `interface_manager` | Interface Manager | SETTINGS | — | — | admin | on | `settings` | settings/interfaces | — | ACTIVE |
 | `translation_manager` | Translation Management | SETTINGS | `translations.translation_management_page` | — | admin | on | — | settings/translations | g t | ACTIVE |
 
 ### INTERNAL (1)

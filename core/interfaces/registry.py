@@ -418,16 +418,6 @@ REGISTRY: Tuple[Interface, ...] = (
         help_topic="settings/overview", keyboard_shortcut="g ,",
     ),
     _if(
-        "interface_manager", "Interface Manager",
-        "The section of Settings that lists every interface, its domain, what "
-        "it needs and whether it is switched on.",
-        Domain.SETTINGS, None, "bi-toggles",
-        required_role="admin",
-        dependencies=("settings",),
-        help_topic="settings/interfaces",
-        kind=InterfaceKind.SECTION,
-    ),
-    _if(
         "translation_manager", "Translation Management",
         "Review and manage localized strings across every screen.",
         Domain.SETTINGS, "translations.translation_management_page", "bi-translate",

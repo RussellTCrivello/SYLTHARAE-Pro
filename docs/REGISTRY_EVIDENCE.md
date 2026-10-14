@@ -56,11 +56,11 @@ mistakes them for the current vocabulary.
 <!-- BEGIN GENERATED REGISTRY EVIDENCE -->
 ### 1. Registry inventory
 
-- Interfaces declared: **35**
+- Interfaces declared: **34**
 - Cross-cutting features (not interfaces): **1**
 - Endpoints owned (canonical routes + aliases): **81**
 - With a keyboard shortcut: **18**
-- With a help topic: **33**
+- With a help topic: **32**
 - Declared domain vocabulary: **12**
 - Domains currently containing interfaces: **10**
 - Declared domains holding no interface yet: **2**
@@ -78,7 +78,7 @@ Domains are **declared** in `core/interfaces/domains.py`; a declared domain may 
 | REPORT | 5 | in use |
 | OPERATE | 3 | in use |
 | ADMINISTRATION | 3 | in use |
-| SETTINGS | 3 | in use |
+| SETTINGS | 2 | in use |
 | SECURITY | 0 | declared, empty |
 | INTERNAL | 1 | in use |
 
@@ -103,8 +103,8 @@ Declared aliases: **47**, across **13** interfaces. An alias is an endpoint the 
 ### 3. Dependency validation
 
 - Validation result: **no issues**
-- Interfaces declaring a dependency: **15**
-- Interfaces other interfaces depend on: **11**
+- Interfaces declaring a dependency: **14**
+- Interfaces other interfaces depend on: **10**
 
 | Interface | Requires | Required by |
 | --- | --- | --- |
@@ -128,8 +128,6 @@ Declared aliases: **47**, across **13** interfaces. An alias is an endpoint the 
 | `charts_dashboard` | `file_library` | — |
 | `detection` | `jobs`, `signal_horizon` | — |
 | `jobs` | — | `detection`, `reports`, `reports_dashboard`, `retention`, `schedules` |
-| `settings` | — | `interface_manager` |
-| `interface_manager` | `settings` | — |
 
 ### 4. Registry integrity
 
@@ -137,8 +135,8 @@ Declared aliases: **47**, across **13** interfaces. An alias is an endpoint the 
 
 ### 5. Lifecycle and migration
 
-- Interfaces by status: **ACTIVE 34, DEPRECATED 1**
-- Interfaces by kind: **INTERNAL 1, PAGE 33, SECTION 1**
+- Interfaces by status: **ACTIVE 33, DEPRECATED 1**
+- Interfaces by kind: **INTERNAL 1, PAGE 33**
 
 Renames and merges the registry understands (a stored value under an old key reaches the interface that replaced it; the code may not name the old key):
 
