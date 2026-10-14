@@ -198,7 +198,7 @@
         {% if search %}{% set extra_param = pagination_params.update({'search': search}) %}{% endif %}
         {% if sort_by != 'word' or sort_order != 'asc' %}{% set extra_param = pagination_params.update({'sort': sort_by, 'order': sort_order}) %}{% endif %}
         {{ unified_pagination(page, total_pages, url_for, 'category_words', pagination_params,
-            table_id='categoryWordsTable', total_count=total_words|default(0), rows_shown=words|length) }}
+            table_id='categoryWordsTable', total_count=total_words|default(0), rows_shown=words|length, page_size=per_page) }}
     {% endif %}
 </div>
 
@@ -264,6 +264,6 @@
         "total": _('total')
     }
 }|tojson }}</script>
-<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20260929a" defer></script>
+<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261014b" defer></script>
 <script type="module" src="{{ url_for('static', filename='js/pages/category-words-page.js') }}"></script>
 {% endblock %}

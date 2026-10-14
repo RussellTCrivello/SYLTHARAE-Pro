@@ -551,39 +551,177 @@
         return count;
     }
 
+    // ------------------------------------------------------------------
+    // One state, every control: range, counters, numbered pager
+    //
+    // The Load More block is the table's state record: the page last loaded,
+    // the rows shown, the total and the page geometry (data-page-size,
+    // data-first-row). Every other control - the registration range, the
+    // pager's page label, the numbered links, Prev/Next/First/Last, the jump
+    // input - is derived from that record by applyState, after every batch.
+    // The numbered window is the same algorithm the server template uses
+    // (components/unified_pagination.html: two pages either side).
+    // ------------------------------------------------------------------
+
+    function readBlockState(block) {
+        const num = (name, fallback) => {
+            const value = parseInt(block.getAttribute(name), 10);
+            return Number.isFinite(value) ? value : fallback;
+        };
+        return {
+            page: Math.max(1, num('data-page', 1)),
+            totalPages: Math.max(1, num('data-total-pages', 1)),
+            total: Math.max(0, num('data-total', 0)),
+            shown: Math.max(0, num('data-shown', 0)),
+            firstRow: Math.max(1, num('data-first-row', 1)),
+            pageSize: Math.max(0, num('data-page-size', 0)),
+        };
+    }
+
+    function writeBlockState(block, state) {
+        block.setAttribute('data-page', String(state.page));
+        block.setAttribute('data-total-pages', String(state.totalPages));
+        block.setAttribute('data-total', String(state.total));
+        block.setAttribute('data-shown', String(state.shown));
+    }
+
+    /** Every node under `scope` matching `selector` shows `value`. */
+    function setAll(scope, selector, value) {
+        if (!scope) return;
+        scope.querySelectorAll(selector).forEach((node) => {
+            node.textContent = String(value);
+        });
+    }
+
+    /** The registration range, "first-last of total". An empty list reads 0-0. */
+    function renderRange(scopes, state) {
+        const shown = state.shown;
+        const first = shown > 0 ? state.firstRow : 0;
+        const last = shown > 0 ? state.firstRow + shown - 1 : 0;
+        scopes.forEach((scope) => {
+            setAll(scope, '[data-ut-first]', first);
+            setAll(scope, '[data-ut-last]', last);
+            setAll(scope, '[data-ut-total]', state.total);
+        });
+    }
+
+    /** The URL of another page of THIS view: everything else the reader chose
+     *  (search, sort, filters, page size) rides along unchanged. */
+    function pageHref(config, page) {
+        const url = new URL(global.location.href);
+        url.searchParams.set((config && config.pageParam) || 'page', String(page));
+        url.searchParams.delete('cursor');
+        return url.toString();
+    }
+
+    /** A nav link (first, previous, next, last) of the numbered pager. The
+     *  markup is the server's; the engine only sets where it points and
+     *  whether it is live. */
+    function setNavLink(link, targetPage, enabled, config) {
+        if (!link) return;
+        link.classList.toggle('disabled', !enabled);
+        if (enabled) {
+            link.setAttribute('href', pageHref(config, targetPage));
+            link.removeAttribute('aria-disabled');
+            link.removeAttribute('tabindex');
+        } else {
+            link.setAttribute('href', '#');
+            link.setAttribute('aria-disabled', 'true');
+            link.setAttribute('tabindex', '-1');
+        }
+    }
+
+    /** The numbered window, drawn from the server's prototypes (hidden items in
+     *  the pager, one per kind: page, current, gap). Two pages either side of
+     *  the current one, plus the first and the last page, as the server draws
+     *  them. Next and Last stay after the numbers. */
+    function renderNumbers(pager, list, state, config) {
+        const prototypes = {};
+        pager.querySelectorAll('[data-ut-proto]').forEach((node) => {
+            prototypes[node.getAttribute('data-ut-proto')] = node;
+        });
+        if (!prototypes.page || !prototypes.current || !prototypes.gap) return;
+        const nextLink = pager.querySelector('[data-ut-nav="next"]');
+        const nextItem = nextLink ? nextLink.parentNode : null;
+        if (!nextItem || nextItem.parentNode !== list) return;
+
+        list.querySelectorAll('[data-ut-numbered]').forEach((node) => node.remove());
+
+        const page = state.page;
+        const total = state.totalPages;
+        const start = Math.max(1, page - 2);
+        const end = Math.min(total, page + 2);
+        const add = (kind, number) => {
+            const item = prototypes[kind].cloneNode(true);
+            item.setAttribute('data-ut-numbered', '');
+            item.removeAttribute('data-ut-proto');
+            // The number sits in the prototype's number element; the current page
+            // is not a link, so it carries no href.
+            const numberEl = item.querySelector('[data-ut-page-link]');
+            if (numberEl) {
+                if (kind !== 'current') numberEl.setAttribute('href', pageHref(config, number));
+                numberEl.textContent = String(number);
+            }
+            list.insertBefore(item, nextItem);
+        };
+        if (start > 1) {
+            add('page', 1);
+            if (start > 2) add('gap');
+        }
+        for (let p = start; p <= end; p += 1) add(p === page ? 'current' : 'page', p);
+        if (end < total) {
+            if (end < total - 1) add('gap');
+            add('page', total);
+        }
+    }
+
+    /** Push one state record to every control that shows it. */
+    function applyState(block, table, state, config) {
+        const wrapper = table ? wrapperOf(table) : block.closest('[' + WRAPPER_ATTR + ']');
+        const pager = block.closest('.unified-pagination-container');
+        renderRange([wrapper || block, pager || block], state);
+        if (pager) {
+            pager.setAttribute('data-current-page', String(state.page));
+            pager.setAttribute('data-total-pages', String(state.totalPages));
+            setAll(pager, '[data-ut-page]', state.page);
+            setAll(pager, '[data-ut-pages]', state.totalPages);
+            const jump = pager.querySelector('[data-ut-jump]');
+            if (jump) {
+                jump.value = String(state.page);
+                jump.max = String(state.totalPages);
+                jump.setAttribute('data-total-pages', String(state.totalPages));
+            }
+            const page = state.page;
+            const total = state.totalPages;
+            setNavLink(pager.querySelector('[data-ut-nav="first"]'), 1, page > 1, config);
+            setNavLink(pager.querySelector('[data-ut-nav="previous"]'), page - 1, page > 1, config);
+            setNavLink(pager.querySelector('[data-ut-nav="next"]'), page + 1, page < total, config);
+            setNavLink(pager.querySelector('[data-ut-nav="last"]'), total, page < total, config);
+            const list = pager.querySelector('[data-ut-pager-list]');
+            if (list) renderNumbers(pager, list, state, config);
+        }
+    }
+
     function updateLoadMoreBlock(table, appended, config) {
         const block = loadMoreBlock(table);
         if (!block) return;
-        const shown = parseInt(block.getAttribute('data-shown'), 10) || 0;
-        const total = parseInt(block.getAttribute('data-total'), 10) || 0;
-        const page = parseInt(block.getAttribute('data-page'), 10) || 1;
-        const totalPages = parseInt(block.getAttribute('data-total-pages'), 10) || 1;
-        const nowShown = Math.min(total, shown + appended);
-        block.setAttribute('data-shown', String(nowShown));
-        block.setAttribute('data-page', String(page + 1));
-        // The wrapper's counters, toolbar and block alike: "Showing X of Y"
-        // must move with every batch, not only the block's own copy.
-        const wrapper = wrapperOf(table);
-        const pager = block.closest('.unified-pagination-container');
-        const scopes = [wrapper, pager, block].filter(Boolean);
-        scopes.forEach((scope) => {
-            scope.querySelectorAll('[data-ut-shown]').forEach((node) => {
-                node.textContent = global.UnifiedTable.fmt.number(nowShown);
-            });
-            scope.querySelectorAll('[data-ut-total]').forEach((node) => {
-                node.textContent = global.UnifiedTable.fmt.number(total);
-            });
-        });
-        if (pager) pager.setAttribute('data-current-page', String(page + 1));
-        // An empty batch means there is nothing more to load (or the request
-        // could not be read); stop instead of asking for the same page again.
-        if (appended === 0 || page + 1 >= totalPages + 1 || nowShown >= total) {
-            block.hidden = true;
+        const state = readBlockState(block);
+        // A batch that brought rows moves the view on one page. An empty batch
+        // (or a failed read) does not: the pager must not claim a page the
+        // rows do not cover.
+        if (appended > 0) {
+            state.shown = Math.min(state.total, state.shown + appended);
+            state.page += 1;
         }
+        writeBlockState(block, state);
+        applyState(block, table, state, config);
+        // Nothing more to load: an empty batch, the last page, or every row shown.
+        block.hidden = appended === 0 || state.page >= state.totalPages || state.shown >= state.total;
+        const wrapper = wrapperOf(table);
         if (wrapper) {
             wrapper.dispatchEvent(new CustomEvent('ut:loadmore', {
                 bubbles: true,
-                detail: { table: table.id, appended: appended, shown: nowShown, total: total }
+                detail: { table: table.id, appended: appended, shown: state.shown, total: state.total }
             }));
         }
     }
@@ -901,24 +1039,23 @@
          *  visibility follow the same rules as a server-rendered batch. */
         syncLoadMore(tableId, shown, total, pageSize) {
             // The control is found by its id, so a page whose list is not a
-            // table (a card list) keeps the same control and the same counters.
+            // table (a card list) keeps the same control and the same state.
             const table = tableOf(tableId);
             const block = table
                 ? loadMoreBlock(table)
                 : document.querySelector('[data-ut-load-more][data-table-id="' + CSS.escape(tableId) + '"]');
             if (!block) return;
-            const size = Math.max(1, pageSize
-                || (parseInt(block.getAttribute('data-page-size'), 10) || 0));
-            block.setAttribute('data-shown', String(Math.max(0, shown)));
-            block.setAttribute('data-total', String(Math.max(0, total)));
-            const counter = block.querySelector('[data-ut-shown]');
-            if (counter) counter.textContent = global.UnifiedTable.fmt.number(Math.max(0, shown));
-            const totalEl = block.querySelector('[data-ut-total]');
-            if (totalEl) totalEl.textContent = global.UnifiedTable.fmt.number(Math.max(0, total));
-            const page = parseInt(block.getAttribute('data-page'), 10) || 1;
-            const totalPages = Math.max(1, Math.ceil(Math.max(0, total) / size));
-            block.setAttribute('data-total-pages', String(totalPages));
-            block.hidden = !(page < totalPages && shown < total);
+            const state = readBlockState(block);
+            if (pageSize) {
+                state.pageSize = Math.max(1, pageSize);
+                block.setAttribute('data-page-size', String(state.pageSize));
+            }
+            state.shown = Math.max(0, shown);
+            state.total = Math.max(0, total);
+            state.totalPages = Math.max(1, Math.ceil(state.total / Math.max(1, state.pageSize || 1)));
+            writeBlockState(block, state);
+            applyState(block, table, state, table ? configOf(table) : {});
+            block.hidden = !(state.page < state.totalPages && state.shown < state.total);
         },
         /** Re-read selection after the page replaced rows itself. */
         refresh(tableId) {

@@ -33,7 +33,7 @@
           nothing else may style or script a list table.
 #}
 {% from 'components/states.html' import empty_state, filtered_state, loading_state, error_state %}
-{% from 'components/unified_pagination.html' import load_more_control %}
+{% from 'components/unified_pagination.html' import load_more_control, showing_range %}
 {#
    Usage:
 
@@ -371,7 +371,7 @@
     } -%}
 <div class="ut" data-unified-table='{{ table_config|tojson }}'>
     <div class="ut-toolbar">
-        <div class="ut-info" id="{{ info_dom_id }}" aria-live="polite">{% if append %}{{ _('Showing') }} <span data-ut-shown>{{ rows_shown or 0 }}</span> {{ _('of') }} <span data-ut-total>{{ total_count or 0 }}</span>{% else %}{{ info_text if info_text else '' }}{% endif %}</div>
+        <div class="ut-info" id="{{ info_dom_id }}" aria-live="polite">{% if append %}{{ showing_range(((page or 1)|int - 1) * (per_page or 0)|int + 1 if per_page else 1, rows_shown, total_count) }}{% else %}{{ info_text if info_text else '' }}{% endif %}</div>
         {% if per_page_options %}
         <div class="ut-per-page">
             <label class="ut-per-page-label" for="{{ per_page_dom_id }}">{{ per_page_label }}</label>
@@ -454,7 +454,7 @@
     {#- A numbered pager on the page renders this control itself (one control,
         not two). Without one, the table renders it under itself. -#}
     {%- if append and not pager -%}
-    {{ load_more_control(table_id, page, total_pages, total_count, rows_shown, load_more_label) }}
+    {{ load_more_control(table_id, page, total_pages, total_count, rows_shown, load_more_label, per_page) }}
     {%- endif -%}
 </div>
 {% endmacro %}

@@ -45,7 +45,7 @@ documentRoot.appendChild(treeFromHtml(`
         <div class="ut-load-more" data-ut-load-more data-table-id="categoriesTable"
              data-page="1" data-total-pages="3" data-total="6" data-shown="3">
           <button type="button" class="btn">Show More</button>
-          <span class="ut-load-more-info">Showing <span data-ut-shown>3</span> of <span data-ut-total>6</span></span>
+          <span class="ut-load-more-info">Showing <span data-ut-first>1</span>&ndash;<span data-ut-last>3</span> of <span data-ut-total>6</span></span>
           <span class="ut-load-more-error" data-ut-load-error hidden>retry</span>
         </div>
         <nav><ul><li><a class="unified-pagination-link" href="/categories?page=2">2</a></li></ul></nav>
@@ -77,8 +77,8 @@ check('the shown counter moved to 5 (pager-placed control)',
 check('the pager knows it is on page 2', container.getAttribute('data-current-page') === '2',
       container.getAttribute('data-current-page'));
 check('the pager counter text moved too',
-      container.querySelector('[data-ut-shown]').textContent === '5',
-      container.querySelector('[data-ut-shown]').textContent);
+      container.querySelector('[data-ut-last]').textContent === '5',
+      container.querySelector('[data-ut-last]').textContent);
 
 // The last batch: the control hides itself.
 block.setAttribute('data-page', '2');

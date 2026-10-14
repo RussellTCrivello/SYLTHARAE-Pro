@@ -262,7 +262,7 @@
         {% if sort_by and sort_by != 'importance' %}{% set extra_param = pagination_params.update({'sort': sort_by, 'order': sort_order}) %}
         {% elif sort_order != 'desc' %}{% set extra_param = pagination_params.update({'sort': 'importance', 'order': sort_order}) %}{% endif %}
         {{ unified_pagination(page, total_pages, url_for, 'sources_list', pagination_params,
-            table_id='sourcesTable', total_count=total_sources|default(0), rows_shown=sources|length) }}
+            table_id='sourcesTable', total_count=total_sources|default(0), rows_shown=sources|length, page_size=per_page) }}
     {% endif %}
 </div>
 
@@ -475,6 +475,6 @@
         "errorSavingSource": _('Error saving source')
     }
 }|tojson }}</script>
-<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20260929a" defer></script>
+<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261014b" defer></script>
 <script type="module" src="{{ url_for('static', filename='js/pages/sources-list-page.js') }}"></script>
 {% endblock %}

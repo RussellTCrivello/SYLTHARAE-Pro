@@ -29,7 +29,7 @@ documentRoot.appendChild(treeFromHtml(`
     <div class="ut-load-more" data-ut-load-more data-table-id="fmasFilesContainer"
          data-page="1" data-total-pages="3" data-total="6" data-shown="2">
       <button type="button" class="btn">Show More</button>
-      <span class="ut-load-more-info">Showing <span data-ut-shown>2</span> of <span data-ut-total>6</span></span>
+      <span class="ut-load-more-info">Showing <span data-ut-first>1</span>&ndash;<span data-ut-last>2</span> of <span data-ut-total>6</span></span>
       <span class="ut-load-more-error" data-ut-load-error hidden>retry</span>
     </div>
   </div>
@@ -54,7 +54,7 @@ check('a click clears a previous error', errorLine.hidden === true);
 UT.syncLoadMore('fmasFilesContainer', 4, 6, 2);
 check('syncLoadMore moves the shown counter by id', block.getAttribute('data-shown') === '4', block.getAttribute('data-shown'));
 check('syncLoadMore keeps the control while items remain', block.hidden !== true);
-check('the counter text follows', block.querySelector('[data-ut-shown]').textContent === '4');
+check('the counter text follows', block.querySelector('[data-ut-last]').textContent === '4');
 
 // 3. The last items: the one control hides itself.
 UT.syncLoadMore('fmasFilesContainer', 6, 6, 2);

@@ -27,6 +27,9 @@ export function renderUnifiedPagination(options) {
         showJump = true,
         endpoint = null,
         baseUrl = null,
+        // Rows per page: the table's page size, so the range and the Show More
+        // batch agree with the Per Page selector.
+        pageSize = 0,
         // Load More: when a table is bound, the table's control is rendered
         // here, beside the numbered pages (the same markup the server renders).
         tableId = null,
@@ -92,6 +95,7 @@ export function renderUnifiedPagination(options) {
         html += loadMoreBlockHtml({
             tableId, page, totalPages: totalPagesFinal,
             total: totalCount, shown: rowsShown, label: loadMoreLabel,
+            pageSize, firstRow: ((page - 1) * (pageSize || 0)) + 1,
         });
     }
     html += '<nav aria-label="Page navigation">';
@@ -228,20 +232,30 @@ export function renderUnifiedPagination(options) {
 /**
  * Build URL for a specific page
  */
+/** "Showing first-last of total", the shape the server renders (components/unified_pagination.html,
+ *  macro showing_range). An empty list reads 0-0. */
+export function rangeHtml(firstRow, shown, total) {
+    const first = shown > 0 ? firstRow : 0;
+    const last = shown > 0 ? firstRow + shown - 1 : 0;
+    return `Showing <span data-ut-first>${first}</span>&ndash;<span data-ut-last>${last}</span>`
+        + ` of <span data-ut-total>${total}</span>`;
+}
+
 /** The one Load More block, as the server renders it (components/unified_pagination.html,
  *  macro load_more_control). The table engine (ui/unified-table.js) owns its behaviour. */
-export function loadMoreBlockHtml({ tableId, page, totalPages, total, shown, label }) {
+export function loadMoreBlockHtml({ tableId, page, totalPages, total, shown, label, pageSize, firstRow }) {
     const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => (
         { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
     const n = (value) => Math.max(0, parseInt(value, 10) || 0);
     return '<div class="ut-load-more" data-ut-load-more'
         + ` data-table-id="${esc(tableId)}" data-page="${n(page)}"`
-        + ` data-total-pages="${n(totalPages)}" data-total="${n(total)}" data-shown="${n(shown)}">`
+        + ` data-total-pages="${n(totalPages)}" data-total="${n(total)}" data-shown="${n(shown)}"`
+        + ` data-page-size="${n(pageSize)}" data-first-row="${Math.max(1, n(firstRow))}">`
         + '<button type="button" class="btn btn-outline-primary btn-sm">'
         + '<i class="bi bi-arrow-down-circle me-2" aria-hidden="true"></i>'
         + `${esc(label || 'Show More')}</button>`
-        + '<span class="ut-load-more-info" aria-live="polite">Showing <span data-ut-shown>'
-        + `${n(shown)}</span> of <span data-ut-total>${n(total)}</span></span>`
+        + '<span class="ut-load-more-info" aria-live="polite">'
+        + rangeHtml(Math.max(1, n(firstRow)), n(shown), n(total)) + '</span>'
         + '<span class="ut-load-more-error text-danger" data-ut-load-error hidden role="alert">'
         + 'Could not load more. Click to try again.</span>'
         + '</div>';

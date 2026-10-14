@@ -293,7 +293,7 @@
         {% if sort %}{% set _sort_params = search_pager_params.update({'sort': sort, 'order': order}) %}{% endif %}
         <div class="pagination-container mt-3" id="searchPagination">
             {{ unified_pagination(page, total_pages, url_for, 'search_page', search_pager_params,
-                table_id='searchResultsTable', total_count=total_results, rows_shown=results|length) }}
+                table_id='searchResultsTable', total_count=total_results, rows_shown=results|length, page_size=per_page) }}
         </div>
     {% endif %}
     {% else %}
@@ -305,5 +305,5 @@
     </div>
 </div>
 {% endif %}
-<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261014a" defer></script>
+<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261014b" defer></script>
 {% endblock %}

@@ -72,7 +72,7 @@ class TestTheLoadMoreComponent:
 
     def test_the_progressive_counter_is_the_toolbars_info(self, render):
         out = self._table(render)
-        assert "data-ut-shown" in out
+        assert "data-ut-last" in out
         assert "data-ut-total" in out
 
     def test_a_numbered_table_keeps_the_callers_info_line(self, render):

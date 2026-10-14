@@ -63,7 +63,7 @@ documentRoot.appendChild(treeFromHtml(`
   <div class="ut-load-more" data-ut-load-more
        data-page="1" data-total-pages="3" data-total="7" data-shown="3">
     <button type="button" class="btn">Load More</button>
-    <span class="ut-load-more-info">Showing <span data-ut-shown>3</span> of <span data-ut-total>7</span></span>
+    <span class="ut-load-more-info">Showing <span data-ut-first>1</span>&ndash;<span data-ut-last>3</span> of <span data-ut-total>7</span></span>
   </div>
 </div>`));
 
@@ -201,7 +201,7 @@ check('the new rows are in the table body', bodyRows().length === 5,
       String(bodyRows().length));
 check('the counter moved to five shown',
       loadMore.getAttribute('data-shown') === '5'
-      && loadMore.querySelector('[data-ut-shown]').textContent === '5',
+      && loadMore.querySelector('[data-ut-last]').textContent === '5',
       loadMore.getAttribute('data-shown'));
 check('the control knows it is on page 2 now', loadMore.getAttribute('data-page') === '2',
       loadMore.getAttribute('data-page'));

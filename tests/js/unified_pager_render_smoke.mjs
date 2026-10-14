@@ -28,7 +28,8 @@ check('the block names its table', block.includes('data-table-id="keywordsTable"
 check('the block carries the page state',
       block.includes('data-page="2"') && block.includes('data-total-pages="4"')
       && block.includes('data-total="18"') && block.includes('data-shown="10"'));
-check('the counters are present for the engine', block.includes('data-ut-shown>10<') && block.includes('data-ut-total>18<'));
+check('the range and total are present for the engine',
+      block.includes('data-ut-first>1<') && block.includes('data-ut-last>10<') && block.includes('data-ut-total>18<'));
 check('the builder escapes a hostile table id',
       !loadMoreBlockHtml({ tableId: '"><img src=x>', page: 1, totalPages: 2, total: 1, shown: 1 }).includes('<img'));
 

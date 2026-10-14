@@ -289,7 +289,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261014a" defer></script>
+<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261014b" defer></script>
 <script type="application/json" id="signals-page-data">{{ page_data|tojson }}</script>
 <script type="application/json" id="signals-page-labels">{{ {
     "bucket_overdue": _('Overdue'), "bucket_week": _('Next 7 days'), "bucket_month": _('Next 30 days'),

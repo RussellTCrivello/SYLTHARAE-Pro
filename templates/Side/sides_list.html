@@ -241,7 +241,7 @@
         {% if sort_by and sort_by != 'importance' %}{% set extra_param = pagination_params.update({'sort': sort_by, 'order': sort_order}) %}
         {% elif sort_order != 'desc' %}{% set extra_param = pagination_params.update({'sort': 'importance', 'order': sort_order}) %}{% endif %}
         {{ unified_pagination(page, total_pages, url_for, 'sides_list', pagination_params,
-            table_id='sidesTable', total_count=total_sides|default(0), rows_shown=sides|length) }}
+            table_id='sidesTable', total_count=total_sides|default(0), rows_shown=sides|length, page_size=per_page) }}
     {% endif %}
 </div>
 
@@ -357,6 +357,6 @@
         "errorSavingSide": _('Error saving side')
     }
 }|tojson }}</script>
-<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20260929a" defer></script>
+<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261014b" defer></script>
 <script type="module" src="{{ url_for('static', filename='js/pages/sides-list-page.js') }}"></script>
 {% endblock %}

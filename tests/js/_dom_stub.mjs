@@ -178,6 +178,16 @@ export class FakeElement {
     setAttribute(name, value) { this.attributes[name] = String(value); }
     getAttribute(name) { return name in this.attributes ? this.attributes[name] : null; }
     matches(selector) { return matches(this, selector); }
+    /** A copy of the element (attributes, classes, text); children only when deep. */
+    cloneNode(deep = false) {
+        const copy = new this.constructor(this.tagName.toLowerCase());
+        Object.assign(copy.attributes, this.attributes);
+        copy.classList.set = new Set(this.classList.set);
+        copy.classList.sync();
+        copy._text = this._text;
+        if (deep) this.children.forEach((child) => copy.appendChild(child.cloneNode(true)));
+        return copy;
+    }
     focus() {
         const owner = this.ownerDocument;
         if (owner) owner.activeElement = this;

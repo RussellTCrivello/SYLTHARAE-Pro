@@ -106,7 +106,7 @@ def test_the_renderers_emit_the_same_control_as_the_server():
     server = _read("components/unified_pagination.html")
     client = (STATIC_JS / "modules/rendering/unified-pagination.js").read_text(encoding="utf-8")
     for attr in ("data-ut-load-more", "data-table-id", "data-page", "data-total-pages",
-                 "data-total", "data-shown", "data-ut-shown", "data-ut-total",
+                 "data-total", "data-shown", "data-ut-first", "data-ut-last", "data-ut-total",
                  "data-ut-load-error", "ut-load-more-info", "ut-load-more-error"):
         assert attr in server, f"server control lost {attr}"
         assert attr in client, f"client renderer lost {attr}"

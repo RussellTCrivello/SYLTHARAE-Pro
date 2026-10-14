@@ -271,7 +271,7 @@
             'per_page': per_page,
             'sort': sort_by|default('usage_count'),
             'order': sort_order|default('desc')
-        }, table_id='keywordsTable', total_count=total_keywords|default(0), rows_shown=keywords|length) }}
+        }, table_id='keywordsTable', total_count=total_keywords|default(0), rows_shown=keywords|length, page_size=per_page) }}
     {% endif %}
 </div>
 
@@ -387,6 +387,6 @@
         "loading": _('Loading...')
     }
 }|tojson }}</script>
-<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20260929a" defer></script>
+<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261014b" defer></script>
 <script type="module" src="{{ url_for('static', filename='js/pages/keywords-list-page.js') }}"></script>
 {% endblock %}
