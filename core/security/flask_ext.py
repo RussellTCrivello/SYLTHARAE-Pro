@@ -49,6 +49,7 @@ PUBLIC_ENDPOINTS = frozenset(
         "setup.test_database",
         "setup.run_installation",
         "setup.check_setup_status",
+        "setup.set_setup_language",  # gated: only functional before DB initialization
     }
 )
 

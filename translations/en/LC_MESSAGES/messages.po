@@ -18144,3 +18144,507 @@ msgstr "Issues"
 msgid "Batch report"
 msgstr "Batch report"
 
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(count)s existing tables"
+msgstr "%(count)s existing tables"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s cannot contain line breaks or null characters."
+msgstr "%(label)s cannot contain line breaks or null characters."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s is required."
+msgstr "%(label)s is required."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be a whole number."
+msgstr "%(label)s must be a whole number."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be between %(minimum)s and %(maximum)s."
+msgstr "%(label)s must be between %(minimum)s and %(maximum)s."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be no more than %(n)s characters."
+msgstr "%(label)s must be no more than %(n)s characters."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be text."
+msgstr "%(label)s must be text."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "(optional)"
+msgstr "(optional)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "0.0.0.0 = all interfaces; 127.0.0.1 = local only"
+msgstr "0.0.0.0 = all interfaces; 127.0.0.1 = local only"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Account locked after this many failures"
+msgstr "Account locked after this many failures"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Address"
+msgstr "Address"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin & Security"
+msgstr "Admin & Security"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin Password"
+msgstr "Admin Password"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin Username"
+msgstr "Admin Username"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin password"
+msgstr "Admin password"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Admin password must be at least %(n)s characters."
+msgstr "Admin password must be at least %(n)s characters."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Administrator Account"
+msgstr "Administrator Account"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Affects security defaults, logging, and rate limits"
+msgstr "Affects security defaults, logging, and rate limits"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "All imported"
+msgstr "All imported"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Application Settings"
+msgstr "Application Settings"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Authentication required"
+msgstr "Authentication required"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Bind Address"
+msgstr "Bind Address"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Bind address"
+msgstr "Bind address"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Cannot verify system state. Installation blocked for safety. Use CLI for recovery."
+msgstr "Cannot verify system state. Installation blocked for safety. Use CLI for recovery."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Check the step results above for details."
+msgstr "Check the step results above for details."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Checking that your system meets the requirements…"
+msgstr "Checking that your system meets the requirements…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Checking…"
+msgstr "Checking…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Choose a supported log level."
+msgstr "Choose a supported log level."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Concurrent file analysis threads"
+msgstr "Concurrent file analysis threads"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Configure the application environment and processing options."
+msgstr "Configure the application environment and processing options."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Could not reach the server:"
+msgstr "Could not reach the server:"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Create the initial administrator account and configure security policies."
+msgstr "Create the initial administrator account and configure security policies."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Created and migrated"
+msgstr "Created and migrated"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Created automatically if missing"
+msgstr "Created automatically if missing"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "DEBUG (verbose)"
+msgstr "DEBUG (verbose)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database Configuration"
+msgstr "Database Configuration"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database connection failed."
+msgstr "Database connection failed."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database host"
+msgstr "Database host"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database name"
+msgstr "Database name"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database password"
+msgstr "Database password"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database port"
+msgstr "Database port"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database username"
+msgstr "Database username"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Default: 5000"
+msgstr "Default: 5000"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Default: 5432"
+msgstr "Default: 5432"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Dependencies"
+msgstr "Dependencies"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Development"
+msgstr "Development"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Disk Space"
+msgstr "Disk Space"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "ERROR (minimal)"
+msgstr "ERROR (minimal)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Enter your PostgreSQL connection details. The database and tables will be created automatically."
+msgstr "Enter your PostgreSQL connection details. The database and tables will be created automatically."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Enter your PostgreSQL password"
+msgstr "Enter your PostgreSQL password"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Environment"
+msgstr "Environment"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Environment must be production, staging, or development."
+msgstr "Environment must be production, staging, or development."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Fair"
+msgstr "Fair"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Guided setup"
+msgstr "Guided setup"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "INFO (recommended)"
+msgstr "INFO (recommended)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Idle Timeout (hours)"
+msgstr "Idle Timeout (hours)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Idle timeout"
+msgstr "Idle timeout"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Idle timeout cannot exceed the session lifetime."
+msgstr "Idle timeout cannot exceed the session lifetime."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Ingestion Roots"
+msgstr "Ingestion Roots"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Ingestion roots"
+msgstr "Ingestion roots"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Install"
+msgstr "Install"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation Complete!"
+msgstr "Installation Complete!"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation complete!"
+msgstr "Installation complete!"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation failed."
+msgstr "Installation failed."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation is already in progress. Please wait for it to complete."
+msgstr "Installation is already in progress. Please wait for it to complete."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installing…"
+msgstr "Installing…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Insufficient permissions"
+msgstr "Insufficient permissions"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Lockout Duration (min)"
+msgstr "Lockout Duration (min)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Lockout duration"
+msgstr "Lockout duration"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Log level"
+msgstr "Log level"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Max Failed Logins"
+msgstr "Max Failed Logins"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Max Processing Workers"
+msgstr "Max Processing Workers"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Maximum failed logins"
+msgstr "Maximum failed logins"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Maximum processing workers"
+msgstr "Maximum processing workers"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Min 12 characters"
+msgstr "Min 12 characters"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Min Password Length"
+msgstr "Min Password Length"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Minimum %(n)s characters"
+msgstr "Minimum %(n)s characters"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Minimum 12 characters"
+msgstr "Minimum 12 characters"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Minimum password length"
+msgstr "Minimum password length"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Must be at least the per-minute limit."
+msgstr "Must be at least the per-minute limit."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Network error:"
+msgstr "Network error:"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Operating System"
+msgstr "Operating System"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Per-file timeout"
+msgstr "Per-file timeout"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "PostgreSQL"
+msgstr "PostgreSQL"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "PostgreSQL server address"
+msgstr "PostgreSQL server address"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "PostgreSQL superuser"
+msgstr "PostgreSQL superuser"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Processing Timeout (sec)"
+msgstr "Processing Timeout (sec)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Processing timeout"
+msgstr "Processing timeout"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Production (recommended)"
+msgstr "Production (recommended)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Python"
+msgstr "Python"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate Limit (req/hour)"
+msgstr "Rate Limit (req/hour)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate Limit (req/min)"
+msgstr "Rate Limit (req/min)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate limit per hour"
+msgstr "Rate limit per hour"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate limit per minute"
+msgstr "Rate limit per minute"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Redirecting to login…"
+msgstr "Redirecting to login…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Request body must be a JSON object."
+msgstr "Request body must be a JSON object."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Security Policies"
+msgstr "Security Policies"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Semicolon-separated server directories the app may read. Leave empty for uploads only."
+msgstr "Semicolon-separated server directories the app may read. Leave empty for uploads only."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Session Lifetime (hours)"
+msgstr "Session Lifetime (hours)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Session lifetime"
+msgstr "Session lifetime"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Setting up your File Analysis system. This takes 15–60 seconds."
+msgstr "Setting up your File Analysis system. This takes 15–60 seconds."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Setup progress"
+msgstr "Setup progress"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Staging"
+msgstr "Staging"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Step %(current)s of %(total)s"
+msgstr "Step %(current)s of %(total)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Strong"
+msgstr "Strong"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "System Check"
+msgstr "System Check"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "System Prerequisites"
+msgstr "System Prerequisites"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "System is already initialized. Re-installation is not permitted through this endpoint."
+msgstr "System is already initialized. Re-installation is not permitted through this endpoint."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Test Connection"
+msgstr "Test Connection"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Testing…"
+msgstr "Testing…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "The password you set during PostgreSQL installation"
+msgstr "The password you set during PostgreSQL installation"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "The per-minute rate limit cannot exceed the per-hour limit."
+msgstr "The per-minute rate limit cannot exceed the per-hour limit."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "The per-minute rate limit cannot exceed the per-hour rate limit."
+msgstr "The per-minute rate limit cannot exceed the per-hour rate limit."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "WARNING (quiet)"
+msgstr "WARNING (quiet)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Weak"
+msgstr "Weak"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Web Port"
+msgstr "Web Port"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Web port"
+msgstr "Web port"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Your File Analysis system is ready to use."
+msgstr "Your File Analysis system is ready to use."
+
+msgid "Administrator"
+msgstr "Administrator"
+
+msgid "Database & schema"
+msgstr "Database & schema"
+
+msgid "Finalize"
+msgstr "Finalize"
+
+msgid "Runtime directories"
+msgstr "Runtime directories"
+
+msgid "Write configuration"
+msgstr "Write configuration"
+
+#: Api/routes/setup.py
+msgid "Choose a supported language."
+msgstr "Choose a supported language."

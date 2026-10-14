@@ -10966,14 +10966,12 @@ msgid "Will reset"
 msgstr "به ترجمه فهرست بازمی‌گردد"
 
 #: templates/Setup/install_wizard.html:8
-#, fuzzy
 msgid "Installation Wizard"
-msgstr "عرض ناوبری"
+msgstr "راهنمای نصب"
 
 #: templates/Setup/install_wizard.html:693
-#, fuzzy
 msgid "Installation steps"
-msgstr "گام‌های دریافت"
+msgstr "مراحل نصب"
 
 #: templates/Setup/install_wizard.html:820 templates/Setup/install_wizard.html:862
 #: templates/Setup/install_wizard.html:877 templates/auth/first_admin.html:231
@@ -10989,18 +10987,16 @@ msgid "Hide password"
 msgstr "پنهان‌کردن گذرواژه"
 
 #: templates/Setup/install_wizard.html:1060
-#, fuzzy
 msgid "Installation progress"
-msgstr "پیشرفت کلی"
+msgstr "پیشرفت نصب"
 
 #: templates/Setup/install_wizard.html:1094
 msgid "Retry system check"
-msgstr ""
+msgstr "تکرار بررسی سامانه"
 
 #: templates/Setup/install_wizard.html:1095
-#, fuzzy
 msgid "Review settings"
-msgstr "تنظیمات پردازش"
+msgstr "بازبینی تنظیمات"
 
 #: templates/Side/side_categories_keywords.html:3
 msgid "Side Categories & Keywords"
@@ -12885,9 +12881,8 @@ msgid "This page is available only until the first administrator exists."
 msgstr ""
 
 #: templates/auth/first_admin.html:216
-#, fuzzy
 msgid "Admin username"
-msgstr "نام کاربری"
+msgstr "نام کاربری مدیر"
 
 #: templates/auth/first_admin.html:216 templates/auth/first_admin.html:224
 #: templates/auth/first_admin.html:238
@@ -12906,9 +12901,8 @@ msgid "Confirm password"
 msgstr "تأیید گذرواژه جدید"
 
 #: templates/auth/first_admin.html:242
-#, fuzzy
 msgid "Re-enter password"
-msgstr "بازنشانی گذرواژه"
+msgstr "گذرواژه را دوباره وارد کنید"
 
 #: templates/auth/first_admin.html:258
 #, fuzzy
@@ -13410,9 +13404,8 @@ msgid "Try again"
 msgstr "لطفاً دوباره تلاش کنید."
 
 #: templates/components/states.html:117
-#, fuzzy
 msgid "Not available"
-msgstr "داده‌ای موجود نیست"
+msgstr "در دسترس نیست"
 
 #: templates/components/states.html:118
 #, fuzzy
@@ -21745,3 +21738,511 @@ msgstr "گزارش دسته"
 #~ msgid "Error deleting file"
 #~ msgstr "خطا در حذف فایل"
 
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(count)s existing tables"
+msgstr "%(count)s جدول موجود"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s cannot contain line breaks or null characters."
+msgstr "%(label)s نمی‌تواند شامل شکست خط یا نویسه تهی باشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s is required."
+msgstr "%(label)s الزامی است."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be a whole number."
+msgstr "%(label)s باید یک عدد صحیح باشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be between %(minimum)s and %(maximum)s."
+msgstr "%(label)s باید بین %(minimum)s و %(maximum)s باشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be no more than %(n)s characters."
+msgstr "%(label)s نباید بیش از %(n)s نویسه باشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be text."
+msgstr "%(label)s باید متن باشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "(optional)"
+msgstr "(اختیاری)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "0.0.0.0 = all interfaces; 127.0.0.1 = local only"
+msgstr "0.0.0.0 = همه رابط‌ها؛ 127.0.0.1 = فقط محلی"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Account locked after this many failures"
+msgstr "حساب پس از این تعداد خطا قفل می‌شود"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Address"
+msgstr "نشانی"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin & Security"
+msgstr "مدیر و امنیت"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin Password"
+msgstr "گذرواژه مدیر"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin Username"
+msgstr "نام کاربری مدیر"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin password"
+msgstr "گذرواژه مدیر"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Admin password must be at least %(n)s characters."
+msgstr "گذرواژه مدیر باید حداقل %(n)s نویسه باشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Administrator Account"
+msgstr "حساب مدیر"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Affects security defaults, logging, and rate limits"
+msgstr "بر پیش‌فرض‌های امنیتی، ثبت رویدادها و محدودیت نرخ اثر می‌گذارد"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "All imported"
+msgstr "همه وارد شده‌اند"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Application Settings"
+msgstr "تنظیمات برنامه"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Authentication required"
+msgstr "احراز هویت لازم است"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Back"
+msgstr "بازگشت"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Bind Address"
+msgstr "نشانی اتصال"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Bind address"
+msgstr "نشانی اتصال"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Cannot verify system state. Installation blocked for safety. Use CLI for recovery."
+msgstr "وضعیت سامانه قابل بررسی نیست. نصب برای ایمنی مسدود شد. برای بازیابی از خط فرمان استفاده کنید."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Check the step results above for details."
+msgstr "برای جزئیات، نتایج مراحل بالا را بررسی کنید."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Checking that your system meets the requirements…"
+msgstr "در حال بررسی تطابق سامانه با نیازمندی‌ها…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Checking…"
+msgstr "در حال بررسی…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Choose a supported log level."
+msgstr "یک سطح ثبت رویداد پشتیبانی‌شده انتخاب کنید."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Concurrent file analysis threads"
+msgstr "رشته‌های همزمان تحلیل فایل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Configure the application environment and processing options."
+msgstr "محیط برنامه و گزینه‌های پردازش را پیکربندی کنید."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Confirm Password"
+msgstr "تأیید گذرواژه"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Could not reach the server:"
+msgstr "به سرور دسترسی پیدا نشد:"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Create the initial administrator account and configure security policies."
+msgstr "حساب مدیر اولیه را بسازید و سیاست‌های امنیتی را پیکربندی کنید."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Created and migrated"
+msgstr "ایجاد و مهاجرت شد"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Created automatically if missing"
+msgstr "در صورت نبودن، خودکار ساخته می‌شود"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "DEBUG (verbose)"
+msgstr "DEBUG (پرجزئیات)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database Configuration"
+msgstr "پیکربندی پایگاه داده"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database connection failed."
+msgstr "اتصال به پایگاه داده ناموفق بود."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database host"
+msgstr "میزبان پایگاه داده"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database name"
+msgstr "نام پایگاه داده"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database password"
+msgstr "گذرواژه پایگاه داده"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database port"
+msgstr "درگاه پایگاه داده"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database username"
+msgstr "نام کاربری پایگاه داده"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Default: 5000"
+msgstr "پیش‌فرض: 5000"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Default: 5432"
+msgstr "پیش‌فرض: 5432"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Dependencies"
+msgstr "وابستگی‌ها"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Development"
+msgstr "توسعه"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Disk Space"
+msgstr "فضای دیسک"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "ERROR (minimal)"
+msgstr "ERROR (حداقلی)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Enter your PostgreSQL connection details. The database and tables will be created automatically."
+msgstr "مشخصات اتصال PostgreSQL را وارد کنید. پایگاه داده و جدول‌ها به‌طور خودکار ساخته می‌شوند."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Enter your PostgreSQL password"
+msgstr "گذرواژه PostgreSQL را وارد کنید"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Environment"
+msgstr "محیط"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Environment must be production, staging, or development."
+msgstr "محیط باید تولید، آزمایشی (staging) یا توسعه باشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Fair"
+msgstr "متوسط"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Guided setup"
+msgstr "راه‌اندازی راهنمایی‌شده"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "INFO (recommended)"
+msgstr "INFO (توصیه‌شده)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Idle Timeout (hours)"
+msgstr "مهلت بیکاری (ساعت)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Idle timeout"
+msgstr "مهلت بیکاری"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Idle timeout cannot exceed the session lifetime."
+msgstr "مهلت بیکاری نمی‌تواند بیش از طول عمر نشست باشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Ingestion Roots"
+msgstr "ریشه‌های ورود داده"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Ingestion roots"
+msgstr "ریشه‌های ورود داده"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Install"
+msgstr "نصب"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation Complete!"
+msgstr "نصب کامل شد!"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation complete!"
+msgstr "نصب کامل شد!"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation failed."
+msgstr "نصب ناموفق بود."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation is already in progress. Please wait for it to complete."
+msgstr "نصب در حال انجام است. لطفاً تا پایان آن صبر کنید."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installing…"
+msgstr "در حال نصب…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Insufficient permissions"
+msgstr "مجوز کافی نیست"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Lockout Duration (min)"
+msgstr "مدت قفل (دقیقه)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Lockout duration"
+msgstr "مدت قفل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Log level"
+msgstr "سطح ثبت رویداد"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Max Failed Logins"
+msgstr "حداکثر ورود ناموفق"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Max Processing Workers"
+msgstr "حداکثر کارگرهای پردازش"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Maximum failed logins"
+msgstr "حداکثر ورود ناموفق"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Maximum processing workers"
+msgstr "حداکثر کارگرهای پردازش"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Min 12 characters"
+msgstr "حداقل ۱۲ نویسه"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Min Password Length"
+msgstr "حداقل طول گذرواژه"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Minimum %(n)s characters"
+msgstr "حداقل %(n)s نویسه"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Minimum 12 characters"
+msgstr "حداقل ۱۲ نویسه"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Minimum password length"
+msgstr "حداقل طول گذرواژه"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Must be at least the per-minute limit."
+msgstr "باید حداقل برابر محدودیت یک‌دقیقه‌ای باشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Network error:"
+msgstr "خطای شبکه:"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Operating System"
+msgstr "سیستم‌عامل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Per-file timeout"
+msgstr "مهلت هر فایل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "PostgreSQL"
+msgstr "PostgreSQL"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "PostgreSQL server address"
+msgstr "نشانی سرور PostgreSQL"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "PostgreSQL superuser"
+msgstr "کاربر مدیر PostgreSQL"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Processing Timeout (sec)"
+msgstr "مهلت پردازش (ثانیه)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Processing timeout"
+msgstr "مهلت پردازش"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Production (recommended)"
+msgstr "تولید (توصیه‌شده)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Python"
+msgstr "Python"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate Limit (req/hour)"
+msgstr "محدودیت نرخ (درخواست/ساعت)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate Limit (req/min)"
+msgstr "محدودیت نرخ (درخواست/دقیقه)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate limit per hour"
+msgstr "محدودیت نرخ در ساعت"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate limit per minute"
+msgstr "محدودیت نرخ در دقیقه"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Redirecting to login…"
+msgstr "در حال انتقال به صفحه ورود…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Request body must be a JSON object."
+msgstr "بدنه درخواست باید یک شیء JSON باشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Security Policies"
+msgstr "سیاست‌های امنیتی"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Semicolon-separated server directories the app may read. Leave empty for uploads only."
+msgstr "پوشه‌های سرور با جداکننده نقطه‌ویرگول که برنامه اجازه خواندن دارد. برای بارگذاری فقط، خالی بگذارید."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Session Lifetime (hours)"
+msgstr "طول عمر نشست (ساعت)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Session lifetime"
+msgstr "طول عمر نشست"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Setting up your File Analysis system. This takes 15–60 seconds."
+msgstr "در حال راه‌اندازی سامانه تحلیل فایل. این کار ۱۵ تا ۶۰ ثانیه طول می‌کشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Setup progress"
+msgstr "پیشرفت راه‌اندازی"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Staging"
+msgstr "آزمایشی (Staging)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Step %(current)s of %(total)s"
+msgstr "مرحله %(current)s از %(total)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Strong"
+msgstr "قوی"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "System Check"
+msgstr "بررسی سامانه"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "System Prerequisites"
+msgstr "پیش‌نیازهای سامانه"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "System is already initialized. Re-installation is not permitted through this endpoint."
+msgstr "سامانه قبلاً راه‌اندازی شده است. نصب مجدد از این نقطه مجاز نیست."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Test Connection"
+msgstr "آزمون اتصال"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Testing…"
+msgstr "در حال آزمون…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "The password you set during PostgreSQL installation"
+msgstr "گذرواژه‌ای که هنگام نصب PostgreSQL تعیین کرده‌اید"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "The per-minute rate limit cannot exceed the per-hour limit."
+msgstr "محدودیت یک‌دقیقه‌ای نمی‌تواند از محدودیت یک‌ساعته بیشتر باشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "The per-minute rate limit cannot exceed the per-hour rate limit."
+msgstr "محدودیت یک‌دقیقه‌ای نمی‌تواند از محدودیت یک‌ساعته بیشتر باشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "WARNING (quiet)"
+msgstr "WARNING (کم‌حرف)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Weak"
+msgstr "ضعیف"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Web Port"
+msgstr "درگاه وب"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Web port"
+msgstr "درگاه وب"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Your File Analysis system is ready to use."
+msgstr "سامانه تحلیل فایل آماده استفاده است."
+
+msgid "Administrator"
+msgstr "مدیر"
+
+msgid "Database & schema"
+msgstr "پایگاه داده و طرح‌واره"
+
+msgid "Finalize"
+msgstr "پایان"
+
+msgid "Runtime directories"
+msgstr "پوشه‌های اجرا"
+
+msgid "Write configuration"
+msgstr "نوشتن پیکربندی"
+
+#: Api/routes/setup.py
+msgid "Choose a supported language."
+msgstr "یک زبان پشتیبانی‌شده انتخاب کنید."

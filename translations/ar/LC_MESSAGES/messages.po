@@ -11517,14 +11517,12 @@ msgid "Will reset"
 msgstr "ستُستعاد ترجمة الفهرس"
 
 #: templates/Setup/install_wizard.html:8
-#, fuzzy
 msgid "Installation Wizard"
-msgstr "تنقل الصفحات"
+msgstr "معالج التثبيت"
 
 #: templates/Setup/install_wizard.html:693
-#, fuzzy
 msgid "Installation steps"
-msgstr "خطوات الاستيعاب"
+msgstr "خطوات التثبيت"
 
 #: templates/Setup/install_wizard.html:820 templates/Setup/install_wizard.html:862
 #: templates/Setup/install_wizard.html:877 templates/auth/first_admin.html:231
@@ -11540,18 +11538,16 @@ msgid "Hide password"
 msgstr "إخفاء كلمة المرور"
 
 #: templates/Setup/install_wizard.html:1060
-#, fuzzy
 msgid "Installation progress"
-msgstr "التقدم الإجمالي"
+msgstr "تقدّم التثبيت"
 
 #: templates/Setup/install_wizard.html:1094
 msgid "Retry system check"
-msgstr ""
+msgstr "إعادة فحص النظام"
 
 #: templates/Setup/install_wizard.html:1095
-#, fuzzy
 msgid "Review settings"
-msgstr "المعالجة"
+msgstr "مراجعة الإعدادات"
 
 #: templates/Side/side_categories_keywords.html:3
 msgid "Side Categories & Keywords"
@@ -13447,9 +13443,8 @@ msgid "This page is available only until the first administrator exists."
 msgstr ""
 
 #: templates/auth/first_admin.html:216
-#, fuzzy
 msgid "Admin username"
-msgstr "اسم المستخدم"
+msgstr "اسم مستخدم المسؤول"
 
 #: templates/auth/first_admin.html:216 templates/auth/first_admin.html:224
 #: templates/auth/first_admin.html:238
@@ -13468,9 +13463,8 @@ msgid "Confirm password"
 msgstr "تأكيد كلمة المرور الجديدة"
 
 #: templates/auth/first_admin.html:242
-#, fuzzy
 msgid "Re-enter password"
-msgstr "إعادة تعيين كلمة المرور"
+msgstr "أعد إدخال كلمة المرور"
 
 #: templates/auth/first_admin.html:258
 #, fuzzy
@@ -13959,9 +13953,8 @@ msgid "Try again"
 msgstr "يرجى المحاولة مرة أخرى."
 
 #: templates/components/states.html:117
-#, fuzzy
 msgid "Not available"
-msgstr "لا توجد بيانات متاحة"
+msgstr "غير متاح"
 
 #: templates/components/states.html:118
 #, fuzzy
@@ -23468,3 +23461,508 @@ msgstr "تقرير الدفعة"
 #~ msgid "Assignment, search & file navigation"
 #~ msgstr "التعيين والبحث والتنقل بين الملفات"
 
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(count)s existing tables"
+msgstr "%(count)s جدول موجود"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s cannot contain line breaks or null characters."
+msgstr "لا يمكن أن يحتوي %(label)s على فواصل أسطر أو محارف فارغة."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s is required."
+msgstr "%(label)s مطلوب."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be a whole number."
+msgstr "يجب أن يكون %(label)s عددًا صحيحًا."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be between %(minimum)s and %(maximum)s."
+msgstr "يجب أن يقع %(label)s بين %(minimum)s و%(maximum)s."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be no more than %(n)s characters."
+msgstr "يجب ألا يتجاوز %(label)s %(n)s حرفًا."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be text."
+msgstr "يجب أن يكون %(label)s نصًا."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "(optional)"
+msgstr "(اختياري)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "0.0.0.0 = all interfaces; 127.0.0.1 = local only"
+msgstr "0.0.0.0 = جميع الواجهات؛ 127.0.0.1 = المحلي فقط"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Account locked after this many failures"
+msgstr "يُقفل الحساب بعد هذا العدد من الإخفاقات"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Address"
+msgstr "العنوان"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin & Security"
+msgstr "المسؤول والأمان"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin Password"
+msgstr "كلمة مرور المسؤول"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin Username"
+msgstr "اسم مستخدم المسؤول"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin password"
+msgstr "كلمة مرور المسؤول"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Admin password must be at least %(n)s characters."
+msgstr "يجب أن تتكون كلمة مرور المسؤول من %(n)s حرفًا على الأقل."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Administrator Account"
+msgstr "حساب المسؤول"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Affects security defaults, logging, and rate limits"
+msgstr "يؤثر في إعدادات الأمان الافتراضية والسجلات وحدود المعدل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "All imported"
+msgstr "تم استيراد الكل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Application Settings"
+msgstr "إعدادات التطبيق"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Authentication required"
+msgstr "المصادقة مطلوبة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Bind Address"
+msgstr "عنوان الربط"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Bind address"
+msgstr "عنوان الربط"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Cannot verify system state. Installation blocked for safety. Use CLI for recovery."
+msgstr "تعذّر التحقق من حالة النظام. تم منع التثبيت لأسباب أمنية. استخدم سطر الأوامر للاسترداد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Check the step results above for details."
+msgstr "راجع نتائج الخطوات أعلاه للاطلاع على التفاصيل."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Checking that your system meets the requirements…"
+msgstr "جارٍ التحقق من استيفاء النظام للمتطلبات…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Checking…"
+msgstr "جارٍ التحقق…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Choose a supported log level."
+msgstr "اختر مستوى سجل مدعومًا."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Concurrent file analysis threads"
+msgstr "خيوط تحليل الملفات المتزامنة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Configure the application environment and processing options."
+msgstr "اضبط بيئة التطبيق وخيارات المعالجة."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Confirm Password"
+msgstr "تأكيد كلمة المرور"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Could not reach the server:"
+msgstr "تعذّر الوصول إلى الخادم:"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Create the initial administrator account and configure security policies."
+msgstr "أنشئ حساب المسؤول الأولي واضبط سياسات الأمان."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Created and migrated"
+msgstr "تم الإنشاء والترحيل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Created automatically if missing"
+msgstr "يُنشأ تلقائيًا إذا كان مفقودًا"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "DEBUG (verbose)"
+msgstr "DEBUG (مفصّل)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database Configuration"
+msgstr "إعداد قاعدة البيانات"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database connection failed."
+msgstr "فشل الاتصال بقاعدة البيانات."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database host"
+msgstr "مضيف قاعدة البيانات"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database name"
+msgstr "اسم قاعدة البيانات"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database password"
+msgstr "كلمة مرور قاعدة البيانات"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database port"
+msgstr "منفذ قاعدة البيانات"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database username"
+msgstr "اسم مستخدم قاعدة البيانات"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Default: 5000"
+msgstr "الافتراضي: 5000"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Default: 5432"
+msgstr "الافتراضي: 5432"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Dependencies"
+msgstr "التبعيات"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Development"
+msgstr "التطوير"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Disk Space"
+msgstr "مساحة القرص"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "ERROR (minimal)"
+msgstr "ERROR (الحد الأدنى)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Enter your PostgreSQL connection details. The database and tables will be created automatically."
+msgstr "أدخل بيانات اتصال PostgreSQL. سيُنشأ قاعدة البيانات والجداول تلقائيًا."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Enter your PostgreSQL password"
+msgstr "أدخل كلمة مرور PostgreSQL"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Environment"
+msgstr "البيئة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Environment must be production, staging, or development."
+msgstr "يجب أن تكون البيئة إنتاجًا أو تجهيزًا أو تطويرًا."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Fair"
+msgstr "مقبولة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Guided setup"
+msgstr "إعداد موجَّه"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "INFO (recommended)"
+msgstr "INFO (موصى به)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Idle Timeout (hours)"
+msgstr "مهلة الخمول (ساعات)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Idle timeout"
+msgstr "مهلة الخمول"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Idle timeout cannot exceed the session lifetime."
+msgstr "لا يمكن أن تتجاوز مهلة الخمول مدة الجلسة."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Ingestion Roots"
+msgstr "جذور الاستيعاب"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Ingestion roots"
+msgstr "جذور الاستيعاب"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Install"
+msgstr "تثبيت"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation Complete!"
+msgstr "اكتمل التثبيت!"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation complete!"
+msgstr "اكتمل التثبيت!"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation failed."
+msgstr "فشل التثبيت."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation is already in progress. Please wait for it to complete."
+msgstr "التثبيت قيد التنفيذ بالفعل. يُرجى الانتظار حتى ينتهي."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installing…"
+msgstr "جارٍ التثبيت…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Insufficient permissions"
+msgstr "صلاحيات غير كافية"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Lockout Duration (min)"
+msgstr "مدة القفل (دقائق)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Lockout duration"
+msgstr "مدة القفل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Log level"
+msgstr "مستوى السجل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Max Failed Logins"
+msgstr "أقصى عدد لمحاولات الدخول الفاشلة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Max Processing Workers"
+msgstr "أقصى عدد لعمال المعالجة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Maximum failed logins"
+msgstr "أقصى عدد لمحاولات الدخول الفاشلة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Maximum processing workers"
+msgstr "أقصى عدد لعمال المعالجة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Min 12 characters"
+msgstr "12 حرفًا على الأقل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Min Password Length"
+msgstr "الحد الأدنى لطول كلمة المرور"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Minimum %(n)s characters"
+msgstr "%(n)s حرفًا على الأقل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Minimum 12 characters"
+msgstr "12 حرفًا على الأقل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Minimum password length"
+msgstr "الحد الأدنى لطول كلمة المرور"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Must be at least the per-minute limit."
+msgstr "يجب أن يكون على الأقل بمقدار حد الدقيقة."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Network error:"
+msgstr "خطأ في الشبكة:"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Operating System"
+msgstr "نظام التشغيل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Per-file timeout"
+msgstr "مهلة لكل ملف"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "PostgreSQL"
+msgstr "PostgreSQL"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "PostgreSQL server address"
+msgstr "عنوان خادم PostgreSQL"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "PostgreSQL superuser"
+msgstr "مستخدم PostgreSQL الفائق"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Processing Timeout (sec)"
+msgstr "مهلة المعالجة (ثوانٍ)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Processing timeout"
+msgstr "مهلة المعالجة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Production (recommended)"
+msgstr "الإنتاج (موصى به)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Python"
+msgstr "Python"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate Limit (req/hour)"
+msgstr "حد المعدل (طلب/ساعة)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate Limit (req/min)"
+msgstr "حد المعدل (طلب/دقيقة)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate limit per hour"
+msgstr "حد المعدل في الساعة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate limit per minute"
+msgstr "حد المعدل في الدقيقة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Redirecting to login…"
+msgstr "جارٍ التحويل إلى تسجيل الدخول…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Request body must be a JSON object."
+msgstr "يجب أن يكون نص الطلب كائن JSON."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Security Policies"
+msgstr "سياسات الأمان"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Semicolon-separated server directories the app may read. Leave empty for uploads only."
+msgstr "مجلدات الخادم المفصولة بفاصلة منقوطة التي يُسمح للتطبيق بقراءتها. اتركها فارغة للرفع فقط."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Session Lifetime (hours)"
+msgstr "مدة الجلسة (ساعات)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Session lifetime"
+msgstr "مدة الجلسة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Setting up your File Analysis system. This takes 15–60 seconds."
+msgstr "جارٍ إعداد نظام تحليل الملفات. يستغرق ذلك من 15 إلى 60 ثانية."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Setup progress"
+msgstr "تقدّم الإعداد"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Staging"
+msgstr "التجهيز"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Step %(current)s of %(total)s"
+msgstr "الخطوة %(current)s من %(total)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Strong"
+msgstr "قوية"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "System Check"
+msgstr "فحص النظام"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "System Prerequisites"
+msgstr "متطلبات النظام"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "System is already initialized. Re-installation is not permitted through this endpoint."
+msgstr "النظام مُهيّأ بالفعل. لا يُسمح بإعادة التثبيت عبر هذه النقطة."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Test Connection"
+msgstr "اختبار الاتصال"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Testing…"
+msgstr "جارٍ الاختبار…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "The password you set during PostgreSQL installation"
+msgstr "كلمة المرور التي حددتها أثناء تثبيت PostgreSQL"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "The per-minute rate limit cannot exceed the per-hour limit."
+msgstr "لا يمكن أن يتجاوز حد الدقيقة حد الساعة."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "The per-minute rate limit cannot exceed the per-hour rate limit."
+msgstr "لا يمكن أن يتجاوز حد الدقيقة حد الساعة."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "WARNING (quiet)"
+msgstr "WARNING (هادئ)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Weak"
+msgstr "ضعيفة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Web Port"
+msgstr "منفذ الويب"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Web port"
+msgstr "منفذ الويب"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Your File Analysis system is ready to use."
+msgstr "نظام تحليل الملفات جاهز للاستخدام."
+
+msgid "Administrator"
+msgstr "المسؤول"
+
+msgid "Database & schema"
+msgstr "قاعدة البيانات والمخطط"
+
+msgid "Finalize"
+msgstr "إنهاء"
+
+msgid "Runtime directories"
+msgstr "مجلدات التشغيل"
+
+msgid "Write configuration"
+msgstr "كتابة الإعدادات"
+
+#: Api/routes/setup.py
+msgid "Choose a supported language."
+msgstr "اختر لغة مدعومة."

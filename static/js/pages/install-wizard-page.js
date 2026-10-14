@@ -7,11 +7,47 @@
 // Server-rendered values from #install-wizard-page-data.
 var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizard-page-data').textContent || '{}');
 
+// Translated UI strings, keyed by the English source text (gettext msgid).
+// A key with no translation falls back to the English text, so the page never
+// shows an empty label or a raw key. Placeholders use %(name)s, as in gettext.
+var INSTALL_WIZARD_STRINGS = JSON.parse(document.getElementById('install-wizard-strings').textContent || '{}');
+function T(key, vars) {
+    var text = Object.prototype.hasOwnProperty.call(INSTALL_WIZARD_STRINGS, key) && INSTALL_WIZARD_STRINGS[key]
+        ? INSTALL_WIZARD_STRINGS[key] : key;
+    if (vars) {
+        text = text.replace(/%\((\w+)\)s/g, function (match, name) {
+            return Object.prototype.hasOwnProperty.call(vars, name) ? String(vars[name]) : match;
+        });
+    }
+    return text;
+}
+
 (function() {
     'use strict';
 
     const CSRF = document.querySelector('meta[name="csrf-token"]').content;
     const HEADERS = {'Content-Type': 'application/json', 'X-CSRFToken': CSRF};
+
+    // ── Language choice (first run) ──
+    // POST /api/setup/language stores system.language and sets the user_language
+    // cookie. The page then reloads so the server renders in the new language and
+    // direction. The cookie is also set here so the reload applies even if the
+    // request fails.
+    function chooseLanguage(code) {
+        document.cookie = 'user_language=' + encodeURIComponent(code) +
+            '; path=/; max-age=31536000; SameSite=Lax';
+        fetch('/api/setup/language', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: HEADERS,
+            body: JSON.stringify({language: code})
+        }).catch(function () { /* the cookie already applies on reload */ })
+          .then(function () { window.location.reload(); });
+    }
+    const languageSelect = document.getElementById('setup-language');
+    if (languageSelect) {
+        languageSelect.addEventListener('change', function () { chooseLanguage(this.value); });
+    }
 
     let currentStep = 1;
     const TOTAL_STEPS = 5;
@@ -89,8 +125,8 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
         // Progress read-outs (presentation only)
         if (stepCounter) {
             stepCounter.textContent = n > TOTAL_STEPS
-                ? 'Complete'
-                : 'Step ' + n + ' of ' + TOTAL_STEPS;
+                ? T('Complete')
+                : T('Step %(current)s of %(total)s', {current: n, total: TOTAL_STEPS});
         }
         if (progressFill) {
             progressFill.style.width =
@@ -108,8 +144,8 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
             btnNext.style.display = '';
             btnBack.style.display = '';
             btnNext.innerHTML = n === TOTAL_STEPS - 1
-                ? '<i class="bi bi-rocket-takeoff"></i> Install'
-                : 'Next <i class="bi bi-arrow-right"></i>';
+                ? '<i class="bi bi-rocket-takeoff"></i> ' + T('Install')
+                : T('Next') + ' <i class="bi bi-arrow-right"></i>';
         }
     }
 
@@ -142,26 +178,26 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
             const pw2 = document.getElementById('admin_password2').value;
             const minLen = parseInt(document.getElementById('sec_pw_min').value, 10);
             if (pw !== pw2) {
-                showStepError('Passwords do not match.');
+                showStepError(T('Passwords do not match.'));
                 document.getElementById('admin_password2').focus();
                 return false;
             }
             const idleHours = Number(document.getElementById('sec_idle').value);
             const sessionHours = Number(document.getElementById('sec_session').value);
             if (idleHours > sessionHours) {
-                showStepError('Idle timeout cannot exceed the session lifetime.');
+                showStepError(T('Idle timeout cannot exceed the session lifetime.'));
                 document.getElementById('sec_idle').focus();
                 return false;
             }
             const ratePerMinute = Number(document.getElementById('sec_rate_min').value);
             const ratePerHour = Number(document.getElementById('sec_rate_hour').value);
             if (ratePerMinute > ratePerHour) {
-                showStepError('The per-minute rate limit cannot exceed the per-hour rate limit.');
+                showStepError(T('The per-minute rate limit cannot exceed the per-hour rate limit.'));
                 document.getElementById('sec_rate_min').focus();
                 return false;
             }
             if (pw.length < minLen) {
-                showStepError('Admin password must be at least ' + minLen + ' characters.');
+                showStepError(T('Admin password must be at least %(n)s characters.', {n: minLen}));
                 document.getElementById('admin_password').focus();
                 return false;
             }
@@ -183,7 +219,7 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
         for (const el of Object.values(items)) {
             el.className = 'check-item';
             el.querySelector('.icon').innerHTML = '<i class="bi bi-arrow-repeat icon-spin"></i>';
-            el.querySelector('.detail').textContent = 'Checking…';
+            el.querySelector('.detail').textContent = T('Checking…');
         }
         try {
             const r = await fetch('/api/setup/system-check');
@@ -192,10 +228,10 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
 
             setCheck(items.python, c.python.ok, c.python.version, c.python.message);
             setCheck(items.packages, c.packages.ok,
-                c.packages.ok ? 'All imported' : c.packages.missing.join(', '),
+                c.packages.ok ? T('All imported') : c.packages.missing.join(', '),
                 c.packages.message);
             setCheck(items.postgresql, c.postgresql.ok,
-                c.postgresql.ok ? 'Running' : 'Not available',
+                c.postgresql.ok ? T('Running') : T('Not available'),
                 c.postgresql.message);
             setCheck(items.disk, c.disk.ok,
                 c.disk.free_mb > 0 ? c.disk.free_mb + ' MB free' : '',
@@ -212,8 +248,8 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
             }
         } catch(e) {
             renderInstallAlert(
-                alertRegion, 'danger', 'bi-wifi-off', 'Could not reach the server:',
-                e && e.message ? e.message : 'Please try again.',
+                alertRegion, 'danger', 'bi-wifi-off', T('Could not reach the server:'),
+                e && e.message ? e.message : T('Please try again.'),
                 INSTALL_WIZARD_PAGE_DATA.retrySystemCheck, () => runSystemCheck());
         }
     }
@@ -242,7 +278,7 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
 
         btn.disabled = true;
         btn.setAttribute('aria-busy', 'true');
-        btn.innerHTML = '<i class="bi bi-arrow-repeat icon-spin" aria-hidden="true"></i> Testing…';
+        btn.innerHTML = '<i class="bi bi-arrow-repeat icon-spin" aria-hidden="true"></i> ' + T('Testing…');
         try {
             const r = await fetch('/api/setup/test-database', {
                 method: 'POST', headers: HEADERS,
@@ -257,17 +293,17 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
             const d = await r.json();
             if (d.ok) {
                 let extra = '';
-                if (d.database_exists) extra = ` · ${d.table_count} existing tables`;
+                if (d.database_exists) extra = ' · ' + T('%(count)s existing tables', {count: d.table_count});
                 showDbTest('ok', d.message + extra);
             } else {
-                showDbTest('fail', d.message || 'Database connection failed.');
+                showDbTest('fail', d.message || T('Database connection failed.'));
             }
         } catch(e) {
-            showDbTest('fail', 'Network error: ' + (e && e.message ? e.message : 'Please try again.'));
+            showDbTest('fail', T('Network error:') + ' ' + (e && e.message ? e.message : T('Please try again.')));
         } finally {
             btn.disabled = false;
             btn.removeAttribute('aria-busy');
-            btn.innerHTML = '<i class="bi bi-lightning-charge-fill" aria-hidden="true"></i> Test Connection';
+            btn.innerHTML = '<i class="bi bi-lightning-charge-fill" aria-hidden="true"></i> ' + T('Test Connection');
         }
     });
 
@@ -294,8 +330,8 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
         bar.style.width = pct + '%';
         bar.style.background = colors[score] || '#e0e0e0';
         const hint = document.getElementById('pw-hint');
-        const label = pw.length === 0 ? 'Minimum ' + minLength + ' characters' :
-            (score < 2 ? 'Weak' : score < 4 ? 'Fair' : 'Strong');
+        const label = pw.length === 0 ? T('Minimum %(n)s characters', {n: minLength}) :
+            (score < 2 ? T('Weak') : score < 4 ? T('Fair') : T('Strong'));
         const icon = pw.length === 0 ? 'bi-shield-lock' :
             (score < 2 ? 'bi-shield-exclamation' : score < 4 ? 'bi-shield-plus' : 'bi-shield-check');
         const iconNode = document.createElement('i');
@@ -353,7 +389,7 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
         for (const name of stepNames) {
             container.innerHTML += '<div class="install-step pending" data-name="' + name + '" role="listitem">' +
                 '<span class="isp-lead"><i class="bi ' + (stepIcons[name] || 'bi-gear') + '" aria-hidden="true"></i></span>' +
-                '<span class="isp-name">' + name + '</span>' +
+                '<span class="isp-name">' + T(name) + '</span>' +
                 '<span class="isp-icon"><i class="bi bi-arrow-repeat icon-spin" aria-hidden="true"></i></span></div>';
         }
 
@@ -420,7 +456,7 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
             if (d.ok) {
                 renderInstallAlert(
                     resultEl, 'success', 'bi-check-circle-fill',
-                    'Installation complete!', 'Redirecting to login…', null, null);
+                    T('Installation complete!'), T('Redirecting to login…'), null, null);
                 // Do not keep submitted secrets in the live DOM after install.
                 document.getElementById('db_password').value = '';
                 document.getElementById('admin_password').value = '';
@@ -458,10 +494,10 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
                     const address = !visiblePort || configuredPort === visiblePort
                         ? window.location.origin
                         : window.location.protocol + '//' + window.location.hostname + ':' + configuredPort;
-                    addSummaryRow('bi-database-fill-check', 'Database', 'Created and migrated');
-                    addSummaryRow('bi-person-badge', 'Admin', body.admin_username);
-                    addSummaryRow('bi-globe2', 'Environment', body.environment);
-                    addSummaryRow('bi-window-desktop', 'Address', address);
+                    addSummaryRow('bi-database-fill-check', T('Database'), T('Created and migrated'));
+                    addSummaryRow('bi-person-badge', T('Admin'), body.admin_username);
+                    addSummaryRow('bi-globe2', T('Environment'), body.environment);
+                    addSummaryRow('bi-window-desktop', T('Address'), address);
 
                     const loginLink = document.createElement('a');
                     loginLink.href = '/';
@@ -478,15 +514,15 @@ var INSTALL_WIZARD_PAGE_DATA = JSON.parse(document.getElementById('install-wizar
                 }, 1500);
             } else {
                 renderInstallAlert(
-                    resultEl, 'danger', 'bi-x-circle-fill', 'Installation failed.',
-                    d.error || 'Check the step results above for details.',
+                    resultEl, 'danger', 'bi-x-circle-fill', T('Installation failed.'),
+                    d.error || T('Check the step results above for details.'),
                     INSTALL_WIZARD_PAGE_DATA.reviewSettings, () => goTo(4));
             }
         } catch(e) {
             installPanel.setAttribute('aria-busy', 'false');
             renderInstallAlert(
-                resultEl, 'danger', 'bi-wifi-off', 'Network error:',
-                e && e.message ? e.message : 'Please try again.',
+                resultEl, 'danger', 'bi-wifi-off', T('Network error:'),
+                e && e.message ? e.message : T('Please try again.'),
                 INSTALL_WIZARD_PAGE_DATA.reviewSettings, () => goTo(4));
         }
     }

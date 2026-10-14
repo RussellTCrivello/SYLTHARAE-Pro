@@ -10854,14 +10854,12 @@ msgid "Will reset"
 msgstr "התרגום מהקטלוג ישוחזר"
 
 #: templates/Setup/install_wizard.html:8
-#, fuzzy
 msgid "Installation Wizard"
-msgstr "רוחב הניווט"
+msgstr "אשף ההתקנה"
 
 #: templates/Setup/install_wizard.html:693
-#, fuzzy
 msgid "Installation steps"
-msgstr "שלבי הקליטה"
+msgstr "שלבי ההתקנה"
 
 #: templates/Setup/install_wizard.html:820 templates/Setup/install_wizard.html:862
 #: templates/Setup/install_wizard.html:877 templates/auth/first_admin.html:231
@@ -10877,18 +10875,16 @@ msgid "Hide password"
 msgstr "הסתר סיסמה"
 
 #: templates/Setup/install_wizard.html:1060
-#, fuzzy
 msgid "Installation progress"
-msgstr "התקדמות כללית"
+msgstr "התקדמות ההתקנה"
 
 #: templates/Setup/install_wizard.html:1094
 msgid "Retry system check"
-msgstr ""
+msgstr "הרצת בדיקת המערכת מחדש"
 
 #: templates/Setup/install_wizard.html:1095
-#, fuzzy
 msgid "Review settings"
-msgstr "הגדרות עיבוד"
+msgstr "סקירת ההגדרות"
 
 #: templates/Side/side_categories_keywords.html:3
 msgid "Side Categories & Keywords"
@@ -12756,9 +12752,8 @@ msgid "This page is available only until the first administrator exists."
 msgstr ""
 
 #: templates/auth/first_admin.html:216
-#, fuzzy
 msgid "Admin username"
-msgstr "שם משתמש"
+msgstr "שם משתמש של המנהל"
 
 #: templates/auth/first_admin.html:216 templates/auth/first_admin.html:224
 #: templates/auth/first_admin.html:238
@@ -12777,9 +12772,8 @@ msgid "Confirm password"
 msgstr "אישור סיסמה חדשה"
 
 #: templates/auth/first_admin.html:242
-#, fuzzy
 msgid "Re-enter password"
-msgstr "איפוס סיסמה"
+msgstr "הזינו מחדש את הסיסמה"
 
 #: templates/auth/first_admin.html:258
 #, fuzzy
@@ -13273,9 +13267,8 @@ msgid "Try again"
 msgstr "נסה שוב."
 
 #: templates/components/states.html:117
-#, fuzzy
 msgid "Not available"
-msgstr "אין נתונים זמינים"
+msgstr "לא זמין"
 
 #: templates/components/states.html:118
 #, fuzzy
@@ -21268,3 +21261,511 @@ msgstr "דוח אצווה"
 #~ msgid "Error deleting file"
 #~ msgstr "שגיאה במחיקת הקובץ"
 
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(count)s existing tables"
+msgstr "%(count)s טבלאות קיימות"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s cannot contain line breaks or null characters."
+msgstr "%(label)s לא יכול להכיל מעברי שורה או תווי NULL."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s is required."
+msgstr "%(label)s הוא שדה חובה."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be a whole number."
+msgstr "%(label)s חייב להיות מספר שלם."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be between %(minimum)s and %(maximum)s."
+msgstr "%(label)s חייב להיות בין %(minimum)s ל-%(maximum)s."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be no more than %(n)s characters."
+msgstr "%(label)s לא יכול להכיל יותר מ-%(n)s תווים."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(label)s must be text."
+msgstr "%(label)s חייב להיות טקסט."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "(optional)"
+msgstr "(אופציונלי)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "0.0.0.0 = all interfaces; 127.0.0.1 = local only"
+msgstr "0.0.0.0 = כל הממשקים; 127.0.0.1 = מקומי בלבד"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Account locked after this many failures"
+msgstr "החשבון ננעל לאחר מספר כישלונות זה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Address"
+msgstr "כתובת"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin & Security"
+msgstr "מנהל ואבטחה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin Password"
+msgstr "סיסמת מנהל"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin Username"
+msgstr "שם משתמש של המנהל"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Admin password"
+msgstr "סיסמת מנהל"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Admin password must be at least %(n)s characters."
+msgstr "סיסמת המנהל חייבת להכיל לפחות %(n)s תווים."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Administrator Account"
+msgstr "חשבון מנהל"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Affects security defaults, logging, and rate limits"
+msgstr "משפיע על ברירות מחדל של אבטחה, רישום והגבלות קצב"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "All imported"
+msgstr "הכול יובא"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Application Settings"
+msgstr "הגדרות היישום"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Authentication required"
+msgstr "נדרשת אימות"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Back"
+msgstr "חזרה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Bind Address"
+msgstr "כתובת האזנה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Bind address"
+msgstr "כתובת האזנה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Cannot verify system state. Installation blocked for safety. Use CLI for recovery."
+msgstr "לא ניתן לאמת את מצב המערכת. ההתקנה נחסמה מטעמי בטיחות. לשחזור, השתמשו בשורת הפקודה."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Check the step results above for details."
+msgstr "לפרטים נוספים, עיינו בתוצאות השלבים למעלה."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Checking that your system meets the requirements…"
+msgstr "בודק שהמערכת עומדת בדרישות…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Checking…"
+msgstr "בודק…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Choose a supported log level."
+msgstr "בחרו רמת לוג נתמכת."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Concurrent file analysis threads"
+msgstr "חוטי ניתוח קבצים במקביל"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Configure the application environment and processing options."
+msgstr "הגדירו את סביבת היישום ואפשרויות העיבוד."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Confirm Password"
+msgstr "אימות סיסמה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Could not reach the server:"
+msgstr "לא ניתן להגיע לשרת:"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Create the initial administrator account and configure security policies."
+msgstr "צרו את חשבון המנהל הראשוני והגדירו מדיניות אבטחה."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Created and migrated"
+msgstr "נוצר והועבר"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Created automatically if missing"
+msgstr "ייווצר אוטומטית אם אינו קיים"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "DEBUG (verbose)"
+msgstr "DEBUG (מפורט)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database Configuration"
+msgstr "הגדרות מסד הנתונים"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database connection failed."
+msgstr "החיבור למסד הנתונים נכשל."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database host"
+msgstr "שרת מסד הנתונים"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database name"
+msgstr "שם מסד הנתונים"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database password"
+msgstr "סיסמת מסד הנתונים"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database port"
+msgstr "יציאת מסד הנתונים"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Database username"
+msgstr "שם משתמש של מסד הנתונים"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Default: 5000"
+msgstr "ברירת מחדל: 5000"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Default: 5432"
+msgstr "ברירת מחדל: 5432"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Dependencies"
+msgstr "תלויות"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Development"
+msgstr "פיתוח"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Disk Space"
+msgstr "שטח דיסק"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "ERROR (minimal)"
+msgstr "ERROR (מינימלי)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Enter your PostgreSQL connection details. The database and tables will be created automatically."
+msgstr "הזינו את פרטי החיבור ל-PostgreSQL. מסד הנתונים והטבלאות ייווצרו אוטומטית."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Enter your PostgreSQL password"
+msgstr "הזינו את סיסמת PostgreSQL"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Environment"
+msgstr "סביבה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Environment must be production, staging, or development."
+msgstr "הסביבה חייבת להיות ייצור (production), הכנה (staging) או פיתוח (development)."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Fair"
+msgstr "סבירה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Guided setup"
+msgstr "התקנה מודרכת"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "INFO (recommended)"
+msgstr "INFO (מומלץ)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Idle Timeout (hours)"
+msgstr "זמן קצוב לחוסר פעילות (שעות)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Idle timeout"
+msgstr "זמן קצוב לחוסר פעילות"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Idle timeout cannot exceed the session lifetime."
+msgstr "זמן החוסר פעילות לא יכול לעלות על משך חיי ההפעלה."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Ingestion Roots"
+msgstr "שורשי קליטה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Ingestion roots"
+msgstr "שורשי קליטה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Install"
+msgstr "התקנה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation Complete!"
+msgstr "ההתקנה הושלמה!"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation complete!"
+msgstr "ההתקנה הושלמה!"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation failed."
+msgstr "ההתקנה נכשלה."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation is already in progress. Please wait for it to complete."
+msgstr "ההתקנה כבר מתבצעת. אנא המתינו לסיומה."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installing…"
+msgstr "מתקין…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Insufficient permissions"
+msgstr "הרשאות לא מספיקות"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Lockout Duration (min)"
+msgstr "משך נעילה (דקות)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Lockout duration"
+msgstr "משך נעילה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Log level"
+msgstr "רמת לוג"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Max Failed Logins"
+msgstr "מספר כניסות כושלות מרבי"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Max Processing Workers"
+msgstr "מספר מקסימלי של עובדי עיבוד"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Maximum failed logins"
+msgstr "מספר כניסות כושלות מרבי"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Maximum processing workers"
+msgstr "מספר מקסימלי של עובדי עיבוד"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Min 12 characters"
+msgstr "לפחות 12 תווים"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Min Password Length"
+msgstr "אורך סיסמה מינימלי"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Minimum %(n)s characters"
+msgstr "לפחות %(n)s תווים"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Minimum 12 characters"
+msgstr "לפחות 12 תווים"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Minimum password length"
+msgstr "אורך סיסמה מינימלי"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Must be at least the per-minute limit."
+msgstr "חייב להיות לפחות כמגבלת הדקה."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Network error:"
+msgstr "שגיאת רשת:"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Operating System"
+msgstr "מערכת הפעלה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Per-file timeout"
+msgstr "זמן קצוב לכל קובץ"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "PostgreSQL"
+msgstr "PostgreSQL"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "PostgreSQL server address"
+msgstr "כתובת שרת PostgreSQL"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "PostgreSQL superuser"
+msgstr "משתמש־על של PostgreSQL"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Processing Timeout (sec)"
+msgstr "זמן קצוב לעיבוד (שניות)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Processing timeout"
+msgstr "זמן קצוב לעיבוד"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Production (recommended)"
+msgstr "ייצור (מומלץ)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Python"
+msgstr "Python"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate Limit (req/hour)"
+msgstr "מגבלת קצב (בקשות/שעה)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate Limit (req/min)"
+msgstr "מגבלת קצב (בקשות/דקה)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate limit per hour"
+msgstr "מגבלת קצב לשעה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Rate limit per minute"
+msgstr "מגבלת קצב לדקה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Redirecting to login…"
+msgstr "מועבר לכניסה…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Request body must be a JSON object."
+msgstr "גוף הבקשה חייב להיות אובייקט JSON."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Security Policies"
+msgstr "מדיניות אבטחה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Semicolon-separated server directories the app may read. Leave empty for uploads only."
+msgstr "תיקיות שרת מופרדות בנקודה-פסיק שהיישום רשאי לקרוא מהן. השאירו ריק להעלאות בלבד."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Session Lifetime (hours)"
+msgstr "משך חיי הפעלה (שעות)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Session lifetime"
+msgstr "משך חיי הפעלה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Setting up your File Analysis system. This takes 15–60 seconds."
+msgstr "מגדירים את מערכת ניתוח הקבצים. התהליך נמשך 15 עד 60 שניות."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Setup progress"
+msgstr "התקדמות ההתקנה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Staging"
+msgstr "הכנה (Staging)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Step %(current)s of %(total)s"
+msgstr "שלב %(current)s מתוך %(total)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Strong"
+msgstr "חזקה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "System Check"
+msgstr "בדיקת מערכת"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "System Prerequisites"
+msgstr "דרישות מוקדמות של המערכת"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "System is already initialized. Re-installation is not permitted through this endpoint."
+msgstr "המערכת כבר מאותחלת. התקנה מחדש אינה מותרת דרך נקודת קצה זו."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Test Connection"
+msgstr "בדיקת חיבור"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Testing…"
+msgstr "בודק…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "The password you set during PostgreSQL installation"
+msgstr "הסיסמה שהגדרתם בעת התקנת PostgreSQL"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "The per-minute rate limit cannot exceed the per-hour limit."
+msgstr "מגבלת הדקה לא יכולה לעלות על מגבלת השעה."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "The per-minute rate limit cannot exceed the per-hour rate limit."
+msgstr "מגבלת הדקה לא יכולה לעלות על מגבלת השעה."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "WARNING (quiet)"
+msgstr "WARNING (שקט)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Weak"
+msgstr "חלשה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Web Port"
+msgstr "יציאת רשת"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Web port"
+msgstr "יציאת רשת"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Your File Analysis system is ready to use."
+msgstr "מערכת ניתוח הקבצים מוכנה לשימוש."
+
+msgid "Administrator"
+msgstr "מנהל"
+
+msgid "Database & schema"
+msgstr "מסד נתונים וסכמה"
+
+msgid "Finalize"
+msgstr "סיום"
+
+msgid "Runtime directories"
+msgstr "תיקיות ריצה"
+
+msgid "Write configuration"
+msgstr "כתיבת התצורה"
+
+#: Api/routes/setup.py
+msgid "Choose a supported language."
+msgstr "בחרו שפה נתמכת."
