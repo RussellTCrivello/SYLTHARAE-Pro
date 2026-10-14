@@ -9,7 +9,8 @@ can terminate itself at a chosen storage boundary:
   after its database commit and before the checkpoint mark for that file.
 
 ``os._exit`` skips every cleanup handler, so the process dies the way a power
-loss or a killed service does.  Prints ``STORE_CALLS=<n>`` on normal exit.
+loss or a killed service does.  On normal exit prints ``STORE_CALLS``, ``ROUTER_CALLS`` (files the reader was
+asked to process) and ``LEDGER`` (terminal counts from the progress ledger).
 
 Usage: resume_worker.py <folder> <checkpoint_file>
 Environment: DB_HOST, DB_PORT, DB_NAME, DB_USER (read by the application).
@@ -48,6 +49,18 @@ def main() -> int:
 
     sp.StoragePipeline._store_file_sync = counting_store
 
+    # Count every file the router is asked to read, including archive members.
+    # A skipped (already committed) file never reaches the router.
+    from reader_file.services.file_router_service import FileRouterService
+    original_route = FileRouterService.process_file
+    routed = {"n": 0}
+
+    def counting_route(self, *args, **kwargs):
+        routed["n"] += 1
+        return original_route(self, *args, **kwargs)
+
+    FileRouterService.process_file = counting_route
+
     reader = ir.IntegratedFileReader(
         max_workers=1,
         enable_monitoring=False,
@@ -57,7 +70,10 @@ def main() -> int:
         checkpoint_file=checkpoint,
     )
     reader.process_folder(folder)
+    import json
     print(f"STORE_CALLS={calls['n']}", flush=True)
+    print(f"ROUTER_CALLS={routed['n']}", flush=True)
+    print("LEDGER=" + json.dumps(dict(reader.progress_ledger.counts)), flush=True)
     return 0
 
 

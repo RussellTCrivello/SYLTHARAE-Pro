@@ -398,6 +398,48 @@ class DeduplicationService:
         )
         return (path_id is not None, path_id)
 
+    def find_committed_occurrence(
+        self,
+        content_hash: str,
+        source_name: str,
+        side_name: str,
+        location: str,
+    ) -> Optional[int]:
+        """Return the path id of a *committed* occurrence, or None. Read-only.
+
+        Used before a file is processed: if this exact occurrence (same bytes,
+        same source and side, same location) is already stored as processed,
+        processing it again can only repeat work. Names are matched, not
+        created: a source or side that does not exist yet has no committed
+        occurrences, and a lookup must never write identity rows.
+
+        ``location`` is the occurrence key: ``hierarchy_path`` for archive
+        members, the physical ``file_path`` otherwise (see occurrence_location).
+        """
+        if not (content_hash and source_name and side_name and location):
+            return None
+        with self._cursor(commit=False) as (_, cur):
+            cur.execute(
+                """
+                SELECT p.id
+                FROM paths p
+                JOIN hash_contexts c ON c.id = p.context_id
+                JOIN hashs h ON h.id = c.hash_id
+                JOIN sources s ON s.id = c.source_id
+                JOIN sides sd ON sd.id = c.side_id
+                WHERE h.hash = %s
+                  AND s.name = %s
+                  AND sd.name = %s
+                  AND COALESCE(p.hierarchy_path, p.file_path) = %s
+                  AND p.processing_status = 'processed'
+                ORDER BY p.id
+                LIMIT 1
+                """,
+                (content_hash, source_name, side_name, location),
+            )
+            row = cur.fetchone()
+        return int(row[0]) if row else None
+
     def hash_exists_with_live_path(
         self, content_hash: str, source_id: Optional[int] = None,
         side_id: Optional[int] = None,

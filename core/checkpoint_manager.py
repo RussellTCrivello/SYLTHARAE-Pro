@@ -127,6 +127,20 @@ class CheckpointManager:
             rel = file_path
         return rel.replace('\\', '/').lower()
 
+    @staticmethod
+    def _exact_fingerprint(file_info: Dict[str, Any], file_path: str):
+        """(size, mtime_ns) for a file; (None, None) when it cannot be read."""
+        size = file_info.get('size_bytes')
+        mtime_ns = file_info.get('mtime_ns')
+        if size is None or mtime_ns is None:
+            try:
+                st = os.stat(file_path)
+                size = st.st_size if size is None else size
+                mtime_ns = st.st_mtime_ns if mtime_ns is None else mtime_ns
+            except (OSError, TypeError, ValueError):
+                return size, mtime_ns
+        return size, mtime_ns
+
     def _get_file_identifier(self, file_info: Dict[str, Any]) -> int:
         """
         Generate unique identifier for a file.
@@ -158,7 +172,13 @@ class CheckpointManager:
             size = file_info.get('size_bytes', file_info.get('size', ''))
             identifier = f"member:{rel}|{size}"
         else:
-            identifier = f"{normalized_path}|{modified}"
+            # 'modified' from file metadata is a calendar date (YYYY-MM-DD), so
+            # a file edited later the same day kept its identifier and was
+            # silently skipped on resume. Size and the exact mtime in
+            # nanoseconds are part of the identity. Read from disk when the
+            # caller did not supply them (one stat per file).
+            size, mtime_ns = self._exact_fingerprint(file_info, file_path)
+            identifier = f"{normalized_path}|{modified}|{size}|{mtime_ns}"
 
         # 96 bits of SHA-256, kept as an int.
         #

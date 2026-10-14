@@ -418,6 +418,12 @@ class ContentDBService:
                 hash_value, source_id, side_id, path_row, commit=commit
             )
 
+    def find_committed_occurrence(self, hash_value: str, source_name: str,
+                                  side_name: str, location: str) -> Optional[int]:
+        """Read-only lookup of a committed occurrence (see DeduplicationService)."""
+        with self._dedup_session() as dedup:
+            return dedup.find_committed_occurrence(hash_value, source_name, side_name, location)
+
     def hash_exists(self, hash_value: str, source_id: int, side_id: Optional[int] = None) -> bool:
         """Check if the content has any live occurrence for the source (and optionally side)."""
         # AUDIT-DB-01: the side-scoped branch called ``self.hashs_repo``, an

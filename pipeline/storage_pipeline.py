@@ -391,6 +391,12 @@ class StoragePipeline:
         Returns:
             Path ID or None if failed
         """
+
+        # The reader supplies the occurrence location for archive members in
+        # file_info (see IntegratedFileReader._occurrence_location). Using it
+        # here keeps the store and the pre-processing skip check on one key.
+        if hierarchy_path is None and isinstance(file_info, dict):
+            hierarchy_path = file_info.get('hierarchy_path')
         # Require explicit source/side names (no defaults, no auto-creation)
         # Source and side must be explicitly provided - either in constructor or in this call
         effective_source_name = source_name if source_name is not None else getattr(self, '_source_name', None)
@@ -1142,6 +1148,28 @@ class StoragePipeline:
         self.stats['files_failed'] += 1
         return None
     
+    def find_committed_occurrence(
+        self,
+        file_hash: str,
+        source_name: Optional[str],
+        side_name: Optional[str],
+        location: Optional[str],
+    ) -> Optional[int]:
+        """Path id of an already committed, processed occurrence, or None.
+
+        Fails open: any error returns None, so the file is processed normally.
+        Correctness does not depend on this lookup, because the store path
+        performs its own duplicate check before writing.
+        """
+        if not (file_hash and source_name and side_name and location):
+            return None
+        try:
+            return self.db_service.find_committed_occurrence(
+                file_hash, source_name, side_name, location)
+        except Exception as exc:
+            logger.debug("Committed-occurrence lookup failed; processing the file: %s", exc)
+            return None
+
     def check_duplicate_for_pipeline(
         self,
         file_hash: str,

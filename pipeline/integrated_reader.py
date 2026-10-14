@@ -782,6 +782,9 @@ class IntegratedFileReader:
         Returns:
             List of processing results
         """
+        # Folder being processed: archive members are located relative to it.
+        self._current_folder = folder_path
+
         # Initialize checkpoint manager if checkpoint file is provided.
         #
         # A nested reader (archive member, attachment) has no checkpoint file of
@@ -1770,6 +1773,65 @@ class IntegratedFileReader:
         console.end_progress()  # Terminate the in-place progress line
         return results
 
+    #: Files that the readers can open as containers (archives, mail, PDF and
+    #: Office packages with embedded objects). A committed container is never
+    #: skipped before it is read: its members may have failed in an earlier run
+    #: and must be retried, and only the members can tell which ones.
+    CONTAINER_EXTENSIONS = frozenset({
+        'zip', 'rar', '7z', 'tar', 'gz', 'tgz', 'bz2', 'xz', 'cab', 'iso',
+        'eml', 'msg', 'pst', 'ost', 'mbox', 'emlx',
+        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'xlsb', 'ppt', 'pptx',
+        'odt', 'ods', 'odp', 'rtf', 'one', 'vsd', 'vsdx', 'epub', 'msi',
+    })
+
+    def _occurrence_location(self, file_info: Dict[str, Any]) -> Optional[str]:
+        """Stable occurrence key for a file, independent of extraction paths.
+
+        Top-level files are identified by their physical path. Archive members
+        are identified as ``<container file name>::<path inside the container>``,
+        so the key does not change when the extraction folder is re-created.
+        """
+        file_path = file_info.get('path') if isinstance(file_info, dict) else None
+        if not file_path:
+            return None
+        if not self._container_path:
+            return str(file_path)
+        folder = getattr(self, '_current_folder', None)
+        try:
+            inside = os.path.relpath(file_path, folder) if folder else os.path.basename(file_path)
+        except ValueError:
+            inside = os.path.basename(file_path)
+        inside = inside.replace('\\', '/')
+        container_name = os.path.basename(self._container_path)
+        return f"{container_name}::{inside}"
+
+    def _skip_committed(self, file_info: Dict[str, Any], location: Optional[str]) -> bool:
+        """True when this exact leaf occurrence is already committed and processed.
+
+        Skipping here happens before the file is read, extracted, parsed or OCR'd,
+        which is where the time goes. Correctness:
+        - the key includes the content hash, so a changed file is never skipped;
+        - the location is part of the key, so a moved file is processed again;
+        - containers are never skipped (see CONTAINER_EXTENSIONS);
+        - any failure to decide returns False, so the file is processed normally.
+        """
+        if not (self.enable_storage and self.storage_pipeline is not None):
+            return False
+        file_path = file_info.get('path')
+        if not file_path or not location or not os.path.isfile(file_path):
+            return False
+        ext = os.path.splitext(file_path)[1].lstrip('.').lower()
+        if ext in self.CONTAINER_EXTENSIONS:
+            return False
+        try:
+            from core.hashing import hash_file
+            digest = hash_file(file_path)
+        except Exception:
+            return False
+        committed = self.storage_pipeline.find_committed_occurrence(
+            digest, self.storage_source, self.storage_side, location)
+        return committed is not None
+
     def _process_file_worker(
         self, 
         file_info: Dict[str, Any],
@@ -1908,6 +1970,32 @@ class IntegratedFileReader:
                 logger.warning(f"File does not exist: {file_path} - will attempt processing anyway")
                 # Don't return None - some readers can handle non-existent files or process from memory
             
+            # Nested members carry their stable location into storage, so the
+            # store and the skip check below agree on one identity.
+            if self._container_path and isinstance(file_info, dict):
+                file_info['hierarchy_path'] = self._occurrence_location(file_info)
+
+            # Durable recovery: a leaf occurrence that is already committed is
+            # terminal work from an earlier run. Mark it and do not read it again.
+            if self._skip_committed(file_info, self._occurrence_location(file_info)):
+                logger.info(f"Already stored (committed occurrence): {os.path.basename(file_path)}")
+                outcome = OUTCOME_SKIPPED
+                # Count it as a duplicate, as the store path does, so job
+                # statistics do not lose it when the store is bypassed.
+                pipeline = getattr(self, 'storage_pipeline', None)
+                if pipeline is not None:
+                    try:
+                        pipeline.stats['files_duplicates'] += 1
+                        pipeline.stats['files_processed'] += 1
+                    except Exception as stat_err:
+                        logger.debug(f"Duplicate accounting failed (non-critical): {stat_err}")
+                if self.checkpoint_manager:
+                    try:
+                        self.checkpoint_manager.mark_processed(file_info)
+                    except Exception as cp_err:
+                        logger.debug(f"Checkpoint marking failed (non-critical): {cp_err}")
+                return None
+
             # Check for pause
             if check_pause:
                 check_pause()

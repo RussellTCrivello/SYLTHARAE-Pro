@@ -13,7 +13,7 @@ production readiness.
 | Pull request | #1, OPEN, head matches the remote tip, `mergeStateStatus` UNKNOWN |
 | `main` | `948b973`; the branch is 0 behind and 26+ commits ahead |
 | Reported commits `22ee34a`, `4f4d7b8`, `215b992` | all present in the branch history |
-| Working copy used for tests | detached worktree `/home/user/audit`, clean at start |
+| Working copy used for tests | detached worktree `<working copy>`, clean at start |
 | Main checkout `/home/user/SYLTHARAE-Pro` | on the branch at `948b973`, 120 changed paths, not modified by this work |
 | Backup of the main checkout | `/home/user/backups/main-checkout-20261014-073753` (checksums in `SHA256SUMS`) |
 
