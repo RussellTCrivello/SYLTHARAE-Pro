@@ -94,6 +94,9 @@ export function renderFilePaginationControls() {
  * Initialize file pagination controls after DOM insertion
  * This must be called after the HTML is inserted into the DOM
  */
+/** The id the file list's Load More control is bound to (one control per list). */
+export const FILE_LIST_LOAD_MORE_ID = 'fmasFilesContainer';
+
 export function initializeFilePaginationControls() {
     const pag = navigationState.filePagination;
     const startItem = (pag.currentPage - 1) * pag.perPage + 1;
@@ -117,6 +120,8 @@ export function initializeFilePaginationControls() {
     
     // Render unified pagination directly into the container
     try {
+        // One control: the list's Load More is rendered by this pager and
+        // handled by the page's loader (the file list is cards, not a table).
         renderUnifiedPagination({
             currentPage: pag.currentPage,
             totalPages: pag.totalPages,
@@ -129,8 +134,16 @@ export function initializeFilePaginationControls() {
             urlParams: {},
             showInfo: true,
             showJump: pag.totalPages > 5,
-            baseUrl: window.location.pathname
+            baseUrl: window.location.pathname,
+            tableId: FILE_LIST_LOAD_MORE_ID,
+            totalCount: pag.total || 0,
+            rowsShown: (navigationState.loadedFiles || []).length,
         });
+        if (window.UnifiedTable && typeof window.UnifiedTable.onLoadMore === 'function') {
+            window.UnifiedTable.onLoadMore(FILE_LIST_LOAD_MORE_ID, () => {
+                if (typeof window.loadMoreFiles === 'function') window.loadMoreFiles();
+            });
+        }
     } catch (error) {
         console.error('Error rendering file pagination:', error);
     }

@@ -202,7 +202,8 @@
         total_pages=total_pages|default(1),
         total_count=total_words|default(0),
         rows_shown=words|length,
-        append=True) %}
+        append=True,
+        pager=True) %}
     {% for word in words %}
     {% set row_number = (page - 1) * per_page + loop.index %}
     <tr data-word-id="{{ word.id }}"
@@ -256,7 +257,7 @@
             'per_page': per_page,
             'sort': sort_by|default('usage_count'),
             'order': sort_order|default('desc')
-        }) }}
+        }, table_id='wordsTable', total_count=total_words|default(0), rows_shown=words|length) }}
     {% endif %}
 </div>
 

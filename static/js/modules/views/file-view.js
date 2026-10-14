@@ -362,12 +362,10 @@ export function renderFilesView(files, section, itemName, pagination) {
 
         fileNavigationState.currentFiles = filesList;
         html += renderFilePaginationControls();
-        html += renderShowMoreControl(pagination, files.length);
     } else {
         html += `<div class="empty-state" id="fmasFilesEmpty">${translations.noFilesFound || 'No files found'}</div>`;
         html += '<div id="fmasFilesContainer"></div>';
         html += '<div id="file-pagination-container" class="file-pagination-container"></div>';
-        html += renderShowMoreControl(pagination, 0);
     }
 
     html += '</div>'; // fmas-files-scroll-body
@@ -586,35 +584,18 @@ function buildFilesToolbar({ filters, currentPerPage, currentFileViewMode, typeO
     return html;
 }
 
-function renderShowMoreControl(pagination, shownCount) {
-    const translations = pageTranslations();
-    const total = pagination?.total || 0;
-    const hasMore = !!(pagination?.has_next) || (shownCount > 0 && shownCount < total);
-    const hidden = hasMore ? '' : ' style="display:none"';
-    return `
-        <div class="fmas-show-more-wrap unified-pagination-show-more"${hidden} id="fmasShowMoreWrap">
-            <button type="button" id="fmasShowMoreFiles" class="btn btn-outline-primary fmas-show-more-btn"
-                    data-on-click="loadMoreFiles?.()"
-                    aria-label="${translations.showMore || 'Show More'}"
-                    title="${translations.showMore || 'Show More'}">
-                <i class="bi bi-arrow-down-circle me-1" aria-hidden="true"></i>
-                <span>${translations.showMore || 'Show More'}</span>
-            </button>
-        </div>`;
-}
-
+/** Keep the list's counter and its one Load More control in step with the state. */
 function updateShowMoreVisibility() {
-    const wrap = document.getElementById('fmasShowMoreWrap');
-    if (!wrap) return;
     const translations = pageTranslations();
     const pag = navigationState.filePagination || {};
     const shown = (navigationState.loadedFiles || []).length
         || document.querySelectorAll('#fmasFilesContainer .file-card, #fmasFilesContainer .file-grid-item').length;
-    const hasMore = !!pag.has_next || (shown > 0 && shown < (pag.total || 0));
-    wrap.style.display = hasMore ? '' : 'none';
     const meta = document.getElementById('fmasFilesMeta');
     if (meta && pag.total != null) {
         meta.textContent = `${shown} / ${pag.total} ${translations.files || 'files'}`;
+    }
+    if (window.UnifiedTable && typeof window.UnifiedTable.syncLoadMore === 'function') {
+        window.UnifiedTable.syncLoadMore('fmasFilesContainer', shown, pag.total || 0, pag.perPage);
     }
 }
 

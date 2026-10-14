@@ -248,7 +248,8 @@
             total_pages=total_pages,
             total_count=total_results,
             rows_shown=results|length,
-            append=True) %}
+            append=True,
+            pager=True) %}
         {% for result in results %}
         <tr class="file-row ut-row-hit" data-file-id="{{ result.id }}" data-file-name="{{ result.file_name }}">
             <td class="ut-col-select">
@@ -284,6 +285,17 @@
         </tr>
         {% endfor %}
     {% endcall %}
+    {#- The numbered pager and the table's Load More: one control. The reader's
+        term and page size ride along in the query string. -#}
+    {% if total_pages > 1 %}
+        {% from "components/unified_pagination.html" import unified_pagination %}
+        {% set search_pager_params = {'q': query, 'limit': per_page} %}
+        {% if sort %}{% set _sort_params = search_pager_params.update({'sort': sort, 'order': order}) %}{% endif %}
+        <div class="pagination-container mt-3" id="searchPagination">
+            {{ unified_pagination(page, total_pages, url_for, 'search_page', search_pager_params,
+                table_id='searchResultsTable', total_count=total_results, rows_shown=results|length) }}
+        </div>
+    {% endif %}
     {% else %}
     <div class="empty-state">
         <i class="bi bi-search"></i>
@@ -293,4 +305,5 @@
     </div>
 </div>
 {% endif %}
+<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261014a" defer></script>
 {% endblock %}

@@ -2,7 +2,7 @@
    purpose: Moving through a long list: where you are, how much there is, and
             how to get to a page you know the number of.
    states: normal, filtered
-   classes: pagination, page-item, page-link, page-navigation-bar, unified-pagination-show-more, unified-pagination-show-more-btn
+   classes: pagination, page-item, page-link, page-navigation-bar, unified-pagination-container, unified-pagination-jump
    notes: Renders links for the endpoint it is given; it does not query and
           does not decide the page size.
 #}
@@ -65,21 +65,6 @@
         {% if table_id and page < total_pages %}
         {# One control: the table's own Load More, placed here. #}
         {{ load_more_control(table_id, page, total_pages, total_count, rows_shown, load_more_label) }}
-        {% elif page < total_pages %}
-        <div class="unified-pagination-show-more me-2">
-            <button type="button" 
-                    class="btn btn-sm btn-outline-primary unified-pagination-show-more-btn"
-                    data-endpoint="{{ endpoint }}"
-                    data-current-page="{{ page }}"
-                    data-next-page="{{ page + 1 }}"
-                    data-total-pages="{{ total_pages }}"
-                    data-url-params="{{ url_params|tojson }}"
-                    aria-label="{{ _('Show More') }}"
-                    title="{{ _('Show More') }}">
-                <i class="bi bi-arrow-down-circle me-1" aria-hidden="true"></i>
-                <span>{{ _('Show More') }}</span>
-            </button>
-        </div>
         {% endif %}
         <nav aria-label="{{ _('Page navigation') }}">
             <ul class="unified-pagination-list">

@@ -58,7 +58,7 @@ This is a measurement of the product as it is, not a target.
 | Templates with a filter submit inside a bar | 1 |
 | Templates with document viewer controls | 1 |
 | Files still calling the browser confirm() | 22 |
-| Files deciding button state by hand | 13 |
+| Files deciding button state by hand | 14 |
 | Gaps: actions the model cannot describe | 12 |
 
 ### Registered actions
@@ -137,7 +137,7 @@ Each row is a scan from `SURFACES`, so the count and the files come from one sta
 | Filter form submitted from a bar | 1 | `templates/email_words/email_words.html` |
 | Document viewer controls | 1 | `templates/file/full_content.html` |
 | Browser confirm() dialog | 22 | `static/js/pages/analysis-batch-page.js`, `static/js/pages/analyst-categorization-page.js`, `static/js/pages/categories-list-page.js`, `static/js/pages/category-words-page.js`, `static/js/pages/keyword-detail-page.js`, `static/js/pages/keywords-list-page.js`, `static/js/pages/map-viewer-page.js`, `static/js/pages/monitoring-page.js`, `static/js/pages/notifications-page.js`, `static/js/pages/retention-page.js`, `static/js/pages/saved-searches-page.js`, `static/js/pages/schedules-page.js`, `static/js/pages/search-advanced-page.js`, `static/js/pages/search-enhanced-page.js`, `static/js/pages/side-detail-page.js`, `static/js/pages/sides-list-page.js`, `static/js/pages/source-detail-page.js`, `static/js/pages/sources-list-page.js`, `static/js/pages/translation-management-page.js`, `static/js/pages/users-page.js`, `static/js/pages/word-detail-page.js`, `static/js/pages/words-list-page.js` |
-| Button state decided by the page | 13 | `static/js/pages/analysis-batch-page.js`, `static/js/pages/categories-list-page.js`, `static/js/pages/email-words-page.js`, `static/js/pages/file-types-page.js`, `static/js/pages/ingestion-studio-page.js`, `static/js/pages/install-wizard-page.js`, `static/js/pages/keywords-list-page.js`, `static/js/pages/login-page.js`, `static/js/pages/notifications-page.js`, `static/js/pages/reports-page.js`, `static/js/pages/search-advanced-page.js`, `static/js/pages/search-enhanced-page.js`, `static/js/pages/users-page.js` |
+| Button state decided by the page | 14 | `static/js/pages/analysis-batch-page.js`, `static/js/pages/categories-list-page.js`, `static/js/pages/email-words-page.js`, `static/js/pages/file-types-page.js`, `static/js/pages/ingestion-studio-page.js`, `static/js/pages/install-wizard-page.js`, `static/js/pages/keywords-list-page.js`, `static/js/pages/login-page.js`, `static/js/pages/notifications-page.js`, `static/js/pages/reports-page.js`, `static/js/pages/search-advanced-page.js`, `static/js/pages/search-enhanced-page.js`, `static/js/pages/signals-page.js`, `static/js/pages/users-page.js` |
 
 The component library counts 5 standardised and 2 hand-written action bars. Those are the same bars seen from two directions: the 5 templates rendering the shared toolbar are listed above, and the hand-written ones split into the file list's action bar and the full-content viewer's bar - which this audit counts as a viewer control, because that is what it is, not as an action bar to migrate.
 

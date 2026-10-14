@@ -329,7 +329,7 @@ if (typeof window.translations === 'undefined') {
         UnifiedTable.renderRows(tableBody, rows);
     }
 
-    function renderPaginator(page, total_pages) {
+    function renderPaginator(page, total_pages, loadMore = {}) {
         console.log(`renderPaginator called: page=${page}, total_pages=${total_pages}`);
 
         // ✅ FIXED: Validate pagination inputs
@@ -396,6 +396,10 @@ if (typeof window.translations === 'undefined') {
             module.renderUnifiedPagination({
                 currentPage: page,
                 totalPages: total_pages,
+                // One control: the table's Load More is rendered by the pager.
+                tableId: 'keywordsTable',
+                totalCount: loadMore.total ?? 0,
+                rowsShown: loadMore.shown ?? 0,
                 containerId: paginationContainer.id,
                 onPageChange: (targetPage) => {
                     console.log('Pagination page change callback triggered:', targetPage);
@@ -671,7 +675,7 @@ if (typeof window.translations === 'undefined') {
                     }
                     renderRows(keywords, pageNum);
                     console.log(`Rendering pagination for page ${pageNum} of ${totalPages}`);
-                    renderPaginator(pageNum, totalPages);
+                    renderPaginator(pageNum, totalPages, { total: json.total, shown: keywords.length });
                     updateSearchInfo(json);
 
                     // STALE-01: keep the server-rendered "Total Keywords" stat

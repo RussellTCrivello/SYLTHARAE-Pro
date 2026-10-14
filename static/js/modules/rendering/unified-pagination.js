@@ -26,7 +26,13 @@ export function renderUnifiedPagination(options) {
         showInfo = true,
         showJump = true,
         endpoint = null,
-        baseUrl = null
+        baseUrl = null,
+        // Load More: when a table is bound, the table's control is rendered
+        // here, beside the numbered pages (the same markup the server renders).
+        tableId = null,
+        totalCount = null,
+        rowsShown = null,
+        loadMoreLabel = null
     } = options;
 
     const container = document.getElementById(containerId);
@@ -82,6 +88,12 @@ export function renderUnifiedPagination(options) {
 
     // Pagination controls
     html += '<div class="unified-pagination-controls">';
+    if (tableId && page < totalPagesFinal) {
+        html += loadMoreBlockHtml({
+            tableId, page, totalPages: totalPagesFinal,
+            total: totalCount, shown: rowsShown, label: loadMoreLabel,
+        });
+    }
     html += '<nav aria-label="Page navigation">';
     html += '<ul class="unified-pagination-list">';
 
@@ -216,6 +228,25 @@ export function renderUnifiedPagination(options) {
 /**
  * Build URL for a specific page
  */
+/** The one Load More block, as the server renders it (components/unified_pagination.html,
+ *  macro load_more_control). The table engine (ui/unified-table.js) owns its behaviour. */
+export function loadMoreBlockHtml({ tableId, page, totalPages, total, shown, label }) {
+    const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    const n = (value) => Math.max(0, parseInt(value, 10) || 0);
+    return '<div class="ut-load-more" data-ut-load-more'
+        + ` data-table-id="${esc(tableId)}" data-page="${n(page)}"`
+        + ` data-total-pages="${n(totalPages)}" data-total="${n(total)}" data-shown="${n(shown)}">`
+        + '<button type="button" class="btn btn-outline-primary btn-sm">'
+        + '<i class="bi bi-arrow-down-circle me-2" aria-hidden="true"></i>'
+        + `${esc(label || 'Show More')}</button>`
+        + '<span class="ut-load-more-info" aria-live="polite">Showing <span data-ut-shown>'
+        + `${n(shown)}</span> of <span data-ut-total>${n(total)}</span></span>`
+        + '<span class="ut-load-more-error text-danger" data-ut-load-error hidden role="alert">'
+        + 'Could not load more. Click to try again.</span>'
+        + '</div>';
+}
+
 function buildPageUrl(page, endpoint, baseUrl, urlParams, onPageChange) {
     if (onPageChange) {
         // Use callback function

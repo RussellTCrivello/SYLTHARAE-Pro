@@ -79,11 +79,14 @@ def test_a_single_page_renders_nothing(render):
     assert "unified-pagination-container" not in _pager(render, total_pages=1)
 
 
-def test_a_pager_without_a_table_keeps_its_own_show_more(render):
+def test_a_pager_without_a_table_has_numbered_pages_and_no_load_more(render):
+    # Paged content with no table to append to: the numbered pages are the
+    # navigation. There is no second Load More implementation to fall back on.
     src = ("{% from 'components/unified_pagination.html' import unified_pagination %}"
            "{{ unified_pagination(1, 5, url_for, 'email_words', {}) }}")
     out = render(src)
-    assert "unified-pagination-show-more-btn" in out
+    assert "unified-pagination-link" in out
+    assert "unified-pagination-show-more-btn" not in out
     assert "data-ut-load-more" not in out
 
 

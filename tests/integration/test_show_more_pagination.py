@@ -72,8 +72,10 @@ def test_show_more_on_keywords_list(admin_client, pg_db):
     html = resp.get_data(as_text=True)
 
     assert "data-ut-load-more" in html
-    assert "unified-pagination-show-more-btn" in html
-    assert 'data-next-page="2"' in html
+    assert "unified-pagination-show-more-btn" not in html, "two Load More controls on one list"
+    assert html.count("data-ut-load-more") == 1
+    assert 'data-table-id="keywordsTable"' in html
+    assert 'data-page="1"' in html
 
 
 def test_show_more_on_sides_list(admin_client, pg_db):
@@ -139,8 +141,10 @@ def test_show_more_on_words_list(admin_client, pg_db):
     html = resp.get_data(as_text=True)
 
     assert "data-ut-load-more" in html
-    assert "unified-pagination-show-more-btn" in html
-    assert 'data-next-page="2"' in html
+    assert "unified-pagination-show-more-btn" not in html, "two Load More controls on one list"
+    assert html.count("data-ut-load-more") == 1
+    assert 'data-table-id="wordsTable"' in html
+    assert 'data-page="1"' in html
 
 
 def test_show_more_on_category_words(admin_client, pg_db):
@@ -189,5 +193,7 @@ def test_show_more_on_email_words(admin_client, pg_db):
     assert resp.status_code == 200
     html = resp.get_data(as_text=True)
 
-    assert "unified-pagination-show-more-btn" in html
-    assert 'data-next-page="2"' in html
+    assert "unified-pagination-show-more-btn" not in html, "two Load More controls on one list"
+    assert html.count("data-ut-load-more") == 1
+    assert 'data-table-id="emailWordsTable"' in html
+    assert 'data-page="1"' in html

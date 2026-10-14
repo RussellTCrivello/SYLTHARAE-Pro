@@ -145,7 +145,7 @@ How much of the repeated markup has moved onto its component. Standardized count
 | --- | --- | --- | --- |
 | Hand-written empty state | 5 | 3 | 62% |
 | Hand-written table | 17 | 9 | 65% |
-| Hand-written pagination markup | 10 | 0 | 100% |
+| Hand-written pagination markup | 11 | 0 | 100% |
 | Hand-written search input | 8 | 10 | 44% |
 | Hand-written filter control | 7 | 7 | 50% |
 | Browser confirm() dialog | 3 | 0 | 100% |
@@ -164,7 +164,7 @@ Every class a component renders has exactly one owner. **OWNED** means an SYLTHA
 
 | Ownership | Classes |
 | --- | --- |
-| OWNED (SYLTHARAE) | 166 |
+| OWNED (SYLTHARAE) | 164 |
 | THIRD_PARTY (Bootstrap, Bootstrap Icons) | 259 |
 | UNKNOWN | 0 |
 
@@ -187,7 +187,5 @@ Owned by declaration rather than by a stylesheet - the component states these ar
 * `ut-export-scope-check` (table.html)
 * `ut-filter-check` (table.html)
 * `ut-head` (table.html)
-* `unified-pagination-show-more` (unified_pagination.html)
-* `unified-pagination-show-more-btn` (unified_pagination.html)
 
 <!-- END GENERATED COMPONENT AUDIT -->

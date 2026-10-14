@@ -255,12 +255,9 @@ export async function loadMoreFiles() {
     const { currentFileSection, currentFileItemId, currentSourceFilter, currentSideFilter } = navigationState;
     if (!currentFileSection || !currentFileItemId) return;
 
-    const btn = document.getElementById('fmasShowMoreFiles');
-    if (btn) {
-        btn.disabled = true;
-        const icon = btn.querySelector('i');
-        if (icon) icon.className = 'spinner-border spinner-border-sm me-1';
-    }
+    const block = document.querySelector('[data-ut-load-more][data-table-id="fmasFilesContainer"]');
+    const button = block?.querySelector('button');
+    if (button) button.disabled = true;
 
     try {
         const currentState = navigationState.history?.[navigationState.currentIndex];
@@ -273,12 +270,12 @@ export async function loadMoreFiles() {
         } else {
             await loadItemView(currentFileSection, currentFileItemId, itemName, nextPage, { append: true });
         }
+    } catch (error) {
+        // The shared control shows its own retry message; the next click retries.
+        const failed = block?.querySelector('[data-ut-load-error]');
+        if (failed) failed.hidden = false;
     } finally {
-        if (btn) {
-            btn.disabled = false;
-            const icon = btn.querySelector('i');
-            if (icon) icon.className = 'bi bi-arrow-down-circle me-1';
-        }
+        if (button) button.disabled = false;
     }
 }
 

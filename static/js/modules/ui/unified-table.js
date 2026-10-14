@@ -642,10 +642,16 @@
             const named = block.getAttribute('data-table-id');
             const wrapper = block.closest('[' + WRAPPER_ATTR + ']');
             const table = named ? tableOf(named) : (wrapper ? wrapper.querySelector('table') : null);
-            if (!table) return;
+            if (!table && !(named && typeof loadMoreHandlers.get(named) === 'function')) return;
             const error = block.querySelector('[data-ut-load-error]');
             if (error) error.hidden = true;
-            requestNextBatch(table);
+            if (typeof loadMoreHandlers.get(named) === 'function') {
+                // The page owns this control's loading (a card list, an API
+                // table): the block is still the one control, the page does the work.
+                loadMoreHandlers.get(named)(table || null);
+                return;
+            }
+            if (table) requestNextBatch(table);
         });
     }
 
@@ -894,9 +900,12 @@
          *  real shown/total here: the Load More block's counters and
          *  visibility follow the same rules as a server-rendered batch. */
         syncLoadMore(tableId, shown, total, pageSize) {
+            // The control is found by its id, so a page whose list is not a
+            // table (a card list) keeps the same control and the same counters.
             const table = tableOf(tableId);
-            if (!table) return;
-            const block = loadMoreBlock(table);
+            const block = table
+                ? loadMoreBlock(table)
+                : document.querySelector('[data-ut-load-more][data-table-id="' + CSS.escape(tableId) + '"]');
             if (!block) return;
             const size = Math.max(1, pageSize
                 || (parseInt(block.getAttribute('data-page-size'), 10) || 0));

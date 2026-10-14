@@ -203,7 +203,8 @@
         total_pages=total_pages|default(1),
         total_count=total_keywords|default(0),
         rows_shown=keywords|length,
-        append=True) %}
+        append=True,
+        pager=True) %}
     {% for keyword in keywords %}
     {% set row_number = (page - 1) * per_page + loop.index %}
     <tr data-keyword-id="{{ keyword.id }}"
@@ -270,7 +271,7 @@
             'per_page': per_page,
             'sort': sort_by|default('usage_count'),
             'order': sort_order|default('desc')
-        }) }}
+        }, table_id='keywordsTable', total_count=total_keywords|default(0), rows_shown=keywords|length) }}
     {% endif %}
 </div>
 
