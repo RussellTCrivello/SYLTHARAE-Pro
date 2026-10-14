@@ -74,7 +74,7 @@
 {#- The stand-in row for a list with nothing to show. `filtered` says the
     records exist but the filters exclude them, which is a different thing to
     tell a reader than "there is nothing here". -#}
-<tr>
+<tr data-ut-state="empty">
     <td colspan="{{ columns }}" class="text-center py-4">
         {% if filtered %}
             {{ filtered_state(title=title, message=message, icon='bi-funnel',
@@ -93,7 +93,7 @@
 
 
 {% macro table_loading_row(columns, message=None) %}
-<tr>
+<tr data-ut-state="loading">
     <td colspan="{{ columns }}" class="text-center py-4">{{ loading_state(message=message) }}</td>
 </tr>
 {% endmacro %}
@@ -377,7 +377,14 @@
             <label class="ut-per-page-label" for="{{ per_page_dom_id }}">{{ per_page_label }}</label>
             <select class="form-select form-select-sm ut-per-page-select" id="{{ per_page_dom_id }}"
                     {% if on_per_page_change %}data-on-change="{{ on_per_page_change }}"{% endif %}>
-                {% for option in per_page_options %}
+                {#- The selector shows the size the table is actually using: a size
+                    that is not one of the offered options joins them, so the
+                    control never displays a value the rows do not have. -#}
+                {%- set size_options = per_page_options|list -%}
+                {%- if per_page and (per_page|int) not in (size_options|map('int')|list) -%}
+                {%- set size_options = (size_options + [per_page|int])|sort -%}
+                {%- endif -%}
+                {% for option in size_options %}
                 <option value="{{ option }}" {% if per_page|int == option|int %}selected{% endif %}>{{ option }}</option>
                 {% endfor %}
             </select>

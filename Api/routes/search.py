@@ -14,6 +14,7 @@ from Api.utils import (
     get_optimized_search_results, select_info_sources, select_info_sides,
     select_info_categories, search_files_by_word, execute_query,
 )
+from core.table_paging import fetch_page, read_page_request, total_pages_for
 from settings import get_settings
 from Api.services.search_service import SearchService
 from Api.services.search_history import SearchHistoryService, SavedSearchesService
@@ -195,9 +196,11 @@ def register_search_routes(app):
         display_config = settings.get_display_config()
         
         query = request.args.get('q', '')
-        page = request.args.get('page', 1, type=int)
-        per_page = request.args.get('limit', display_config.get('results_per_page', 10), type=int)
-        per_page = max(1, min(200, per_page))
+        page_req = read_page_request(
+            request.args, request.headers, size_key='limit',
+            default_size=display_config.get('results_per_page', 10))
+        page = page_req.page
+        per_page = page_req.size
         max_results = search_config.get('max_results', 1000)
         results = []
         total_results = 0
@@ -216,14 +219,21 @@ def register_search_routes(app):
         # Minimum 2 chars (reduced from 3 to match enhanced search)
         if query and len(query.strip()) >= 2:
             # Use the enhanced search_files_by_word which now supports multiple words
-            results, total_results = search_files_by_word(
-                query, page, per_page, analyst_scope=analyst_scope,
-                sort=sort, order=order)
+            result = fetch_page(
+                lambda p, n: search_files_by_word(
+                    query, p, n, analyst_scope=analyst_scope,
+                    sort=sort, order=order),
+                page_req)
+            results, total_results = result.rows, result.total
+            page, per_page = result.page, result.size
             # Decorate results with analyst categories (own, separate
             # namespace - never merged with smart categories, FR-1.4)
             results = AnalystCategoryService.attach_categories_to_results(results)
 
-        total_pages = (total_results + per_page - 1) // per_page if total_results > 0 else 1
+        if not (query and len(query.strip()) >= 2):
+            # No search has run: there is no list to page through.
+            page = 1
+        total_pages = total_pages_for(total_results, per_page)
 
         return render_template('Search/search.html',
                              query=query,

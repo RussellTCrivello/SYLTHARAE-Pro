@@ -540,8 +540,12 @@
         const body = table.tBodies[0];
         if (!incoming || !body) return 0;
         const fragment = document.createDocumentFragment();
-        Array.from(incoming.rows).forEach((row) => fragment.appendChild(
-            global.document.importNode(row, true)));
+        // Only real rows are adopted. An empty or loading stand-in in the batch
+        // (the server's empty state) is not a record: adopting it would put a
+        // placeholder into the list, and an empty batch must add nothing.
+        Array.from(incoming.rows)
+            .filter((row) => !row.hasAttribute(STATE_ATTR))
+            .forEach((row) => fragment.appendChild(global.document.importNode(row, true)));
         const count = fragment.children.length;
         // A state row (empty/filtered) must never be adopted; the list has
         // rows, so any standing state row goes first.
@@ -576,6 +580,15 @@
             firstRow: Math.max(1, num('data-first-row', 1)),
             pageSize: Math.max(0, num('data-page-size', 0)),
         };
+    }
+
+    /** The page must lie inside the list. A shrunken dataset (a narrower
+     *  filter, a deleted row) can leave the stored page past the last one;
+     *  the state is pulled back so the controls never point past the end. */
+    function clampPage(state) {
+        state.totalPages = Math.max(1, state.totalPages);
+        state.page = Math.min(Math.max(1, state.page), state.totalPages);
+        return state;
     }
 
     function writeBlockState(block, state) {
@@ -677,6 +690,7 @@
 
     /** Push one state record to every control that shows it. */
     function applyState(block, table, state, config) {
+        clampPage(state);
         const wrapper = table ? wrapperOf(table) : block.closest('[' + WRAPPER_ATTR + ']');
         const pager = block.closest('.unified-pagination-container');
         renderRange([wrapper || block, pager || block], state);
@@ -713,6 +727,7 @@
             state.shown = Math.min(state.total, state.shown + appended);
             state.page += 1;
         }
+        clampPage(state);
         writeBlockState(block, state);
         applyState(block, table, state, config);
         // Nothing more to load: an empty batch, the last page, or every row shown.
@@ -1053,6 +1068,7 @@
             state.shown = Math.max(0, shown);
             state.total = Math.max(0, total);
             state.totalPages = Math.max(1, Math.ceil(state.total / Math.max(1, state.pageSize || 1)));
+            clampPage(state);
             writeBlockState(block, state);
             applyState(block, table, state, table ? configOf(table) : {});
             block.hidden = !(state.page < state.totalPages && state.shown < state.total);

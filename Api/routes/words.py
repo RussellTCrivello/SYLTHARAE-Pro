@@ -10,6 +10,7 @@ from Api.utils import (
     delete_word, get_words_usage_by_ids, bulk_delete_words
 )
 from datetime import datetime
+from core.table_paging import fetch_page, read_page_request
 import logging
 from core.errors import client_error
 
@@ -23,8 +24,7 @@ def register_words_routes(app):
     def words_list():
         """Words Management with server-side pagination and sorting"""
         try:
-            page = request.args.get('page', 1, type=int)
-            per_page = request.args.get('per_page', 10, type=int)
+            req = read_page_request(request.args, request.headers)
             search = request.args.get('search', '').strip()
             # Column sort comes from the table headers: `sort` + `order` in
             # the query string. `get_words_with_usage` validates the column
@@ -32,25 +32,24 @@ def register_words_routes(app):
             sort_by = request.args.get('sort', 'usage_count')
             sort_order = request.args.get('order', 'desc')
             
-            if page < 1:
-                page = 1
-            if per_page < 1 or per_page > 100:
-                per_page = 10
             if sort_order not in ('asc', 'desc'):
                 sort_order = 'desc'
             
             if len(search) > 500:
                 search = search[:500]
             
-            words, total_words = get_words_with_usage(
-                search_term=search if search else None,
-                page=page,
-                per_page=per_page,
-                sort_by=sort_by,
-                sort_order=sort_order
+            result = fetch_page(
+                lambda page, size: get_words_with_usage(
+                    search_term=search if search else None,
+                    page=page,
+                    per_page=size,
+                    sort_by=sort_by,
+                    sort_order=sort_order
+                ),
+                req,
             )
-            
-            total_pages = (total_words + per_page - 1) // per_page if total_words > 0 else 1
+            words, total_words = result.rows, result.total
+            page, per_page, total_pages = result.page, result.size, result.total_pages
             
             return render_template('Word/Word_list.html',
                                    words=words,

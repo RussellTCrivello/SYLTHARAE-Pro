@@ -175,6 +175,69 @@ check('the control hides itself at the end', block.hidden === true);
 check('the page list does not duplicate a number', new Set(numberLinks()).size === numberLinks().length,
       numberLinks().join(','));
 
+// ------------------------------------------------------------------
+// Dataset changes and large sets. The walk above left the view on page 5 of
+// 5 with 18 rows; these checks set up a visible page 2 and move the dataset.
+// ------------------------------------------------------------------
+const rowCount = () => documentRoot.querySelector('#keywordsTable tbody').querySelectorAll('tr').length;
+const UT = globalThisRef.UnifiedTable;
+const stateOnlyBatch = `<div data-unified-table='{\"mode\":\"server\"}'><table id=\"keywordsTable\"><tbody><tr data-ut-state=\"empty\"><td>No keywords</td></tr></tbody></table></div>`;
+
+block.setAttribute('data-page', '2');
+block.setAttribute('data-shown', '5');
+block.setAttribute('data-total', '23');
+block.setAttribute('data-total-pages', '5');
+block.hidden = false;
+pager.setAttribute('data-current-page', '2');
+const before = rowCount();
+
+nextBatch = stateOnlyBatch;
+block.querySelector('button').dispatch('click');
+await wait();
+check('an empty-state batch adds no rows (no placeholder reaches the list)',
+      rowCount() === before && !documentRoot.querySelector('#keywordsTable tbody [data-ut-state]'),
+      `${before} -> ${rowCount()}`);
+check('an empty-state batch does not move the page or the shown count',
+      block.getAttribute('data-page') === '2' && block.getAttribute('data-shown') === '5',
+      `${block.getAttribute('data-page')}/${block.getAttribute('data-shown')}`);
+
+check('the engine exposes syncLoadMore for the dataset change',
+      UT && typeof UT.syncLoadMore === 'function', UT && Object.keys(UT));
+
+// The dataset shrinks to 2 pages (10 records) while the view is on page 4.
+block.setAttribute('data-page', '4');
+UT.syncLoadMore('keywordsTable', 5, 10, 5);
+check('a shrunken dataset clamps the page to the last page (2 of 2)',
+      block.getAttribute('data-page') === '2' && pager.getAttribute('data-current-page') === '2'
+      && text('[data-ut-page]', pager) === '2' && text('[data-ut-pages]', pager) === '2',
+      `${block.getAttribute('data-page')} / ${text('[data-ut-page]', pager)}`);
+check('the page-number controls follow the clamped page',
+      activeNumber() === '2' && numberLinks().join(',') === '1',
+      `${activeNumber()} / ${numberLinks()}`);
+check('Next and Last are disabled once clamped to the last page',
+      linkFor('Next').classList.contains('disabled') && linkFor('Last').classList.contains('disabled'));
+check('the control hides itself at the clamped last page', block.hidden === true);
+
+// The filter now matches nothing: one page, page 1, reads 0-0 of 0.
+UT.syncLoadMore('keywordsTable', 0, 0, 5);
+check('a filter with no matches clamps to page 1 of 1',
+      block.getAttribute('data-page') === '1' && pager.getAttribute('data-current-page') === '1'
+      && block.getAttribute('data-total-pages') === '1', block.getAttribute('data-page'));
+check('an empty result reads 0-0 of 0 in the toolbar',
+      text('[data-ut-first]', wrapperInfo) === '0' && text('[data-ut-last]', wrapperInfo) === '0'
+      && text('[data-ut-total]', wrapperInfo) === '0');
+
+// A very large set keeps the numbered window bounded (no node per page).
+block.setAttribute('data-page', '2');
+UT.syncLoadMore('keywordsTable', 5, 100000, 5);
+const numbered = pager.querySelectorAll('[data-ut-numbered]').length;
+check('a 20,000-page set draws a bounded numbered window (no node per page)',
+      numbered <= 7 && numberLinks().includes('20000') && activeNumber() === '2',
+      `${numbered} nodes: ${numberLinks()}`);
+check('the range and total stay correct for a large set',
+      text('[data-ut-total]', pager) === '100000' && text('[data-ut-last]', pager) === '10',
+      `${text('[data-ut-total]', pager)} / ${text('[data-ut-last]', pager)}`);
+
 const failed = checks.filter(([, ok]) => !ok).length;
 console.log(`\n${checks.length - failed}/${checks.length} checks passed`);
 process.exit(failed ? 1 : 0);
