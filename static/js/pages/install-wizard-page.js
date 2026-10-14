@@ -573,8 +573,9 @@ function T(key, vars) {
         return head + ' · ' + T('Optional gaps: %(count)s', {count: c.optional_gaps});
     }
 
+    // Rendering fills the panel but never changes its visibility: the details
+    // button owns that. Auto-run loads the report while the panel stays closed.
     function renderDependencyReport(report) {
-        document.getElementById('dependency-panel').hidden = false;
         document.getElementById('dependency-summary').textContent = depSummaryText(report);
         const list = document.getElementById('dependency-list');
         list.replaceChildren();
@@ -622,7 +623,9 @@ function T(key, vars) {
 
     async function loadDependencyReport(refresh) {
         const status = document.getElementById('dependency-status');
-        status.textContent = refresh ? T('Checking dependencies…') : '';
+        // Only an explicit refresh owns the status line. A background load must
+        // not erase a message such as "Selected dependencies installed.".
+        if (refresh) status.textContent = T('Checking dependencies…');
         try {
             const r = await fetch('/api/setup/dependencies' + (refresh ? '?refresh=1' : ''),
                                   {credentials: 'same-origin'});

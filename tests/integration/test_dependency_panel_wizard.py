@@ -107,3 +107,31 @@ def test_unknown_install_job_returns_404(app, uninstalled):
     resp = client.get("/api/setup/dependencies/jobs/no-such-job")
     assert resp.status_code == 404
     assert resp.get_json()["ok"] is False
+
+
+def test_rendering_the_report_does_not_toggle_the_panel():
+    """Auto-run loads the report while the panel is closed. A render that forces
+    the panel open made the first click on "Dependency details" close it again
+    (found in a browser run). Visibility belongs to the details button alone."""
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    script = (root / "static" / "js" / "pages" / "install-wizard-page.js").read_text(encoding="utf-8")
+    start = script.index("function renderDependencyReport(report)")
+    end = script.index("async function loadDependencyReport", start)
+    body = script[start:end]
+    assert "dependency-panel" not in body  # per-row detail toggles are fine
+
+
+def test_a_background_load_does_not_erase_the_status_line():
+    """The post-install recheck calls loadDependencyReport(false); it must not clear
+    the "Selected dependencies installed." message set just before."""
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    script = (root / "static" / "js" / "pages" / "install-wizard-page.js").read_text(encoding="utf-8")
+    start = script.index("async function loadDependencyReport(refresh)")
+    end = script.index("function pollDependencyJob", start)
+    body = script[start:end]
+    assert "if (refresh) status.textContent = T('Checking dependencies…');" in body
+    assert "status.textContent = refresh ? " not in body
