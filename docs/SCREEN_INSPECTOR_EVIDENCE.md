@@ -43,11 +43,11 @@ document with what it writes.
 
 | Measurement | Count |
 | --- | --- |
-| Interfaces | 35 |
+| Interfaces | 34 |
 | Navigable interfaces | 33 |
 | Interfaces with a described screen | 5 |
 | Interfaces declaring no help topic | 2 |
-| Interfaces declaring no keyboard shortcut | 17 |
+| Interfaces declaring no keyboard shortcut | 16 |
 | Registered actions | 34 |
 | Actions bound to a control | 6 |
 | Presented actions nothing binds | 28 |
@@ -146,7 +146,6 @@ with the evidence.
 | `users` | ADMINISTRATION | `users_page` | administration/users | g u | 0 |
 | `audit_log` | ADMINISTRATION | `audit_page` | administration/audit | g l | 0 |
 | `settings` | SETTINGS | `settings_page_direct` | settings/overview | g , | 0 |
-| `interface_manager` | SETTINGS | `None` | settings/interfaces | Not declared | 0 |
 | `translation_manager` | SETTINGS | `translations.translation_management_page` | settings/translations | g t | 0 |
 | `concurrency_monitor` | INTERNAL | `concurrency.dashboard` | Not declared | Not declared | 0 |
 
@@ -158,8 +157,8 @@ with the evidence.
 | binding | 6 | 34 |
 | component | 22 | 22 |
 | execution | 29 | 34 |
-| help | 33 | 35 |
-| interface | 35 | 35 |
+| help | 32 | 34 |
+| interface | 34 | 34 |
 | permission | 34 | 34 |
 | scope | 34 | 34 |
 | state | 34 | 34 |
