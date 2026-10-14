@@ -6,7 +6,36 @@
    notes: Renders links for the endpoint it is given; it does not query and
           does not decide the page size.
 #}
-{%- macro unified_pagination(page, total_pages, url_for_func, endpoint, url_params={}, show_info=true, show_jump=true) -%}
+{#- The one Load More control. A table that is paged by a numbered pager
+    renders it inside that pager; a table with no pager renders it under
+    itself (components/table.html). Same markup, same attributes, same JS
+    engine (static/js/modules/ui/unified-table.js). -#}
+{%- macro load_more_control(table_id, page, total_pages, total_count, rows_shown, label=None) -%}
+{%- set page = (page or 1)|int -%}
+{%- set total_pages = (total_pages or 1)|int -%}
+{%- if total_pages > 1 and page < total_pages %}
+    <div class="ut-load-more"
+         data-ut-load-more
+         data-table-id="{{ table_id }}"
+         data-page="{{ page }}"
+         data-total-pages="{{ total_pages }}"
+         data-total="{{ total_count or 0 }}"
+         data-shown="{{ rows_shown or 0 }}">
+        <button type="button" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-arrow-down-circle me-2" aria-hidden="true"></i>{{ label or _('Show More') }}
+        </button>
+        <span class="ut-load-more-info" aria-live="polite">
+            {{ _('Showing') }} <span data-ut-shown>{{ rows_shown or 0 }}</span> {{ _('of') }}
+            <span data-ut-total>{{ total_count or 0 }}</span>
+        </span>
+        <span class="ut-load-more-error text-danger" data-ut-load-error hidden role="alert">
+            {{ _('Could not load more. Click to try again.') }}
+        </span>
+    </div>
+{%- endif %}
+{%- endmacro -%}
+
+{%- macro unified_pagination(page, total_pages, url_for_func, endpoint, url_params={}, show_info=true, show_jump=true, table_id=None, total_count=None, rows_shown=None, load_more_label=None) -%}
 {# 
     Unified Pagination Component
     
@@ -33,7 +62,10 @@
     {% endif %}
     
     <div class="unified-pagination-controls d-flex align-items-center flex-wrap gap-2">
-        {% if page < total_pages %}
+        {% if table_id and page < total_pages %}
+        {# One control: the table's own Load More, placed here. #}
+        {{ load_more_control(table_id, page, total_pages, total_count, rows_shown, load_more_label) }}
+        {% elif page < total_pages %}
         <div class="unified-pagination-show-more me-2">
             <button type="button" 
                     class="btn btn-sm btn-outline-primary unified-pagination-show-more-btn"

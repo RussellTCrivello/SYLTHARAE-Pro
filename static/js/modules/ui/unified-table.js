@@ -509,6 +509,11 @@
     const loadMoreBusy = new WeakSet();
 
     function loadMoreBlock(table) {
+        if (table && table.id) {
+            const byId = document.querySelector(
+                '[data-ut-load-more][data-table-id="' + CSS.escape(table.id) + '"]');
+            if (byId) return byId;
+        }
         return table.closest('[' + WRAPPER_ATTR + ']')
             ?.querySelector('[data-ut-load-more]') || null;
     }
@@ -559,14 +564,17 @@
         // The wrapper's counters, toolbar and block alike: "Showing X of Y"
         // must move with every batch, not only the block's own copy.
         const wrapper = wrapperOf(table);
-        if (wrapper) {
-            wrapper.querySelectorAll('[data-ut-shown]').forEach((node) => {
+        const pager = block.closest('.unified-pagination-container');
+        const scopes = [wrapper, pager, block].filter(Boolean);
+        scopes.forEach((scope) => {
+            scope.querySelectorAll('[data-ut-shown]').forEach((node) => {
                 node.textContent = global.UnifiedTable.fmt.number(nowShown);
             });
-            wrapper.querySelectorAll('[data-ut-total]').forEach((node) => {
+            scope.querySelectorAll('[data-ut-total]').forEach((node) => {
                 node.textContent = global.UnifiedTable.fmt.number(total);
             });
-        }
+        });
+        if (pager) pager.setAttribute('data-current-page', String(page + 1));
         // An empty batch means there is nothing more to load (or the request
         // could not be read); stop instead of asking for the same page again.
         if (appended === 0 || page + 1 >= totalPages + 1 || nowShown >= total) {
@@ -620,6 +628,27 @@
     // Event wiring (delegated on the table: re-rendered rows need no rebinding)
     // ------------------------------------------------------------------
 
+    /** The one Load More click listener, for every placement (under the table
+     *  or inside a numbered pager). Registered once. */
+    let loadMoreDelegated = false;
+    function delegateLoadMoreClicks() {
+        if (loadMoreDelegated) return;
+        loadMoreDelegated = true;
+        document.addEventListener('click', (event) => {
+            const block = event.target.closest ? event.target.closest('[data-ut-load-more]') : null;
+            if (!block) return;
+            // The block names its table; a block without the name belongs to
+            // the table of the wrapper it sits in.
+            const named = block.getAttribute('data-table-id');
+            const wrapper = block.closest('[' + WRAPPER_ATTR + ']');
+            const table = named ? tableOf(named) : (wrapper ? wrapper.querySelector('table') : null);
+            if (!table) return;
+            const error = block.querySelector('[data-ut-load-error]');
+            if (error) error.hidden = true;
+            requestNextBatch(table);
+        });
+    }
+
     function enhance(table) {
         if (!table || enhanced.has(table)) return;
         enhanced.add(table);
@@ -659,15 +688,6 @@
             applySort(table, key, direction);
         });
 
-        scope.addEventListener('click', (event) => {
-            const control = event.target.closest('.ut-sort-btn, [data-ut-load-more], [data-ut-load-more] *');
-            if (!control) return;
-            if (control.closest('[data-ut-load-more]') && !control.closest('.ut-sort-btn')) {
-                const error = control.closest('[data-ut-load-more]').querySelector('[data-ut-load-error]');
-                if (error) error.hidden = true;
-                requestNextBatch(table);
-            }
-        });
 
         table.addEventListener('change', (event) => {
             const target = event.target;
@@ -694,6 +714,7 @@
 
     function init(root) {
         const scope = root || document;
+        delegateLoadMoreClicks();
         scope.querySelectorAll('[' + WRAPPER_ATTR + '] table').forEach(enhance);
     }
 

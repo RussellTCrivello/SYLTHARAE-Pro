@@ -86,7 +86,7 @@ Read from the `{# component: … #}` declaration at the top of each file in `tem
 | `operations_widget` | `templates/components/operations_widget.html` | `normal`, `loading`, `empty`, `error` | — | What the ingestion and processing system is doing right now: active jobs, throughput, and the shortcuts into Operations. |
 | `page_data` | `templates/components/analyst_classify_page_data.html` | `normal` | `analyst_classify_page_data` | The translated strings and the write permission the analyst classification module needs, so nothing is hard-coded in JavaScript and a language switch reaches it. |
 | `page_tips` | `templates/components/page_tips.html` | `normal`, `empty` | `page_tips` | The explanatory tips at the top of a page: what this page is for, what the elements on it do, how to add data here. |
-| `pagination` | `templates/components/unified_pagination.html` | `normal`, `filtered` | `unified_pagination` | Moving through a long list: where you are, how much there is, and how to get to a page you know the number of. |
+| `pagination` | `templates/components/unified_pagination.html` | `normal`, `filtered` | `load_more_control`, `unified_pagination` | Moving through a long list: where you are, how much there is, and how to get to a page you know the number of. |
 | `pagination_cursor` | `templates/components/cursor_pagination.html` | `normal`, `filtered` | `cursor_pagination` | Moving through a list that has no page numbers - only "next" and "back" - and saying honestly what is known about how much is left. |
 | `record_actions` | `templates/components/record_actions.html` | `normal`, `loading`, `success`, `error`, `unauthorized` | `record_action_button`, `record_action_surface` | The actions a single record offers. The buttons come from the Action Definition layer - id, label, icon, scope, destructiveness, confirmation key - joined with the screen's own bindings by core/experience/presentation.py, so a page cannot invent an action and two pages cannot render one action two ways. |
 | `record_header` | `templates/components/record_header.html` | `normal`, `empty`, `loading`, `unavailable`, `archived` | `record_header` | The top of a record: what this record is, what state it is in, and the one action that matters most. The same header for a file, a source, a side, a category, an analysis or a report - it knows nothing about what kind of record it is describing. |
@@ -165,7 +165,7 @@ Every class a component renders has exactly one owner. **OWNED** means an SYLTHA
 | Ownership | Classes |
 | --- | --- |
 | OWNED (SYLTHARAE) | 166 |
-| THIRD_PARTY (Bootstrap, Bootstrap Icons) | 260 |
+| THIRD_PARTY (Bootstrap, Bootstrap Icons) | 259 |
 | UNKNOWN | 0 |
 
 Third-party stylesheets bundled with the application: `static/css/bootstrap.min.css`, `static/icons/bootstrap-icons.css`.

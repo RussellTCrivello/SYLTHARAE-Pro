@@ -33,6 +33,7 @@
           nothing else may style or script a list table.
 #}
 {% from 'components/states.html' import empty_state, filtered_state, loading_state, error_state %}
+{% from 'components/unified_pagination.html' import load_more_control %}
 {#
    Usage:
 
@@ -358,7 +359,7 @@
                       export_interface=None, export_columns=None,
                       export_params=None, export_scope_base=None,
                       page=None, total_pages=None, total_count=None,
-                      rows_shown=None, append=False, load_more_label=None) %}
+                      rows_shown=None, append=False, load_more_label=None, pager=False) %}
 {%- set table_id = id if id else 'recordsTable' -%}
 {%- set info_dom_id = info_id if info_id else (table_id ~ 'Info') -%}
 {%- set per_page_dom_id = per_page_id if per_page_id else (table_id ~ 'PerPage') -%}
@@ -450,24 +451,10 @@
         </tbody>
     </table>
     </div>
-    {%- if append and total_pages and page is not none and total_pages > 1 and page < total_pages -%}
-    <div class="ut-load-more"
-         data-ut-load-more
-         data-page="{{ page }}"
-         data-total-pages="{{ total_pages }}"
-         data-total="{{ total_count or 0 }}"
-         data-shown="{{ rows_shown or 0 }}">
-        <button type="button" class="btn btn-outline-primary btn-sm">
-            <i class="bi bi-arrow-down-circle me-2" aria-hidden="true"></i>{{ load_more_label or _('Show More') }}
-        </button>
-        <span class="ut-load-more-info" aria-live="polite">
-            {{ _('Showing') }} <span data-ut-shown>{{ rows_shown or 0 }}</span> {{ _('of') }}
-            <span data-ut-total>{{ total_count or 0 }}</span>
-        </span>
-        <span class="ut-load-more-error text-danger" data-ut-load-error hidden role="alert">
-            {{ _('Could not load more. Click to try again.') }}
-        </span>
-    </div>
+    {#- A numbered pager on the page renders this control itself (one control,
+        not two). Without one, the table renders it under itself. -#}
+    {%- if append and not pager -%}
+    {{ load_more_control(table_id, page, total_pages, total_count, rows_shown, load_more_label) }}
     {%- endif -%}
 </div>
 {% endmacro %}

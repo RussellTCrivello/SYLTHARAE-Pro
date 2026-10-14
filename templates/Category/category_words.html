@@ -162,7 +162,8 @@
         total_pages=total_pages|default(1),
         total_count=total_words|default(0),
         rows_shown=words|length,
-        append=True) %}
+        append=True,
+        pager=True) %}
     {% for word in words %}
     <tr class="word-item"
         data-word-id="{{ word.id }}"
@@ -196,7 +197,8 @@
         {% set pagination_params = {'per_page': per_page, 'category_id': category.id} %}
         {% if search %}{% set extra_param = pagination_params.update({'search': search}) %}{% endif %}
         {% if sort_by != 'word' or sort_order != 'asc' %}{% set extra_param = pagination_params.update({'sort': sort_by, 'order': sort_order}) %}{% endif %}
-        {{ unified_pagination(page, total_pages, url_for, 'category_words', pagination_params) }}
+        {{ unified_pagination(page, total_pages, url_for, 'category_words', pagination_params,
+            table_id='categoryWordsTable', total_count=total_words|default(0), rows_shown=words|length) }}
     {% endif %}
 </div>
 

@@ -180,7 +180,8 @@
         total_pages=total_pages|default(1),
         total_count=total_sides|default(0),
         rows_shown=sides|length,
-        append=True) %}
+        append=True,
+        pager=True) %}
     {% for side in sides %}
     {% set stars = ((side.importance or 0) * 5)|round|int %}
     <tr class="side-item" data-side-id="{{ side.id }}">
@@ -239,7 +240,8 @@
         {% if search %}{% set extra_param = pagination_params.update({'search': search}) %}{% endif %}
         {% if sort_by and sort_by != 'importance' %}{% set extra_param = pagination_params.update({'sort': sort_by, 'order': sort_order}) %}
         {% elif sort_order != 'desc' %}{% set extra_param = pagination_params.update({'sort': 'importance', 'order': sort_order}) %}{% endif %}
-        {{ unified_pagination(page, total_pages, url_for, 'sides_list', pagination_params) }}
+        {{ unified_pagination(page, total_pages, url_for, 'sides_list', pagination_params,
+            table_id='sidesTable', total_count=total_sides|default(0), rows_shown=sides|length) }}
     {% endif %}
 </div>
 
