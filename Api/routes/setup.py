@@ -13,7 +13,7 @@ Endpoints:
     GET  /api/setup/check        → is the system initialized?
 """
 
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session
 from flask_babel import gettext as _
 import logging
 import threading
@@ -435,6 +435,8 @@ def set_setup_language():
         persisted = False
         logger.warning("Setup language could not be saved to system.language: %s", exc)
 
+    # The session is updated too, so signed-in state and the cookie agree.
+    session["language"] = code
     response = jsonify({"ok": True, "language": code, "persisted": persisted})
     response.set_cookie("user_language", code, max_age=31536000, samesite="Lax", path="/")
     return response

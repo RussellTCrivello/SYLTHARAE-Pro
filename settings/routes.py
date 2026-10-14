@@ -6,7 +6,7 @@ RESTful API for settings management
 Enhanced with all existing system features
 """
 
-from flask import Blueprint, request, jsonify, current_app, session
+from flask import Blueprint, request, jsonify, current_app, session, g
 from functools import wraps
 from pathlib import Path
 from werkzeug.exceptions import HTTPException
@@ -210,6 +210,7 @@ def update_single_setting(category, key):
         # Update session
         session['language'] = value
         session.permanent = True
+        g._language_cookie = value  # the explicit choice must win over an older cookie
     
     # Update setting
     success, error = manager.set(full_key, value, validate=True)
@@ -295,6 +296,7 @@ def batch_update_settings():
         current_app.config['BABEL_DEFAULT_LOCALE'] = value
         session['language'] = value
         session.permanent = True
+        g._language_cookie = value  # the explicit choice must win over an older cookie
     
     # Update all settings
     success, errors = manager.update_many(updates, validate=True)

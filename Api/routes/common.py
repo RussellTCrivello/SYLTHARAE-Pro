@@ -117,53 +117,58 @@ def interface_for(endpoint):
         return None
 
 
+def resolve_interface_language(app):
+    """Return the interface language for the current request.
+
+    Precedence:
+      1. ``user_language`` cookie. This is the most recent explicit choice made
+         in this browser, by the setup wizard, the login screen, or the header
+         switcher. It applies with or without a session.
+      2. ``session['language']``, set by ``/set_language`` for signed-in users.
+      3. ``system.language`` from settings (the installation's default).
+      4. The browser's Accept-Language preference.
+      5. ``BABEL_DEFAULT_LOCALE``.
+
+    This function never writes to the session. Storing the system default in the
+    session on a first visit used to pin that language, so a later explicit choice
+    was ignored.
+    """
+    from flask import request, session
+
+    supported = app.config['LANGUAGES']
+    cookie_lang = request.cookies.get('user_language')
+    if cookie_lang in supported:
+        return cookie_lang
+
+    session_lang = session.get('language')
+    if session_lang in supported:
+        return session_lang
+
+    if app.config.get('SETTINGS'):
+        try:
+            system_language = app.config['SETTINGS'].get_system_config().get('language', 'en')
+            if system_language in supported:
+                return system_language
+        except Exception:  # settings are optional for this lookup
+            pass
+
+    browser_lang = request.accept_languages.best_match(list(supported.keys()))
+    if browser_lang:
+        return browser_lang
+    return app.config['BABEL_DEFAULT_LOCALE']
+
+
 def register_common_routes(app, babel_instance):
     """Register common routes and context processors with the Flask app"""
     
     def get_locale():
-        """Get the locale/language from session (user choice), system settings, or browser preference"""
-        # PRIORITY 1: Check session first (user's explicit choice takes precedence)
-        # This ensures that when user switches language, it doesn't get overridden
-        if 'language' in session:
-            session_lang = session.get('language')
-            if session_lang and session_lang in app.config['LANGUAGES']:
-                return session_lang
+        """Interface language for the current request (see resolve_interface_language)."""
+        return resolve_interface_language(app)
 
-        # PRIORITY 1.5: Explicit user preference carried in the user_language
-        # cookie (set by the login-screen language switcher for anonymous
-        # visitors). Session priority still wins once the user signs in.
-        cookie_lang = request.cookies.get('user_language')
-        if cookie_lang and cookie_lang in app.config['LANGUAGES']:
-            return cookie_lang
-        
-        # PRIORITY 2: Check system settings (persistent across restarts)
-        if 'SETTINGS' in app.config and app.config['SETTINGS']:
-            try:
-                system_config = app.config['SETTINGS'].get_system_config()
-                system_language = system_config.get('language', 'en')
-                if system_language in app.config['LANGUAGES']:
-                    # Sync session with system setting for consistency (only if session not set)
-                    if 'language' not in session:
-                        session['language'] = system_language
-                    return system_language
-            except Exception:
-                pass  # Fall through to browser preference
-        
-        # PRIORITY 3: Check browser's Accept-Language header (but only if no explicit choice)
-        browser_lang = request.accept_languages.best_match(app.config['LANGUAGES'].keys())
-        if browser_lang:
-            # Only use browser language if session doesn't have an explicit choice
-            if 'language' not in session:
-                return browser_lang
-        
-        # PRIORITY 4: Default fallback
-        return app.config['BABEL_DEFAULT_LOCALE']
-    
     @app.route('/set_language/<language>')
     def set_language(language):
         """Route to switch language - SYSTEM-WIDE"""
         if language in app.config['LANGUAGES']:
-            # Update session FIRST (this ensures get_locale() will use session priority)
             session['language'] = language
             try:
                 from settings import get_settings
@@ -191,14 +196,18 @@ def register_common_routes(app, babel_instance):
         # Support AJAX requests
         if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             from flask import jsonify
-            return jsonify({
+            response = jsonify({
                 'success': True,
                 'language': language,
                 'language_name': app.config['LANGUAGES'].get(language, language),
                 'message': _('Language changed to %(lang)s', lang=app.config["LANGUAGES"].get(language, language))
             })
-        
-        return redirect(request.referrer or url_for('index'))
+        else:
+            response = redirect(request.referrer or url_for('index'))
+        if language in app.config['LANGUAGES']:
+            # The cookie is the explicit choice for this browser; it must win over any older session value.
+            response.set_cookie('user_language', language, max_age=31536000, samesite='Lax', path='/')
+        return response
     
     # Components (macros) cannot read the render context, so the two lookups
     # they need are environment globals. A page still receives the prepared
@@ -408,49 +417,20 @@ def register_common_routes(app, babel_instance):
                 )
                 raise
 
-        # CRITICAL: Prioritize session language if it exists (user's explicit choice)
-        # Handle X-Language header with explicit flag
+        # An explicit client choice (X-Language with X-Language-Explicit) is the
+        # newest one. It applies to this request, is stored in the session, and
+        # the cookie is refreshed in after_request. Every other request uses the
+        # shared resolver. Non-explicit hints are not stored anywhere.
         request_lang = request.headers.get('X-Language')
         is_explicit = request.headers.get('X-Language-Explicit') == 'true'
-        
-        # Check if session already has a language (user's explicit choice takes priority)
-        if 'language' in session and session.get('language') in app.config['LANGUAGES']:
-            session_lang = session.get('language')
-            
-            # If request explicitly says user set this language, and it differs from session,
-            # update session to match (user just changed language)
-            if is_explicit and request_lang and request_lang in app.config['LANGUAGES']:
-                if request_lang != session_lang:
-                    logger.info(f"User explicitly changed language from {session_lang} to {request_lang}, updating session")
-                    session['language'] = request_lang
-                    session.permanent = True
-                    locale = request_lang
-                else:
-                    locale = session_lang
-            else:
-                # Session has language - use it (don't let request header override unless explicit)
-                locale = session_lang
-                # If request header differs and is not explicit, log it but don't change
-                if request_lang and request_lang != locale and not is_explicit:
-                    logger.debug(f"Request header language ({request_lang}) differs from session ({locale}), using session")
-        elif request_lang and request_lang in app.config['LANGUAGES']:
-            # No session language, but request has one - use it and save to session
-            session['language'] = request_lang
-            session.permanent = True
+        if is_explicit and request_lang in app.config['LANGUAGES']:
             locale = request_lang
-            if is_explicit:
-                logger.info(f"Setting language from explicit request: {request_lang}")
+            if session.get('language') != locale:
+                session['language'] = locale
+                session.permanent = True
+            g._language_cookie = locale
         else:
-            # No header, no session - use get_locale() which checks system settings and browser
-            locale = get_locale()  # This will check session first, then system settings
-            if locale and locale in app.config['LANGUAGES']:
-                # Sync session if it's not already set
-                if 'language' not in session:
-                    session['language'] = locale
-                    session.permanent = True  # Make session persistent
-                elif session.get('language') != locale:
-                    # If session has a different language, trust the session (user's explicit choice)
-                    locale = session.get('language')
+            locale = resolve_interface_language(app)
         
         if locale and locale in app.config['LANGUAGES']:
             # Store locale in g for use in templates and Babel
@@ -507,6 +487,12 @@ def register_common_routes(app, babel_instance):
         # Set response header to communicate language back to client
         if hasattr(g, 'locale') and g.locale:
             response.headers['X-Language'] = g.locale
+        # A request that made an explicit language choice hands its value to us
+        # here (see before_request and the Settings routes). The cookie is what
+        # makes the choice survive, so it is refreshed on the same response.
+        pending_language = getattr(g, '_language_cookie', None)
+        if pending_language in app.config['LANGUAGES']:
+            response.set_cookie('user_language', pending_language, max_age=31536000, samesite='Lax', path='/')
         
         # Log slow endpoints
         if hasattr(g, 'start_time'):

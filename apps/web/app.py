@@ -123,45 +123,9 @@ app.config['BABEL_TRANSLATION_DIRECTORIES'] = os.path.join(project_root, 'transl
 
 # Define locale selector function
 def get_locale():
-    """Get the locale/language from session (user choice), system settings, or browser preference"""
-    from flask import session, request
-    # PRIORITY 1: Check session first (user's explicit choice takes precedence)
-    # This ensures that when user switches language, it doesn't get overridden
-    if 'language' in session:
-        session_lang = session.get('language')
-        if session_lang and session_lang in app.config['LANGUAGES']:
-            return session_lang
-
-    # PRIORITY 1.5: Explicit user preference carried in the user_language
-    # cookie (set by the login-screen language switcher for anonymous
-    # visitors). Session priority still wins once the user signs in.
-    cookie_lang = request.cookies.get('user_language')
-    if cookie_lang and cookie_lang in app.config['LANGUAGES']:
-        return cookie_lang
-    
-    # PRIORITY 2: Check system settings (persistent across restarts)
-    if 'SETTINGS' in app.config and app.config['SETTINGS']:
-        try:
-            system_config = app.config['SETTINGS'].get_system_config()
-            system_language = system_config.get('language', 'en')
-            if system_language in app.config['LANGUAGES']:
-                # Sync session with system setting for consistency (only if session not set)
-                if 'language' not in session:
-                    session['language'] = system_language
-                return system_language
-        except Exception as e:
-            # Settings error is non-critical - fall through to browser preference
-            logger.debug(f"Could not get language from settings: {e}, using browser preference")
-    
-    # PRIORITY 3: Check browser's Accept-Language header (but only if no explicit choice)
-    browser_lang = request.accept_languages.best_match(app.config['LANGUAGES'].keys())
-    if browser_lang:
-        # Only use browser language if session doesn't have an explicit choice
-        if 'language' not in session:
-            return browser_lang
-    
-    # PRIORITY 4: Default fallback
-    return app.config['BABEL_DEFAULT_LOCALE']
+    """Interface language for the current request. Shared with Api.routes.common."""
+    from Api.routes.common import resolve_interface_language
+    return resolve_interface_language(app)
 
 # Initialize Babel with locale selector (Flask-Babel 3.0+)
 babel = Babel(app, locale_selector=get_locale)
