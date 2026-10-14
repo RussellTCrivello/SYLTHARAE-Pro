@@ -1079,7 +1079,9 @@ class OfficeFileReader(BaseReader):
                 "not a supported openpyxl path suffix)",
                 os.path.basename(filepath), suffix or "(none)",
             )
-        return load_spreadsheet_workbook(filepath, data_only=True)
+        # Extraction needs cell values, not external-link parts; keep_links=False
+        # stops a DDE link with a missing _rels part from failing the whole file.
+        return load_spreadsheet_workbook(filepath, data_only=True, keep_links=False)
 
     def read_xlsx_file(self, filepath):
         """Independent XLSX reader function with image extraction and OCR."""
@@ -1228,6 +1230,7 @@ class OfficeFileReader(BaseReader):
         except ImportError:
             pyxlsb = None  # type: ignore
 
+        pyxlsb_error = None
         if pyxlsb is not None:
             try:
                 result = {
@@ -1253,7 +1256,10 @@ class OfficeFileReader(BaseReader):
                     result["total_sheets"] = len(result["sheet_names"])
                 return self._normalize_spreadsheet_result(result)
             except Exception as exc:
-                logger.debug("pyxlsb failed for %s: %s", filepath, exc)
+                # Kept as a warning with the real cause: pyxlsb is installed on
+                # this machine, so "install pyxlsb" would send the user the wrong way.
+                pyxlsb_error = f"{type(exc).__name__}: {exc}"
+                logger.warning("pyxlsb could not read %s: %s", filepath, pyxlsb_error)
 
         converted = self._convert_with_libreoffice(filepath, "xlsx")
         if converted:
@@ -1270,13 +1276,23 @@ class OfficeFileReader(BaseReader):
                 except OSError:
                     pass
 
-        return {
-            "error": (
+        if pyxlsb is None:
+            message = (
                 "Could not read .xlsb. Install pyxlsb (pip install pyxlsb) "
                 "or LibreOffice (soffice) for conversion."
-            ),
-            "filepath": filepath,
-        }
+            )
+        elif pyxlsb_error:
+            message = (
+                f"Could not read .xlsb: pyxlsb failed ({pyxlsb_error}) and no "
+                "LibreOffice conversion was available. Install LibreOffice "
+                "(soffice) to read this workbook."
+            )
+        else:
+            message = (
+                "Could not read .xlsb: LibreOffice conversion failed. Check that "
+                "soffice runs headless on this machine."
+            )
+        return {"error": message, "filepath": filepath}
 
 
     def read_csv_file(self, filepath, delimiter=',', encoding='utf-8'):

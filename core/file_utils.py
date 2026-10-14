@@ -206,12 +206,16 @@ OPENPYXL_PATH_SUFFIXES = (".xlsx", ".xlsm", ".xltx", ".xltm")
 
 
 def load_spreadsheet_workbook(file_path: str, *, read_only: bool = False,
-                              data_only: bool = False):
+                              data_only: bool = False, keep_links: bool = True):
     """Open a workbook by its bytes when its name is not a supported suffix.
 
     ``read_only`` and ``data_only`` are passed through unchanged, so the caller
-    keeps deciding whether formulas or cached values are wanted. Raises whatever
-    openpyxl raises for content that is not a workbook.
+    keeps deciding whether formulas or cached values are wanted. ``keep_links``
+    is passed through too: ``False`` skips external-link parts. A DDE or
+    external link whose ``_rels`` part is missing from the package otherwise
+    makes openpyxl raise ``There is no item named 'xl/externalLinks/_rels/...'``
+    and the whole workbook is lost, even though its cell values are intact.
+    Raises whatever openpyxl raises for content that is not a workbook.
 
     The returned workbook owns the stream it was opened from and closes it in
     its own ``close()``. openpyxl reads from a stream lazily - a ``read_only``
@@ -225,12 +229,12 @@ def load_spreadsheet_workbook(file_path: str, *, read_only: bool = False,
     suffix = os.path.splitext(str(file_path))[1].lower()
     if suffix in OPENPYXL_PATH_SUFFIXES:
         return openpyxl.load_workbook(file_path, read_only=read_only,
-                                      data_only=data_only)
+                                      data_only=data_only, keep_links=keep_links)
 
     handle = open(file_path, "rb")
     try:
         workbook = openpyxl.load_workbook(handle, read_only=read_only,
-                                          data_only=data_only)
+                                          data_only=data_only, keep_links=keep_links)
     except Exception:
         handle.close()
         raise
