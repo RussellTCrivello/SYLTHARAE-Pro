@@ -2839,7 +2839,14 @@ def same_context_duplicates_preview():
 
     Read-only. A repetition is the same content recorded more than once in one
     source and one side; the earliest occurrence is kept.
+
+    The preview names files and ids across the whole corpus, so it is limited
+    to the roles that may remove them (admin, analyst). Viewers get 403.
     """
+    from core.security import current_user
+    user = current_user()
+    if not (user and user.has_role('admin', 'analyst')):
+        return jsonify({'success': False, 'error': 'Not permitted'}), 403
     try:
         with _same_context_service() as dedup:
             groups = dedup.same_context_duplicates()
