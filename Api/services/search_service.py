@@ -1561,201 +1561,250 @@ class SearchService:
                 where_conditions.extend(filter_sql)
                 params.extend(filter_params)
 
-            # Analyst-category filter (FR-3.1): a separate dimension from the
-            # smart category filter above - reads ONLY analyst tables and is
-            # never satisfied by a smart category id (FR-1.4).
-            # Same shared predicate as every compiled Criteria consumer
-            # (core/criteria/sql.py::filter_predicates).
-            if analyst_category_ids:
-                afc_sql, afc_params = _filter_predicates(
-                    analyst_category_ids=analyst_category_ids)
-                where_conditions.extend(afc_sql)
-                params.extend(afc_params)
+                # Analyst-category filter (FR-3.1): a separate dimension from the
+                # smart category filter above - reads ONLY analyst tables and is
+                # never satisfied by a smart category id (FR-1.4).
+                # Same shared predicate as every compiled Criteria consumer
+                # (core/criteria/sql.py::filter_predicates).
+                if analyst_category_ids:
+                    afc_sql, afc_params = _filter_predicates(
+                        analyst_category_ids=analyst_category_ids)
+                    where_conditions.extend(afc_sql)
+                    params.extend(afc_params)
 
-            # Analyst-categorization scope filter (FR-2.x). Runs purely on
-            # analyst_file_categories; smart categorization status is never
-            # consulted (FR-2.4). The EXISTS/NOT EXISTS probe is served by
-            # idx_afc_path_id so scoped searches perform like unscoped ones
-            # (NFR-4).
-            from Api.services.analyst_categories import scope_condition
-            scope_sql = scope_condition(analyst_scope, alias="p")
-            if scope_sql:
-                where_conditions.append(scope_sql)
+                # Analyst-categorization scope filter (FR-2.x). Runs purely on
+                # analyst_file_categories; smart categorization status is never
+                # consulted (FR-2.4). The EXISTS/NOT EXISTS probe is served by
+                # idx_afc_path_id so scoped searches perform like unscoped ones
+                # (NFR-4).
+                from Api.services.analyst_categories import scope_condition
+                scope_sql = scope_condition(analyst_scope, alias="p")
+                if scope_sql:
+                    where_conditions.append(scope_sql)
 
-            where_clause = " AND ".join(where_conditions) if where_conditions else "1=1"
-            limits = SearchLimits.from_settings(search_cfg)
-            limit = min(limit, limits.max_response_results)
+                where_clause = " AND ".join(where_conditions) if where_conditions else "1=1"
+                limits = SearchLimits.from_settings(search_cfg)
+                limit = min(limit, limits.max_response_results)
 
-            if session and session.is_cancelled:
-                cursor.execute("SET LOCAL statement_timeout = 0")
-                return [], 0
+                if session and session.is_cancelled:
+                    cursor.execute("SET LOCAL statement_timeout = 0")
+                    return [], 0
             
-            # Count with the same exact-content identity used by the visible
-            # result list. Missing hashes remain distinct path records.
-            count_expression = (
-                "COUNT(DISTINCT COALESCE(h.hash::text, 'path:' || p.id::text))"
-                if hide_duplicates else "COUNT(DISTINCT p.id)"
-            )
-            count_query = f"""
-                SELECT {count_expression}
-                FROM paths p
-                LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id
-                WHERE {where_clause}
-            """
-            SearchService._last_count_query = count_query
-            SearchService._last_count_params = tuple(params)
-
-            skip_heavy_sql = bool(short_circuit_meta)
-            total_count = 0
-            if skip_heavy_sql:
-                sc_extra = dict(short_circuit_meta or {})
-                if trace:
-                    with trace.span("word_resolution", **sc_extra):
-                        pass
-                count_span = trace.span("db_count", **sc_extra) if trace else None
-                if count_span:
-                    count_span.__enter__()
-                    count_span.__exit__(None, None, None)
-                SearchService._last_count_meta = {
-                    "total": 0,
-                    "total_is_approximate": False,
-                    "count_mode": count_mode,
-                    "note": sc_extra.get("short_circuit_reason"),
-                }
-            else:
-                count_span = trace.span("db_count") if trace else None
-                if count_span:
-                    count_span.__enter__()
-                try:
-                    total_count, approx, note = apply_count_mode(
-                        cursor,
-                        count_query,
-                        tuple(params),
-                        mode=count_mode,
-                        timeout_ms=int(search_cfg.get("search_count_timeout_ms", 250)),
-                    )
-                    SearchService._last_count_meta = {
-                        "total": total_count,
-                        "total_is_approximate": approx,
-                        "count_mode": count_mode,
-                        "note": note,
-                    }
-                finally:
-                    if count_span:
-                        count_span.__exit__(None, None, None)
-                if total_count is None:
-                    total_count = 0
-            
-            sort_direction = 'ASC' if sort_order.lower() == 'asc' else 'DESC'
-            candidate_order = {
-                'date': f'p.file_date {sort_direction}, p.id ASC',
-                'name': f'p.file_name {sort_direction}, p.id ASC',
-                'type': f'p.file_type {sort_direction}, p.file_name ASC, p.id ASC',
-                'size': f'p.file_size {sort_direction}, p.file_name ASC, p.id ASC',
-            }.get(sort_by, 'p.file_date DESC, p.id ASC')
-            candidate_order_final = candidate_order.replace('p.', '')
-
-            use_sql_pagination = fast_mode or not use_bm25
-            use_sql_relevance = (
-                use_sql_pagination
-                and sort_by == 'relevance'
-                and query
-                and len(query.strip()) >= 2
-            )
-            relevance_expr = ""
-            relevance_params: List[Any] = []
-            if use_sql_relevance:
-                relevance_expr, relevance_params = sql_relevance_score_expr(
-                    ranking_terms or [query.strip()])
-            relevance_order = (
-                f"relevance_score {sort_direction}, p.file_date DESC, p.id ASC"
-            )
-            relevance_order_final = relevance_order.replace('p.', '')
-
-            use_keyset = (
-                use_sql_pagination
-                and use_sql_relevance
-                and cursor_after_score is not None
-                and cursor_after_id is not None
-                and sort_order.lower() == "desc"
-                and not hide_duplicates
-            )
-            keyset_params: List[Any] = []
-            effective_where = where_clause
-            if use_keyset and relevance_expr:
-                # The ORDER BY is ``score DESC, file_date DESC, id ASC`` (NULL
-                # dates sort first under DESC). The rows after the cursor are
-                # therefore: a lower score; or an equal score with an earlier
-                # date; or an equal score and date with a higher id. A cursor
-                # without a recorded date (legacy v2 token) keeps the original
-                # (score, id) comparison.
-                if cursor_has_date and cursor_after_date is not None:
-                    tie_clause = (
-                        "(p.file_date < %s OR "
-                        "(p.file_date = %s AND p.id > %s))"
-                    )
-                    tie_params: List[Any] = [
-                        cursor_after_date, cursor_after_date, cursor_after_id,
-                    ]
-                elif cursor_has_date:
-                    # NULL dates come first in DESC order: after a NULL-date
-                    # row come all dated rows, then NULL-date rows with a
-                    # higher id.
-                    tie_clause = (
-                        "(p.file_date IS NOT NULL OR "
-                        "(p.file_date IS NULL AND p.id > %s))"
-                    )
-                    tie_params = [cursor_after_id]
-                else:
-                    tie_clause = "p.id > %s"
-                    tie_params = [cursor_after_id]
-                effective_where = (
-                    f"{where_clause} AND ("
-                    f"({relevance_expr}) < %s OR "
-                    f"(({relevance_expr}) = %s AND {tie_clause})"
-                    f")"
+                # Count with the same exact-content identity used by the visible
+                # result list. Missing hashes remain distinct path records.
+                count_expression = (
+                    "COUNT(DISTINCT COALESCE(h.hash::text, 'path:' || p.id::text))"
+                    if hide_duplicates else "COUNT(DISTINCT p.id)"
                 )
-                # The WHERE clause is: <filters> AND (<expr> < %s OR (<expr> = %s
-                # AND <tie>)). The relevance expression has its own placeholders,
-                # so its parameters sit between the two cursor scores. Omitting
-                # them shifted every later parameter, the statement raised
-                # IndexError, and the next page came back empty.
-                keyset_params = [
-                    cursor_after_score,
-                    *relevance_params,
-                    cursor_after_score,
-                    *tie_params,
-                ]
+                count_query = f"""
+                    SELECT {count_expression}
+                    FROM paths p
+                    LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id
+                    WHERE {where_clause}
+                """
+                SearchService._last_count_query = count_query
+                SearchService._last_count_params = tuple(params)
 
-            if use_sql_pagination:
-                fetch_limit = min(limit, limits.max_candidates)
-                if use_keyset:
+                skip_heavy_sql = bool(short_circuit_meta)
+                total_count = 0
+                if skip_heavy_sql:
+                    sc_extra = dict(short_circuit_meta or {})
+                    if trace:
+                        with trace.span("word_resolution", **sc_extra):
+                            pass
+                    count_span = trace.span("db_count", **sc_extra) if trace else None
+                    if count_span:
+                        count_span.__enter__()
+                        count_span.__exit__(None, None, None)
+                    SearchService._last_count_meta = {
+                        "total": 0,
+                        "total_is_approximate": False,
+                        "count_mode": count_mode,
+                        "note": sc_extra.get("short_circuit_reason"),
+                    }
+                else:
+                    count_span = trace.span("db_count") if trace else None
+                    if count_span:
+                        count_span.__enter__()
+                    try:
+                        total_count, approx, note = apply_count_mode(
+                            cursor,
+                            count_query,
+                            tuple(params),
+                            mode=count_mode,
+                            timeout_ms=int(search_cfg.get("search_count_timeout_ms", 250)),
+                        )
+                        SearchService._last_count_meta = {
+                            "total": total_count,
+                            "total_is_approximate": approx,
+                            "count_mode": count_mode,
+                            "note": note,
+                        }
+                    finally:
+                        if count_span:
+                            count_span.__exit__(None, None, None)
+                    if total_count is None:
+                        total_count = 0
+            
+                sort_direction = 'ASC' if sort_order.lower() == 'asc' else 'DESC'
+                candidate_order = {
+                    'date': f'p.file_date {sort_direction}, p.id ASC',
+                    'name': f'p.file_name {sort_direction}, p.id ASC',
+                    'type': f'p.file_type {sort_direction}, p.file_name ASC, p.id ASC',
+                    'size': f'p.file_size {sort_direction}, p.file_name ASC, p.id ASC',
+                }.get(sort_by, 'p.file_date DESC, p.id ASC')
+                candidate_order_final = candidate_order.replace('p.', '')
+
+                use_sql_pagination = fast_mode or not use_bm25
+                use_sql_relevance = (
+                    use_sql_pagination
+                    and sort_by == 'relevance'
+                    and query
+                    and len(query.strip()) >= 2
+                )
+                relevance_expr = ""
+                relevance_params: List[Any] = []
+                if use_sql_relevance:
+                    relevance_expr, relevance_params = sql_relevance_score_expr(
+                        ranking_terms or [query.strip()])
+                relevance_order = (
+                    f"relevance_score {sort_direction}, p.file_date DESC, p.id ASC"
+                )
+                relevance_order_final = relevance_order.replace('p.', '')
+
+                use_keyset = (
+                    use_sql_pagination
+                    and use_sql_relevance
+                    and cursor_after_score is not None
+                    and cursor_after_id is not None
+                    and sort_order.lower() == "desc"
+                    and not hide_duplicates
+                )
+                keyset_params: List[Any] = []
+                effective_where = where_clause
+                if use_keyset and relevance_expr:
+                    # The ORDER BY is ``score DESC, file_date DESC, id ASC`` (NULL
+                    # dates sort first under DESC). The rows after the cursor are
+                    # therefore: a lower score; or an equal score with an earlier
+                    # date; or an equal score and date with a higher id. A cursor
+                    # without a recorded date (legacy v2 token) keeps the original
+                    # (score, id) comparison.
+                    if cursor_has_date and cursor_after_date is not None:
+                        tie_clause = (
+                            "(p.file_date < %s OR "
+                            "(p.file_date = %s AND p.id > %s))"
+                        )
+                        tie_params: List[Any] = [
+                            cursor_after_date, cursor_after_date, cursor_after_id,
+                        ]
+                    elif cursor_has_date:
+                        # NULL dates come first in DESC order: after a NULL-date
+                        # row come all dated rows, then NULL-date rows with a
+                        # higher id.
+                        tie_clause = (
+                            "(p.file_date IS NOT NULL OR "
+                            "(p.file_date IS NULL AND p.id > %s))"
+                        )
+                        tie_params = [cursor_after_id]
+                    else:
+                        tie_clause = "p.id > %s"
+                        tie_params = [cursor_after_id]
+                    effective_where = (
+                        f"{where_clause} AND ("
+                        f"({relevance_expr}) < %s OR "
+                        f"(({relevance_expr}) = %s AND {tie_clause})"
+                        f")"
+                    )
+                    # The WHERE clause is: <filters> AND (<expr> < %s OR (<expr> = %s
+                    # AND <tie>)). The relevance expression has its own placeholders,
+                    # so its parameters sit between the two cursor scores. Omitting
+                    # them shifted every later parameter, the statement raised
+                    # IndexError, and the next page came back empty.
+                    keyset_params = [
+                        cursor_after_score,
+                        *relevance_params,
+                        cursor_after_score,
+                        *tie_params,
+                    ]
+
+                if use_sql_pagination:
+                    fetch_limit = min(limit, limits.max_candidates)
+                    if use_keyset:
+                        limit_clause = "LIMIT %s"
+                        limit_params = [fetch_limit]
+                    else:
+                        sql_offset = offset
+                        limit_clause = "LIMIT %s OFFSET %s"
+                        limit_params = [fetch_limit, sql_offset]
+                else:
+                    # The ranked pool must reach the window being asked for: the
+                    # slice below is documents[offset:offset + limit], so a pool
+                    # sized from limit alone returns nothing past the first few pages.
+                    fetch_limit = min(max(limit * 3, offset + limit), limits.max_rank_pool)
+                    sql_offset = 0
                     limit_clause = "LIMIT %s"
                     limit_params = [fetch_limit]
-                else:
-                    sql_offset = offset
-                    limit_clause = "LIMIT %s OFFSET %s"
-                    limit_params = [fetch_limit, sql_offset]
-            else:
-                # The ranked pool must reach the window being asked for: the
-                # slice below is documents[offset:offset + limit], so a pool
-                # sized from limit alone returns nothing past the first few pages.
-                fetch_limit = min(max(limit * 3, offset + limit), limits.max_rank_pool)
-                sql_offset = 0
-                limit_clause = "LIMIT %s"
-                limit_params = [fetch_limit]
 
-            if hide_duplicates:
-                inner_order = relevance_order if use_sql_relevance else candidate_order
-                relevance_select = (
-                    f", {relevance_expr} AS relevance_score" if use_sql_relevance else ""
-                )
-                outer_order = (
-                    relevance_order_final if use_sql_relevance else candidate_order_final
-                )
-                candidate_query = f"""
-                    WITH candidate_paths AS (
-                        SELECT
+                if hide_duplicates:
+                    if use_sql_relevance:
+                        # A window ORDER BY cannot use an output alias of the same
+                        # SELECT (``relevance_score`` is one), so repeat the score
+                        # expression here. Its parameters are bound in the matching
+                        # position below. Same direction and tie-breaks as
+                        # ``relevance_order``.
+                        inner_order = f"{relevance_expr} {sort_direction}, p.file_date DESC, p.id ASC"
+                    else:
+                        inner_order = candidate_order
+                    relevance_select = (
+                        f", {relevance_expr} AS relevance_score" if use_sql_relevance else ""
+                    )
+                    outer_order = (
+                        relevance_order_final if use_sql_relevance else candidate_order_final
+                    )
+                    candidate_query = f"""
+                        WITH candidate_paths AS (
+                            SELECT
+                                p.id,
+                                p.file_name,
+                                p.file_path,
+                                p.file_type,
+                                p.file_size,
+                                p.file_date,
+                                p.file_status,
+                                p.date_creation,
+                                COALESCE(s.name, 'Unknown') as source_name,
+                                COALESCE(si.name, 'Unknown') as side_name,
+                                hc.source_id,
+                                hc.side_id
+                                {relevance_select},
+                                ROW_NUMBER() OVER (
+                                    PARTITION BY COALESCE(h.hash::text, 'path:' || p.id::text)
+                                    ORDER BY {inner_order}
+                                ) AS duplicate_rank
+                            FROM paths p
+                            LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id
+                            LEFT JOIN sources s ON hc.source_id = s.id
+                            LEFT JOIN sides si ON hc.side_id = si.id
+                            WHERE {effective_where}
+                        )
+                        SELECT id, file_name, file_path, file_type, file_size,
+                               file_date, file_status, date_creation, source_name,
+                               side_name, source_id, side_id
+                               {', relevance_score' if use_sql_relevance else ''}
+                        FROM candidate_paths
+                        WHERE duplicate_rank = 1
+                        ORDER BY {outer_order}
+                        {limit_clause}
+                    """
+                else:
+                    relevance_select = (
+                        f", {relevance_expr} AS relevance_score" if use_sql_relevance else ""
+                    )
+                    outer_order = (
+                        relevance_order if use_sql_relevance else candidate_order
+                    )
+                    candidate_query = f"""
+                        SELECT DISTINCT
                             p.id,
                             p.file_name,
                             p.file_path,
@@ -1768,232 +1817,197 @@ class SearchService:
                             COALESCE(si.name, 'Unknown') as side_name,
                             hc.source_id,
                             hc.side_id
-                            {relevance_select},
-                            ROW_NUMBER() OVER (
-                                PARTITION BY COALESCE(h.hash::text, 'path:' || p.id::text)
-                                ORDER BY {inner_order}
-                            ) AS duplicate_rank
+                            {relevance_select}
                         FROM paths p
                         LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id
                         LEFT JOIN sources s ON hc.source_id = s.id
                         LEFT JOIN sides si ON hc.side_id = si.id
                         WHERE {effective_where}
-                    )
-                    SELECT id, file_name, file_path, file_type, file_size,
-                           file_date, file_status, date_creation, source_name,
-                           side_name, source_id, side_id
-                           {', relevance_score' if use_sql_relevance else ''}
-                    FROM candidate_paths
-                    WHERE duplicate_rank = 1
-                    ORDER BY {outer_order}
-                    {limit_clause}
-                """
-            else:
-                relevance_select = (
-                    f", {relevance_expr} AS relevance_score" if use_sql_relevance else ""
-                )
-                outer_order = (
-                    relevance_order if use_sql_relevance else candidate_order
-                )
-                candidate_query = f"""
-                    SELECT DISTINCT
-                        p.id,
-                        p.file_name,
-                        p.file_path,
-                        p.file_type,
-                        p.file_size,
-                        p.file_date,
-                        p.file_status,
-                        p.date_creation,
-                        COALESCE(s.name, 'Unknown') as source_name,
-                        COALESCE(si.name, 'Unknown') as side_name,
-                        hc.source_id,
-                        hc.side_id
-                        {relevance_select}
-                    FROM paths p
-                    LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id
-                    LEFT JOIN sources s ON hc.source_id = s.id
-                    LEFT JOIN sides si ON hc.side_id = si.id
-                    WHERE {effective_where}
-                    ORDER BY {outer_order}
-                    {limit_clause}
-                """
+                        ORDER BY {outer_order}
+                        {limit_clause}
+                    """
             
-            # Placeholders in ``relevance_expr`` appear in SELECT before WHERE.
-            if use_sql_relevance and use_keyset:
-                candidate_params = (
-                    list(relevance_params)
-                    + list(params)
-                    + list(relevance_params)
-                    + list(keyset_params)
-                    + list(limit_params)
-                )
-            elif use_sql_relevance:
-                candidate_params = (
-                    list(relevance_params) + list(params) + list(limit_params)
-                )
-            else:
-                candidate_params = list(params) + list(limit_params)
-            if session and session.is_cancelled:
-                cursor.execute("SET LOCAL statement_timeout = 0")
-                return [], 0
+                # Placeholders in ``relevance_expr`` appear in SELECT before WHERE.
+                if use_sql_relevance and use_keyset:
+                    candidate_params = (
+                        list(relevance_params)
+                        + list(params)
+                        + list(relevance_params)
+                        + list(keyset_params)
+                        + list(limit_params)
+                    )
+                elif use_sql_relevance and hide_duplicates:
+                    # SELECT score, window ORDER BY score (same parameters again), WHERE, LIMIT.
+                    candidate_params = (
+                        list(relevance_params) + list(relevance_params)
+                        + list(params) + list(limit_params)
+                    )
+                elif use_sql_relevance:
+                    candidate_params = (
+                        list(relevance_params) + list(params) + list(limit_params)
+                    )
+                else:
+                    candidate_params = list(params) + list(limit_params)
+                if session and session.is_cancelled:
+                    cursor.execute("SET LOCAL statement_timeout = 0")
+                    return [], 0
 
-            SearchService._last_candidate_query = candidate_query
-            SearchService._last_candidate_params = tuple(candidate_params)
+                SearchService._last_candidate_query = candidate_query
+                SearchService._last_candidate_params = tuple(candidate_params)
 
-            if skip_heavy_sql:
-                sc_extra = dict(short_circuit_meta or {})
-                cand_span = trace.span("db_candidates", **sc_extra) if trace else None
-                if cand_span:
-                    cand_span.__enter__()
-                    cand_span.__exit__(None, None, None)
-                candidates = []
-            else:
-                cand_span = trace.span("db_candidates") if trace else None
-                if cand_span:
-                    cand_span.__enter__()
-                try:
-                    cursor.execute(candidate_query, tuple(candidate_params))
-                    candidates = cursor.fetchall()
-                finally:
+                if skip_heavy_sql:
+                    sc_extra = dict(short_circuit_meta or {})
+                    cand_span = trace.span("db_candidates", **sc_extra) if trace else None
                     if cand_span:
+                        cand_span.__enter__()
                         cand_span.__exit__(None, None, None)
+                    candidates = []
+                else:
+                    cand_span = trace.span("db_candidates") if trace else None
+                    if cand_span:
+                        cand_span.__enter__()
+                    try:
+                        cursor.execute(candidate_query, tuple(candidate_params))
+                        candidates = cursor.fetchall()
+                    finally:
+                        if cand_span:
+                            cand_span.__exit__(None, None, None)
             
-            # Convert to document dictionaries
-            documents = []
-            for row in candidates:
-                doc = {
-                    'id': row[0],
-                    'file_name': row[1] or '',
-                    'file_path': row[2] or '',
-                    'file_type': row[3],
-                    'file_size': row[4],
-                    'file_date': row[5],
-                    'file_status': str(row[6]),
-                    'date_creation': row[7],
-                    'source_name': row[8],
-                    'side_name': row[9],
-                    'source_id': row[10],
-                    'side_id': row[11],
-                    'content': '',
-                }
-                if use_sql_relevance and len(row) > 12:
-                    doc['relevance_score'] = float(row[12] or 0.0)
-                documents.append(doc)
+                # Convert to document dictionaries
+                documents = []
+                for row in candidates:
+                    doc = {
+                        'id': row[0],
+                        'file_name': row[1] or '',
+                        'file_path': row[2] or '',
+                        'file_type': row[3],
+                        'file_size': row[4],
+                        'file_date': row[5],
+                        'file_status': str(row[6]),
+                        'date_creation': row[7],
+                        'source_name': row[8],
+                        'side_name': row[9],
+                        'source_id': row[10],
+                        'side_id': row[11],
+                        'content': '',
+                    }
+                    if use_sql_relevance and len(row) > 12:
+                        doc['relevance_score'] = float(row[12] or 0.0)
+                    documents.append(doc)
             
-            # Apply advanced ranking if enabled
-            if use_bm25 and query and documents:
-                try:
-                    # Load content snippets for ranking (first 1000 chars)
-                    for doc in documents:
-                        try:
-                            content = load_text_content(doc['id'])
-                            # Rank on real content only - structural markers
-                            # would skew BM25 toward label-heavy files.
-                            content = strip_structural_markers(content) if content else ''
-                            doc['content'] = content[:1000]
-                        except:
-                            doc['content'] = ''
+                # Apply advanced ranking if enabled
+                if use_bm25 and query and documents:
+                    try:
+                        # Load content snippets for ranking (first 1000 chars)
+                        for doc in documents:
+                            try:
+                                content = load_text_content(doc['id'])
+                                # Rank on real content only - structural markers
+                                # would skew BM25 toward label-heavy files.
+                                content = strip_structural_markers(content) if content else ''
+                                doc['content'] = content[:1000]
+                            except:
+                                doc['content'] = ''
                     
-                    # Rank documents using BM25 and other algorithms
-                    ranker = SearchService._get_ranker()
-                    ranked_docs = ranker.rank_documents(
-                        query=query,
-                        documents=documents,
-                        use_expansion=False,  # Already expanded in query
-                        use_fuzzy=use_fuzzy
-                    )
+                        # Rank documents using BM25 and other algorithms
+                        ranker = SearchService._get_ranker()
+                        ranked_docs = ranker.rank_documents(
+                            query=query,
+                            documents=documents,
+                            use_expansion=False,  # Already expanded in query
+                            use_fuzzy=use_fuzzy
+                        )
                     
-                    # Extract documents and scores
-                    documents = [doc for doc, score in ranked_docs]
+                        # Extract documents and scores
+                        documents = [doc for doc, score in ranked_docs]
                     
-                    # Update relevance scores
-                    for i, (doc, score) in enumerate(ranked_docs):
-                        if i < len(documents):
-                            documents[i]['relevance_score'] = float(score)
-                except Exception as e:
-                    logger.warning(f"Advanced ranking failed, using basic ranking: {e}")
-                    # Fallback to basic relevance
-                    for doc in documents:
-                        doc['relevance_score'] = 0.0
+                        # Update relevance scores
+                        for i, (doc, score) in enumerate(ranked_docs):
+                            if i < len(documents):
+                                documents[i]['relevance_score'] = float(score)
+                    except Exception as e:
+                        logger.warning(f"Advanced ranking failed, using basic ranking: {e}")
+                        # Fallback to basic relevance
+                        for doc in documents:
+                            doc['relevance_score'] = 0.0
             
-            # Apply sorting (skipped when SQL already ordered and paginated)
-            if not use_sql_pagination:
-                if sort_by == 'relevance':
-                    documents.sort(
-                        key=lambda x: x.get('relevance_score', 0),
-                        reverse=(sort_order.lower() == 'desc'))
-                elif sort_by == 'date':
-                    documents.sort(
-                        key=lambda x: x.get('file_date') or date.min,
-                        reverse=(sort_order.lower() == 'desc'))
-                elif sort_by == 'name':
-                    documents.sort(
-                        key=lambda x: x.get('file_name', '').lower(),
-                        reverse=(sort_order.lower() == 'desc'))
-                elif sort_by == 'type':
-                    documents.sort(
-                        key=lambda x: (x.get('file_type', ''), x.get('file_name', '').lower()),
-                        reverse=(sort_order.lower() == 'desc'))
-                elif sort_by == 'size':
-                    documents.sort(
-                        key=lambda x: x.get('file_size', 0),
-                        reverse=(sort_order.lower() == 'desc'))
+                # Apply sorting (skipped when SQL already ordered and paginated)
+                if not use_sql_pagination:
+                    if sort_by == 'relevance':
+                        documents.sort(
+                            key=lambda x: x.get('relevance_score', 0),
+                            reverse=(sort_order.lower() == 'desc'))
+                    elif sort_by == 'date':
+                        documents.sort(
+                            key=lambda x: x.get('file_date') or date.min,
+                            reverse=(sort_order.lower() == 'desc'))
+                    elif sort_by == 'name':
+                        documents.sort(
+                            key=lambda x: x.get('file_name', '').lower(),
+                            reverse=(sort_order.lower() == 'desc'))
+                    elif sort_by == 'type':
+                        documents.sort(
+                            key=lambda x: (x.get('file_type', ''), x.get('file_name', '').lower()),
+                            reverse=(sort_order.lower() == 'desc'))
+                    elif sort_by == 'size':
+                        documents.sort(
+                            key=lambda x: x.get('file_size', 0),
+                            reverse=(sort_order.lower() == 'desc'))
             
-            # Apply pagination (skipped when SQL already paginated)
-            paginated_docs = (
-                documents if use_sql_pagination else documents[offset:offset + limit]
-            )
+                # Apply pagination (skipped when SQL already paginated)
+                paginated_docs = (
+                    documents if use_sql_pagination else documents[offset:offset + limit]
+                )
 
-            results = SearchService._format_advanced_results(
-                paginated_docs,
-                query=query,
-                case_sensitive=case_sensitive,
-                whole_word=whole_word,
-                include_snippets=include_snippets,
-            )
-            if (
-                use_sql_relevance
-                and paginated_docs
-                and len(paginated_docs) >= fetch_limit
-            ):
-                last = paginated_docs[-1]
-                score = float(last.get("relevance_score") or 0.0)
-                page_sig = pagination_query_signature(
-                    query=query or "",
-                    file_type=file_type,
-                    source_ids=source_ids,
-                    side_ids=side_ids,
-                    category_ids=category_ids,
-                    analyst_category_ids=analyst_category_ids,
-                    date_from=date_from,
-                    date_to=date_to,
-                    analyst_scope=analyst_scope,
-                    file_statuses=file_statuses,
-                    hide_duplicates=hide_duplicates,
-                    sort_by=sort_by,
-                    sort_order=sort_order,
+                results = SearchService._format_advanced_results(
+                    paginated_docs,
+                    query=query,
                     case_sensitive=case_sensitive,
                     whole_word=whole_word,
+                    include_snippets=include_snippets,
                 )
-                SearchService._last_pagination_cursor = relevance_cursor(
-                    score,
-                    int(last["id"]),
-                    sort_order,
-                    query_signature=page_sig,
-                    file_date=last.get("file_date"),
-                    file_date_known=True,
-                )
+                if (
+                    use_sql_relevance
+                    and paginated_docs
+                    and len(paginated_docs) >= fetch_limit
+                ):
+                    last = paginated_docs[-1]
+                    score = float(last.get("relevance_score") or 0.0)
+                    page_sig = pagination_query_signature(
+                        query=query or "",
+                        file_type=file_type,
+                        source_ids=source_ids,
+                        side_ids=side_ids,
+                        category_ids=category_ids,
+                        analyst_category_ids=analyst_category_ids,
+                        date_from=date_from,
+                        date_to=date_to,
+                        analyst_scope=analyst_scope,
+                        file_statuses=file_statuses,
+                        hide_duplicates=hide_duplicates,
+                        sort_by=sort_by,
+                        sort_order=sort_order,
+                        case_sensitive=case_sensitive,
+                        whole_word=whole_word,
+                    )
+                    SearchService._last_pagination_cursor = relevance_cursor(
+                        score,
+                        int(last["id"]),
+                        sort_order,
+                        query_signature=page_sig,
+                        file_date=last.get("file_date"),
+                        file_date_known=True,
+                    )
 
-            try:
-                cursor.execute("SET LOCAL statement_timeout = 0")
-            except Exception:
-                pass
-            cursor.close()
-            # PHASE 9 FIX: this return was previously nested inside the for
-            # loop, so an empty result set fell through and returned None,
-            # crashing the search endpoint with a 500.
-            return results, total_count
+                try:
+                    cursor.execute("SET LOCAL statement_timeout = 0")
+                except Exception:
+                    pass
+                cursor.close()
+                # PHASE 9 FIX: this return was previously nested inside the for
+                # loop, so an empty result set fell through and returned None,
+                # crashing the search endpoint with a 500.
+                return results, total_count
                 
         except Exception as e:
             logger.error(f"Advanced search error: {e}", exc_info=True)
