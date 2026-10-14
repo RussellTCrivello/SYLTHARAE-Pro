@@ -287,6 +287,14 @@
     <!-- Sidebar Backdrop (for mobile overlay) -->
     <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
 
+    {#- One live region for the whole application: an action that finished
+        says so in one place, whatever page it happened on. It is placed
+        before #mainContent, not after the page: a soft navigation replaces the
+        children of #mainContent, and a region inside it lost every visible
+        toast. The region is position:fixed, so its placement does not move it. -#}
+    {% from 'components/toast.html' import toast_region %}
+    {{ toast_region() }}
+
     <!-- ========================================
          MAIN CONTENT AREA
          ======================================== -->
@@ -557,11 +565,6 @@
     {{ screen_inspector(enabled=True, interface_id=inspector_interface) }}
     <script src="{{ url_for('static', filename='js/modules/core/screen-inspector-init.js') }}"></script>
     {% endif %}
-
-    {#- One live region for the whole application: an action that finished
-        says so in one place, whatever page it happened on. -#}
-    {% from 'components/toast.html' import toast_region %}
-    {{ toast_region() }}
 
     <!-- Page-Specific JavaScript -->
     {% block extra_js %}{% endblock %}
