@@ -1033,6 +1033,8 @@ Identity authority (One Content, Many Contexts) - the ONLY place where
   - `register_content(self, content_hash: str, source_id: int, side_id: int, path_row: Dict[str, Any], commit: bool = True) -> Dict[str, Any]` - Register one occurrence, creating identity rows as needed.
   - `reconcile_occurrence(self, path_id: int, hierarchy_path: str, commit: bool = True) -> Dict[str, Any]` - Collapse a repeat in-container occurrence onto its first record.
   - `delete_path(self, path_id: int, commit: bool = True) -> Dict[str, Any]` - Delete one occurrence and clean up emptied identity rows.
+  - `same_context_duplicates(self) -> List[Dict[str, Any]]` - Groups of EXACT repeats inside one (source, side) context.
+  - `remove_same_context_duplicates(self) -> Dict[str, int]` - Delete every repeated occurrence inside its (source, side) context.
   - `cleanup_orphaned_hashes(self, dry_run: bool = False) -> int` - Remove canonical rows with zero contexts (DB-05 repair tool).
   - `cleanup_orphaned_contexts(self, dry_run: bool = False) -> int` - Remove context rows with zero occurrences (repair tooling).
   - `deduplicate_hash_relationships(self, dry_run: bool = False) -> int` - Consolidate duplicate relationship records in hash_contexts table.

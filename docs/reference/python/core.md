@@ -1336,7 +1336,8 @@ Keyset (cursor) pagination tokens for stable deep pages.
 
 - `encode_cursor(payload: Dict[str, Any]) -> str`
 - `decode_cursor(token: Optional[str]) -> Optional[Dict[str, Any]]`
-- `relevance_cursor(score: float, path_id: int, sort_order: str = 'desc', *, query_signature: Optional[str] = None) -> str`
+- `relevance_cursor(score: float, path_id: int, sort_order: str = 'desc', *, query_signature: Optional[str] = None, file_date: Optional[_dt.date] = None, file_d...` - Encode the position of the last row returned.
+- `parse_relevance_cursor_tiebreak(token: Optional[str], *, expected_signature: Optional[str] = None) -> Optional[Tuple[bool, Optional[_dt.date]]]` - Return ``(has_date, file_date)`` for a valid relevance cursor.
 - `parse_relevance_cursor(token: Optional[str], *, expected_signature: Optional[str] = None) -> Optional[Tuple[float, int, str]]`
 
 ### `core/search/enums.py`

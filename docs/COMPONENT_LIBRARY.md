@@ -148,7 +148,7 @@ How much of the repeated markup has moved onto its component. Standardized count
 | Hand-written pagination markup | 10 | 0 | 100% |
 | Hand-written search input | 8 | 10 | 44% |
 | Hand-written filter control | 7 | 7 | 50% |
-| Browser confirm() dialog | 2 | 0 | 100% |
+| Browser confirm() dialog | 3 | 0 | 100% |
 | Hand-written status badge | 6 | 0 | 100% |
 | Hand-written action bar | 5 | 2 | 71% |
 

@@ -90,6 +90,8 @@ Files Blueprint - File Management Routes and Helpers
 - `original_file_info(file_id)` <sub>files_bp.route('/api/file/<int:file_id>/original', methods=['GET'])</sub> - Describe the ORIGINAL file a stored object was extracted from.
 - `original_file_content(file_id)` <sub>files_bp.route('/api/file/<int:file_id>/original/content', methods=['GET'])</sub> - Serve the original file's bytes for display or download.
 - `delete_file(file_id)` <sub>files_bp.route('/file/<int:file_id>/delete', methods=['POST', 'DELETE'])</sub> - Delete a single file and all its related data
+- `same_context_duplicates_preview()` <sub>files_bp.route('/api/files/same-context-duplicates', methods=['GET'])</sub> - Preview the repetitions inside each (source, side): what would go, what stays.
+- `same_context_duplicates_remove()` <sub>files_bp.route('/api/files/same-context-duplicates/remove', methods=['POST'])</sub> - Remove the repetitions inside each (source, side), keeping one occurrence.
 - `bulk_delete_files()` <sub>files_bp.route('/files/bulk-delete', methods=['POST'])</sub> - Delete multiple files and all their related data
 
 ### `Api/blueprints/paths.py`
