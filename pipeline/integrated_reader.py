@@ -907,10 +907,12 @@ class IntegratedFileReader:
         # PROGRESS: skipped work is still accounted. It enters the denominator
         # and the terminal bucket in one step, so a resumed job can reach 100%
         # instead of stranding under it forever.
+        # The units are already terminal, so they are not outstanding work of
+        # any container. Passing ``parent`` here made the folder look like a
+        # container with work still to do, and the end-of-run wait then ran to
+        # its stall limit on every resumed run.
         if skipped_count:
-            self.progress_ledger.record(
-                OUTCOME_SKIPPED, skipped_count, parent=folder_path
-            )
+            self.progress_ledger.record(OUTCOME_SKIPPED, skipped_count)
 
         if not total_files:
             if self.checkpoint_manager and not nested_run:

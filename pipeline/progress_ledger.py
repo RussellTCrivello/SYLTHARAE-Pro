@@ -145,6 +145,10 @@ class ProgressLedger:
         self.initial_total = 0            # first (top-level) workload
         self.discovered_total = 0         # grows as containers are opened
         self._discovery_keys: Dict[str, int] = {}
+        #: Container that published each keyed registration. A later
+        #: reconciliation (a nested reader re-registering the post-checkpoint
+        #: count) must lower that container's outstanding work too.
+        self._discovery_parents: Dict[str, str] = {}
         self._initial_locked = False
 
         # Lifecycle
@@ -231,6 +235,10 @@ class ProgressLedger:
                 else:
                     delta = count - previous
                     self._discovery_keys[key] = count
+                if parent is not None:
+                    self._discovery_parents[key] = parent
+                elif key in self._discovery_parents:
+                    parent = self._discovery_parents[key]
             else:
                 delta = count
 
@@ -245,6 +253,11 @@ class ProgressLedger:
                 self._attribute_children_locked(parent, delta)
                 self._container_work_locked(parent, delta)
                 self.containers_opened += 1
+            elif parent is not None and delta < 0:
+                # Reconciliation removed units (checkpoint-skipped members that
+                # were registered with the container). They are no longer
+                # outstanding, so the container must not wait for them.
+                self._container_work_locked(parent, delta)
 
             percent = self._percent_locked()
             discovered_changed = bool(delta)
