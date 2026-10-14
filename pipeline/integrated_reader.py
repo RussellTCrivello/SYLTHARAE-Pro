@@ -12,7 +12,7 @@ import threading
 import time
 
 from core.console import console
-from core.file_utils import get_standardized_metadata, iter_tree
+from core.file_utils import get_standardized_metadata, iter_tree, nested_extract_skip_reason
 from reader_file.main_specify_method import main_specify_method_of_reading_the_file
 # DatabaseHub is optional - import will be handled conditionally in _init_storage
 from pipeline.storage_pipeline import StoragePipeline
@@ -219,6 +219,24 @@ def _object_footprint(value: Any) -> int:
         return len(value) + 49  # e.g. numpy arrays expose len()
     except Exception:
         return 100
+
+
+def _macos_metadata_reason(file_info: Dict[str, Any], root: str) -> Optional[str]:
+    """Why a top-level entry is macOS metadata, not content (or None).
+
+    Unzipped Mac exports keep ``__MACOSX/._*`` AppleDouble resource forks next to
+    the real files. They are not images, and reading them as images fails with
+    "cannot identify image file". Archive members get the same rule in
+    FileRouterService; this applies it to the top-level walk, which had no rule.
+    Only these two reasons are applied here, not the iWork shard rule.
+    """
+    path = str(file_info.get('path') or '')
+    try:
+        rel = os.path.relpath(path, root) if root else path
+    except ValueError:
+        rel = os.path.basename(path)
+    reason = nested_extract_skip_reason(rel)
+    return reason if reason in ('macosx_metadata', 'appledouble_resource_fork') else None
 
 
 class IntegratedFileReader:
@@ -843,12 +861,17 @@ class IntegratedFileReader:
                 parts.append(f"{symlinks} symbolic link(s)")
             if special:
                 parts.append(f"{special} special file(s) (socket/FIFO/device)")
-            message = ("Not ingested: " + " and ".join(parts)
-                       + " - links are not followed (their targets are ingested "
-                         "on their own) and special files are not artifacts")
-            logger.info(message)
-            if not nested_run:
-                print(f"ℹ️  {message}")
+            metadata = (not_ingested.get('macosx_metadata', 0)
+                        + not_ingested.get('appledouble_resource_fork', 0))
+            if metadata:
+                parts.append(f"{metadata} macOS metadata file(s) (__MACOSX / ._ resource forks)")
+            if parts:
+                message = ("Not ingested: " + " and ".join(parts)
+                           + " - links are not followed (their targets are ingested "
+                             "on their own), special files and macOS metadata are not artifacts")
+                logger.info(message)
+                if not nested_run:
+                    print(f"ℹ️  {message}")
 
         if skipped_count > 0:
             if not nested_run:
@@ -1140,6 +1163,10 @@ class IntegratedFileReader:
                 if record_type in ('SYMLINK', 'OTHER'):
                     not_ingested[record_type] = not_ingested.get(record_type, 0) + 1
                 continue
+            meta_reason = _macos_metadata_reason(file_info, folder_path)
+            if meta_reason:
+                not_ingested[meta_reason] = not_ingested.get(meta_reason, 0) + 1
+                continue
             if root_error is None and record_type == 'ERROR' \
                     and file_info.get('path') == folder_path and folder_path:
                 # A record describing the root itself (unreadable/absent root).
@@ -1173,6 +1200,8 @@ class IntegratedFileReader:
         for file_info in iter_tree(folder_path, compute_hashes=False):
             record_type = file_info.get('type')
             if record_type not in ('FILE', 'ERROR'):
+                continue
+            if _macos_metadata_reason(file_info, folder_path):
                 continue
             if self._phase_of(file_info) != phase:
                 continue
