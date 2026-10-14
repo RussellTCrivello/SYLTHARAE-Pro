@@ -65,25 +65,26 @@ const state = {
  *  "engine capabilities Cannot access 'taxonomy' before initialization". */
 const taxonomy = { sources: [], sides: [] };
 
-let studioBound = false;
 let telemetryTimer = null;
 
 const el = (id) => document.getElementById(id);
 
 function initializeIngestionStudio() {
-  if (!el('ingestAction') && !document.getElementById('ingestionPageData')) return;
-  // Soft nav can re-import this module; keep chrome listeners/timers single.
-  if (!studioBound) {
-    bindModes();
-    bindPicker();
-    bindServerPath();
-    bindTaxonomy();
-    bindOptions();
-    bindRail();
-    bindAction();
-    bindKeys();
-    studioBound = true;
-  }
+  const anchor = el('ingestAction') || document.getElementById('ingestionPageData');
+  if (!anchor) return;
+  // Guard per DOM, not per module copy: the self-run, the soft-nav default export
+  // and cache-busted copies can all run against the same document. The anchor is
+  // recreated on every visit, so a fresh visit still binds and boots.
+  if (anchor.dataset.ingestBooted === '1') return;
+  anchor.dataset.ingestBooted = '1';
+  bindModes();
+  bindPicker();
+  bindServerPath();
+  bindTaxonomy();
+  bindOptions();
+  bindRail();
+  bindAction();
+  bindKeys();
   loadCapabilities();
   loadTaxonomy();
   refreshTelemetry();
@@ -98,7 +99,6 @@ function stopIngestionStudio() {
     window.clearInterval(telemetryTimer);
     telemetryTimer = null;
   }
-  studioBound = false;
 }
 
 document.addEventListener('syltharae:soft-nav', (event) => {
