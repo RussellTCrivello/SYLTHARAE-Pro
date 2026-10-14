@@ -74,6 +74,10 @@ export function updateAllSidebarCounts(stats) {
 export function setupSidebarKeyboardNavigation() {
     const sidebar = document.getElementById('fileManagerSidebar');
     if (!sidebar) return;
+    // Marker lives on the element: a re-run of the bootstrap (new module
+    // instance after a soft-nav swap) must not stack a second keydown handler.
+    if (sidebar.dataset.keyboardNavWired) return;
+    sidebar.dataset.keyboardNavWired = '1';
     
     sidebar.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {

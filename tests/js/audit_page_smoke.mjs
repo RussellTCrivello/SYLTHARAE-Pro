@@ -22,11 +22,17 @@ function entry(id, over = {}) {
            ip_address: '10.0.0.1', created_at: '2030-01-01T00:00:00+00:00', ...over };
 }
 
-async function run(routes) {
+async function run(routes, opts = {}) {
   const { document, byId } = makeDom();
   document.getElementById('audit-page-data').textContent = JSON.stringify({ page_size: 2, max_page_size: 200 });
   document.getElementById('audit-page-labels').textContent = JSON.stringify(LABELS);
-  document.getElementById('auditError').classList.add('d-none');
+  if (opts.noErrorBox) {
+    // The error box can be absent on some renders; a real missing element is null.
+    const lookup = document.getElementById.bind(document);
+    document.getElementById = (id) => (id === 'auditError' ? null : lookup(id));
+  } else {
+    document.getElementById('auditError').classList.add('d-none');
+  }
   document.getElementById('auditDetail').classList.add('d-none');
   const calls = [];
   const fetchImpl = (url, init) => {
@@ -35,7 +41,7 @@ async function run(routes) {
     const [status, body] = hit ? hit[1](url, init) : [404, { success: false, error: { message: 'no route' } }];
     return Promise.resolve({ ok: status < 400, status, json: () => Promise.resolve(body) });
   };
-  const ctx = { document, fetch: fetchImpl, console, JSON, Promise, Object, String, Number, Math, Set,
+  const ctx = { document, fetch: fetchImpl, console: opts.console || console, JSON, Promise, Object, String, Number, Math, Set,
                 Error, URL, URLSearchParams, setTimeout, Date, Node: function Node() {} };
   Object.defineProperty(ctx.Node, Symbol.hasInstance, { value: (v) => v && typeof v === 'object' && 'nodeType' in v });
   vm.createContext(ctx);
@@ -128,6 +134,23 @@ function check(name, cond, detail) {
   byId.auditUsername.value = 'nobody';
   byId.auditForm.listeners.submit.forEach((f) => f({ preventDefault() {} })); await tick();
   check('empty filtered result says nothing matches', byId.auditRows.textContent === LABELS.empty);
+}
+
+// ---- 4: a failed request with no error box on the page must not throw
+{
+  const logged = [];
+  const fakeConsole = { log() {}, warn() {}, error: (...args) => logged.push(args), info() {}, debug() {} };
+  const rejections = [];
+  const onRejection = (reason) => rejections.push(String((reason && reason.message) || reason));
+  process.on('unhandledRejection', onRejection);
+  await run([
+    [/^\/api\/audit\/actions/, () => [200, { success: true, items: [], capped: false, cap: 500 }]],
+    [/^\/api\/audit\?/, () => [503, { success: false, error: { code: 'QUERY_TIMEOUT', message: 'query timed out' } }]],
+  ], { noErrorBox: true, console: fakeConsole });
+  await tick(); await tick();
+  process.off('unhandledRejection', onRejection);
+  check('no uncaught TypeError when the error box is absent', rejections.length === 0, rejections.join(' | '));
+  check('the server error is still logged when there is no box', logged.some((a) => String(a[0]).includes('Audit page error')), JSON.stringify(logged.map((a) => String(a[0]))));
 }
 
 if (failures) { console.log(`${failures} failure(s)`); process.exit(1); }

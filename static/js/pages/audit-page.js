@@ -76,15 +76,23 @@ async function api(url) {
     return body;
 }
 
+// The error box is optional on some renders (and absent after a soft
+// navigation swap). Without it there is nowhere to show the message, so log
+// it instead of throwing a TypeError out of the error handler.
 function showError(error) {
     const box = document.getElementById('auditError');
+    if (!box) {
+        console.error('Audit page error:', error);
+        return;
+    }
     const message = box.querySelector('.state-message, p') || box;
     message.textContent = error.code ? `${error.message} (${error.code})` : error.message;
     box.classList.remove('d-none');
 }
 
 function hideError() {
-    document.getElementById('auditError').classList.add('d-none');
+    const box = document.getElementById('auditError');
+    if (box) box.classList.add('d-none');
 }
 
 async function guarded(fn) {
