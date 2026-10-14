@@ -22246,3 +22246,170 @@ msgstr "نوشتن پیکربندی"
 #: Api/routes/setup.py
 msgid "Choose a supported language."
 msgstr "یک زبان پشتیبانی‌شده انتخاب کنید."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(mb)s MB free"
+msgstr "%(mb)s مگابایت آزاد"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(name)s is not a declared dependency."
+msgstr "%(name)s یک وابستگی اعلام‌شده نیست."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "An installation is already running."
+msgstr "یک نصب در حال انجام است."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Checking dependencies…"
+msgstr "در حال بررسی وابستگی‌ها…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Choose at least one dependency to install."
+msgstr "حداقل یک وابستگی برای نصب انتخاب کنید."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Compatible"
+msgstr "سازگار"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Could not check dependencies."
+msgstr "بررسی وابستگی‌ها ممکن نشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Could not read package metadata: %(error)s"
+msgstr "خواندن فراداده بسته ممکن نشد: %(error)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Dependency details"
+msgstr "جزئیات وابستگی‌ها"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Go to Login"
+msgstr "رفتن به ورود"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Hide dependency details"
+msgstr "پنهان کردن جزئیات وابستگی‌ها"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Hide details"
+msgstr "پنهان کردن جزئیات"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Import did not finish within %(seconds)s seconds"
+msgstr "واردسازی در %(seconds)s ثانیه تمام نشد"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Import name"
+msgstr "نام وارد‌سازی"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Incompatible version"
+msgstr "نسخه ناسازگار"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Inspect"
+msgstr "بررسی"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Install selected"
+msgstr "نصب موارد انتخاب‌شده"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation job not found."
+msgstr "کار نصب پیدا نشد."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Installed %(installed)s; requires %(requires)s"
+msgstr "نصب‌شده %(installed)s؛ نیازمند %(requires)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Installed %(version)s"
+msgstr "نصب‌شده %(version)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installed (command-line tool)"
+msgstr "نصب‌شده (ابزار خط فرمان)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installing selected packages…"
+msgstr "در حال نصب بسته‌های انتخاب‌شده…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Invalid request."
+msgstr "درخواست نامعتبر است."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Listed in requirements"
+msgstr "فهرست‌شده در requirements"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Needs attention: %(names)s"
+msgstr "نیازمند بررسی: %(names)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "None (command-line tool)"
+msgstr "ندارد (ابزار خط فرمان)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Optional"
+msgstr "اختیاری"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Optional gaps: %(count)s"
+msgstr "کمبودهای اختیاری: %(count)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Required"
+msgstr "الزامی"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Required dependencies need attention: %(ready)s of %(total)s ready"
+msgstr "وابستگی‌های الزامی نیازمند بررسی‌اند: %(ready)s از %(total)s آماده"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Required dependencies ready: %(ready)s of %(total)s"
+msgstr "وابستگی‌های الزامی آماده‌اند: %(ready)s از %(total)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Requirement"
+msgstr "نیازمندی"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "See docs/OPERATIONS.md for help."
+msgstr "برای راهنمایی docs/OPERATIONS.md را ببینید."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Selected dependencies installed."
+msgstr "وابستگی‌های انتخاب‌شده نصب شدند."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Some checks failed."
+msgstr "برخی بررسی‌ها ناموفق بودند."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Some selected dependencies could not be installed. Review the details and retry."
+msgstr "برخی وابستگی‌های انتخاب‌شده نصب نشدند. جزئیات را بررسی و دوباره تلاش کنید."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Too many dependencies in one request."
+msgstr "تعداد وابستگی‌ها در یک درخواست زیاد است."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "You can still proceed, but you may need to install missing components before the database step will succeed."
+msgstr "می‌توانید ادامه دهید، اما ممکن است پیش از موفقیت مرحله پایگاه داده، اجزای ناقص را نصب کنید."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "pip exited with code %(code)s"
+msgstr "pip با کد %(code)s خاتمه یافت"

@@ -228,13 +228,15 @@ function T(key, vars) {
 
             setCheck(items.python, c.python.ok, c.python.version, c.python.message);
             setCheck(items.packages, c.packages.ok,
-                c.packages.ok ? T('All imported') : c.packages.missing.join(', '),
+                c.packages.ok ? T('Ready') : T('Needs attention: %(names)s', {names: c.packages.missing.join(', ')}),
                 c.packages.message);
+            document.getElementById('btn-dep-details').hidden = false;
+            loadDependencyReport(false);
             setCheck(items.postgresql, c.postgresql.ok,
                 c.postgresql.ok ? T('Running') : T('Not available'),
                 c.postgresql.message);
             setCheck(items.disk, c.disk.ok,
-                c.disk.free_mb > 0 ? c.disk.free_mb + ' MB free' : '',
+                c.disk.free_mb > 0 ? T('%(mb)s MB free', {mb: c.disk.free_mb}) : '',
                 c.disk.message);
             setCheck(items.os, true, c.os.name + ' ' + c.os.arch, '');
 
@@ -242,9 +244,9 @@ function T(key, vars) {
                 document.getElementById('step1-alert').innerHTML =
                     '<div class="alert alert-warning" role="alert">' +
                     '<i class="bi bi-exclamation-triangle-fill"></i><div>' +
-                    '<strong>Some checks failed.</strong> You can still proceed, but ' +
-                    'you may need to install missing components before the database step ' +
-                    'will succeed. See docs/OPERATIONS.md for help.</div></div>';
+                    '<strong>' + T('Some checks failed.') + '</strong> ' +
+                    T('You can still proceed, but you may need to install missing components before the database step will succeed.') +
+                    ' <span>' + T('See docs/OPERATIONS.md for help.') + '</span></div></div>';
             }
         } catch(e) {
             renderInstallAlert(
@@ -505,7 +507,7 @@ function T(key, vars) {
                     const loginIcon = document.createElement('i');
                     loginIcon.className = 'bi bi-box-arrow-in-right';
                     loginIcon.setAttribute('aria-hidden', 'true');
-                    loginLink.append(loginIcon, document.createTextNode(' Go to Login'));
+                    loginLink.append(loginIcon, document.createTextNode(' ' + T('Go to Login')));
                     const completion = document.getElementById('completion-summary');
                     completion.replaceChildren(summary, loginLink);
                     document.getElementById('redirect-note').style.display = '';
@@ -526,6 +528,186 @@ function T(key, vars) {
                 INSTALL_WIZARD_PAGE_DATA.reviewSettings, () => goTo(4));
         }
     }
+
+    // ── Python dependency readiness (step 1 details) ──
+    // The server computes readiness from the declared manifest and real import
+    // checks. This panel shows that report and installs only declared packages.
+    const DEP = {timer: null, busy: false};
+
+    function depStateLabel(state) {
+        switch (state) {
+            case 'compatible': return T('Compatible');
+            case 'missing': return T('Missing');
+            case 'incompatible': return T('Incompatible version');
+            case 'import_failed': return T('Import failed');
+            case 'installing': return T('Installing…');
+            case 'failed': return T('Failed');
+            default: return T('Unknown');
+        }
+    }
+
+    function depGroupLabel(item) {
+        if (item.required) return T('Required');
+        if (item.group === 'manifest') return T('Listed in requirements');
+        return T('Optional') + ' · ' + item.group;
+    }
+
+    function depStateClass(state) {
+        if (state === 'compatible') return 'ok';
+        if (state === 'installing') return 'pending';
+        return 'bad';
+    }
+
+    function depNode(tag, cls, text) {
+        const el = document.createElement(tag);
+        if (cls) el.className = cls;
+        if (text !== undefined) el.textContent = text;
+        return el;
+    }
+
+    function depSummaryText(report) {
+        const c = report.counts;
+        const head = report.ready
+            ? T('Required dependencies ready: %(ready)s of %(total)s', {ready: c.required_ready, total: c.required})
+            : T('Required dependencies need attention: %(ready)s of %(total)s ready', {ready: c.required_ready, total: c.required});
+        return head + ' · ' + T('Optional gaps: %(count)s', {count: c.optional_gaps});
+    }
+
+    function renderDependencyReport(report) {
+        document.getElementById('dependency-panel').hidden = false;
+        document.getElementById('dependency-summary').textContent = depSummaryText(report);
+        const list = document.getElementById('dependency-list');
+        list.replaceChildren();
+        for (const item of report.items) {
+            const row = depNode('div', 'dep-item');
+            row.setAttribute('role', 'listitem');
+
+            const pick = depNode('input');
+            pick.type = 'checkbox';
+            pick.className = 'dep-pick';
+            pick.value = item.name;
+            pick.id = 'dep-pick-' + item.canonical_name;
+            // Preselect what the application needs: required items that are not
+            // working, and any item whose last install failed.
+            pick.checked = item.state !== 'compatible' && item.state !== 'installing'
+                && (item.required || item.state === 'failed');
+            pick.disabled = item.state === 'installing';
+
+            const name = depNode('label', 'dep-name', item.name);
+            name.htmlFor = pick.id;
+            const meta = depNode('span', 'dep-meta', depGroupLabel(item) +
+                (item.installed_version ? ' · ' + T('Installed %(version)s', {version: item.installed_version}) : ''));
+            const state = depNode('span', 'dep-state ' + depStateClass(item.state), depStateLabel(item.state));
+            const inspect = depNode('button', 'btn btn-link btn-sm dep-inspect', T('Inspect'));
+            inspect.type = 'button';
+
+            const facts = depNode('dl', 'dep-detail');
+            facts.hidden = true;
+            const addFact = (label, value) => {
+                facts.append(depNode('dt', '', label), depNode('dd', '', value || '—'));
+            };
+            addFact(T('Requirement'), item.requirement);
+            addFact(T('Source'), item.source);
+            addFact(T('Import name'), item.import_name || T('None (command-line tool)'));
+            addFact(T('Details'), item.detail);
+
+            inspect.addEventListener('click', () => {
+                facts.hidden = !facts.hidden;
+                inspect.textContent = facts.hidden ? T('Inspect') : T('Hide details');
+            });
+            row.append(pick, name, meta, state, inspect, facts);
+            list.append(row);
+        }
+    }
+
+    async function loadDependencyReport(refresh) {
+        const status = document.getElementById('dependency-status');
+        status.textContent = refresh ? T('Checking dependencies…') : '';
+        try {
+            const r = await fetch('/api/setup/dependencies' + (refresh ? '?refresh=1' : ''),
+                                  {credentials: 'same-origin'});
+            const d = await r.json();
+            if (!r.ok || !d.ok) throw new Error(d.error || T('Could not check dependencies.'));
+            renderDependencyReport(d);
+            if (refresh) status.textContent = '';
+            return d;
+        } catch (e) {
+            status.textContent = T('Could not check dependencies.') + ' ' +
+                (e && e.message ? e.message : T('Please try again.'));
+            return null;
+        }
+    }
+
+    function pollDependencyJob(jobId) {
+        const status = document.getElementById('dependency-status');
+        const btn = document.getElementById('btn-dep-install');
+        const finish = () => {
+            DEP.busy = false;
+            btn.disabled = false;
+        };
+        const tick = async () => {
+            try {
+                const r = await fetch('/api/setup/dependencies/jobs/' + encodeURIComponent(jobId),
+                                      {credentials: 'same-origin'});
+                const d = await r.json();
+                if (!r.ok || !d.ok) throw new Error(d.error || T('Please try again.'));
+                if (d.job.status === 'running') {
+                    DEP.timer = setTimeout(tick, 2000);
+                    return;
+                }
+                finish();
+                const ok = d.job.status === 'succeeded';
+                await loadDependencyReport(true);
+                status.textContent = ok
+                    ? T('Selected dependencies installed.')
+                    : T('Some selected dependencies could not be installed. Review the details and retry.');
+                // Refresh the summary row too, so the step reflects the new state.
+                runSystemCheck();
+            } catch (e) {
+                finish();
+                status.textContent = e && e.message ? e.message : T('Please try again.');
+            }
+        };
+        tick();
+    }
+
+    async function installSelectedDependencies() {
+        const status = document.getElementById('dependency-status');
+        const names = Array.from(document.querySelectorAll('#dependency-list .dep-pick:checked'))
+            .map(box => box.value);
+        if (names.length === 0) {
+            status.textContent = T('Choose at least one dependency to install.');
+            return;
+        }
+        if (DEP.busy) return;
+        DEP.busy = true;
+        const btn = document.getElementById('btn-dep-install');
+        btn.disabled = true;
+        status.textContent = T('Installing selected packages…');
+        try {
+            const r = await fetch('/api/setup/dependencies/install', {
+                method: 'POST', credentials: 'same-origin', headers: HEADERS,
+                body: JSON.stringify({names: names})
+            });
+            const d = await r.json();
+            if (!r.ok || !d.ok) throw new Error(d.error || T('Installation failed.'));
+            pollDependencyJob(d.job.job_id);
+        } catch (e) {
+            DEP.busy = false;
+            btn.disabled = false;
+            status.textContent = e && e.message ? e.message : T('Please try again.');
+        }
+    }
+
+    document.getElementById('btn-dep-details').addEventListener('click', function () {
+        const panel = document.getElementById('dependency-panel');
+        const opening = panel.hidden;
+        if (opening) loadDependencyReport(false);
+        panel.hidden = !opening;
+        this.textContent = opening ? T('Hide dependency details') : T('Dependency details');
+    });
+    document.getElementById('btn-dep-refresh').addEventListener('click', () => loadDependencyReport(true));
+    document.getElementById('btn-dep-install').addEventListener('click', installSelectedDependencies);
 
     // ── Auto-run system check on page load ──
     runSystemCheck();

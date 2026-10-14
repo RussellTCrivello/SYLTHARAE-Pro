@@ -21769,3 +21769,170 @@ msgstr "כתיבת התצורה"
 #: Api/routes/setup.py
 msgid "Choose a supported language."
 msgstr "בחרו שפה נתמכת."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(mb)s MB free"
+msgstr "%(mb)s MB פנויים"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(name)s is not a declared dependency."
+msgstr "%(name)s אינו תלות מוצהרת."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "An installation is already running."
+msgstr "התקנה כבר פועלת."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Checking dependencies…"
+msgstr "בודק תלויות…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Choose at least one dependency to install."
+msgstr "בחרו לפחות תלות אחת להתקנה."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Compatible"
+msgstr "תואם"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Could not check dependencies."
+msgstr "לא ניתן לבדוק את התלויות."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Could not read package metadata: %(error)s"
+msgstr "לא ניתן לקרוא את המטא־נתונים של החבילה: %(error)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Dependency details"
+msgstr "פרטי תלויות"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Go to Login"
+msgstr "מעבר לכניסה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Hide dependency details"
+msgstr "הסתרת פרטי התלויות"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Hide details"
+msgstr "הסתרת פרטים"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Import did not finish within %(seconds)s seconds"
+msgstr "הייבוא לא הסתיים תוך %(seconds)s שניות"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Import name"
+msgstr "שם הייבוא"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Incompatible version"
+msgstr "גרסה לא תואמת"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Inspect"
+msgstr "בדיקה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Install selected"
+msgstr "התקנת הנבחרים"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation job not found."
+msgstr "משימת ההתקנה לא נמצאה."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Installed %(installed)s; requires %(requires)s"
+msgstr "מותקנת %(installed)s; נדרשת %(requires)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Installed %(version)s"
+msgstr "מותקנת %(version)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installed (command-line tool)"
+msgstr "מותקן (כלי שורת פקודה)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installing selected packages…"
+msgstr "מתקין את החבילות שנבחרו…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Invalid request."
+msgstr "בקשה לא תקינה."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Listed in requirements"
+msgstr "רשומה בדרישות"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Needs attention: %(names)s"
+msgstr "דורש טיפול: %(names)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "None (command-line tool)"
+msgstr "אין (כלי שורת פקודה)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Optional"
+msgstr "אופציונלי"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Optional gaps: %(count)s"
+msgstr "פערים אופציונליים: %(count)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Required"
+msgstr "נדרש"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Required dependencies need attention: %(ready)s of %(total)s ready"
+msgstr "תלויות נדרשות דורשות טיפול: %(ready)s מתוך %(total)s מוכנות"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Required dependencies ready: %(ready)s of %(total)s"
+msgstr "התלויות הנדרשות מוכנות: %(ready)s מתוך %(total)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Requirement"
+msgstr "דרישה"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "See docs/OPERATIONS.md for help."
+msgstr "לעזרה ראו את docs/OPERATIONS.md."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Selected dependencies installed."
+msgstr "התלויות שנבחרו הותקנו."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Some checks failed."
+msgstr "חלק מהבדיקות נכשלו."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Some selected dependencies could not be installed. Review the details and retry."
+msgstr "חלק מהתלויות שנבחרו לא הותקנו. בדקו את הפרטים ונסו שוב."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Too many dependencies in one request."
+msgstr "יותר מדי תלויות בבקשה אחת."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "You can still proceed, but you may need to install missing components before the database step will succeed."
+msgstr "אפשר להמשיך, אך ייתכן שתצטרכו להתקין רכיבים חסרים לפני שצעד מסד הנתונים יצליח."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "pip exited with code %(code)s"
+msgstr "pip הסתיים עם קוד %(code)s"

@@ -23966,3 +23966,170 @@ msgstr "كتابة الإعدادات"
 #: Api/routes/setup.py
 msgid "Choose a supported language."
 msgstr "اختر لغة مدعومة."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(mb)s MB free"
+msgstr "%(mb)s ميغابايت متاحة"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "%(name)s is not a declared dependency."
+msgstr "%(name)s ليس اعتمادية معلنة."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "An installation is already running."
+msgstr "يجري تثبيت بالفعل."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Checking dependencies…"
+msgstr "جارٍ التحقق من الاعتماديات…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Choose at least one dependency to install."
+msgstr "اختر اعتمادية واحدة على الأقل للتثبيت."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Compatible"
+msgstr "متوافق"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Could not check dependencies."
+msgstr "تعذّر التحقق من الاعتماديات."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Could not read package metadata: %(error)s"
+msgstr "تعذّرت قراءة بيانات الحزمة: %(error)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Dependency details"
+msgstr "تفاصيل الاعتماديات"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Go to Login"
+msgstr "الانتقال إلى تسجيل الدخول"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Hide dependency details"
+msgstr "إخفاء تفاصيل الاعتماديات"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Hide details"
+msgstr "إخفاء التفاصيل"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Import did not finish within %(seconds)s seconds"
+msgstr "لم ينتهِ الاستيراد خلال %(seconds)s ثانية"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Import name"
+msgstr "اسم الاستيراد"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Incompatible version"
+msgstr "إصدار غير متوافق"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Inspect"
+msgstr "فحص"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Install selected"
+msgstr "تثبيت المحدد"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installation job not found."
+msgstr "لم يُعثر على مهمة التثبيت."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Installed %(installed)s; requires %(requires)s"
+msgstr "المثبَّت %(installed)s؛ والمطلوب %(requires)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Installed %(version)s"
+msgstr "المثبَّت %(version)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installed (command-line tool)"
+msgstr "مثبَّتة (أداة سطر أوامر)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Installing selected packages…"
+msgstr "جارٍ تثبيت الحزم المحددة…"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Invalid request."
+msgstr "طلب غير صالح."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Listed in requirements"
+msgstr "مدرجة في المتطلبات"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Needs attention: %(names)s"
+msgstr "يحتاج إلى انتباه: %(names)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "None (command-line tool)"
+msgstr "لا شيء (أداة سطر أوامر)"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Optional"
+msgstr "اختياري"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Optional gaps: %(count)s"
+msgstr "فجوات اختيارية: %(count)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Required"
+msgstr "مطلوب"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Required dependencies need attention: %(ready)s of %(total)s ready"
+msgstr "الاعتماديات المطلوبة تحتاج إلى انتباه: جاهز %(ready)s من %(total)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "Required dependencies ready: %(ready)s of %(total)s"
+msgstr "الاعتماديات المطلوبة جاهزة: %(ready)s من %(total)s"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Requirement"
+msgstr "المتطلب"
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "See docs/OPERATIONS.md for help."
+msgstr "راجع docs/OPERATIONS.md للمساعدة."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Selected dependencies installed."
+msgstr "تم تثبيت الاعتماديات المحددة."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Some checks failed."
+msgstr "فشلت بعض الفحوص."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Some selected dependencies could not be installed. Review the details and retry."
+msgstr "تعذّر تثبيت بعض الاعتماديات المحددة. راجع التفاصيل وأعد المحاولة."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "Too many dependencies in one request."
+msgstr "عدد الاعتماديات في الطلب الواحد كبير جدًا."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+msgid "You can still proceed, but you may need to install missing components before the database step will succeed."
+msgstr "يمكنك المتابعة، لكن قد تحتاج إلى تثبيت المكونات الناقصة قبل أن تنجح خطوة قاعدة البيانات."
+
+#: templates/Setup/install_wizard.html static/js/pages/install-wizard-page.js Api/routes/setup.py
+#, python-format
+msgid "pip exited with code %(code)s"
+msgstr "أنهى pip بالرمز %(code)s"

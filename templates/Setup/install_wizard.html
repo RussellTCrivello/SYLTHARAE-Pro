@@ -682,6 +682,24 @@
         }
             .header-language{display:inline-flex;align-items:center;gap:.4rem;margin-inline-start:auto}
         .header-language select{width:auto;min-width:8.5rem;padding-block:.25rem}
+            .dependency-tools{margin-block-start:.5rem}
+        .dependency-panel{margin-block-start:.75rem;padding:.9rem 1rem;border:1px solid var(--line-soft);border-radius:12px;background:#fff}
+        .dependency-panel[hidden]{display:none}
+        .dependency-summary{margin:0 0 .6rem;font-weight:600;color:var(--ink-700,#273142)}
+        .dependency-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-block-end:.5rem}
+        .dependency-status{min-height:1.2em;margin:0 0 .4rem;color:var(--ink-500);font-size:.85rem}
+        .dependency-list{max-block-size:320px;overflow-y:auto}
+        .dep-item{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto;gap:.5rem;align-items:center;padding-block:.4rem;border-block-end:1px solid var(--line-soft)}
+        .dep-name{margin:0;font-weight:600;overflow-wrap:anywhere}
+        .dep-meta{font-size:.78rem;color:var(--ink-500)}
+        .dep-state{font-size:.75rem;font-weight:600;padding:.12rem .5rem;border-radius:999px;background:#eef2f7;color:#334155;white-space:nowrap}
+        .dep-state.ok{background:#e7f6ec;color:#1d6b3a}
+        .dep-state.pending{background:#fff4d6;color:#7a5200}
+        .dep-state.bad{background:#fde8e8;color:#8a1c1c}
+        .dep-detail{grid-column:1 / -1;display:grid;grid-template-columns:max-content minmax(0,1fr);gap:.25rem .75rem;margin:.2rem 0 .4rem;font-size:.8rem}
+        .dep-detail[hidden]{display:none}
+        .dep-detail dt{color:var(--ink-500);font-weight:600}
+        .dep-detail dd{margin:0;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
     </style>
 </head>
 <body>
@@ -787,6 +805,18 @@
                     <span class="label">{{ _('Operating System') }}</span>
                     <span class="detail">{{ _('Checking…') }}</span>
                     <span class="icon"><i class="bi bi-arrow-repeat icon-spin"></i></span>
+                </div>
+                <div class="dependency-tools">
+                    <button type="button" class="btn btn-link btn-sm" id="btn-dep-details" hidden>{{ _('Dependency details') }}</button>
+                </div>
+                <div class="dependency-panel" id="dependency-panel" hidden>
+                    <p class="dependency-summary" id="dependency-summary" aria-live="polite"></p>
+                    <div class="dependency-actions">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-dep-refresh">{{ _('Refresh') }}</button>
+                        <button type="button" class="btn btn-primary btn-sm" id="btn-dep-install">{{ _('Install selected') }}</button>
+                    </div>
+                    <p class="dependency-status" id="dependency-status" role="status" aria-live="polite"></p>
+                    <div class="dependency-list" id="dependency-list" role="list"></div>
                 </div>
             </div>
             <div id="step1-alert"></div>

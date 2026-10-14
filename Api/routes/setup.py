@@ -161,42 +161,77 @@ def _require_setup_window_or_admin():
 # A test asserts this list matches the T('…') calls in install-wizard-page.js.
 WIZARD_SCRIPT_STRING_KEYS = (
     '%(count)s existing tables',
+    '%(mb)s MB free',
     'Address',
     'Admin',
     'Admin password must be at least %(n)s characters.',
     'Administrator',
-    'All imported',
     'Check the step results above for details.',
+    'Checking dependencies…',
     'Checking…',
+    'Choose at least one dependency to install.',
+    'Compatible',
     'Complete',
+    'Could not check dependencies.',
     'Could not reach the server:',
     'Created and migrated',
     'Database',
     'Database & schema',
     'Database connection failed.',
+    'Dependency details',
+    'Details',
     'Environment',
+    'Failed',
     'Fair',
     'Finalize',
+    'Go to Login',
+    'Hide dependency details',
+    'Hide details',
     'Idle timeout cannot exceed the session lifetime.',
+    'Import failed',
+    'Import name',
+    'Incompatible version',
+    'Inspect',
     'Install',
     'Installation complete!',
     'Installation failed.',
+    'Installed %(version)s',
+    'Installing selected packages…',
+    'Installing…',
+    'Listed in requirements',
     'Minimum %(n)s characters',
+    'Missing',
+    'Needs attention: %(names)s',
     'Network error:',
     'Next',
+    'None (command-line tool)',
     'Not available',
+    'Optional',
+    'Optional gaps: %(count)s',
     'Passwords do not match.',
     'Please try again.',
+    'Ready',
     'Redirecting to login…',
+    'Required',
+    'Required dependencies need attention: %(ready)s of %(total)s ready',
+    'Required dependencies ready: %(ready)s of %(total)s',
+    'Requirement',
     'Running',
     'Runtime directories',
+    'See docs/OPERATIONS.md for help.',
+    'Selected dependencies installed.',
+    'Some checks failed.',
+    'Some selected dependencies could not be installed. Review the details and retry.',
+    'Source',
     'Step %(current)s of %(total)s',
     'Strong',
     'Test Connection',
     'Testing…',
     'The per-minute rate limit cannot exceed the per-hour rate limit.',
+    'Unknown',
     'Weak',
     'Write configuration',
+    'You can still proceed, but you may need to install missing components before the database step will succeed.',
 )
 
 
@@ -403,6 +438,92 @@ def set_setup_language():
     response = jsonify({"ok": True, "language": code, "persisted": persisted})
     response.set_cookie("user_language", code, max_age=31536000, samesite="Lax", path="/")
     return response
+
+
+# ── Python dependency readiness ──
+@setup_bp.route("/api/setup/dependencies", methods=["GET"])
+def dependency_report():
+    guard_response = _require_setup_window_or_admin()
+    if guard_response is not None:
+        return guard_response
+    from core.dependency_readiness import build_report
+
+    refresh = request.args.get("refresh") in ("1", "true", "yes")
+    report = build_report(refresh=refresh)
+    items = []
+    for item in report["items"]:
+        item = dict(item)
+        localized = _localized_dependency_detail(item.get("detail_key"), item.get("detail_vars"))
+        if localized is not None:
+            item["detail"] = localized
+        items.append(item)
+    return jsonify({"ok": True, **report, "items": items}), 200
+
+
+def _localized_dependency_detail(key, variables):
+    """Translate a readiness detail message. Technical output (import errors, pip) stays as-is."""
+    if not key:
+        return None
+    templates = {
+        "Not installed": _("Not installed"),
+        "Installed %(installed)s; requires %(requires)s": _("Installed %(installed)s; requires %(requires)s"),
+        "Installed (command-line tool)": _("Installed (command-line tool)"),
+        "Import did not finish within %(seconds)s seconds": _("Import did not finish within %(seconds)s seconds"),
+        "Could not read package metadata: %(error)s": _("Could not read package metadata: %(error)s"),
+        "pip exited with code %(code)s": _("pip exited with code %(code)s"),
+    }
+    text = templates.get(key)
+    if text is None:
+        return None
+    try:
+        return text % (variables or {})
+    except (KeyError, TypeError, ValueError):
+        return text
+
+
+def _dependency_request_message(code, name=""):
+    """Translated text for a rejected dependency install request."""
+    if code == "none_chosen":
+        return _("Choose at least one dependency to install.")
+    if code == "too_many":
+        return _("Too many dependencies in one request.")
+    if code == "not_declared":
+        return _("%(name)s is not a declared dependency.", name=name)
+    return _("Invalid request.")
+
+
+@setup_bp.route("/api/setup/dependencies/install", methods=["POST"])
+def dependency_install():
+    guard_response = _require_setup_window_or_admin()
+    if guard_response is not None:
+        return guard_response
+    from core.dependency_readiness import (
+        DependencyBusyError, DependencyRequestError, start_install,
+    )
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"ok": False, "error": _("Request body must be a JSON object.")}), 400
+    try:
+        job = start_install(data.get("names"))
+    except DependencyRequestError as exc:
+        return jsonify({"ok": False, "error": _dependency_request_message(exc.code, exc.name)}), 400
+    except DependencyBusyError:
+        return jsonify({"ok": False, "error": _("An installation is already running.")}), 409
+    return jsonify({"ok": True, "job": job}), 202
+
+
+@setup_bp.route("/api/setup/dependencies/jobs/<job_id>", methods=["GET"])
+def dependency_job(job_id):
+    guard_response = _require_setup_window_or_admin()
+    if guard_response is not None:
+        return guard_response
+    from core.dependency_readiness import get_job
+
+    job = get_job(job_id) if len(job_id) == 32 and job_id.isalnum() else None
+    if job is None:
+        return jsonify({"ok": False, "error": _("Installation job not found.")}), 404
+    return jsonify({"ok": True, "job": job}), 200
 
 
 # ── Status check ──

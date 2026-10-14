@@ -126,5 +126,5 @@ def test_setup_completion_renders_user_values_as_text_not_markup():
 
     assert "valueNode.textContent = String(value" in setup
     assert "body.admin_username + '</span>" not in setup
-    assert "d.error || 'Check the step results above" in setup
+    assert "d.error || T('Check the step results above for details." in setup
     assert "renderInstallAlert(" in setup
