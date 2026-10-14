@@ -48,6 +48,19 @@ def image_name(index: int) -> str:
     return f"img_{index:05d}.png"
 
 
+def expected_words(index: int) -> List[str]:
+    """Words drawn on text image ``index`` (ground truth for accuracy checks).
+
+    Replays the seeded draws in ``generate_corpus`` in the same order. Only
+    meaningful for text images (``index % 10 != 0``).
+    """
+    rnd = random.Random(index)
+    rnd.randrange(160)  # width draw
+    rnd.randrange(60)   # height draw
+    words = [rnd.choice(WORDS) for _ in range(4)]
+    return words + [str(index)]
+
+
 def generate_corpus(directory: str, count: int) -> None:
     """Write ``count`` deterministic PNGs into ``directory`` (existing files kept)."""
     from PIL import Image, ImageDraw, ImageFont

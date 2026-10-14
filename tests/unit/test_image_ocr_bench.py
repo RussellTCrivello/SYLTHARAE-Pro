@@ -98,3 +98,23 @@ def test_identical_content_is_counted_as_duplicates(tmp_path):
 )
 def test_outcomes_follow_the_reader_vocabulary(result, outcome):
     assert bench.classify(result) == outcome
+
+
+def test_expected_words_match_the_text_the_generator_draws(tmp_path, monkeypatch):
+    """The accuracy ground truth must replay the generator's own draws exactly."""
+    from PIL import ImageDraw
+
+    drawn = {}
+    original_text = ImageDraw.ImageDraw.text
+
+    def capture(self, xy, text, *args, **kwargs):
+        drawn.setdefault("texts", []).append(text)
+        return original_text(self, xy, text, *args, **kwargs)
+
+    monkeypatch.setattr(ImageDraw.ImageDraw, "text", capture)
+    bench.generate_corpus(str(tmp_path), 30)
+
+    text_indices = [i for i in range(30) if i % 10 != 0]
+    assert len(drawn["texts"]) == len(text_indices)
+    for index, text in zip(text_indices, drawn["texts"]):
+        assert text == " ".join(bench.expected_words(index)), index
