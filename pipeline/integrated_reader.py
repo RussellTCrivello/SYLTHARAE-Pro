@@ -1021,6 +1021,17 @@ class IntegratedFileReader:
                     outstanding,
                 )
                 self.progress_ledger.abandon(outstanding, OUTCOME_CANCELLED)
+            elif outstanding > 0 and self.is_pause_requested():
+                # A pause stops the submission loop, so the files it never
+                # started were not failures. Recording them as failed made every
+                # paused run report "N files could not be processed". They are
+                # settled as skipped and the run is marked incomplete.
+                logger.warning(
+                    "%d discovered file(s) were not started before the pause",
+                    outstanding,
+                )
+                self.progress_ledger.abandon(outstanding, OUTCOME_SKIPPED)
+                self._partial_run = True
             elif outstanding > 0:
                 # Nothing cancelled: work was discovered and never ran.  That is
                 # a failure, not a skip - reporting it as skipped hid a real
