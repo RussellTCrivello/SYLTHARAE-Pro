@@ -539,6 +539,12 @@ class IntegratedFileReader:
         Returns:
             Processing result dictionary or None
         """
+        # A single file runs without a checkpoint. Clear any base left by an
+        # earlier run in this process, so its archive members do not resume
+        # from a checkpoint this run did not ask for.
+        if not self._container_path:
+            from core.checkpoint_scope import register_checkpoint_base
+            register_checkpoint_base(self.storage_source, self.storage_side, None)
         if self._control_requested():
             logger.warning("Control requested: single-file processing not started")
             return None
@@ -776,18 +782,34 @@ class IntegratedFileReader:
         Returns:
             List of processing results
         """
-        # Initialize checkpoint manager if checkpoint file is provided
-        if self.checkpoint_file and not self.checkpoint_manager:
+        # Initialize checkpoint manager if checkpoint file is provided.
+        #
+        # A nested reader (archive member, attachment) has no checkpoint file of
+        # its own. It takes a stable per-container checkpoint derived from the
+        # top-level run's file, so members already stored are skipped when the
+        # run restarts. See core/checkpoint_scope.py.
+        checkpoint_file = self.checkpoint_file
+        stable_members = False
+        if not self._container_path:
+            from core.checkpoint_scope import register_checkpoint_base
+            register_checkpoint_base(self.storage_source, self.storage_side, checkpoint_file)
+        elif not checkpoint_file:
+            from core.checkpoint_scope import member_checkpoint_file
+            checkpoint_file = member_checkpoint_file(
+                self.storage_source, self.storage_side, self._container_path)
+            stable_members = checkpoint_file is not None
+        if checkpoint_file and not self.checkpoint_manager:
             try:
                 from core.checkpoint_manager import CheckpointManager
                 self.checkpoint_manager = CheckpointManager(
-                    checkpoint_file=self.checkpoint_file,
+                    checkpoint_file=checkpoint_file,
                     folder_path=folder_path,
                     storage_source=self.storage_source,
                     storage_side=self.storage_side,
-                    auto_save_interval=50  # OPTIMIZED: Save checkpoint every 50 files (reduced I/O)
+                    auto_save_interval=50,  # OPTIMIZED: Save checkpoint every 50 files (reduced I/O)
+                    stable_members=stable_members,
                 )
-                logger.info(f"Checkpoint manager initialized: {self.checkpoint_file}")
+                logger.info(f"Checkpoint manager initialized: {checkpoint_file}")
             except Exception as e:
                 logger.warning(f"Failed to initialize checkpoint manager: {e}. Continuing without resume support.")
                 self.checkpoint_manager = None

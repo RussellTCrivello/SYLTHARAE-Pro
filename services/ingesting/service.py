@@ -498,9 +498,21 @@ class IngestionService:
         ckpt_dir.mkdir(parents=True, exist_ok=True)
         digest = hashlib.sha256(str(Path(request.path).resolve()).encode()).hexdigest()[:16]
         path = ckpt_dir / f"checkpoint_{digest}_{request.source}_{request.side}.json"
-        if policy == "fresh" and path.exists():
+        if policy == "fresh":
+            # A fresh run must forget everything: the snapshot, its append-only
+            # journal, and the per-container member checkpoints. Removing only
+            # the snapshot left the journal behind, and it would still skip files.
+            import shutil
+            for stale in (path, path.with_suffix(path.suffix + ".journal")):
+                try:
+                    if stale.exists():
+                        stale.unlink()
+                except OSError:
+                    pass
             try:
-                path.unlink()
+                members_dir = path.with_name(path.stem + ".members")
+                if members_dir.is_dir():
+                    shutil.rmtree(members_dir, ignore_errors=True)
             except OSError:
                 pass
         return str(path)
