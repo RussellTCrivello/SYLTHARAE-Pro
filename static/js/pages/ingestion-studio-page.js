@@ -69,6 +69,18 @@ let telemetryTimer = null;
 
 const el = (id) => document.getElementById(id);
 
+// The studio's root node for this visit. Async loaders capture it before they
+// await, so they can tell whether the page that started them is still mounted.
+function studioAnchor() {
+  return el('ingestAction') || document.getElementById('ingestionPageData');
+}
+
+// False once soft navigation has replaced the studio: a late response must not
+// render into the page that took its place.
+function studioStillMounted(anchor) {
+  return Boolean(anchor) && studioAnchor() === anchor;
+}
+
 function initializeIngestionStudio() {
   const anchor = el('ingestAction') || document.getElementById('ingestionPageData');
   if (!anchor) return;
@@ -189,8 +201,10 @@ function esc(value) {
 async function loadCapabilities() {
   const box = el('capabilities');
   if (!box) return;
+  const anchor = studioAnchor();
   try {
     const info = await api(pageData.optionsInfoUrl || '/api/input/options-info');
+    if (!studioStillMounted(anchor)) return;
     state.limits = {
       direct: (info.max_direct_upload_mb || 0) * 1024 * 1024,
       chunked: (info.max_chunked_upload_mb || 0) * 1024 * 1024,
@@ -543,16 +557,20 @@ function bindTaxonomy() {
 }
 
 async function loadTaxonomy() {
+  const anchor = studioAnchor();
   try {
     const [sources, sides] = await Promise.all([
       api(pageData.sourcesUrl || '/api/input/sources'),
       api(pageData.sidesUrl || '/api/input/sides'),
     ]);
+    if (!studioStillMounted(anchor)) return;
     taxonomy.sources = sources.sources || [];
     taxonomy.sides = sides.sides || [];
   } catch (error) {
+    if (!studioStillMounted(anchor)) return;
     pushMessage(msg('Sources and sides could not be loaded: {message}', { message: error.message }), 'error');
   }
+  if (!studioStillMounted(anchor)) return;
   renderPickers();
 }
 
@@ -561,6 +579,7 @@ function renderPickers() {
   renderPickList('sideList', taxonomy.sides, 'sides');
   [['sourceDisplay', state.source], ['sideDisplay', state.side]].forEach(([id, value]) => {
     const node = el(id);
+    if (!node) return;
     node.textContent = value || msg('Not selected');
     node.dataset.empty = String(!value);
   });
@@ -568,7 +587,10 @@ function renderPickers() {
 
 function renderPickList(listId, rows, key) {
   const list = el(listId);
-  const filter = el(key === 'sources' ? 'sourceFilter' : 'sideFilter').value.trim().toLowerCase();
+  const filterInput = el(key === 'sources' ? 'sourceFilter' : 'sideFilter');
+  // Either element can be missing when the page has been replaced.
+  if (!list || !filterInput) return;
+  const filter = filterInput.value.trim().toLowerCase();
   const selected = key === 'sources' ? state.source : state.side;
   const visible = rows.filter((row) => !filter || String(row.name || '').toLowerCase().includes(filter));
   if (!visible.length) {
