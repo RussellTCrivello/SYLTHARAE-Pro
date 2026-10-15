@@ -5,6 +5,8 @@ checks that hold them. Architecture is in [ARCHITECTURE.md](ARCHITECTURE.md),
 configuration in [CONFIGURATION.md](CONFIGURATION.md), database in
 [DATABASE.md](DATABASE.md), security policy in [SECURITY.md](SECURITY.md).
 
+Agent sessions and their reviewers: see [AGENTS.md](../AGENTS.md).
+
 ## Setting up
 
 ```
