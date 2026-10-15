@@ -5,6 +5,7 @@ from datetime import datetime, date
 from collections import defaultdict
 
 from core.serialization import unpack_int_list
+from core.keyword_search import html_rank, keyword_page
 
 # Unified database interface - import from centralized database module
 # This provides a single source of truth for all database operations
@@ -1916,10 +1917,21 @@ def get_keywords_with_usage(
     Returns:
         Tuple of (keywords_rows, total_count)
     """
+    if sort_by not in ('usage_count', 'id', 'status', 'text'):
+        sort_by = 'usage_count'
+    if search_term or sort_by == 'text':
+        # Search and text order: streamed and bounded (core/keyword_search.py).
+        # Errors are not caught here: a database failure must reach the caller,
+        # not look like "no keywords".
+        descending = str(sort_order).lower() != 'asc'
+        rows, total = keyword_page(
+            execute_query, page=page, size=per_page,
+            needle=search_term.lower() if search_term else None,
+            conditions=[], params=[], rank=html_rank(sort_by, descending))
+        # Same row shape as the SQL path: (id, category_id, keyword, usage_count).
+        return [(c[0], c[2], c[1], c[4]) for c in rows], total
     try:
         sort_direction = 'ASC' if str(sort_order).lower() == 'asc' else 'DESC'
-        if sort_by not in ('usage_count', 'id', 'status', 'text'):
-            sort_by = 'usage_count'
 
         # SQL order clauses for the columns the database can see.
         if sort_by == 'id':
@@ -1958,66 +1970,6 @@ def get_keywords_with_usage(
             
             total = total_result[0] if total_result else 0
             return results or [], total
-        
-        # Otherwise load keywords in batches and work in Python: search needs
-        # the texts, and so does a sort by text (pickled column). This is more
-        # efficient than unpickling each keyword individually.
-        if search_term:
-            search_lower = search_term.lower()
-        
-        # First, get all keywords with usage counts (without pagination)
-        # We'll filter by text and then paginate
-        base_query = """
-            SELECT k.id, k.category_id, k.keyword, COUNT(DISTINCT p.id) as usage_count
-            FROM keywords k
-            LEFT JOIN keywords_hashs kp ON kp.keyword_id = k.id
-            LEFT JOIN hash_contexts hc ON hc.hash_id = kp.hash_id
-            LEFT JOIN paths p ON p.context_id = hc.id
-            GROUP BY k.id, k.category_id, k.keyword
-        """
-        
-        all_keywords = execute_query(base_query, (), fetch="all")
-        
-        if not all_keywords:
-            return [], 0
-        
-        # Batch load all keyword texts efficiently
-        keyword_text_map = batch_load_keywords_from_rows(all_keywords)
-        
-        # Filter keywords by search term
-        filtered_keywords = []
-        for kw in all_keywords:
-            keyword_id = kw[0]
-            keyword_text = keyword_text_map.get(keyword_id, '')
-            
-            if search_term and search_lower not in keyword_text.lower():
-                continue
-            filtered_keywords.append((kw, keyword_text))
-        
-        # The order the table headers asked for, applied to the full list
-        # before the page slice, so every page shares one order.
-        if sort_by == 'text':
-            filtered_keywords.sort(
-                key=lambda item: ((item[1] or '').lower(), item[0][0]),
-                reverse=(sort_direction == 'DESC'))
-        elif sort_by == 'id':
-            filtered_keywords.sort(
-                key=lambda item: (item[0][0] or 0,), reverse=(sort_direction == 'DESC'))
-        elif sort_by == 'status':
-            filtered_keywords.sort(
-                key=lambda item: ((item[0][3] or 0) > 0, item[0][3] or 0, item[0][0]),
-                reverse=(sort_direction == 'DESC'))
-        else:  # usage_count
-            filtered_keywords.sort(
-                key=lambda item: (item[0][3] or 0, item[0][0]),
-                reverse=(sort_direction == 'DESC'))
-        
-        # Apply pagination
-        total = len(filtered_keywords)
-        offset = (page - 1) * per_page
-        paginated_results = [item[0] for item in filtered_keywords[offset:offset + per_page]]
-        
-        return paginated_results, total
         
     except Exception as e:
         logger.error(f"Error getting keywords with usage: {e}", exc_info=True)
