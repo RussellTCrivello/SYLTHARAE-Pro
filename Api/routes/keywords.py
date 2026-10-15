@@ -23,6 +23,9 @@ from core.serialization import pack_int_list
 from Api.blueprints.files import _documents_panel_response, unpack_int_list
 from core.errors import client_error, client_safe_message
 
+from core.table_paging import fetch_page, read_page_request
+from core.keyword_search import api_rank, category_names, keyword_page
+
 logger = logging.getLogger(__name__)
 
 
@@ -32,8 +35,7 @@ def register_keywords_routes(app):
     @app.route('/keywords')
     def keywords_list():
         try:
-            page = request.args.get('page', 1, type=int)
-            per_page = request.args.get('per_page', 10, type=int)
+            req = read_page_request(request.args, request.headers)
             search = request.args.get('search', '').strip()
             # Column sort comes from the table headers. Keyword text lives in
             # a pickled column the database cannot order by, so the page sorts
@@ -42,10 +44,6 @@ def register_keywords_routes(app):
             sort_by = request.args.get('sort', 'usage_count')
             sort_order = request.args.get('order', 'desc')
             
-            if page < 1:
-                page = 1
-            if per_page < 1 or per_page > 100:  # Limit per_page to prevent DoS
-                per_page = 10
             if sort_by not in ('usage_count', 'text', 'id', 'status'):
                 sort_by = 'usage_count'
             if sort_order not in ('asc', 'desc'):
@@ -54,15 +52,18 @@ def register_keywords_routes(app):
             if len(search) > 500:
                 search = search[:500]
 
-            keywords_rows, total_keywords = get_keywords_with_usage(
-                search_term=search if search else None,
-                page=page,
-                per_page=per_page,
-                sort_by=sort_by,
-                sort_order=sort_order
+            result = fetch_page(
+                lambda page, size: get_keywords_with_usage(
+                    search_term=search if search else None,
+                    page=page,
+                    per_page=size,
+                    sort_by=sort_by,
+                    sort_order=sort_order
+                ),
+                req,
             )
-            
-            total_pages = (total_keywords + per_page - 1) // per_page if total_keywords > 0 else 1
+            keywords_rows, total_keywords = result.rows, result.total
+            page, per_page, total_pages = result.page, result.size, result.total_pages
             
             keyword_text_map = batch_load_keywords_from_rows(keywords_rows) if keywords_rows else {}
             
@@ -573,8 +574,8 @@ def register_keywords_routes(app):
     def api_keywords():
         """Enhanced API endpoint for keywords with advanced features"""
         try:
-            page = request.args.get('page', 1, type=int)
-            per_page = min(request.args.get('per_page', 10, type=int), 100)
+            req = read_page_request(request.args, request.headers)
+            page, per_page = req.page, req.size
             query = request.args.get('q', '').strip()
             sort_by = request.args.get('sort', 'usage_count')
             sort_order = request.args.get('order', 'desc')
@@ -617,78 +618,37 @@ def register_keywords_routes(app):
             where_clause = " WHERE " + " AND ".join(where_conditions) if where_conditions else ""
             
             if query:
-                # When searching, load ALL keywords, filter by text, then paginate
-                keywords_query_all = f"""
-                    {base_query}
-                    {where_clause}
-                    GROUP BY k.id, k.keyword, k.category_id, c.word
-                    ORDER BY k.id ASC
-                """
-                all_keywords_rows = execute_query(keywords_query_all, tuple(params))
-                
-                keyword_text_map = batch_load_keywords_from_rows(all_keywords_rows) if all_keywords_rows else {}
-                all_formatted_keywords = []
-                
-                if all_keywords_rows and not keyword_text_map:
-                    logger.warning(f"batch_load_keywords returned empty map for {len(all_keywords_rows)} rows in search mode")
-                
-                for kw in all_keywords_rows or []:
-                    try:
-                        keyword_id = kw[0]
-                        # kw[1] is now k.keyword (BYTEA), skip it - we get text from keyword_text_map
-                        category_id = kw[2] if len(kw) > 2 else None
-                        usage_count = kw[3] if len(kw) > 3 else 0
-                        category_name = kw[4] if len(kw) > 4 else 'Uncategorized'
-                        
-                        keyword_text = keyword_text_map.get(keyword_id)
-                        if not keyword_text:
-                            continue
-                        
-                        if query.lower() not in keyword_text.lower():
-                            continue
-                        
-                        all_formatted_keywords.append({
-                            'id': keyword_id,
-                            'text': keyword_text,
-                            'importance': 1.0,
-                            'usage_count': usage_count,
-                            'is_duplicate': False,
-                            'category_id': category_id,
-                            'category_name': category_name,
-                            'date_creation': None,
-                            'status': 'active' if usage_count > 0 else 'unused'
-                        })
-                    except Exception as e:
-                        logger.error(f"Error loading keyword {kw[0]}: {e}")
-                        continue
-                
-                if sort_by == 'usage_count':
-                    all_formatted_keywords.sort(key=lambda x: x.get('usage_count', 0), reverse=(sort_order == 'desc'))
-                elif sort_by == 'text':
-                    all_formatted_keywords.sort(key=lambda x: (x.get('text') or '').lower(), reverse=(sort_order == 'desc'))
-                elif sort_by == 'id':
-                    all_formatted_keywords.sort(key=lambda x: x.get('id', 0), reverse=(sort_order == 'desc'))
-                elif sort_by == 'status':
-                    # Sort by status (active/unused) then by usage_count
-                    all_formatted_keywords.sort(key=lambda x: (x.get('status') == 'active', x.get('usage_count', 0)), reverse=(sort_order == 'desc'))
-                
-                # Calculate pagination for search results
-                total_keywords = len(all_formatted_keywords)
-                total_pages = (total_keywords + per_page - 1) // per_page if total_keywords > 0 else 1
-                
-                # Apply pagination
-                start_idx = (page - 1) * per_page
-                end_idx = start_idx + per_page
-                formatted_keywords = all_formatted_keywords[start_idx:end_idx]
+                # Bounded search (core/keyword_search.py): the keywords are
+                # streamed and only the requested page is kept in memory. The
+                # matches, their order and the total are unchanged.
+                result = fetch_page(
+                    lambda p, n: keyword_page(
+                        execute_query, page=p, size=n, needle=query.lower(),
+                        conditions=where_conditions, params=params,
+                        rank=api_rank(sort_by, sort_order == 'desc')),
+                    req)
+                page_rows = result.rows
+                keywords_rows = page_rows  # read by the empty-result diagnostics below
+                total_keywords = result.total
+                page, per_page, total_pages = result.page, result.size, result.total_pages
+                names = category_names(execute_query, [row[2] for row in page_rows])
+                formatted_keywords = [
+                    {
+                        'id': kid,
+                        'text': text,
+                        'importance': 1.0,
+                        'usage_count': usage,
+                        'is_duplicate': False,
+                        'category_id': cat,
+                        'category_name': names.get(cat),
+                        'date_creation': None,
+                        'status': 'active' if usage > 0 else 'unused',
+                    }
+                    for kid, _blob, cat, text, usage in page_rows
+                ]
             else:
-                # No search - use efficient database pagination
-                count_query = f"SELECT COUNT(DISTINCT k.id) FROM keywords k{where_clause}"
-                total_result = execute_query(count_query, tuple(params), fetch="one")
-                total_keywords = total_result[0] if total_result and isinstance(total_result, tuple) else (total_result if isinstance(total_result, int) else 0)
-                total_pages = (total_keywords + per_page - 1) // per_page if total_keywords > 0 else 1
-                offset = (page - 1) * per_page
-                
-                # Build ORDER BY clause
+                # No search - use efficient database pagination. The model decides
+                # the page; this runs the count and one page of rows for it.
                 sort_column_map = {
                     'usage_count': 'usage_count',
                     'text': 'k.id',
@@ -699,16 +659,25 @@ def register_keywords_routes(app):
                 order_clause = f"ORDER BY {sort_column} {sort_order.upper()}"
                 if sort_column != 'k.id':
                     order_clause += ", k.id ASC"
-                
-                # Fetch paginated keyword rows
-                keywords_query = f"""
-                    {base_query}
-                    {where_clause}
-                    GROUP BY k.id, k.keyword, k.category_id, c.word
-                    {order_clause}
-                    LIMIT %s OFFSET %s
-                """
-                keywords_rows = execute_query(keywords_query, tuple(params + [per_page, offset]))
+
+                def _load_sql(p, n):
+                    count_query = f"SELECT COUNT(DISTINCT k.id) FROM keywords k{where_clause}"
+                    total_result = execute_query(count_query, tuple(params), fetch="one")
+                    total = total_result[0] if total_result and isinstance(total_result, tuple) else (total_result if isinstance(total_result, int) else 0)
+                    keywords_query = f"""
+                        {base_query}
+                        {where_clause}
+                        GROUP BY k.id, k.keyword, k.category_id, c.word
+                        {order_clause}
+                        LIMIT %s OFFSET %s
+                    """
+                    rows = execute_query(keywords_query, tuple(params + [n, (p - 1) * n]))
+                    return rows or [], total
+
+                result = fetch_page(_load_sql, req)
+                keywords_rows = result.rows
+                total_keywords = result.total
+                page, per_page, total_pages = result.page, result.size, result.total_pages
                 
                 if keywords_rows:
                     logger.info(f"Fetched {len(keywords_rows)} keyword rows")

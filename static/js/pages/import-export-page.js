@@ -11,14 +11,9 @@
  * explicitly published on window.
  */
 
-import { escapeHtml } from '../modules/core/utils.js';
+import { escapeHtml, getCSRFToken } from '../modules/core/utils.js';
 // Load translations from JSON script tag
 let translations = {};
-
-function getCSRFToken() {
-    const metaTag = document.querySelector('meta[name="csrf-token"]');
-    return metaTag ? metaTag.getAttribute('content') : '';
-}
 
 // Switch import method
 function setupImportMethodSwitcher() {

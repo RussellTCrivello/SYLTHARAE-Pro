@@ -52,7 +52,6 @@ openpyxl>=3.1                         # [WIN-NATIVE] XLSX extraction
 python-pptx>=0.6.23                   # [WIN-NATIVE] PPTX extraction
 xlrd>=2.0                             # [WIN-NATIVE] legacy XLS extraction (.xls only; not .xlsx)
 pyxlsb>=1.0.10                        # [WIN-NATIVE] Excel binary (.xlsb) extraction (.xls only)
-pyxlsb>=1.0.10                        # [WIN-NATIVE] Excel binary (.xlsb) extraction
 odfpy>=1.4                            # [WIN-NATIVE] OpenDocument extraction
 striprtf>=0.0.26                      # [WIN-NATIVE] RTF text extraction
 docx2txt>=0.8                         # [WIN-NATIVE] DOCX text extraction
@@ -70,6 +69,12 @@ Pillow>=12.3.0                          # [WIN-BINARY] image decoding; >=12.3 fi
 pytesseract>=0.3.10                  # [WIN-NATIVE] Python wrapper; needs Tesseract below
 rapidocr-onnxruntime>=1.4             # [WIN-BINARY] ONNX OCR fallback with Windows wheels
 opencv-python-headless>=4.9            # [WIN-BINARY] image preprocessing; Windows wheels
+                                      #   rapidocr-onnxruntime declares the GUI
+                                      #   opencv-python instead; both unpack into
+                                      #   cv2/, so the last one installed wins and
+                                      #   the GUI build needs libGL.so.1 on Linux.
+                                      #   See docs/CONFIGURATION.md ("The cv2
+                                      #   packaging trap") before adding either.
 
 # -----------------------------------------------------------------------------
 # Audio and video

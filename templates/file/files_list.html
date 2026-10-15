@@ -267,6 +267,13 @@
                     <i class="bi bi-trash" aria-hidden="true"></i>
                     <span class="visually-hidden">{{ _('Delete') }}</span>
                 </button>
+                {% if current_user.is_authenticated and current_user.has_role('admin', 'analyst') %}
+                <button class="btn-action btn-outline-warning btn-action-icon-only" id="removeSameContextDuplicatesBtn" data-on-click="removeSameContextDuplicates()"
+                        title="{{ _('Remove exact repeats: same name, content and details in the same source and side (keeps one)') }}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-container="body">
+                    <i class="bi bi-files" aria-hidden="true"></i>
+                    <span class="visually-hidden">{{ _('Remove exact repeats') }}</span>
+                </button>
+                {% endif %}
             </div>
             <div class="action-group">
                 <span class="action-label">{{ _('View:') }}</span>
@@ -382,11 +389,11 @@
     "startPosition": start_position|default(1),
     "currentPage": page|default(1),
     "totalPages": total_pages|default(1),
-    "search": search|tojson,
-    "sourceFilter": source_filter|tojson,
-    "sideFilter": side_filter|tojson,
-    "statusFilter": status_filter|tojson,
-    "fileTypeFilter": file_type_filter|tojson
+    "search": search,
+    "sourceFilter": source_filter,
+    "sideFilter": side_filter,
+    "statusFilter": status_filter,
+    "fileTypeFilter": file_type_filter
 }|tojson }}</script>
 
 {% endblock %}
@@ -417,6 +424,14 @@
 <script type="application/json" id="structured-export-i18n">{% include 'components/structured_export_i18n.json.jinja' %}</script>
 
 
-<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20260929a" defer></script>
+{% from 'components/confirm_dialog.html' import confirm_dialog %}
+{{ confirm_dialog(id='sameContextDuplicatesDialog',
+                  title=_('Remove exact repeats in the same source and side?'),
+                  message=_('Records with the same name, content and details, in the same source and the same side, are removed; one record is kept. Records with another name, source or side are not touched. Original files on disk are not deleted.'),
+                  scope_label=_('Exact repeats'),
+                  confirm_label=_('Remove exact repeats'),
+                  cancel_label=_('Keep them'),
+                  dangerous=True) }}
+<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261014b" defer></script>
 {#- files-list-page.js is loaded by universal-initializer.js (full load + soft-nav). -#}
 {% endblock %}

@@ -2,6 +2,8 @@
  * Saved Searches Page JavaScript
  * Wired to the real saved-search API (GET/PUT/DELETE /api/search/saved[/<id>]).
  */
+import { getCSRFToken } from '../modules/core/utils.js';
+
 
 // Load translations from JSON script tag
 let translations = {};
@@ -21,11 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log('Saved searches page loaded');
 });
-
-function getCSRFToken() {
-    const metaTag = document.querySelector('meta[name="csrf-token"]');
-    return metaTag ? metaTag.getAttribute('content') : '';
-}
 
 // Client-side filter by saved-search name
 function filterSavedSearches() {

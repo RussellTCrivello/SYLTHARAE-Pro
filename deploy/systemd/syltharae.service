@@ -1,0 +1,74 @@
+# SYLTHARAE - one hardened process, restarted by systemd.
+#
+# Install:
+#   1. create the account and the directories:
+#        useradd --system --home /opt/syltharae --shell /usr/sbin/nologin syltharae
+#        install -d -o syltharae -g syltharae /opt/syltharae /var/lib/syltharae
+#   2. install the application into /opt/syltharae (the install directory) and
+#      its virtual environment beside it;
+#   3. write /opt/syltharae/.env (the application reads it itself - there is no
+#      EnvironmentFile here, so there is exactly one parser of that file);
+#   4. copy this unit to /etc/systemd/system/syltharae.service, then
+#      `systemctl daemon-reload && systemctl enable --now syltharae`.
+#
+# The application validates these settings at start-up
+# (apps/web/deployment.py) and refuses to start on a dangerous one. Runtime
+# files it writes:
+#   data/search_history.json          - recent search history
+#   data/settings.json                - the settings store
+#   data/settings_backups/            - previous settings, kept beside it
+#   core/.app_instance.lock           - the single-instance lock
+# With APP_DATA_DIR=/var/lib/syltharae (see the Environment lines below) the
+# same files live under /var/lib/syltharae, which is why both directories are
+# in ReadWritePaths. AUTO_INSTALL=0 keeps the unit from fetching anything at
+# boot: installation is an operator action, not a start-up side effect.
+
+[Unit]
+Description=SYLTHARAE document analysis and archive
+Documentation=https://github.com/RussellTCrivello/SYLTHARAE-Pro
+After=network-online.target postgresql.service
+Wants=network-online.target
+# The database is not a hard dependency: the app starts, reports the database
+# as unavailable and keeps its own process healthy.
+
+[Service]
+Type=simple
+User=syltharae
+Group=syltharae
+WorkingDirectory=/opt/syltharae
+# The environment file is .env inside WorkingDirectory; the application reads
+# it. Anything set here wins over the file.
+Environment=APP_DATA_DIR=/var/lib/syltharae
+Environment=AUTO_INSTALL=0
+Environment=FLASK_ENV=production
+ExecStart=/opt/syltharae/.venv/bin/python run_web.py
+# run_web.py exits 2 when start-up settings are refused. Do not restart into
+# the same refusal: the unit stops and the operator reads the journal.
+Restart=on-failure
+RestartPreventExitStatus=2
+RestartSec=5
+TimeoutStopSec=30
+KillSignal=SIGTERM
+
+# Hardening: no privilege escalation, a read-only /usr, no home, a private
+# /tmp, and no capabilities at all (the app binds 127.0.0.1:5000, it does not
+# need them).
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+CapabilityBoundingSet=
+AmbientCapabilities=
+ReadWritePaths=/var/lib/syltharae /opt/syltharae
+
+[Install]
+WantedBy=multi-user.target

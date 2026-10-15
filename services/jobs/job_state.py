@@ -31,13 +31,31 @@ TRANSITIONS = {
     CANCELLING: {CANCELLED, FAILED},
 }
 
-# Event types emitted to job_events / SSE (spec section 10)
+# Event types emitted to job_events / SSE (spec section 10).
+#
+# This is the vocabulary `job_events.event_type` actually receives, so it must
+# list every string the job system can write:
+#   * the phase/file/data events below, emitted by the starters and the
+#     throttle list in `services/jobs/manager.py`;
+#   * the lifecycle events (`JOB_*`), emitted by the manager;
+#   * `PROGRESS` - the throttle-related heartbeat, emitted per
+#     `JOBS_PROGRESS_INTERVAL`;
+#   * `JOB_PAUSED`;
+#   * the terminal event, which carries the job **status** rather than a
+#     separate name (see `Manager._finish` -> `_publish(job_id, status)`), so
+#     `FAILED` is part of this vocabulary too.
+# `tests/unit/test_job_event_vocabulary.py` derives the emitted set from those
+# call sites and fails if a new string is published without being listed here;
+# before that test existed this tuple was missing PROGRESS, JOB_PAUSED and
+# FAILED - three values the manager writes - so it could not have been used to
+# validate the column.
 EVENT_TYPES = (
     "JOB_CREATED", "JOB_STARTED", "PHASE_STARTED", "FILE_DISCOVERED",
     "FILE_PROCESSING", "FILE_COMPLETED", "FILE_SKIPPED", "FILE_FAILED",
     "ARCHIVE_EXTRACTED", "TEXT_EXTRACTED", "OCR_COMPLETED",
     "DUPLICATE_DETECTED", "DATABASE_WRITE", "WARNING", "ERROR",
     "PHASE_COMPLETED", "JOB_COMPLETED", "JOB_CANCELLED",
+    "JOB_PAUSED", "PROGRESS", FAILED,
 )
 
 

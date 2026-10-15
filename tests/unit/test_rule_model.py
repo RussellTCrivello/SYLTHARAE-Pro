@@ -32,6 +32,46 @@ def test_definition_round_trips_with_a_stable_fingerprint():
     assert explicit.fingerprint() == parse_definition(BASE).fingerprint()
 
 
+def test_the_text_filters_survive_the_round_trip():
+    """Every field ``SignalFilter.canonical()`` writes must be readable again.
+
+    The canonical form is what the database holds, so the parser refusing one
+    of its own keys is not a cosmetic mismatch: the stored definition of every
+    rule (and scenario condition) becomes unreadable - the rule cannot be
+    edited or evaluated afterwards. The text filters and their match modes are
+    the fields that were missing from the accepted vocabulary.
+    """
+    d = parse_definition({**BASE, "signals": {
+        "signal_types": ["date_reference"],
+        "evidence_text": "deadline", "evidence_mode": "equals",
+        "surface_text": "invoice", "surface_mode": "starts_with",
+        "value_text": "2026", "value_mode": "ends_with"}})
+    again = definition_from_stored(d.canonical())
+    assert again == d and again.fingerprint() == d.fingerprint()
+    assert (again.signals.surface_text, again.signals.surface_mode) == ("invoice", "starts_with")
+    assert (again.signals.value_text, again.signals.value_mode) == ("2026", "ends_with")
+    assert (again.signals.evidence_text, again.signals.evidence_mode) == ("deadline", "equals")
+
+
+def test_a_mode_without_its_text_stays_unsatisfied():
+    """A mode is only meaningful next to its text - as the Explorer parses it."""
+    d = parse_definition({**BASE, "signals": {"surface_mode": "equals"}})
+    assert d.signals.surface_text is None and d.signals.surface_mode == "contains"
+    assert d == definition_from_stored(d.canonical())
+
+
+@pytest.mark.parametrize("payload, message", [
+    ({**BASE, "signals": {"surface_mode": 3}}, "signals.surface_mode must be a string"),
+    ({**BASE, "signals": {"value_text": 7}}, "signals.value_text must be a string"),
+    ({**BASE, "signals": {"evidence_text": "x", "evidence_mode": "sounds_like"}},
+     "signals: evidence_mode must be one of"),
+])
+def test_text_filter_input_is_still_validated(payload, message):
+    with pytest.raises(RuleDefinitionError) as info:
+        parse_definition(payload)
+    assert message in str(info.value), str(info.value)
+
+
 def test_every_semantic_field_changes_the_fingerprint():
     base = parse_definition(BASE).fingerprint()
     variants = [{"unit": "content"}, {"min_confidence": "low"},

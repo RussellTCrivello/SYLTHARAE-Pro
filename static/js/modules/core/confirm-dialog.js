@@ -181,6 +181,11 @@
             function settle(value) {
                 node.removeEventListener('click', onClick);
                 node.removeEventListener('hidden.bs.modal', onHidden);
+                // Move focus out of the dialog before it is hidden (aria-hidden
+                // must not be set on an ancestor that still holds focus).
+                if (document.activeElement && node.contains(document.activeElement)) {
+                    document.activeElement.blur();
+                }
                 if (instance) {
                     instance.hide();
                 }

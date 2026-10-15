@@ -72,7 +72,7 @@ class TestTheLoadMoreComponent:
 
     def test_the_progressive_counter_is_the_toolbars_info(self, render):
         out = self._table(render)
-        assert "data-ut-shown" in out
+        assert "data-ut-last" in out
         assert "data-ut-total" in out
 
     def test_a_numbered_table_keeps_the_callers_info_line(self, render):
@@ -83,12 +83,14 @@ class TestTheLoadMoreComponent:
     def test_the_page_js_asks_for_one_page_on_the_same_view(self):
         source = (PROJECT_ROOT / "static/js/modules/ui/unified-table.js").read_text(
             encoding="utf-8")
-        assert "nextPageUrl" in source
+        # The batch is the same view's next aligned block (nextBatchUrl): the
+        # reader's search, sort and filters ride along, and the batch states its
+        # own page and size. The pager's page is not part of the request.
+        assert "nextBatchUrl" in source
         assert "searchParams.delete('cursor')" in source, (
             "the next batch must not inherit a cursor coordinate")
-        # The batch request carries no special body: it IS the same URL one
-        # page on, so the reader's search, sort and filters ride along.
-        assert "url.searchParams.set(pageParam" in source
+        assert "url.searchParams.set(config.pageParam" in source
+        assert "url.searchParams.set(config.sizeParam" in source
 
 
 class TestTheFileLibraryList:

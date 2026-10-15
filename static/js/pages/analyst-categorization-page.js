@@ -439,6 +439,14 @@ async function openStructuredExport() {
 // ---- Init -------------------------------------------------------------
 
 function initAnalystCategorizationPage() {
+    // Guard per DOM: the page can be initialised by its own top-level self-run and
+    // again by the soft-nav default export (or a cache-busted copy) on the same
+    // document. The filter inputs are recreated on every visit, so a flag stored on
+    // the node resets naturally and never blocks a fresh visit.
+    const guard = document.getElementById('filterQuery');
+    if (!guard || guard.dataset.analystBooted === '1') return;
+    guard.dataset.analystBooted = '1';
+
     analystInitState();
 
     // Enter key in filter inputs applies the filters

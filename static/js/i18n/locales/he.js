@@ -19,6 +19,8 @@ window.I18N_UI_PACKS['he'] = {
     "Analyzing folder...": "מנתח תיקייה...",
     "API error": "שגיאת API",
     "Applied": "הוחל",
+    "Batch report": "דוח אצווה",
+    "Open batch report": "פתח דוח אצווה",
     "archive safety": "בטיחות ארכיון",
     "Are you sure you want to clear all global CSS?": "האם אתה בטוח שברצונך לנקות את כל ה-CSS הגלובלי?",
     "Are you sure you want to delete this file?": "האם אתה בטוח שברצונך למחוק קובץ זה?",

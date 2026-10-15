@@ -4,6 +4,16 @@ from Api.services import search_service
 
 
 def test_fast_mode_uses_sql_limit_offset(monkeypatch):
+    """Fast mode emits SQL LIMIT/OFFSET for an ordinary two-word search.
+
+    The double answers the vocabulary lookup, so ``alpha`` and ``beta`` are
+    indexed words in a corpus that may hold them - the case this test is about
+    (the SQL shape). A corpus where a term is absent from the vocabulary *and*
+    matches no path at all is a provably empty search, and the short-circuit is
+    entitled to answer it without SQL: that case is
+    ``tests/unit/test_search_zero_shortcircuit.py``.
+    """
+
     class Cursor:
         def __init__(self):
             self.queries = []
@@ -15,7 +25,11 @@ def test_fast_mode_uses_sql_limit_offset(monkeypatch):
             return (0,)
 
         def fetchall(self):
-            return []
+            sql = self.queries[-1][0]
+            if "word = ANY" not in sql:
+                return []
+            keys = self.queries[-1][1][0]
+            return [(key, index + 1) for index, key in enumerate(keys)]
 
         def close(self):
             pass

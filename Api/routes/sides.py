@@ -6,6 +6,7 @@ from flask import render_template, redirect, url_for, request, flash
 from Api.utils import (
     execute_query, select_info_sides
 )
+from core.table_paging import fetch_page, read_page_request
 import logging
 
 logger = logging.getLogger(__name__)
@@ -18,14 +19,9 @@ def register_sides_routes(app):
     def sides_list():
         """Side Management — server-side search, sort and pagination"""
         try:
-            page = request.args.get('page', 1, type=int)
-            per_page = request.args.get('per_page', 50, type=int)
+            req = read_page_request(request.args, request.headers)
             search = (request.args.get('search') or '').strip()
 
-            if page < 1:
-                page = 1
-            if per_page < 1 or per_page > 200:
-                per_page = 50
             if len(search) > 500:
                 search = search[:500]
 
@@ -44,7 +40,6 @@ def register_sides_routes(app):
                 sort_order = 'desc'
             order_by = f"{SORT_COLUMNS[sort_by]} {sort_order.upper()} NULLS LAST, si.id DESC"
 
-            offset = (page - 1) * per_page
             joins = (
                 "LEFT JOIN hash_contexts hc ON si.id = hc.side_id "
                 "LEFT JOIN paths p ON p.context_id = hc.id"
@@ -52,28 +47,32 @@ def register_sides_routes(app):
             where = "WHERE si.name ILIKE %s" if search else ""
             base_params = (f"%{search}%",) if search else ()
 
-            rows = execute_query(
-                f"""
-                SELECT si.id, si.name, si.importance, si.date_creation,
-                       COUNT(DISTINCT p.id) AS doc_count,
-                       COUNT(DISTINCT hc.source_id) AS source_count
-                FROM sides si
-                {joins}
-                {where}
-                GROUP BY si.id
-                ORDER BY {order_by}
-                LIMIT %s OFFSET %s
-                """,
-                base_params + (per_page, offset),
-                fetch="all",
-            )
-            total_row = execute_query(
-                f"SELECT COUNT(DISTINCT si.id) FROM sides si {joins} {where}",
-                base_params,
-                fetch="one",
-            )
-            total_sides = (total_row[0] if total_row else 0) or 0
-            total_pages = ((total_sides - 1) // per_page) + 1 if total_sides > 0 else 1
+            def _load(page, size):
+                offset = (page - 1) * size
+                rows = execute_query(
+                    f"""
+                    SELECT si.id, si.name, si.importance, si.date_creation,
+                           COUNT(DISTINCT p.id) AS doc_count,
+                           COUNT(DISTINCT hc.source_id) AS source_count
+                    FROM sides si
+                    {joins}
+                    {where}
+                    GROUP BY si.id
+                    ORDER BY {order_by}
+                    LIMIT %s OFFSET %s
+                    """,
+                    base_params + (size, offset),
+                    fetch="all",
+                )
+                total_row = execute_query(
+                    f"SELECT COUNT(DISTINCT si.id) FROM sides si {joins} {where}",
+                    base_params,
+                    fetch="one",
+                )
+                return rows, (total_row[0] if total_row else 0) or 0
+            result = fetch_page(_load, req)
+            rows, total_sides = result.rows, result.total
+            page, per_page, total_pages = result.page, result.size, result.total_pages
 
             def _iso(value):
                 if value is None:

@@ -23,6 +23,14 @@ Different folders, filenames, containers, sources, sides or import runs are
 legitimate distinct occurrences of one content: they are preserved, never
 discarded, and never duplicate the canonical content.
 
+Exact repeats are one record. Ingestion writes no second occurrence for the
+same source, same side, same file name, same content and same details (size,
+type, date), wherever the file came from. ``remove_same_context_duplicates``
+(the files library's "remove exact repeats" action) clears such repeats that
+already exist, keeping the earliest. Same content under another name, source
+or side is a different record and is never touched; the content and its
+contexts always remain.
+
 Concurrency: registration is a chain of ``ON CONFLICT DO NOTHING`` upserts
 against the unique constraints above inside one transaction, so two workers
 ingesting identical content concurrently converge on one canonical row and
@@ -180,6 +188,46 @@ _SQL = {
         JOIN hash_contexts c ON c.id = p.context_id
         JOIN hashs h ON h.id = c.hash_id
         WHERE p.id = %s
+    """,
+    "same_context_groups": """
+        SELECT c.id, h.hash, c.source_id, c.side_id,
+               COALESCE(s.name, ''), COALESCE(si.name, ''),
+               array_agg(p.id ORDER BY p.id),
+               array_agg(p.file_name ORDER BY p.id)
+        FROM paths p
+        JOIN hash_contexts c ON c.id = p.context_id
+        JOIN hashs h ON h.id = c.hash_id
+        LEFT JOIN sources s ON s.id = c.source_id
+        LEFT JOIN sides si ON si.id = c.side_id
+        GROUP BY c.id, h.hash, c.source_id, c.side_id, s.name, si.name
+        HAVING COUNT(*) > 1
+        ORDER BY c.id
+    """,
+    "find_same_details": """
+        SELECT p.id
+        FROM paths p
+        WHERE p.context_id = %s
+          AND p.file_name = %s
+          AND p.file_size = %s
+          AND p.file_type = %s
+          AND p.file_date = %s
+        ORDER BY p.id
+        LIMIT 1
+    """,
+    "same_context_groups": """
+        SELECT c.id, h.hash, c.source_id, c.side_id,
+               COALESCE(s.name, ''), COALESCE(si.name, ''),
+               array_agg(p.id ORDER BY p.id),
+               array_agg(p.file_name ORDER BY p.id)
+        FROM paths p
+        JOIN hash_contexts c ON c.id = p.context_id
+        JOIN hashs h ON h.id = c.hash_id
+        LEFT JOIN sources s ON s.id = c.source_id
+        LEFT JOIN sides si ON si.id = c.side_id
+        GROUP BY c.id, h.hash, c.source_id, c.side_id, s.name, si.name,
+                 p.file_name, p.file_size, p.file_type, p.file_date
+        HAVING COUNT(*) > 1
+        ORDER BY c.id
     """,
     "delete_path": "DELETE FROM paths WHERE id = %s RETURNING context_id",
     "context_path_count": """
@@ -350,6 +398,48 @@ class DeduplicationService:
         )
         return (path_id is not None, path_id)
 
+    def find_committed_occurrence(
+        self,
+        content_hash: str,
+        source_name: str,
+        side_name: str,
+        location: str,
+    ) -> Optional[int]:
+        """Return the path id of a *committed* occurrence, or None. Read-only.
+
+        Used before a file is processed: if this exact occurrence (same bytes,
+        same source and side, same location) is already stored as processed,
+        processing it again can only repeat work. Names are matched, not
+        created: a source or side that does not exist yet has no committed
+        occurrences, and a lookup must never write identity rows.
+
+        ``location`` is the occurrence key: ``hierarchy_path`` for archive
+        members, the physical ``file_path`` otherwise (see occurrence_location).
+        """
+        if not (content_hash and source_name and side_name and location):
+            return None
+        with self._cursor(commit=False) as (_, cur):
+            cur.execute(
+                """
+                SELECT p.id
+                FROM paths p
+                JOIN hash_contexts c ON c.id = p.context_id
+                JOIN hashs h ON h.id = c.hash_id
+                JOIN sources s ON s.id = c.source_id
+                JOIN sides sd ON sd.id = c.side_id
+                WHERE h.hash = %s
+                  AND s.name = %s
+                  AND sd.name = %s
+                  AND COALESCE(p.hierarchy_path, p.file_path) = %s
+                  AND p.processing_status = 'processed'
+                ORDER BY p.id
+                LIMIT 1
+                """,
+                (content_hash, source_name, side_name, location),
+            )
+            row = cur.fetchone()
+        return int(row[0]) if row else None
+
     def hash_exists_with_live_path(
         self, content_hash: str, source_id: Optional[int] = None,
         side_id: Optional[int] = None,
@@ -486,6 +576,17 @@ class DeduplicationService:
                     existing_path_id = existing[0]
 
             if existing_path_id is None:
+                # Same source, same side, same name, same content and same
+                # details is one record, whatever folder it came from.
+                cur.execute(_SQL["find_same_details"], (
+                    context_id, path_row["file_name"], path_row["file_size"],
+                    path_row["file_type"], path_row["file_date"],
+                ))
+                exact = cur.fetchone()
+                if exact is not None:
+                    existing_path_id = exact[0]
+
+            if existing_path_id is None:
                 cur.execute(_SQL["insert_path"], (
                     path_row["file_name"],
                     path_row["file_path"],
@@ -596,6 +697,52 @@ class DeduplicationService:
                         cur.execute(_SQL["delete_canonical"], (hash_id,))
                         result["hash_deleted"] = cur.rowcount > 0
         return result
+
+    # ------------------------------------------------------------------
+    # Same-source, same-side repetition (explicit cleanup, operator-run)
+    # ------------------------------------------------------------------
+
+    def same_context_duplicates(self) -> List[Dict[str, Any]]:
+        """Groups of EXACT repeats inside one (source, side) context.
+
+        An exact repeat has the same source, the same side, the same file name,
+        the same content hash and the same details (size, type, date). The
+        earliest record (lowest id) is kept; the rest are the repeats. Files
+        that only share content but have another name, or another source or
+        side, are not repeats and never appear here.
+        """
+        groups: List[Dict[str, Any]] = []
+        with self._cursor(commit=False) as (_, cur):
+            cur.execute(_SQL["same_context_groups"])
+            for (context_id, content_hash, source_id, side_id, source_name,
+                 side_name, path_ids, file_names) in cur.fetchall():
+                groups.append({
+                    "context_id": context_id,
+                    "hash": content_hash,
+                    "source_id": source_id,
+                    "side_id": side_id,
+                    "source": source_name or "",
+                    "side": side_name or "",
+                    "keep_id": path_ids[0],
+                    "remove_ids": list(path_ids[1:]),
+                    "file_names": list(file_names),
+                })
+        return groups
+
+    def remove_same_context_duplicates(self) -> Dict[str, int]:
+        """Delete every repeated occurrence inside its (source, side) context.
+
+        Each deletion goes through ``delete_path`` so the identity lifecycle
+        stays authoritative. The kept occurrence means no context or content is
+        ever emptied by this operation, so no extracted text is lost.
+        """
+        groups = self.same_context_duplicates()
+        removed = 0
+        for group in groups:
+            for path_id in group["remove_ids"]:
+                if self.delete_path(path_id, commit=True)["path_deleted"]:
+                    removed += 1
+        return {"groups": len(groups), "removed": removed}
 
     def cleanup_orphaned_hashes(self, dry_run: bool = False) -> int:
         """Remove canonical rows with zero contexts (DB-05 repair tool).

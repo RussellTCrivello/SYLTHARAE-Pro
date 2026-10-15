@@ -111,18 +111,18 @@ def check_system() -> Dict[str, Any]:
         "message": "",
     }
 
-    # Critical Python packages
-    critical = ["flask", "psycopg2", "flask_wtf", "flask_limiter"]
-    missing: List[str] = []
-    for mod in critical:
-        try:
-            __import__(mod)
-        except ImportError:
-            missing.append(mod)
+    # Python dependencies: every declared requirement in pyproject.toml and
+    # requirements.txt, checked for version and a successful import. "ok" is
+    # True only when every required item is compatible.
+    from core.dependency_readiness import build_report
+
+    readiness = build_report()
+    blocking = [item["name"] for item in readiness["items"] if item["blocking"]]
     checks["packages"] = {
-        "ok": len(missing) == 0,
-        "missing": missing,
-        "message": "" if not missing else f"Missing: {', '.join(missing)}",
+        "ok": readiness["ready"],
+        "missing": blocking,
+        "message": "" if readiness["ready"] else f"Required dependencies need attention: {', '.join(blocking)}",
+        "counts": readiness["counts"],
     }
 
     # PostgreSQL probe (just check if the configured endpoint responds)

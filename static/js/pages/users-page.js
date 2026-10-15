@@ -3,14 +3,11 @@
  * Wired to GET/POST /api/auth/users, PATCH /api/auth/users/<id>,
  * POST /api/auth/users/<id>/reset-password.
  */
+import { getCSRFToken } from '../modules/core/utils.js';
+
 
 let translations = {};
 let currentUserId = null;
-
-function getCSRFToken() {
-    const metaTag = document.querySelector('meta[name="csrf-token"]');
-    return metaTag ? metaTag.getAttribute('content') : '';
-}
 
 function escapeHtml(value) {
     return String(value == null ? '' : value)

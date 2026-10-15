@@ -14,7 +14,23 @@ var JOB_DETAIL_PAGE_DATA = JSON.parse(document.getElementById('job-detail-page-d
   let lastEventId = 0;
   let errorsCache = [], warningsCache = [];
 
+  // One refresh cycle at a time. The page polls every 2 s; a slow response must
+  // not let the next tick start another job + errors + events round trip on top
+  // of it. Without this guard, requests piled up while the server was busy.
+  let refreshing = false;
   async function refresh() {
+    if (refreshing) return;
+    refreshing = true;
+    try {
+      await refreshOnce();
+    } catch (_error) {
+      // A failed poll is retried on the next tick.
+    } finally {
+      refreshing = false;
+    }
+  }
+
+  async function refreshOnce() {
     const r = await fetch(`/api/jobs/${JOB_ID}`);
     const d = await r.json();
     if (!d.success) { document.getElementById('jStatus').textContent = JOB_DETAIL_PAGE_DATA.notFound; return; }
@@ -90,11 +106,10 @@ var JOB_DETAIL_PAGE_DATA = JSON.parse(document.getElementById('job-detail-page-d
       errorsCache = normalizeLines(er.errors);
       warningsCache = normalizeLines(er.warnings);
     } else {
-      fetch(`/api/jobs/${JOB_ID}/errors`).then(r => r.json()).then((er) => {
-        errorsCache = normalizeLines(er.errors);
-        warningsCache = normalizeLines(er.warnings);
-        renderErrors();
-      }).catch(() => {});
+      const er = await fetch(`/api/jobs/${JOB_ID}/errors`).then(r => r.json()).catch(() => ({}));
+      errorsCache = normalizeLines(er.errors);
+      warningsCache = normalizeLines(er.warnings);
+      renderErrors();
     }
     renderErrors();
 
@@ -117,7 +132,7 @@ var JOB_DETAIL_PAGE_DATA = JSON.parse(document.getElementById('job-detail-page-d
     document.getElementById('jActions').innerHTML =
       actions.join('') || '<span class="text-muted small">No actions available</span>';
 
-    loadEvents();
+    await loadEvents();
   }
 
   function issueLabel(line) {

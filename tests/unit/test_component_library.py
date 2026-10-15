@@ -34,6 +34,7 @@ from core.frontend.component_audit import (
     class_ownership,
     classify_class,
     components,
+    owned_classes,
     state_coverage,
     third_party_classes,
     undeclared_files,
@@ -186,10 +187,20 @@ class TestClassesHaveExactlyOneOwner:
         assert classify_class("file-nav__button").ownership == OWNED
 
     def test_a_component_can_own_a_class_by_declaring_it(self):
-        """Declaring a hook is a decision; the audit shows it, the test allows it."""
-        declared = components()["file_nav"].classes
-        assert "file-nav__text" in declared
-        entry = classify_class("file-nav__text", {"file-nav__text"})
+        """Declaring a hook is a decision; the audit shows it, the test allows it.
+
+        The example is derived rather than named: a hard-coded class stops
+        exercising this path the moment a stylesheet starts styling it (which
+        is what happened to `file-nav__text`, styled by the dock stylesheet to
+        stay screen-reader-only on narrow screens - correctly reported as owned
+        by that rule, not by the declaration).
+        """
+        declared = {name for component in components().values()
+                    for name in component.classes}
+        hooks = sorted(declared - owned_classes())
+        assert hooks, "no component declares a class of its own any more"
+        hook = hooks[0]
+        entry = classify_class(hook, {hook})
         assert entry.ownership == OWNED
         assert entry.source == "component declaration"
 
@@ -490,9 +501,19 @@ class TestAdoption:
         # File Types dashboard's formats list has followed (its documents
         # panel embeds the shared file-library table); what is left
         # hand-writing table markup are the dashboards and screens the table
-        # migration has not reached.
-        assert counts()["pattern_table"] == 10
-        assert counts()["pattern_filter"] == 8
+        # migration has not reached, named by the audit: analysis_batch,
+        # dashboard, analyst_categorization, job_detail, jobs, settings,
+        # translation_manager, auth/users and email_words.
+        #
+        # Not counted, and deliberately: `components/table.html` is the
+        # component itself, and `components/operations_widget.html` renders a
+        # `<table>` its script fills - a mount, like the pagination mounts the
+        # audit counts separately. `users()` reports user-facing templates.
+        assert counts()["pattern_table"] == 9
+        # charts_dashboard, comprehensive_dashboard, path_analysis,
+        # analyst_categorization, search_advanced, email_words and the file
+        # management analysis screen.
+        assert counts()["pattern_filter"] == 7
         # Two bars are still hand-written, and both are waiting for the layer
         # that owns them: the file list (record actions on a richer model) and
         # the full-content reader (document/viewer controls). Keywords, Words,
@@ -500,22 +521,26 @@ class TestAdoption:
         # pattern is anchored to a class attribute: before it was, `base.html`
         # counted as an extra because a script src reads `action-toolbar.js`.
         assert counts()["pattern_toolbar"] == 2
-        # The existing seven hand-written search controls remain, alongside
-        # one new Gazetteer search field in the Settings management tables.
-        assert counts()["pattern_search"] == 8
+        # Ten templates still hand-write a search control: the two chart
+        # dashboards, the operations dashboard, the notifications list, the
+        # ingestion input screen, the advanced search page, the Settings tables
+        # (their search fields and the Gazetteer field), the translation
+        # manager, the file detail panel and the map viewer.
+        assert counts()["pattern_search"] == 10
         # Status badges are counted by what a badge *shows*: a status word or
         # a status variable is a status badge, a count or an id is a chip, and
         # conflating them said "22 status badges" when most were numbers.
         assert counts()["badges_status"] == 0, (
             "a hand-written status badge is back; every one of them now "
             "renders through the component and the vocabulary")
-        # Current inventory: 39 non-status count/id/method chips remain
-        # hand-written in templates. (It was 68: the id/count chips the
+        # Current inventory: 32 non-status count/id/method chips remain
+        # hand-written, spread over thirteen templates - analysis_batch alone
+        # carries nine, settings five. (It was 68: the id/count chips the
         # sources and sides card grids rendered were deleted with the grids
         # when both lists moved onto record_table - the markup moved, it was
         # not migrated; the File Types formats table followed, and the
         # search results moved onto the table with theirs.)
-        assert counts()["badges_chip"] == 39
+        assert counts()["badges_chip"] == 32
 
 
 class TestTheComponentsRenderWhatTheyPromised:

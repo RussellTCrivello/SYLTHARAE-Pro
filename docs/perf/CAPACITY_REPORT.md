@@ -44,6 +44,12 @@ _Source: `docs/perf/runs/word_resolution.jsonl`_
 
 EXPLAIN: ILIKE `%report%` → **Seq Scan** on `words` (39318 rows removed); `word = ANY` → **Bitmap Index Scan** on `idx_words_word` (~0.1ms exec).
 
+_Measurement taken at m0036 (2026-10-08), quoted as measured. m0038 removed
+`idx_words_word` as an exact duplicate of the `words_word_key` unique
+constraint's index - same table, same column, same order, same operator class -
+so the plan above is still the plan the schema produces; only the index's name
+in `EXPLAIN` output changed to `words_word_key`._
+
 ## Extraction (test-doc)
 
 _Source: `docs/perf/runs/extraction_testdoc.jsonl` — **ingestion only**, not search engine selection._

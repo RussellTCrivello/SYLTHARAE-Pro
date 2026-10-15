@@ -14,6 +14,7 @@ from Api.utils import (
     get_optimized_search_results, select_info_sources, select_info_sides,
     select_info_categories, search_files_by_word, execute_query,
 )
+from core.table_paging import fetch_page, read_page_request, total_pages_for
 from settings import get_settings
 from Api.services.search_service import SearchService
 from Api.services.search_history import SearchHistoryService, SavedSearchesService
@@ -26,7 +27,7 @@ from typing import Any, Dict, Optional
 from urllib.parse import urlencode
 
 from core.errors import client_error
-from core.search.cursor import parse_relevance_cursor
+from core.search.cursor import parse_relevance_cursor, parse_relevance_cursor_tiebreak
 from core.search.metrics import STORE as search_metrics_store
 from core.search.slow_capture import SLOW as slow_search_capture
 from core.search.normalize import pagination_query_signature
@@ -195,9 +196,11 @@ def register_search_routes(app):
         display_config = settings.get_display_config()
         
         query = request.args.get('q', '')
-        page = request.args.get('page', 1, type=int)
-        per_page = request.args.get('limit', display_config.get('results_per_page', 10), type=int)
-        per_page = max(1, min(200, per_page))
+        page_req = read_page_request(
+            request.args, request.headers, size_key='limit',
+            default_size=display_config.get('results_per_page', 10))
+        page = page_req.page
+        per_page = page_req.size
         max_results = search_config.get('max_results', 1000)
         results = []
         total_results = 0
@@ -216,14 +219,21 @@ def register_search_routes(app):
         # Minimum 2 chars (reduced from 3 to match enhanced search)
         if query and len(query.strip()) >= 2:
             # Use the enhanced search_files_by_word which now supports multiple words
-            results, total_results = search_files_by_word(
-                query, page, per_page, analyst_scope=analyst_scope,
-                sort=sort, order=order)
+            result = fetch_page(
+                lambda p, n: search_files_by_word(
+                    query, p, n, analyst_scope=analyst_scope,
+                    sort=sort, order=order),
+                page_req)
+            results, total_results = result.rows, result.total
+            page, per_page = result.page, result.size
             # Decorate results with analyst categories (own, separate
             # namespace - never merged with smart categories, FR-1.4)
             results = AnalystCategoryService.attach_categories_to_results(results)
 
-        total_pages = (total_results + per_page - 1) // per_page if total_results > 0 else 1
+        if not (query and len(query.strip()) >= 2):
+            # No search has run: there is no list to page through.
+            page = 1
+        total_pages = total_pages_for(total_results, per_page)
 
         return render_template('Search/search.html',
                              query=query,
@@ -500,7 +510,8 @@ def register_search_routes(app):
                 return jsonify({'error': "sort_order must be 'asc' or 'desc'"}), 400
             try:
                 page = max(1, int(data.get('page', 1) or 1))
-                per_page = min(max(1, int(data.get('per_page', 50) or 50)), 200)
+                # 500 is the largest page size the results UI offers (20/50/100/200/500).
+                per_page = min(max(1, int(data.get('per_page', 50) or 50)), 500)
             except (TypeError, ValueError):
                 return jsonify({'error': 'page and per_page must be whole numbers'}), 400
             use_fulltext = _request_bool(data, 'use_fulltext', True)
@@ -539,6 +550,8 @@ def register_search_routes(app):
             cursor_token = str(data.get("cursor") or "").strip() or None
             cursor_after_score: Optional[float] = None
             cursor_after_id: Optional[int] = None
+            cursor_has_date = False
+            cursor_after_date = None
             cursor_cache_key = pagination_query_signature(
                 query=query,
                 file_type=file_type,
@@ -566,6 +579,11 @@ def register_search_routes(app):
                         "error": "Cursor is invalid or does not match query/sort/filters",
                     }), 400
                 cursor_after_score, cursor_after_id, _cursor_order = parsed
+                tiebreak = parse_relevance_cursor_tiebreak(
+                    cursor_token,
+                    expected_signature=cursor_cache_key,
+                ) or (False, None)
+                cursor_has_date, cursor_after_date = tiebreak
                 offset = 0
 
             has_advanced_filters = any((
@@ -607,6 +625,8 @@ def register_search_routes(app):
                         count_mode=count_mode,
                         cursor_after_score=cursor_after_score,
                         cursor_after_id=cursor_after_id,
+                        cursor_has_date=cursor_has_date,
+                        cursor_after_date=cursor_after_date,
                     )
             elif use_fulltext and query:
                 results, total_count = SearchService.full_text_search(

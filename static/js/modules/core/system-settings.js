@@ -5,6 +5,13 @@
 
 import { apiGet } from '../api/api-client.js';
 
+// Resolves once the server settings have been loaded and applied (or the
+// defaults have been applied after a failure). A page that reads a per-page
+// select must wait for it: applyAllSettings writes the saved page size into
+// those selects, and a read before that point is a read of a stale value.
+let markSettingsReady;
+export const settingsReady = new Promise((resolve) => { markSettingsReady = resolve; });
+
 class SystemSettings {
     constructor() {
         this.settings = {};
@@ -26,6 +33,8 @@ class SystemSettings {
             // Use defaults on error
             this.settings = this.getDefaultSettings();
             this.applyAllSettings();
+        } finally {
+            markSettingsReady();
         }
     }
 

@@ -457,13 +457,15 @@ async function exercisePage({ moduleName, barId, checkboxClass, cardClass,
                               secondaryAction = 'Edit Selected' }) {
     const document = makeDocument({ permissive: true });
     const ActionToolbar = loadToolbar(document);
+    const navigations = [];
     const window = {
         document,
         console,
         translations: {},
         confirm: () => true,
         location: { pathname: `/${kind}`, search: '', href: `http://localhost/${kind}`,
-                    origin: 'http://localhost' },
+                    origin: 'http://localhost',
+                    assign: (destination) => navigations.push(destination) },
         history: { replaceState() {} },
     };
     window.ActionToolbar = ActionToolbar;
@@ -480,10 +482,34 @@ async function exercisePage({ moduleName, barId, checkboxClass, cardClass,
             new FakeElement('div', { class: cardClass, 'data-id': String(i) })));
         card.style.display = 'block';
         cards.push(card);
-        checkboxes.push(card.appendChild(new FakeElement('input', {
+        const checkbox = new FakeElement('input', {
             type: 'checkbox', class: checkboxClass, value: String(i),
             onchange: 'updateBulkButtons()',
+        });
+        // A real checkbox carries its row's id in `value`, and the page's
+        // selection code reads the property (`parseInt(cb.value, 10)`); the
+        // stub sets attributes, so the property is set here alongside.
+        checkbox.value = String(i);
+        checkboxes.push(card.appendChild(checkbox));
+    }
+    // The served page carries the table's export menu: `components/table.html`
+    // renders one checked box per offered column, and the page's bulk export
+    // reads the reader's chosen columns from it (and stops with "select at
+    // least one column" when none are). The harness builds the rows itself, so
+    // it builds the menu the rows came with - otherwise it would be testing a
+    // page state no browser ever serves.
+    if (exportMessage) {
+        const menu = document.register(document.body.appendChild(new FakeElement('div', {
+            id: `${barId}ExportMenu`, class: 'dropdown ut-export',
+            'data-export-interface': kind,
         })));
+        for (const column of ['id', 'name', 'created_at']) {
+            const box = menu.appendChild(new FakeElement('input', {
+                type: 'checkbox', class: 'form-check-input ut-export-column-check',
+                'data-export-column': column,
+            }));
+            box.checked = true;
+        }
     }
     // The page's own `change` delegation would be a second binding for the same
     // event; the freeze forbids it, so count how many ways one change reaches

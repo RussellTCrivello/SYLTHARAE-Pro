@@ -32,3 +32,23 @@ def test_cursor_rejects_wrong_signature():
     data["sig"] = "tampered"
     bad = encode_cursor(data)
     assert parse_relevance_cursor(bad, expected_signature=sig) is None
+
+
+def test_tiebreak_round_trips_the_date_and_null_date():
+    import datetime as dt
+    from core.search.cursor import parse_relevance_cursor_tiebreak, relevance_cursor
+    sig = "sig-tb"
+    dated = relevance_cursor(2.0, 7, "desc", query_signature=sig,
+                             file_date=dt.date(2020, 2, 29), file_date_known=True)
+    assert parse_relevance_cursor_tiebreak(dated, expected_signature=sig) == (True, dt.date(2020, 2, 29))
+    undated = relevance_cursor(2.0, 7, "desc", query_signature=sig,
+                               file_date=None, file_date_known=True)
+    assert parse_relevance_cursor_tiebreak(undated, expected_signature=sig) == (True, None)
+
+
+def test_legacy_v2_cursor_has_no_recorded_date():
+    from core.search.cursor import parse_relevance_cursor_tiebreak, relevance_cursor
+    sig = "sig-legacy"
+    legacy = relevance_cursor(3.0, 9, "desc", query_signature=sig)
+    assert parse_relevance_cursor_tiebreak(legacy, expected_signature=sig) == (False, None)
+    assert parse_relevance_cursor_tiebreak(legacy, expected_signature="other") is None

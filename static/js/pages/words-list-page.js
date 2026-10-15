@@ -201,7 +201,7 @@ function loadPageTranslations() {
         if (unusedEl) unusedEl.textContent = unusedCount;
     }
     
-    function renderPaginator(page, total_pages) {
+    function renderPaginator(page, total_pages, loadMore = {}) {
         // Find or create pagination container
         let paginationContainer = document.querySelector('.pagination-container');
         if (!paginationContainer) {
@@ -232,6 +232,10 @@ function loadPageTranslations() {
             module.renderUnifiedPagination({
                 currentPage: page,
                 totalPages: total_pages,
+                // One control: the table's Load More is rendered by the pager.
+                tableId: 'wordsTable',
+                totalCount: loadMore.total ?? 0,
+                rowsShown: loadMore.shown ?? 0,
                 containerId: paginationContainer.id,
                 onPageChange: (targetPage) => {
                     // Update URL without page reload
@@ -421,7 +425,7 @@ function loadPageTranslations() {
                 const totalPages = json.total_pages || 1;
                 
                 renderRows(words, pageNum);
-                renderPaginator(pageNum, totalPages);
+                renderPaginator(pageNum, totalPages, { total: json.total, shown: words.length });
                 updateSearchInfo(json);
 
                 // STALE-01: keep the server-rendered "Total Words" stat card

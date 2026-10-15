@@ -167,7 +167,8 @@
         total_pages=total_pages|default(1),
         total_count=total_categories|default(0),
         rows_shown=categories|length,
-        append=True) %}
+        append=True,
+        pager=True) %}
     {% for category in categories %}
     <tr class="category-item"
         data-category-id="{{ category.id }}"
@@ -221,7 +222,8 @@
         {% if search %}{% set extra_param = pagination_params.update({'search': search}) %}{% endif %}
         {% if sort_by and sort_by != 'files' %}{% set extra_param = pagination_params.update({'sort': sort_by, 'order': sort_order}) %}
         {% elif sort_order != 'desc' %}{% set extra_param = pagination_params.update({'sort': 'files', 'order': sort_order}) %}{% endif %}
-        {{ unified_pagination(page, total_pages, url_for, 'categories_list', pagination_params) }}
+        {{ unified_pagination(page, total_pages, url_for, 'categories_list', pagination_params,
+            table_id='categoriesTable', total_count=total_categories|default(0), rows_shown=categories|length, page_size=per_page) }}
     {% endif %}
 </div>
 
@@ -365,6 +367,6 @@
 }|tojson }}</script>
 <script src="{{ url_for('static', filename='js/modules/core/select2-loader.js') }}"
         data-select2-src="{{ url_for('static', filename='dist/js/select2.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20260929a" defer></script>
+<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261014b" defer></script>
 <script src="{{ url_for('static', filename='js/pages/categories-list-page.js') }}"></script>
 {% endblock %}

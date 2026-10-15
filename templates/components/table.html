@@ -33,6 +33,7 @@
           nothing else may style or script a list table.
 #}
 {% from 'components/states.html' import empty_state, filtered_state, loading_state, error_state %}
+{% from 'components/unified_pagination.html' import load_more_control, showing_range %}
 {#
    Usage:
 
@@ -73,7 +74,7 @@
 {#- The stand-in row for a list with nothing to show. `filtered` says the
     records exist but the filters exclude them, which is a different thing to
     tell a reader than "there is nothing here". -#}
-<tr>
+<tr data-ut-state="empty">
     <td colspan="{{ columns }}" class="text-center py-4">
         {% if filtered %}
             {{ filtered_state(title=title, message=message, icon='bi-funnel',
@@ -92,7 +93,7 @@
 
 
 {% macro table_loading_row(columns, message=None) %}
-<tr>
+<tr data-ut-state="loading">
     <td colspan="{{ columns }}" class="text-center py-4">{{ loading_state(message=message) }}</td>
 </tr>
 {% endmacro %}
@@ -345,7 +346,7 @@
                       sort_key=None, sort_dir=None,
                       info_text=None, info_id=None,
                       per_page=None, per_page_id=None,
-                      per_page_options=(10, 25, 50, 100),
+                      per_page_options=(10, 25, 50, 100, 200),
                       per_page_label=_('Per Page:'),
                       on_per_page_change=None,
                       select_all_onchange=None, select_all_id=None,
@@ -358,7 +359,7 @@
                       export_interface=None, export_columns=None,
                       export_params=None, export_scope_base=None,
                       page=None, total_pages=None, total_count=None,
-                      rows_shown=None, append=False, load_more_label=None) %}
+                      rows_shown=None, append=False, load_more_label=None, pager=False) %}
 {%- set table_id = id if id else 'recordsTable' -%}
 {%- set info_dom_id = info_id if info_id else (table_id ~ 'Info') -%}
 {%- set per_page_dom_id = per_page_id if per_page_id else (table_id ~ 'PerPage') -%}
@@ -368,15 +369,22 @@
         'orderParam': order_param,
         'pageParam': page_param
     } -%}
-<div class="ut" data-unified-table="{{ table_config|tojson }}">
+<div class="ut" data-unified-table='{{ table_config|tojson }}'>
     <div class="ut-toolbar">
-        <div class="ut-info" id="{{ info_dom_id }}" aria-live="polite">{% if append %}{{ _('Showing') }} <span data-ut-shown>{{ rows_shown or 0 }}</span> {{ _('of') }} <span data-ut-total>{{ total_count or 0 }}</span>{% else %}{{ info_text if info_text else '' }}{% endif %}</div>
+        <div class="ut-info" id="{{ info_dom_id }}" aria-live="polite">{% if append %}{{ showing_range(((page or 1)|int - 1) * (per_page or 0)|int + 1 if per_page else 1, rows_shown, total_count) }}{% else %}{{ info_text if info_text else '' }}{% endif %}</div>
         {% if per_page_options %}
         <div class="ut-per-page">
             <label class="ut-per-page-label" for="{{ per_page_dom_id }}">{{ per_page_label }}</label>
             <select class="form-select form-select-sm ut-per-page-select" id="{{ per_page_dom_id }}"
                     {% if on_per_page_change %}data-on-change="{{ on_per_page_change }}"{% endif %}>
-                {% for option in per_page_options %}
+                {#- The selector shows the size the table is actually using: a size
+                    that is not one of the offered options joins them, so the
+                    control never displays a value the rows do not have. -#}
+                {%- set size_options = per_page_options|list -%}
+                {%- if per_page and (per_page|int) not in (size_options|map('int')|list) -%}
+                {%- set size_options = (size_options + [per_page|int])|sort -%}
+                {%- endif -%}
+                {% for option in size_options %}
                 <option value="{{ option }}" {% if per_page|int == option|int %}selected{% endif %}>{{ option }}</option>
                 {% endfor %}
             </select>
@@ -450,24 +458,10 @@
         </tbody>
     </table>
     </div>
-    {%- if append and total_pages and page is not none and total_pages > 1 and page < total_pages -%}
-    <div class="ut-load-more"
-         data-ut-load-more
-         data-page="{{ page }}"
-         data-total-pages="{{ total_pages }}"
-         data-total="{{ total_count or 0 }}"
-         data-shown="{{ rows_shown or 0 }}">
-        <button type="button" class="btn btn-outline-primary btn-sm">
-            <i class="bi bi-arrow-down-circle me-2" aria-hidden="true"></i>{{ load_more_label or _('Show More') }}
-        </button>
-        <span class="ut-load-more-info" aria-live="polite">
-            {{ _('Showing') }} <span data-ut-shown>{{ rows_shown or 0 }}</span> {{ _('of') }}
-            <span data-ut-total>{{ total_count or 0 }}</span>
-        </span>
-        <span class="ut-load-more-error text-danger" data-ut-load-error hidden role="alert">
-            {{ _('Could not load more. Click to try again.') }}
-        </span>
-    </div>
+    {#- A numbered pager on the page renders this control itself (one control,
+        not two). Without one, the table renders it under itself. -#}
+    {%- if append and not pager -%}
+    {{ load_more_control(table_id, page, total_pages, total_count, rows_shown, load_more_label, per_page) }}
     {%- endif -%}
 </div>
 {% endmacro %}

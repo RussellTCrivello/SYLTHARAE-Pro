@@ -1088,14 +1088,12 @@ function copyContent() {
 function downloadContent() {
     const content = document.getElementById('contentText').textContent;
     const blob = new Blob([content], { type: 'text/plain' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${fileName}_page_${currentPage}_of_${totalPages}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
+    const suggested = `${fileName || 'file'}_page_${currentPage}_of_${totalPages}.txt`;
+    if (!window.FileActions || typeof window.FileActions.saveFile !== 'function') {
+        if (window.Toast) window.Toast.error(translations.error);
+        return;
+    }
+    window.FileActions.saveFile({ blob, suggestedName: suggested, extension: '.txt' });
 }
 
 // ==================== FULLSCREEN & SHARE ====================
@@ -1240,15 +1238,39 @@ function bindFileRecordActions() {
             return {ok: true, handled: true};
         }
 
-        if (endpoint) {
-            // A navigation the server prepared - the extracted text, for
-            // instance. The browser performs it; the surface reports it.
-            if (window.swapNavigate) { window.swapNavigate(endpoint); } else { window.location.href = endpoint; }
+        // Downloads and exports are files, not pages: they never go through
+        // the content swap (the server answers with an attachment, which the
+        // swap cannot parse). The reader names the file first, then saves it.
+        const displayName = (document.querySelector('.file-analyst-title')
+            || {}).textContent || 'file';
+        const stem = displayName.replace(/\.[^.]+$/, '') || 'file';
+
+        if (actionId === 'files.view_original') {
+            // Shown in its own tab, as the element says (target=_blank).
+            window.open(context.href || element.getAttribute('href'), '_blank', 'noopener');
             return {ok: true, handled: true};
         }
 
-        // A link (the original, inline or as an attachment): let the browser
-        // follow it, which is what the element already says.
+        if (actionId === 'files.download_original') {
+            return window.FileActions.saveFile({
+                url: context.href || element.getAttribute('href'),
+                suggestedName: displayName,
+            });
+        }
+
+        if (actionId === 'files.export_content' && endpoint) {
+            return window.FileActions.saveFile({
+                url: endpoint,
+                suggestedName: stem + '_extracted_text.txt',
+                extension: '.txt',
+            });
+        }
+
+        // Anything else the server prepared as a plain link: follow it.
+        if (endpoint) {
+            if (window.swapNavigate) { window.swapNavigate(endpoint); } else { window.location.href = endpoint; }
+            return {ok: true, handled: true};
+        }
         return {ok: true, handled: false};
     });
 }

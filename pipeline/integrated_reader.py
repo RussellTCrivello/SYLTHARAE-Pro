@@ -12,7 +12,7 @@ import threading
 import time
 
 from core.console import console
-from core.file_utils import get_standardized_metadata, iter_tree
+from core.file_utils import get_standardized_metadata, iter_tree, nested_extract_skip_reason
 from reader_file.main_specify_method import main_specify_method_of_reading_the_file
 # DatabaseHub is optional - import will be handled conditionally in _init_storage
 from pipeline.storage_pipeline import StoragePipeline
@@ -219,6 +219,24 @@ def _object_footprint(value: Any) -> int:
         return len(value) + 49  # e.g. numpy arrays expose len()
     except Exception:
         return 100
+
+
+def _macos_metadata_reason(file_info: Dict[str, Any], root: str) -> Optional[str]:
+    """Why a top-level entry is macOS metadata, not content (or None).
+
+    Unzipped Mac exports keep ``__MACOSX/._*`` AppleDouble resource forks next to
+    the real files. They are not images, and reading them as images fails with
+    "cannot identify image file". Archive members get the same rule in
+    FileRouterService; this applies it to the top-level walk, which had no rule.
+    Only these two reasons are applied here, not the iWork shard rule.
+    """
+    path = str(file_info.get('path') or '')
+    try:
+        rel = os.path.relpath(path, root) if root else path
+    except ValueError:
+        rel = os.path.basename(path)
+    reason = nested_extract_skip_reason(rel)
+    return reason if reason in ('macosx_metadata', 'appledouble_resource_fork') else None
 
 
 class IntegratedFileReader:
@@ -521,6 +539,12 @@ class IntegratedFileReader:
         Returns:
             Processing result dictionary or None
         """
+        # A single file runs without a checkpoint. Clear any base left by an
+        # earlier run in this process, so its archive members do not resume
+        # from a checkpoint this run did not ask for.
+        if not self._container_path:
+            from core.checkpoint_scope import register_checkpoint_base
+            register_checkpoint_base(self.storage_source, self.storage_side, None)
         if self._control_requested():
             logger.warning("Control requested: single-file processing not started")
             return None
@@ -758,18 +782,37 @@ class IntegratedFileReader:
         Returns:
             List of processing results
         """
-        # Initialize checkpoint manager if checkpoint file is provided
-        if self.checkpoint_file and not self.checkpoint_manager:
+        # Folder being processed: archive members are located relative to it.
+        self._current_folder = folder_path
+
+        # Initialize checkpoint manager if checkpoint file is provided.
+        #
+        # A nested reader (archive member, attachment) has no checkpoint file of
+        # its own. It takes a stable per-container checkpoint derived from the
+        # top-level run's file, so members already stored are skipped when the
+        # run restarts. See core/checkpoint_scope.py.
+        checkpoint_file = self.checkpoint_file
+        stable_members = False
+        if not self._container_path:
+            from core.checkpoint_scope import register_checkpoint_base
+            register_checkpoint_base(self.storage_source, self.storage_side, checkpoint_file)
+        elif not checkpoint_file:
+            from core.checkpoint_scope import member_checkpoint_file
+            checkpoint_file = member_checkpoint_file(
+                self.storage_source, self.storage_side, self._container_path)
+            stable_members = checkpoint_file is not None
+        if checkpoint_file and not self.checkpoint_manager:
             try:
                 from core.checkpoint_manager import CheckpointManager
                 self.checkpoint_manager = CheckpointManager(
-                    checkpoint_file=self.checkpoint_file,
+                    checkpoint_file=checkpoint_file,
                     folder_path=folder_path,
                     storage_source=self.storage_source,
                     storage_side=self.storage_side,
-                    auto_save_interval=50  # OPTIMIZED: Save checkpoint every 50 files (reduced I/O)
+                    auto_save_interval=50,  # OPTIMIZED: Save checkpoint every 50 files (reduced I/O)
+                    stable_members=stable_members,
                 )
-                logger.info(f"Checkpoint manager initialized: {self.checkpoint_file}")
+                logger.info(f"Checkpoint manager initialized: {checkpoint_file}")
             except Exception as e:
                 logger.warning(f"Failed to initialize checkpoint manager: {e}. Continuing without resume support.")
                 self.checkpoint_manager = None
@@ -843,12 +886,17 @@ class IntegratedFileReader:
                 parts.append(f"{symlinks} symbolic link(s)")
             if special:
                 parts.append(f"{special} special file(s) (socket/FIFO/device)")
-            message = ("Not ingested: " + " and ".join(parts)
-                       + " - links are not followed (their targets are ingested "
-                         "on their own) and special files are not artifacts")
-            logger.info(message)
-            if not nested_run:
-                print(f"ℹ️  {message}")
+            metadata = (not_ingested.get('macosx_metadata', 0)
+                        + not_ingested.get('appledouble_resource_fork', 0))
+            if metadata:
+                parts.append(f"{metadata} macOS metadata file(s) (__MACOSX / ._ resource forks)")
+            if parts:
+                message = ("Not ingested: " + " and ".join(parts)
+                           + " - links are not followed (their targets are ingested "
+                             "on their own), special files and macOS metadata are not artifacts")
+                logger.info(message)
+                if not nested_run:
+                    print(f"ℹ️  {message}")
 
         if skipped_count > 0:
             if not nested_run:
@@ -862,10 +910,12 @@ class IntegratedFileReader:
         # PROGRESS: skipped work is still accounted. It enters the denominator
         # and the terminal bucket in one step, so a resumed job can reach 100%
         # instead of stranding under it forever.
+        # The units are already terminal, so they are not outstanding work of
+        # any container. Passing ``parent`` here made the folder look like a
+        # container with work still to do, and the end-of-run wait then ran to
+        # its stall limit on every resumed run.
         if skipped_count:
-            self.progress_ledger.record(
-                OUTCOME_SKIPPED, skipped_count, parent=folder_path
-            )
+            self.progress_ledger.record(OUTCOME_SKIPPED, skipped_count)
 
         if not total_files:
             if self.checkpoint_manager and not nested_run:
@@ -998,6 +1048,17 @@ class IntegratedFileReader:
                     outstanding,
                 )
                 self.progress_ledger.abandon(outstanding, OUTCOME_CANCELLED)
+            elif outstanding > 0 and self.is_pause_requested():
+                # A pause stops the submission loop, so the files it never
+                # started were not failures. Recording them as failed made every
+                # paused run report "N files could not be processed". They are
+                # settled as skipped and the run is marked incomplete.
+                logger.warning(
+                    "%d discovered file(s) were not started before the pause",
+                    outstanding,
+                )
+                self.progress_ledger.abandon(outstanding, OUTCOME_SKIPPED)
+                self._partial_run = True
             elif outstanding > 0:
                 # Nothing cancelled: work was discovered and never ran.  That is
                 # a failure, not a skip - reporting it as skipped hid a real
@@ -1140,6 +1201,10 @@ class IntegratedFileReader:
                 if record_type in ('SYMLINK', 'OTHER'):
                     not_ingested[record_type] = not_ingested.get(record_type, 0) + 1
                 continue
+            meta_reason = _macos_metadata_reason(file_info, folder_path)
+            if meta_reason:
+                not_ingested[meta_reason] = not_ingested.get(meta_reason, 0) + 1
+                continue
             if root_error is None and record_type == 'ERROR' \
                     and file_info.get('path') == folder_path and folder_path:
                 # A record describing the root itself (unreadable/absent root).
@@ -1173,6 +1238,8 @@ class IntegratedFileReader:
         for file_info in iter_tree(folder_path, compute_hashes=False):
             record_type = file_info.get('type')
             if record_type not in ('FILE', 'ERROR'):
+                continue
+            if _macos_metadata_reason(file_info, folder_path):
                 continue
             if self._phase_of(file_info) != phase:
                 continue
@@ -1706,6 +1773,65 @@ class IntegratedFileReader:
         console.end_progress()  # Terminate the in-place progress line
         return results
 
+    #: Files that the readers can open as containers (archives, mail, PDF and
+    #: Office packages with embedded objects). A committed container is never
+    #: skipped before it is read: its members may have failed in an earlier run
+    #: and must be retried, and only the members can tell which ones.
+    CONTAINER_EXTENSIONS = frozenset({
+        'zip', 'rar', '7z', 'tar', 'gz', 'tgz', 'bz2', 'xz', 'cab', 'iso',
+        'eml', 'msg', 'pst', 'ost', 'mbox', 'emlx',
+        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'xlsb', 'ppt', 'pptx',
+        'odt', 'ods', 'odp', 'rtf', 'one', 'vsd', 'vsdx', 'epub', 'msi',
+    })
+
+    def _occurrence_location(self, file_info: Dict[str, Any]) -> Optional[str]:
+        """Stable occurrence key for a file, independent of extraction paths.
+
+        Top-level files are identified by their physical path. Archive members
+        are identified as ``<container file name>::<path inside the container>``,
+        so the key does not change when the extraction folder is re-created.
+        """
+        file_path = file_info.get('path') if isinstance(file_info, dict) else None
+        if not file_path:
+            return None
+        if not self._container_path:
+            return str(file_path)
+        folder = getattr(self, '_current_folder', None)
+        try:
+            inside = os.path.relpath(file_path, folder) if folder else os.path.basename(file_path)
+        except ValueError:
+            inside = os.path.basename(file_path)
+        inside = inside.replace('\\', '/')
+        container_name = os.path.basename(self._container_path)
+        return f"{container_name}::{inside}"
+
+    def _skip_committed(self, file_info: Dict[str, Any], location: Optional[str]) -> bool:
+        """True when this exact leaf occurrence is already committed and processed.
+
+        Skipping here happens before the file is read, extracted, parsed or OCR'd,
+        which is where the time goes. Correctness:
+        - the key includes the content hash, so a changed file is never skipped;
+        - the location is part of the key, so a moved file is processed again;
+        - containers are never skipped (see CONTAINER_EXTENSIONS);
+        - any failure to decide returns False, so the file is processed normally.
+        """
+        if not (self.enable_storage and self.storage_pipeline is not None):
+            return False
+        file_path = file_info.get('path')
+        if not file_path or not location or not os.path.isfile(file_path):
+            return False
+        ext = os.path.splitext(file_path)[1].lstrip('.').lower()
+        if ext in self.CONTAINER_EXTENSIONS:
+            return False
+        try:
+            from core.hashing import hash_file
+            digest = hash_file(file_path)
+        except Exception:
+            return False
+        committed = self.storage_pipeline.find_committed_occurrence(
+            digest, self.storage_source, self.storage_side, location)
+        return committed is not None
+
     def _process_file_worker(
         self, 
         file_info: Dict[str, Any],
@@ -1844,6 +1970,32 @@ class IntegratedFileReader:
                 logger.warning(f"File does not exist: {file_path} - will attempt processing anyway")
                 # Don't return None - some readers can handle non-existent files or process from memory
             
+            # Nested members carry their stable location into storage, so the
+            # store and the skip check below agree on one identity.
+            if self._container_path and isinstance(file_info, dict):
+                file_info['hierarchy_path'] = self._occurrence_location(file_info)
+
+            # Durable recovery: a leaf occurrence that is already committed is
+            # terminal work from an earlier run. Mark it and do not read it again.
+            if self._skip_committed(file_info, self._occurrence_location(file_info)):
+                logger.info(f"Already stored (committed occurrence): {os.path.basename(file_path)}")
+                outcome = OUTCOME_SKIPPED
+                # Count it as a duplicate, as the store path does, so job
+                # statistics do not lose it when the store is bypassed.
+                pipeline = getattr(self, 'storage_pipeline', None)
+                if pipeline is not None:
+                    try:
+                        pipeline.stats['files_duplicates'] += 1
+                        pipeline.stats['files_processed'] += 1
+                    except Exception as stat_err:
+                        logger.debug(f"Duplicate accounting failed (non-critical): {stat_err}")
+                if self.checkpoint_manager:
+                    try:
+                        self.checkpoint_manager.mark_processed(file_info)
+                    except Exception as cp_err:
+                        logger.debug(f"Checkpoint marking failed (non-critical): {cp_err}")
+                return None
+
             # Check for pause
             if check_pause:
                 check_pause()

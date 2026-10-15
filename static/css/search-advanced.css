@@ -2152,3 +2152,148 @@ body.sfp-no-scroll {
         flex-wrap: wrap;
     }
 }
+
+/* --------------------------------------------------------------------------
+   Results per page (20 / 50 / 100 / 200 / 500)
+   -------------------------------------------------------------------------- */
+.results-per-page {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--text-light, #64748b);
+    font-size: 0.78rem;
+    white-space: nowrap;
+}
+
+.results-per-page-select {
+    width: auto;
+    min-width: 4.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   Fixed results viewport (desktop, >= 1200px where the review pane sits
+   beside the results). The page does not scroll: the search controls scroll
+   in their own region, the results header and pagination stay in place, and
+   only the result list scrolls. Narrower screens keep the normal page flow.
+   -------------------------------------------------------------------------- */
+@media (min-width: 1200px) {
+    body[data-page-type="search-advanced"] #mainContent {
+        height: 100vh;
+        height: 100dvh;
+        min-height: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    body[data-page-type="search-advanced"] #mainContent > :not(.search-page-shell) {
+        flex-shrink: 0;
+    }
+
+    body[data-page-type="search-advanced"] #mainContent > .search-page-shell {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Everything above the results: scrolls in its own region. It fills the
+       viewport when there are no results and yields room to them otherwise. */
+    .search-page-top {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: 0.25rem 0.25rem 0.5rem;
+        margin: -0.25rem -0.25rem 0;
+    }
+
+    .search-page-shell:has(.search-results-section:not([style*="display: none"])) .search-page-top {
+        flex: 0 1 auto;
+        max-height: 15%;
+    }
+
+    .search-results-section {
+        flex: 1 1 0;
+        min-height: 18rem;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    .search-results-section > .results-header {
+        flex-shrink: 0;
+    }
+
+    /* Selection bars are capped and scroll internally so they cannot take the
+       whole results area and collapse the list beneath them. */
+    .search-results-section > .analyst-categorization-bar,
+    .search-results-section > .selected-document-actions {
+        flex-shrink: 0;
+        max-height: 6.5rem;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .search-results-section > .results-header {
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .search-workspace-grid {
+        flex: 1 1 0;
+        min-height: 10rem;
+        grid-template-rows: minmax(0, 1fr);
+        align-items: stretch;
+    }
+
+    .search-workspace-results {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    #resultsContainer.results-container {
+        flex: 1 1 auto;
+        min-height: 6rem;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding-inline-end: 0.35rem;
+    }
+
+    #resultsContainer.results-container > .result-item {
+        flex-shrink: 0;
+    }
+
+    .results-pagination {
+        flex-shrink: 0;
+        margin-top: 0;
+        padding-top: 0.5rem;
+        border-top: 1px solid var(--border-color, #e2e8f0);
+        background: var(--surface-raised, #fff);
+    }
+
+    .results-pagination .unified-pagination-container {
+        margin: 0;
+        padding: 0.4rem 0;
+        gap: 0.5rem;
+    }
+
+    .search-workspace-grid.is-review-open .document-review-pane {
+        position: relative;
+        top: auto;
+        height: 100%;
+        min-height: 0;
+        max-height: none;
+    }
+
+    /* The review pane's content area must keep a usable height and scroll
+       on its own when the pane is squeezed beside the results. */
+    .search-workspace-grid.is-review-open .document-review-pane {
+        overflow-y: auto;
+    }
+
+    .search-workspace-grid.is-review-open .review-pane-content {
+        min-height: 6rem;
+    }
+}

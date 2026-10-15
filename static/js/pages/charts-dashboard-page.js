@@ -188,23 +188,64 @@ const CONFIG = {
     }
 };
 
+// ===== RUN TOKEN =====
+// Every visit imports this module under a new URL, so several copies can be
+// alive at once, each with its own `state`. Their requests outlive the page
+// they were started for. The run token lives on `window`, is shared by every
+// copy, and changes whenever a new page root is booted. A response that
+// arrives after its run has been replaced is dropped rather than rendered into
+// the current page (which is what produced "Cannot set properties of null").
+function chartsRunRoot() {
+    return document.getElementById('section-words') || document.body;
+}
+
+function startChartsRun() {
+    const shared = window.__chartsDashboardRun || (window.__chartsDashboardRun = { generation: 0, root: null });
+    const root = chartsRunRoot();
+    if (shared.root === root && root.isConnected) return null; // this DOM already booted
+    shared.generation += 1;
+    shared.root = root;
+    // Drop Chart.js instances whose canvases belonged to the previous page.
+    if (window.Chart && window.Chart.instances) {
+        Object.values(window.Chart.instances).forEach((chart) => {
+            if (!chart.canvas || !chart.canvas.isConnected) {
+                try { chart.destroy(); } catch (e) { /* already gone */ }
+            }
+        });
+    }
+    return { generation: shared.generation, root };
+}
+
+function currentChartsRun() {
+    const shared = window.__chartsDashboardRun;
+    return shared ? { generation: shared.generation, root: shared.root } : null;
+}
+
+function isStaleChartsRun(run) {
+    const shared = window.__chartsDashboardRun;
+    return !run || !shared || run.generation !== shared.generation || !run.root.isConnected;
+}
+
 // ===== INITIALIZATION =====
 function bootChartsDashboard() {
+    const run = startChartsRun();
+    if (!run) {
+        console.log('Charts dashboard already booted on this page; skipping');
+        return;
+    }
     console.log('Initializing charts dashboard...');
     loadChartsTranslations();
 
     // Load filter options first
-    loadFilterOptions().then(() => {
+    loadFilterOptions(run).then(() => {
+        if (isStaleChartsRun(run)) return;
         console.log('Filter options loaded, loading initial data...');
         // Load all sections on page load
-        loadDataForSection('files', 'charts');
-        loadDataForSection('categories', 'charts');
-        loadDataForSection('keywords', 'charts');
-        loadDataForSection('sources', 'charts');
-        loadDataForSection('sides', 'charts');
-        loadDataForSection('words', 'charts');
+        ['files', 'categories', 'keywords', 'sources', 'sides', 'words'].forEach((section) => {
+            loadDataForSection(section, 'charts', run);
+        });
     }).catch(error => {
-        console.error('Error during initialization:', error);
+        if (!isStaleChartsRun(run)) console.error('Error during initialization:', error);
     });
 }
 
@@ -217,14 +258,14 @@ export default function init() {
 }
 
 // ===== FILTER OPTIONS LOADING =====
-async function loadFilterOptions() {
+async function loadFilterOptions(run = currentChartsRun()) {
     try {
         await Promise.all([
-            loadCategories(),
-            loadSources(),
-            loadSides(),
-            loadKeywords(),
-            loadFileTypes()
+            loadCategories(run),
+            loadSources(run),
+            loadSides(run),
+            loadKeywords(run),
+            loadFileTypes(run)
         ]);
         console.log('All filter options loaded successfully');
     } catch (error) {
@@ -233,12 +274,13 @@ async function loadFilterOptions() {
     }
 }
 
-async function loadCategories() {
+async function loadCategories(run = currentChartsRun()) {
     try {
         const response = await fetch('/api/categories');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
+        if (isStaleChartsRun(run)) return;
         state.filterData.categories = Array.isArray(data) ? data : [];
         
         const selects = [
@@ -250,17 +292,19 @@ async function loadCategories() {
         selects.forEach(id => populateSelect(id, state.filterData.categories));
         console.log(`Loaded ${state.filterData.categories.length} categories`);
     } catch (error) {
+        if (isStaleChartsRun(run)) return;
         console.error('Error loading categories:', error);
         state.filterData.categories = [];
     }
 }
 
-async function loadSources() {
+async function loadSources(run = currentChartsRun()) {
     try {
         const response = await fetch('/api/sources');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
+        if (isStaleChartsRun(run)) return;
         state.filterData.sources = Array.isArray(data) ? data : [];
         
         const selects = [
@@ -271,17 +315,19 @@ async function loadSources() {
         selects.forEach(id => populateSelect(id, state.filterData.sources));
         console.log(`Loaded ${state.filterData.sources.length} sources`);
     } catch (error) {
+        if (isStaleChartsRun(run)) return;
         console.error('Error loading sources:', error);
         state.filterData.sources = [];
     }
 }
 
-async function loadSides() {
+async function loadSides(run = currentChartsRun()) {
     try {
         const response = await fetch('/api/sides');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
+        if (isStaleChartsRun(run)) return;
         state.filterData.sides = Array.isArray(data) ? data : [];
         
         const selects = [
@@ -296,17 +342,19 @@ async function loadSides() {
         selects.forEach(id => populateSelect(id, state.filterData.sides));
         console.log(`Loaded ${state.filterData.sides.length} sides`);
     } catch (error) {
+        if (isStaleChartsRun(run)) return;
         console.error('Error loading sides:', error);
         state.filterData.sides = [];
     }
 }
 
-async function loadKeywords() {
+async function loadKeywords(run = currentChartsRun()) {
     try {
         const response = await fetch('/api/keywords?per_page=100&page=1');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
+        if (isStaleChartsRun(run)) return;
         
         if (data.success && Array.isArray(data.keywords)) {
             state.filterData.keywords = data.keywords;
@@ -322,17 +370,19 @@ async function loadKeywords() {
             throw new Error('Invalid keywords data format');
         }
     } catch (error) {
+        if (isStaleChartsRun(run)) return;
         console.error('Error loading keywords:', error);
         state.filterData.keywords = [];
     }
 }
 
-async function loadFileTypes() {
+async function loadFileTypes(run = currentChartsRun()) {
     try {
         const response = await fetch('/api/analytics/file-type-distribution');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
+        if (isStaleChartsRun(run)) return;
         
         if (data.types && Array.isArray(data.types)) {
             state.filterData.fileTypes = data.types;
@@ -348,6 +398,7 @@ async function loadFileTypes() {
             throw new Error('Invalid file types data format');
         }
     } catch (error) {
+        if (isStaleChartsRun(run)) return;
         console.error('Error loading file types:', error);
         state.filterData.fileTypes = [];
     }
@@ -442,7 +493,7 @@ function getFilterParams(section, mode) {
 }
 
 // ===== DATA LOADING =====
-async function loadDataForSection(section, mode) {
+async function loadDataForSection(section, mode, run = currentChartsRun()) {
     // Prevent duplicate loading
     const loadKey = `${section}-${mode}`;
     if (state.loadingStates[loadKey]) {
@@ -472,6 +523,7 @@ async function loadDataForSection(section, mode) {
         }
         
         const data = await response.json();
+        if (isStaleChartsRun(run)) return;
         console.log(`Received data for ${section}:`, data);
         
         if (data.success) {
@@ -482,10 +534,11 @@ async function loadDataForSection(section, mode) {
             console.error(`API returned success=false for ${section}:`, data);
         }
     } catch (error) {
+        if (isStaleChartsRun(run)) return;
         console.error(`Error loading ${section} ${mode}:`, error);
         showError(section, error.message || translations.errorLoadingData || 'Error loading data');
     } finally {
-        setLoadingState(section, false);
+        if (!isStaleChartsRun(run)) setLoadingState(section, false);
         state.loadingStates[loadKey] = false;
     }
 }

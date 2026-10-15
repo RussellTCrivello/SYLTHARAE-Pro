@@ -7,6 +7,8 @@
    outputs: none
    events: none of its own; the runtime raises Bootstrap's toast events
    states: success, warning, error, loading, unavailable
+   placement: top end, above every other layer (see .toast-stack in
+            message_system.css). Success and other notes never sit at the bottom.
    slots: message, detail line, action link, correlation id line
    accessibility: the region is a polite live region (`role="status"`), so a
            message is announced without stealing focus; each toast carries
@@ -32,6 +34,6 @@
 #}
 
 {%- macro toast_region(id='toastRegion') -%}
-<div id="{{ id }}" class="toast-container position-fixed bottom-0 end-0 p-3"
+<div id="{{ id }}" class="toast-container toast-stack position-fixed top-0 end-0 p-3"
      role="status" aria-live="polite" aria-atomic="false" data-toast-region></div>
 {%- endmacro -%}

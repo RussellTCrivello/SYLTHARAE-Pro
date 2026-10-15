@@ -138,8 +138,10 @@ def test_the_interface_templates_have_strings_to_check():
 #: Strings that are deliberately not translated: acronyms, format names and
 #: literal values. A msgid with no lowercase letter is one of those by
 #: construction (OCR, SHA-256, a bare status code), and this lifts it out of
-#: the "must differ from the source" rule below.
-_LITERAL_ALLOWED = ("OCR", "Status", "admin", "403", "SHA-256")
+#: the "must differ from the source" rule below. IPv4 and IPv6 are protocol
+#: names written the same way in every catalog - they carry a lowercase letter
+#: (`v`), so they need to be named here explicitly.
+_LITERAL_ALLOWED = ("OCR", "Status", "admin", "403", "SHA-256", "IPv4", "IPv6")
 
 
 def _is_literal(msgid: str) -> bool:

@@ -4,7 +4,7 @@
     python tools/ci/ocr_selfcheck.py --require tesseract   # fail early (CI)
     python tools/ci/ocr_selfcheck.py --json report.json
 
-Tesseract is a system package (see docs/INSTALL.md), so OCR behaviour depends
+Tesseract is a system package (see docs/CONFIGURATION.md), so OCR behaviour depends
 on the host rather than on requirements.txt. This reports, stage by stage:
 
 ``engines``
@@ -58,7 +58,7 @@ FAILING = {"wrong_text", "no_text", "invocation_failed", "unavailable"}
 REMEDIATION = {
     "unavailable": (
         "Install an OCR engine: the tesseract-ocr system package with the "
-        "tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/INSTALL.md), "
+        "tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), "
         "or the rapidocr_onnxruntime Python package."
     ),
     "invocation_failed": (

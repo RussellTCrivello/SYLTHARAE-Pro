@@ -61,6 +61,22 @@ class Catalog:
         return len(self.messages)
 
 
+def _catalog_locale(path: Path) -> Optional[str]:
+    """The locale a PO file belongs to, or ``None`` for a file that has none.
+
+    ``translations/<locale>/LC_MESSAGES/messages.po`` names its locale in the
+    path. ``translations/messages.pot`` is the *template* and belongs to no
+    locale: read as ``path.parent.parent.name`` it announced the checkout
+    directory as a locale, so Babel raised ``ValueError: expected only letters,
+    got 'syltharae-pro'`` and ``/api/experience/coverage`` answered 500 in any
+    checkout whose directory is not named after a language.
+    """
+    parts = path.parts
+    if len(parts) >= 3 and parts[-2] == "LC_MESSAGES":
+        return parts[-3]
+    return None
+
+
 def _read_po(path: Path, keep_untranslated: bool = False) -> Dict[str, str]:
     """Read a catalog. With ``keep_untranslated``, an entry with no translation
     keeps its source string - which is what the message *template* is: the list
@@ -71,7 +87,7 @@ def _read_po(path: Path, keep_untranslated: bool = False) -> Dict[str, str]:
 
     messages: Dict[str, str] = {}
     with open(path, "rb") as handle:
-        catalog = read_po(handle, locale=path.parent.parent.name)
+        catalog = read_po(handle, locale=_catalog_locale(path))
         for message in catalog:
             if not message.id:
                 continue

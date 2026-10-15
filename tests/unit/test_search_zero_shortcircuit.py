@@ -106,6 +106,43 @@ def test_assess_boolean_and_or_semantics():
     assert assess("missingtoken OR othertoken") is not None
 
 
+class _PathHitCursor(_WordCursor):
+    """Vocabulary without the term, but a path the term matches (a file name)."""
+
+    def fetchall(self):
+        sql = self.queries[-1][0]
+        if "word = ANY" in sql:
+            return super().fetchall()
+        if "FROM paths p" in sql:
+            return [(1,)]  # the bounded existence probe found a match
+        return []
+
+
+@pytest.mark.parametrize("query,intent", [
+    ("e04c07fc", {"has_operators": False, "has_quotes": False}),
+    ("alpha-report-e04c07fc.txt", {"has_operators": False, "has_quotes": False}),
+    ("report AND e04c07fc", {"has_operators": True, "has_quotes": False}),
+])
+def test_a_term_matching_a_file_name_is_never_short_circuited(query, intent):
+    """A vocabulary miss is not proof that nothing matches.
+
+    Interactive search also matches file names, file types, source and side
+    names, the stored raw text and the token table. A file named
+    ``alpha-report-e04c07fc.txt`` matched the query ``e04c07fc`` plainly, yet
+    the short-circuit answered zero results without running a query - the
+    existence probe is what makes the empty answer provable.
+    """
+    cursor = _PathHitCursor({"report"})
+    assert assess_indexed_vocabulary_short_circuit(
+        query=query,
+        intent=intent,
+        case_sensitive=False,
+        whole_word=False,
+        expansion_terms=[],
+        cursor=cursor,
+    ) is None
+
+
 def test_regex_not_short_circuited():
     assert looks_like_regex_pattern("rep[a-z]{2,4}")
     cursor = _WordCursor(set())

@@ -786,14 +786,22 @@ class JobManager:
             time.sleep(0.2)
         return self.repo.get(job_id)
 
-    def pause(self, job_id: str) -> Dict[str, Any]:
+    def pause(self, job_id: str, wait_seconds: float = 0.0) -> Dict[str, Any]:
+        """Request a pause and return the job.
+
+        The engine stops at its next checkpoint, which can take a long time
+        while a large file is in progress. The request therefore returns at once
+        (``wait_seconds=0``) and the job reaches PAUSED on its own; callers watch
+        the status. A caller that needs to wait can pass a bound. The old
+        behaviour blocked the HTTP worker for up to 30 s per click.
+        """
         job = self._require(job_id)
         if job["status"] != job_state.RUNNING:
             raise ValueError("Only RUNNING jobs can be paused")
         self.repo.update_fields(job_id, {"pause_requested": True})
         self._signal_engine(job_id, "pause")
-        deadline = time.time() + 30
-        while time.time() < deadline:
+        deadline = time.time() + max(0.0, float(wait_seconds))
+        while wait_seconds and time.time() < deadline:
             job = self.repo.get(job_id)
             if job and job["status"] in (job_state.PAUSED, job_state.CANCELLED,
                                          job_state.FAILED):

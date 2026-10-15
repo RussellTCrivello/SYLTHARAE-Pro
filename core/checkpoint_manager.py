@@ -6,6 +6,7 @@ from where it left off after power outages, device shutdowns, or other interrupt
 """
 
 import json
+import os
 import time
 import hashlib
 import threading
@@ -34,7 +35,8 @@ class CheckpointManager:
         folder_path: str,
         storage_source: Optional[str] = None,
         storage_side: Optional[str] = None,
-        auto_save_interval: int = 10
+        auto_save_interval: int = 10,
+        stable_members: bool = False,
     ):
         """
         Initialize checkpoint manager.
@@ -51,6 +53,10 @@ class CheckpointManager:
         self.storage_source = storage_source
         self.storage_side = storage_side
         self.auto_save_interval = auto_save_interval
+        #: Identify files by their path relative to ``folder_path`` and their
+        #: size, not by mtime. Used for archive members: their extraction-time
+        #: mtime changes on every run, which would make every member look new.
+        self.stable_members = stable_members
         
         # Thread-safe tracking
         self._lock = threading.Lock()
@@ -113,6 +119,28 @@ class CheckpointManager:
         except ValueError:
             return None
 
+    def _relative_to_folder(self, file_path: str) -> str:
+        """Path of ``file_path`` relative to the folder, normalized; falls back to the full path."""
+        try:
+            rel = os.path.relpath(os.path.abspath(file_path), str(self.folder_path))
+        except ValueError:
+            rel = file_path
+        return rel.replace('\\', '/').lower()
+
+    @staticmethod
+    def _exact_fingerprint(file_info: Dict[str, Any], file_path: str):
+        """(size, mtime_ns) for a file; (None, None) when it cannot be read."""
+        size = file_info.get('size_bytes')
+        mtime_ns = file_info.get('mtime_ns')
+        if size is None or mtime_ns is None:
+            try:
+                st = os.stat(file_path)
+                size = st.st_size if size is None else size
+                mtime_ns = st.st_mtime_ns if mtime_ns is None else mtime_ns
+            except (OSError, TypeError, ValueError):
+                return size, mtime_ns
+        return size, mtime_ns
+
     def _get_file_identifier(self, file_info: Dict[str, Any]) -> int:
         """
         Generate unique identifier for a file.
@@ -135,8 +163,22 @@ class CheckpointManager:
         # Path.resolve() is expensive and not necessary for checkpoint tracking
         # Normalize path separators to handle Windows/Unix differences
         normalized_path = file_path.replace('\\', '/').lower()
-        
-        identifier = f"{normalized_path}|{modified}"
+
+        if self.stable_members:
+            # Member of a container: identify it by where it sits inside the
+            # extraction folder and by its size. The mtime is set at extraction
+            # time, so it differs on every run and must not be part of the key.
+            rel = self._relative_to_folder(file_path)
+            size = file_info.get('size_bytes', file_info.get('size', ''))
+            identifier = f"member:{rel}|{size}"
+        else:
+            # 'modified' from file metadata is a calendar date (YYYY-MM-DD), so
+            # a file edited later the same day kept its identifier and was
+            # silently skipped on resume. Size and the exact mtime in
+            # nanoseconds are part of the identity. Read from disk when the
+            # caller did not supply them (one stat per file).
+            size, mtime_ns = self._exact_fingerprint(file_info, file_path)
+            identifier = f"{normalized_path}|{modified}|{size}|{mtime_ns}"
 
         # 96 bits of SHA-256, kept as an int.
         #
@@ -174,13 +216,15 @@ class CheckpointManager:
                 if is_new:
                     self._journal_handle.write(self._journal_header() + "\n")
             self._journal_handle.write(f"{file_id:x}\n")
-            self._journal_pending += 1
-            now = time.time()
-            if (self._journal_pending >= self.auto_save_interval
-                    or now - self._journal_last_flush >= self.journal_flush_interval):
-                self._journal_handle.flush()
-                self._journal_pending = 0
-                self._journal_last_flush = now
+            # Make every mark durable before returning. A file is only marked
+            # after its result is stored, so a process kill or power loss must
+            # never drop a mark: a lost mark means the file is stored again on
+            # resume. The cost is one fsync per processed file, which is small
+            # next to the time spent extracting and storing each file.
+            self._journal_handle.flush()
+            os.fsync(self._journal_handle.fileno())
+            self._journal_pending = 0
+            self._journal_last_flush = time.time()
         except Exception as exc:
             logger.warning(f"Checkpoint journal write failed (non-critical): {exc}")
             self._journal_handle = None

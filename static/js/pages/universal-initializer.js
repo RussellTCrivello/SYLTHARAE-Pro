@@ -25,15 +25,19 @@ const pageDetectors = [
         // Map routes to page types
         if (path.includes('/files') && !path.match(/\/file\/\d+/)) return 'files-list';
         if (path.match(/\/file\/\d+/)) return 'file-detail';
-        if (path.includes('/keywords') && !path.match(/\/keyword\/\d+/)) return 'keywords-list';
-        if (path.match(/\/keyword\/\d+/)) return 'keyword-detail';
+        // Detail routes are the plural resource path with a trailing id
+        // (/keywords/18, /words/21, /sources/62, /sides/42). Anchored, so a
+        // sub-page such as /keywords/18/documents or /keywords/add keeps its
+        // list-page mapping exactly as before.
+        if (path.match(/\/keywords\/\d+\/?$/)) return 'keyword-detail';
+        if (path.includes('/keywords') && !path.match(/\/keywords\/\d+\/?$/)) return 'keywords-list';
         if (path.match(/\/categories\/\d+\/words/)) return 'category-words';  // Must be before general /words check
-        if (path.includes('/words') && !path.match(/\/word\/\d+/)) return 'words-list';
-        if (path.match(/\/word\/\d+/)) return 'word-detail';
-        if (path.includes('/sources') && !path.match(/\/source\/\d+/)) return 'sources-list';
-        if (path.match(/\/source\/\d+/)) return 'source-detail';
-        if (path.includes('/sides') && !path.match(/\/side\/\d+/)) return 'sides-list';
-        if (path.match(/\/side\/\d+/)) return 'side-detail';
+        if (path.match(/\/words\/\d+\/?$/)) return 'word-detail';
+        if (path.includes('/words') && !path.match(/\/words\/\d+\/?$/)) return 'words-list';
+        if (path.match(/\/sources\/\d+\/?$/)) return 'source-detail';
+        if (path.includes('/sources') && !path.match(/\/sources\/\d+\/?$/)) return 'sources-list';
+        if (path.match(/\/sides\/\d+\/?$/)) return 'side-detail';
+        if (path.includes('/sides') && !path.match(/\/sides\/\d+\/?$/)) return 'sides-list';
         if (path === '/search/enhanced') return 'search-enhanced';
         if (path === '/search/advanced') return 'search-advanced';
         if (path === '/search') return 'search';
@@ -67,19 +71,28 @@ function moduleImportBust() {
 }
 
 // Page handler registry — every entry accepts cache-bust on soft-nav.
+// These detail pages load their own module from the page template (a plain
+// <script type="module">). Importing it here as well would create a second
+// module instance (the asset-version query makes a different URL), and each
+// instance binds its own DOMContentLoaded init. The handler therefore loads
+// nothing and lets the template's module run once.
+function templateOwnsModule() {
+    return Promise.resolve(null);
+}
+
 const pageHandlers = {
     'files-list': (bust) => import('./files-list-page.js' + (bust || '')),
     'file-types': (bust) => import('./file-types-page.js' + (bust || '')),
     'file-detail': (bust) => import('./file-detail-page.js' + (bust || '')),
     'keywords-list': (bust) => import('./keywords-list-page.js' + (bust || '')),
-    'keyword-detail': (bust) => import('./keyword-detail-page.js' + (bust || '')),
+    'keyword-detail': templateOwnsModule,
     'category-words': (bust) => import('./category-words-page.js' + (bust || '')),
     'words-list': (bust) => import('./words-list-page.js' + (bust || '')),
-    'word-detail': (bust) => import('./word-detail-page.js' + (bust || '')),
+    'word-detail': templateOwnsModule,
     'sources-list': (bust) => import('./sources-list-page.js' + (bust || '')),
-    'source-detail': (bust) => import('./source-detail-page.js' + (bust || '')),
+    'source-detail': templateOwnsModule,
     'sides-list': (bust) => import('./sides-list-page.js' + (bust || '')),
-    'side-detail': (bust) => import('./side-detail-page.js' + (bust || '')),
+    'side-detail': templateOwnsModule,
     'search': (bust) => import('./search-page.js' + (bust || '')),
     'search-enhanced': (bust) => import('./search-enhanced-page.js' + (bust || '')),
     'search-advanced': (bust) => import('./search-advanced-page.js' + (bust || '')),

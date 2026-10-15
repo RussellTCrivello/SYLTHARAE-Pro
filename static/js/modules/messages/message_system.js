@@ -21,11 +21,14 @@
         
         init() {
             // Create message container
+            // The cards live in the shared top-end notification stack when the
+            // page has one, so they never sit in a second corner of their own.
             if (!document.getElementById('message-container')) {
                 this.container = document.createElement('div');
                 this.container.id = 'message-container';
                 this.container.className = 'message-container';
-                document.body.appendChild(this.container);
+                const stack = document.querySelector('[data-toast-region]');
+                (stack || document.body).appendChild(this.container);
             } else {
                 this.container = document.getElementById('message-container');
             }

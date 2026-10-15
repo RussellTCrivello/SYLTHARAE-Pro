@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     {#- Soft-nav module cache-bust: bump when shipping JS that must re-init
         after in-app navigations (DocumentActions, analysis, export modules). -#}
-    <meta name="asset-version" content="20261004d">
+    <meta name="asset-version" content="20261015e">
     {#- Runs data-on-<event> handlers without inline script (RES-CSP-01).
         Synchronous and first, so every control drawn below is live. -#}
     <script src="{{ url_for('static', filename='js/modules/core/declarative-events.js') }}"></script>
@@ -212,7 +212,7 @@
         else - the page still performs the operation. -#}
     <script src="{{ url_for('static', filename='js/modules/core/confirm-dialog.js') }}?v=20260921a" defer></script>
     {#- Every action ends visibly. One region, one set of tones, text only. -#}
-    <script src="{{ url_for('static', filename='js/modules/core/toast.js') }}?v=20260921a" defer></script>
+    <script src="{{ url_for('static', filename='js/modules/core/toast.js') }}?v=20261015d" defer></script>
     {#- The actions a record offers: the question, the busy state and the
         toast. The page supplies what each action does; this supplies how it
         is asked for, and nothing else. -#}
@@ -286,6 +286,14 @@
     
     <!-- Sidebar Backdrop (for mobile overlay) -->
     <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
+    {#- One live region for the whole application: an action that finished
+        says so in one place, whatever page it happened on. It is placed
+        before #mainContent, not after the page: a soft navigation replaces the
+        children of #mainContent, and a region inside it lost every visible
+        toast. The region is position:fixed, so its placement does not move it. -#}
+    {% from 'components/toast.html' import toast_region %}
+    {{ toast_region() }}
 
     <!-- ========================================
          MAIN CONTENT AREA
@@ -557,11 +565,6 @@
     {{ screen_inspector(enabled=True, interface_id=inspector_interface) }}
     <script src="{{ url_for('static', filename='js/modules/core/screen-inspector-init.js') }}"></script>
     {% endif %}
-
-    {#- One live region for the whole application: an action that finished
-        says so in one place, whatever page it happened on. -#}
-    {% from 'components/toast.html' import toast_region %}
-    {{ toast_region() }}
 
     <!-- Page-Specific JavaScript -->
     {% block extra_js %}{% endblock %}

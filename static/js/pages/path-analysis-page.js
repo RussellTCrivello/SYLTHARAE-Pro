@@ -1650,6 +1650,14 @@ async function loadPathWords(pathName) {
             console.log('Ignoring stale words response for:', pathName);
             return;
         }
+
+        // A soft navigation can swap the page out while the request is in
+        // flight. The container we started with is then detached, and
+        // rendering into it would only produce "container not found" noise.
+        if (!wordCloud.isConnected) {
+            console.log('Words response arrived after the page was replaced; skipping render for:', pathName);
+            return;
+        }
         
         console.log('Words data received for path:', pathName, data);
         

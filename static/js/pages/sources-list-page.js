@@ -2,6 +2,8 @@
  * Sources List Page JavaScript
  * Extracted from Sources/sources_list.html
  */
+import { getCSRFToken } from '../modules/core/utils.js';
+
 
 // Load translations from JSON script tag
 let translations = {};
@@ -24,10 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Sources list page loaded');
 });
 
-
 // Toast notification helper function
 function showToast(message, type = 'info', duration = 4000) {
-    const toastContainer = document.getElementById('toastContainer');
+    const toastContainer = (document.querySelector('[data-toast-region]') || document.getElementById('toastContainer'));
     if (!toastContainer) {
         const container = document.createElement('div');
         container.id = 'toastContainer';
@@ -63,7 +64,7 @@ function showToast(message, type = 'info', duration = 4000) {
         </div>
     `;
     
-    document.getElementById('toastContainer').insertAdjacentHTML('beforeend', toastHtml);
+    (document.querySelector('[data-toast-region]') || document.getElementById('toastContainer')).insertAdjacentHTML('beforeend', toastHtml);
     const toastElement = document.getElementById(toastId);
     const toast = new bootstrap.Toast(toastElement, { delay: duration });
     toast.show();
@@ -241,13 +242,7 @@ window.viewSourceCategoriesKeywords = viewSourceCategoriesKeywords;
 window.viewSource = viewSource;
 window.editSource = editSource;
 
-
-
 // ✅ SECURITY: Helper function to get CSRF token
-function getCSRFToken() {
-    const metaTag = document.querySelector('meta[name="csrf-token"]');
-    return metaTag ? metaTag.getAttribute('content') : '';
-}
 
 function duplicateSource(sourceId) {
     if (confirm(translations.createCopyOfSource)) {

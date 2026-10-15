@@ -191,7 +191,8 @@
         total_pages=total_pages|default(1),
         total_count=total_sources|default(0),
         rows_shown=sources|length,
-        append=True) %}
+        append=True,
+        pager=True) %}
     {% for source in sources %}
     {% set stars = ((source.importance or 0) * 5)|round|int %}
     <tr class="source-item" data-source-id="{{ source.id }}">
@@ -260,7 +261,8 @@
         {% if search %}{% set extra_param = pagination_params.update({'search': search}) %}{% endif %}
         {% if sort_by and sort_by != 'importance' %}{% set extra_param = pagination_params.update({'sort': sort_by, 'order': sort_order}) %}
         {% elif sort_order != 'desc' %}{% set extra_param = pagination_params.update({'sort': 'importance', 'order': sort_order}) %}{% endif %}
-        {{ unified_pagination(page, total_pages, url_for, 'sources_list', pagination_params) }}
+        {{ unified_pagination(page, total_pages, url_for, 'sources_list', pagination_params,
+            table_id='sourcesTable', total_count=total_sources|default(0), rows_shown=sources|length, page_size=per_page) }}
     {% endif %}
 </div>
 
@@ -435,7 +437,6 @@
 </div>
 
 <!-- Toast Container -->
-<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;" id="toastContainer"></div>
 
 {% endblock %}
 
@@ -473,6 +474,6 @@
         "errorSavingSource": _('Error saving source')
     }
 }|tojson }}</script>
-<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20260929a" defer></script>
+<script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261014b" defer></script>
 <script type="module" src="{{ url_for('static', filename='js/pages/sources-list-page.js') }}"></script>
 {% endblock %}

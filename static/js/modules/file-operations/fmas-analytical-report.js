@@ -14,6 +14,9 @@ const FINISHED = new Set(['COMPLETED', 'COMPLETED_WITH_WARNINGS', 'FAILED', 'CAN
 const JOB_POLL_MS = 1500;
 const JOB_POLL_LIMIT = 400;
 
+// Must match core/criteria/model.py MAX_IDS_PER_DIMENSION (tests enforce it).
+const MAX_REPORT_FILES = 1000;
+
 const REPORT_CHOICES = [
     {
         id: 'entry_content',
@@ -257,6 +260,12 @@ async function submitReport() {
     const pathIds = pendingPathIds || [];
     if (!pathIds.length) {
         throw new Error(t('pleaseSelectFilesToExport', 'Please select files first'));
+    }
+    // The server refuses more than MAX_REPORT_FILES ids in one criteria set
+    // (core/criteria/model.py MAX_IDS_PER_DIMENSION). Say so before sending.
+    if (pathIds.length > MAX_REPORT_FILES) {
+        throw new Error(t('tooManyFilesForReport',
+            `Select at most ${MAX_REPORT_FILES} files for one report.`));
     }
 
     const kind = dialog.querySelector('#fmasReportKind').value;

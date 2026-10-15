@@ -12,6 +12,7 @@ from Api.utils import (
 )
 import logging
 from core.errors import client_error, client_safe_message
+from core.table_paging import DEFAULT_PAGE_SIZE, fetch_page, read_page_request
 
 logger = logging.getLogger(__name__)
 
@@ -22,16 +23,11 @@ def register_categories_routes(app):
     def categories_list():
         """Category Management Page — server-side search, sort and pagination"""
         try:
-            page = request.args.get('page', 1, type=int)
-            per_page = request.args.get('per_page', 20, type=int)
+            req = read_page_request(request.args, request.headers)
             search = request.args.get('search', '').strip()
             sort_by = request.args.get('sort', 'files')
             sort_order = request.args.get('order', 'desc')
 
-            if page < 1:
-                page = 1
-            if per_page < 1 or per_page > 200:
-                per_page = 20
             if sort_by not in ('name', 'files', 'words', 'id'):
                 sort_by = 'files'
             if sort_order not in ('asc', 'desc'):
@@ -39,15 +35,18 @@ def register_categories_routes(app):
             if len(search) > 500:
                 search = search[:500]
 
-            categories, total_categories = get_categories_paged(
-                search=search if search else None,
-                page=page,
-                per_page=per_page,
-                sort_by=sort_by,
-                sort_order=sort_order
+            result = fetch_page(
+                lambda page, size: get_categories_paged(
+                    search=search if search else None,
+                    page=page,
+                    per_page=size,
+                    sort_by=sort_by,
+                    sort_order=sort_order
+                ),
+                req,
             )
-
-            total_pages = ((total_categories - 1) // per_page) + 1 if total_categories > 0 else 1
+            categories, total_categories = result.rows, result.total
+            page, per_page, total_pages = result.page, result.size, result.total_pages
 
             return render_template('Category/categories_list.html',
                                  categories=categories,
@@ -65,7 +64,7 @@ def register_categories_routes(app):
             return render_template('Category/categories_list.html',
                                  categories=[],
                                  page=1,
-                                 per_page=20,
+                                 per_page=DEFAULT_PAGE_SIZE,
                                  total_pages=1,
                                  total_categories=0,
                                  search='',
@@ -105,16 +104,11 @@ def register_categories_routes(app):
                 flash('Category not found', 'error')
                 return redirect(url_for('categories_list'))
 
-            page = request.args.get('page', 1, type=int)
-            per_page = request.args.get('per_page', 20, type=int)
+            req = read_page_request(request.args, request.headers)
             search = request.args.get('search', '').strip()
             sort_by = request.args.get('sort', 'word')
             sort_order = request.args.get('order', 'asc')
 
-            if page < 1:
-                page = 1
-            if per_page < 1 or per_page > 200:
-                per_page = 20
             if sort_by not in ('word', 'usage_count', 'id'):
                 sort_by = 'word'
             if sort_order not in ('asc', 'desc'):
@@ -122,16 +116,19 @@ def register_categories_routes(app):
             if len(search) > 500:
                 search = search[:500]
 
-            words, total_words = get_words_by_category_paged(
-                category_id,
-                search=search if search else None,
-                page=page,
-                per_page=per_page,
-                sort_by=sort_by,
-                sort_order=sort_order
+            result = fetch_page(
+                lambda page, size: get_words_by_category_paged(
+                    category_id,
+                    search=search if search else None,
+                    page=page,
+                    per_page=size,
+                    sort_by=sort_by,
+                    sort_order=sort_order
+                ),
+                req,
             )
-
-            total_pages = ((total_words - 1) // per_page) + 1 if total_words > 0 else 1
+            words, total_words = result.rows, result.total
+            page, per_page, total_pages = result.page, result.size, result.total_pages
 
             return render_template('Category/category_words.html',
                                  category=category,

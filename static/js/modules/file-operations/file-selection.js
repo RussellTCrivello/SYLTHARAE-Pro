@@ -240,11 +240,13 @@ function updateSelectedCount() {
 /**
  * Initialize file selection handlers
  */
-let selectionWired = false;
 
 export function initializeFileSelection() {
-    if (selectionWired) return;   // re-init must not pile up listeners
-    selectionWired = true;
+    // Marker on <html>, not a module variable: each soft-nav revisit can
+    // re-evaluate this module, which would reset a module-scoped flag and
+    // pile up another document-level change listener.
+    if (document.documentElement.dataset.fileSelectionWired) return;
+    document.documentElement.dataset.fileSelectionWired = '1';
     // Add change handlers to checkboxes
     document.addEventListener('change', (e) => {
         if (e.target.classList.contains('file-checkbox')

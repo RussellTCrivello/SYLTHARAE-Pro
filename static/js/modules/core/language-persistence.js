@@ -20,22 +20,10 @@ class LanguagePersistence {
             return;
         }
 
-        // CRITICAL: Check sessionStorage FIRST (before HTML) to get user's explicit choice
-        // This ensures we respect user's explicit selection even if HTML says something else
-        try {
-            const stored = sessionStorage.getItem('userLanguage');
-            const wasExplicit = sessionStorage.getItem('userExplicitLanguage') === 'true';
-            
-            if (stored && this.isValidLanguage(stored)) {
-                this.currentLanguage = stored;
-                if (wasExplicit) {
-                    this.userExplicitlySetLanguage = true;
-                    console.log(`✅ Language Persistence: Detected explicit user language from sessionStorage: ${stored}`);
-                }
-            }
-        } catch (e) {
-            console.warn('Could not read sessionStorage during init:', e);
-        }
+        // The server renders the page in the language of the latest explicit
+        // choice (the user_language cookie). On load that rendered language is
+        // authoritative; a stale sessionStorage value must not override it.
+        this.syncFromServerRenderedLanguage();
 
         // Get current language from multiple sources (if not already set from sessionStorage)
         if (!this.currentLanguage) {
@@ -62,24 +50,36 @@ class LanguagePersistence {
     }
 
     /**
+     * Adopt the language the server rendered and align sessionStorage with it.
+     * Returns false when the page has no valid language attribute.
+     */
+    syncFromServerRenderedLanguage() {
+        const htmlLang = document.documentElement.getAttribute('lang');
+        if (!htmlLang || !this.isValidLanguage(htmlLang)) {
+            return false;
+        }
+        this.currentLanguage = htmlLang;
+        try {
+            if (sessionStorage.getItem('userLanguage') !== htmlLang) {
+                sessionStorage.setItem('userLanguage', htmlLang);
+                sessionStorage.setItem('languageChangeTime', Date.now().toString());
+            }
+            if (sessionStorage.getItem('userExplicitLanguage') === 'true') {
+                this.userExplicitlySetLanguage = true;
+            }
+        } catch (e) {
+            console.warn('Could not align sessionStorage with the rendered language:', e);
+        }
+        return true;
+    }
+
+    /**
      * Detect current language from multiple sources
      */
     detectCurrentLanguage() {
-        // Priority 1: Check sessionStorage (user's explicit choice) - HIGHEST PRIORITY
-        try {
-            const stored = sessionStorage.getItem('userLanguage');
-            const wasExplicit = sessionStorage.getItem('userExplicitLanguage') === 'true';
-            
-            if (stored && this.isValidLanguage(stored)) {
-                this.currentLanguage = stored;
-                if (wasExplicit) {
-                    this.userExplicitlySetLanguage = true;
-                    console.log(`✅ Detected explicit user language from sessionStorage: ${stored}`);
-                }
-                return;
-            }
-        } catch (e) {
-            console.warn('Could not read sessionStorage:', e);
+        // Priority 1: the server-rendered language (authoritative on load)
+        if (this.syncFromServerRenderedLanguage()) {
+            return;
         }
 
         // Priority 2: Check HTML lang attribute (server-rendered)

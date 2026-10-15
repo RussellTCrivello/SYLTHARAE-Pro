@@ -20,6 +20,10 @@ def setup_client():
         static_folder=str(PROJECT_ROOT / "static"),
     )
     app.config.update(TESTING=True, SECRET_KEY="setup-route-test-secret")
+    # The setup API translates its messages with flask_babel, which needs Babel
+    # registered on the app (the production app always does this).
+    from flask_babel import Babel
+    Babel(app)
     app.jinja_env.globals.update(
         _=lambda message, **values: message % values if values else message,
         csrf_token=lambda: "setup-test-csrf-token",

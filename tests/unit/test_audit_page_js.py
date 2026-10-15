@@ -18,4 +18,4 @@ def test_audit_page_renders_server_state_as_text():
     proc = subprocess.run(["node", "tests/js/audit_page_smoke.mjs"], cwd=ROOT,
                           capture_output=True, text=True, timeout=60)
     assert proc.returncode == 0, proc.stdout + proc.stderr
-    assert proc.stdout.count("ok ") == 19, proc.stdout
+    assert proc.stdout.count("ok ") == 21, proc.stdout

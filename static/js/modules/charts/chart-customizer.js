@@ -954,6 +954,18 @@
     }
 
     /**
+     * True when a chart can still be customised: it exists, it has a canvas,
+     * and that canvas is still on the page. Chart.js clears `canvas` when a
+     * chart is destroyed (for example when its type is changed and it is
+     * rebuilt), and a soft navigation can remove the canvas. A deferred caller
+     * checks this when its timer fires, so a replaced chart is skipped instead
+     * of raising "Chart canvas is required".
+     */
+    function isAttachable(chart) {
+        return !!(chart && chart.canvas && chart.canvas.isConnected && chart.config);
+    }
+
+    /**
      * Attach customization button to chart controls
      * Now creates controls if they don't exist
      * FIXED: Better validation and error handling
@@ -1636,6 +1648,7 @@
     // Export functions
     window.ChartCustomizer = {
         attachCustomizationButton: attachCustomizationButton,
+        isAttachable: isAttachable,
         attachCustomizationButtonsToAllCharts: attachCustomizationButtonsToAllCharts,
         attachCustomizerEventListeners: attachCustomizerEventListeners,
         attachListenersToAllPanels: attachListenersToAllPanels,

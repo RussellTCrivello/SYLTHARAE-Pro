@@ -3,6 +3,9 @@
  * Extracted from Keyword/keywords_list.html
  */
 
+import { getCSRFToken } from '../modules/core/utils.js';
+import { settingsReady } from '../modules/core/system-settings.js';
+
 // Load translations from JSON script tag
 let translations = {};
 
@@ -98,11 +101,6 @@ if (typeof window.translations === 'undefined') {
         const pageFromUrl = parseInt(urlParams.get('page')) || 1;
         currentPage = pageFromUrl;
         
-        // ✅ FIXED: Initialize currentPerPage from select element
-        if (perPageSelect) {
-            currentPerPage = parseInt(perPageSelect.value) || 10;
-        }
-
         // ✅ FIXED: Update sort icons to reflect current sort state
         updateSortIcons();
 
@@ -122,9 +120,47 @@ if (typeof window.translations === 'undefined') {
         // ✅ FIXED: Create pagination container on init to ensure it's always visible
         createPaginationContainer();
         
-        loadCategories();
-        fetchPage(pageFromUrl);
+        // The saved page size is written into the select once the settings
+        // have loaded. Read the select and make the first request only after
+        // that, so the request, the select and the rows agree on one size.
+        settingsReady.then(() => {
+            if (perPageSelect) {
+                currentPerPage = parseInt(perPageSelect.value) || 10;
+            }
+            loadCategories();
+            fetchPage(pageFromUrl);
+        });
         setupEventListeners();
+        wireLoadMoreInfo();
+    }
+
+    // Show More appends rows through the shared table engine, which reports the
+    // visible and total counts. The info line must follow those counts, not
+    // stay on the last fetched range.
+    let loadMoreInfoWired = false;
+    function wireLoadMoreInfo() {
+        if (loadMoreInfoWired) return;
+        loadMoreInfoWired = true;
+        document.addEventListener('ut:loadmore', (event) => {
+            const detail = event.detail || {};
+            if (detail.table !== TABLE_ID) return;
+            const infoEl = document.getElementById('searchResultsInfo');
+            if (!infoEl) return;
+            const shown = Math.max(0, detail.shown || 0);
+            const total = Math.max(0, detail.total || 0);
+            const first = Math.max(1, detail.first || 1);
+            const last = first + shown - 1;
+            const query = searchInput.value.trim();
+            if (shown === 0) {
+                infoEl.textContent = query
+                    ? `Found ${total} result${total !== 1 ? 's' : ''} for "${query}"`
+                    : `${translations.showing} 0 ${translations.of} ${total} ${translations.keywords}`;
+                return;
+            }
+            infoEl.textContent = query
+                ? `Found ${total} result${total !== 1 ? 's' : ''} for "${query}" (${first}–${last})`
+                : `${translations.showing} ${first}–${last} ${translations.of} ${total} ${translations.keywords}`;
+        });
     }
     
     // Update sort icons to reflect current sort state
@@ -329,7 +365,7 @@ if (typeof window.translations === 'undefined') {
         UnifiedTable.renderRows(tableBody, rows);
     }
 
-    function renderPaginator(page, total_pages) {
+    function renderPaginator(page, total_pages, loadMore = {}) {
         console.log(`renderPaginator called: page=${page}, total_pages=${total_pages}`);
 
         // ✅ FIXED: Validate pagination inputs
@@ -396,6 +432,11 @@ if (typeof window.translations === 'undefined') {
             module.renderUnifiedPagination({
                 currentPage: page,
                 totalPages: total_pages,
+                // One control: the table's Load More is rendered by the pager.
+                tableId: 'keywordsTable',
+                pageSize: currentPerPage,
+                totalCount: loadMore.total ?? 0,
+                rowsShown: loadMore.shown ?? 0,
                 containerId: paginationContainer.id,
                 onPageChange: (targetPage) => {
                     console.log('Pagination page change callback triggered:', targetPage);
@@ -671,7 +712,7 @@ if (typeof window.translations === 'undefined') {
                     }
                     renderRows(keywords, pageNum);
                     console.log(`Rendering pagination for page ${pageNum} of ${totalPages}`);
-                    renderPaginator(pageNum, totalPages);
+                    renderPaginator(pageNum, totalPages, { total: json.total, shown: keywords.length });
                     updateSearchInfo(json);
 
                     // STALE-01: keep the server-rendered "Total Keywords" stat
@@ -697,7 +738,14 @@ if (typeof window.translations === 'undefined') {
                 }
             })
             .catch(err => {
+                // Cancelled by a newer request: expected, not a failure.
                 if (err.name === 'AbortError') return;
+                // A failure from a request that is no longer current must not
+                // replace the results of the newer request.
+                if (sequence !== requestSequence) {
+                    console.log(`Ignoring failed stale request ${sequence}`);
+                    return;
+                }
                 console.error('Fetch error', err);
                 if (tableBody && window.UnifiedTable) {
                     UnifiedTable.renderRows(tableBody, [
@@ -714,15 +762,23 @@ if (typeof window.translations === 'undefined') {
     function updateSearchInfo(json) {
         const infoEl = document.getElementById('searchResultsInfo');
         if (infoEl) {
-            const start = ((json.page - 1) * json.per_page) + 1;
-            const end = start + ((json.keywords || []).length) - 1;
             const total = json.total || 0;
             const query = searchInput.value.trim();
-            
+            // A range only exists when there are rows to number. Zero results
+            // must never read "1–0".
+            const shown = (json.keywords || []).length;
+            const start = shown > 0 ? ((json.page - 1) * json.per_page) + 1 : 0;
+            const end = shown > 0 ? start + shown - 1 : 0;
+
             if (query) {
-                infoEl.textContent = `Found ${total} result${total !== 1 ? 's' : ''} for "${query}" (${start}–${end})`;
+                const noun = `result${total !== 1 ? 's' : ''}`;
+                infoEl.textContent = shown > 0
+                    ? `Found ${total} ${noun} for "${query}" (${start}–${end})`
+                    : `Found ${total} ${noun} for "${query}"`;
             } else {
-                infoEl.textContent = `${translations.showing} ${start}–${end} ${translations.of} ${total} ${translations.keywords}`;
+                infoEl.textContent = shown > 0
+                    ? `${translations.showing} ${start}–${end} ${translations.of} ${total} ${translations.keywords}`
+                    : `${translations.showing} 0 ${translations.of} ${total} ${translations.keywords}`;
             }
         }
     }
@@ -1377,11 +1433,6 @@ if (typeof window.translations === 'undefined') {
         return div.innerHTML;
     }
 
-    function getCSRFToken() {
-        const metaTag = document.querySelector('meta[name="csrf-token"]');
-        return metaTag ? metaTag.getAttribute('content') : '';
-    }
-
     async function getCSRFTokenAsync() {
         const metaToken = document.querySelector('meta[name="csrf-token"]');
         if (metaToken) {
@@ -1404,7 +1455,7 @@ if (typeof window.translations === 'undefined') {
     }
 
     function showToast(message, type = 'info', duration = 4000) {
-        let toastContainer = document.getElementById('toastContainer');
+        let toastContainer = (document.querySelector('[data-toast-region]') || document.getElementById('toastContainer'));
         if (!toastContainer) {
             toastContainer = document.createElement('div');
             toastContainer.id = 'toastContainer';

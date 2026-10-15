@@ -914,7 +914,9 @@ def api_file_type_statistics():
         return jsonify({
             'success': True,
             'types': rows,
+            # Every indexed document, unfiltered: the page's totals are dataset-wide.
             'total_files': sum(row['file_count'] for row in rows),
+            'total_files_scope': 'dataset',
         })
     except Exception as error:
         logger.error('Could not load file-type statistics: %s', error, exc_info=True)
@@ -2825,6 +2827,79 @@ def delete_file(file_id):
         
     except Exception as e:
         logger.error(f"Error deleting file {file_id}: {e}", exc_info=True)
+        return client_error(e, subsystem='Api.blueprints.files', success_key='success', status=500)
+
+
+def _same_context_service():
+    from database.services.contents_db_service import ContentDBService
+    return ContentDBService()._dedup_session()
+
+
+@files_bp.route('/api/files/same-context-duplicates', methods=['GET'])
+def same_context_duplicates_preview():
+    """Preview the repetitions inside each (source, side): what would go, what stays.
+
+    Read-only. A repetition is the same content recorded more than once in one
+    source and one side; the earliest occurrence is kept.
+
+    The preview names files and ids across the whole corpus, so it is limited
+    to the roles that may remove them (admin, analyst). Viewers get 403.
+    """
+    from core.security import current_user
+    user = current_user()
+    if not (user and user.has_role('admin', 'analyst')):
+        return jsonify({'success': False, 'error': 'Not permitted'}), 403
+    try:
+        with _same_context_service() as dedup:
+            groups = dedup.same_context_duplicates()
+        sample = [
+            {
+                'source': g['source'], 'side': g['side'],
+                'file_name': g['file_names'][0],
+                'kept_id': g['keep_id'],
+                'removed_ids': g['remove_ids'],
+                'copies': len(g['remove_ids']) + 1,
+            }
+            for g in groups[:50]
+        ]
+        return jsonify({
+            'success': True,
+            'groups': len(groups),
+            'to_remove': sum(len(g['remove_ids']) for g in groups),
+            'sample': sample,
+        })
+    except Exception as e:
+        logger.error(f"Error previewing same-context duplicates: {e}", exc_info=True)
+        return client_error(e, subsystem='Api.blueprints.files', success_key='success', status=500)
+
+
+@files_bp.route('/api/files/same-context-duplicates/remove', methods=['POST'])
+def same_context_duplicates_remove():
+    """Remove the repetitions inside each (source, side), keeping one occurrence.
+
+    Analysts and admins only. Original files on disk are never touched, and
+    the extracted text is kept because one occurrence always remains.
+    """
+    from core.security import current_user
+    user = current_user()
+    if not (user and user.has_role('admin', 'analyst')):
+        return jsonify({'success': False, 'error': 'Not permitted'}), 403
+    try:
+        with _same_context_service() as dedup:
+            result = dedup.remove_same_context_duplicates()
+        try:
+            get_query().clear()
+        except Exception as e:
+            logger.warning(f"Could not clear cache after same-context cleanup: {e}")
+        logger.info(f"Same-context duplicate cleanup: {result}")
+        return jsonify({
+            'success': True,
+            'groups': result['groups'],
+            'removed': result['removed'],
+            'message': f"Removed {result['removed']} repeated file record(s) in {result['groups']} group(s).",
+        })
+    except Exception as e:
+        logger.error(f"Error removing same-context duplicates: {e}", exc_info=True)
         return client_error(e, subsystem='Api.blueprints.files', success_key='success', status=500)
 
 

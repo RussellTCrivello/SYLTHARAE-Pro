@@ -67,10 +67,76 @@ function bindFilesListWindowExports() {
             FileManagement.changeFilesPageSize();
         }
     };
+    window.removeSameContextDuplicates = removeSameContextDuplicates;
     if (typeof FileManagement.applyFilters === 'function') {
         const bound = FileManagement.applyFilters.bind(FileManagement);
         window.applyFileFilters = bound;
         window.applyFilters = bound;
+    }
+}
+
+/**
+ * Remove the repeats inside each (source, side): one file recorded more than
+ * once in the same source and the same side keeps its earliest record, and the
+ * rest are removed. Files from another source or side are never touched.
+ *
+ * The reader sees the exact numbers first (a read-only preview), then confirms.
+ * Nothing is deleted without that confirmation.
+ */
+async function removeSameContextDuplicates() {
+    const toast = (message, tone) => {
+        if (!window.Toast) return;
+        if (tone === 'error') window.Toast.error(message);
+        else if (tone === 'success') window.Toast.success(message);
+        else if (window.Toast.info) window.Toast.info(message);
+    };
+    const csrf = () => {
+        if (window.CSRF && typeof window.CSRF.getToken === 'function') return window.CSRF.getToken();
+        const meta = document.querySelector('meta[name="csrf-token"]');
+        return meta ? meta.getAttribute('content') : '';
+    };
+
+    let preview;
+    try {
+        const response = await fetch('/api/files/same-context-duplicates', {
+            credentials: 'same-origin',
+            headers: { Accept: 'application/json' },
+        });
+        preview = await response.json();
+        if (!response.ok || !preview.success) throw new Error(preview.error || 'preview failed');
+    } catch (_error) {
+        toast(translations.duplicatePreviewFailed || 'The repeated files could not be checked.', 'error');
+        return;
+    }
+
+    if (!preview.to_remove) {
+        toast(translations.noRepeatedFiles || 'No file repeats inside one source and side.', 'info');
+        return;
+    }
+
+    const confirmed = await window.ConfirmDialog.request({
+        root: 'sameContextDuplicatesDialog',
+        title: translations.removeRepeatsTitle || 'Remove exact repeats in the same source and side?',
+        message: (translations.removeRepeatsMessage
+            || 'Records with the same name, content and details, in the same source and the same side, are removed; one record is kept. Records with another name, source or side are not touched. Original files on disk are not deleted.')
+            + ` ${preview.to_remove} record(s) in ${preview.groups} group(s).`,
+        dangerous: true,
+    });
+    if (!confirmed) return;
+
+    try {
+        const response = await fetch('/api/files/same-context-duplicates/remove', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { Accept: 'application/json', 'X-CSRFToken': csrf() },
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.success) throw new Error(result.error || 'remove failed');
+        toast(result.message || `Removed ${result.removed} repeated file record(s).`, 'success');
+        if (window.refreshMainContent) window.refreshMainContent();
+        else window.location.reload();
+    } catch (_error) {
+        toast(translations.duplicateRemoveFailed || 'The exact repeats could not be removed.', 'error');
     }
 }
 

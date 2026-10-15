@@ -54,6 +54,24 @@ class NotificationSystem {
             onClose = null
         } = options;
 
+        // One notification stack for the whole app. Every page's showSuccess and
+        // notification call lands in the top-end stack (core/toast.js), not in a
+        // second container at the bottom of the page.
+        if (window.Toast) {
+            const tone = ['success', 'error', 'warning', 'info'].includes(type) ? type : 'info';
+            window.Toast.show({
+                tone: tone,
+                title: title || undefined,
+                message: message,
+                persistent: !!persistent,
+                timeout: persistent ? undefined : duration,
+                actionLabel: action && action.label ? action.label : undefined,
+                onAction: action && typeof action.callback === 'function' ? action.callback : undefined,
+                dismissible: true
+            });
+            return null;
+        }
+
         // Remove oldest notification if at max
         if (this.notifications.length >= this.maxNotifications) {
             this.remove(this.notifications[0].id);

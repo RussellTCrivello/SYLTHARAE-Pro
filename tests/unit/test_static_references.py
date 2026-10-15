@@ -53,6 +53,16 @@ def test_the_scan_finds_references():
 def test_referenced_static_file_exists(name):
     target = (STATIC / name).resolve()
     assert STATIC.resolve() in target.parents, f"{name} escapes static/"
+    if name.endswith("/"):
+        # A trailing slash names a directory, not a file: navigation-swap.js
+        # tests a script's path against the ``/static/js/pages/`` prefix
+        # (``path.indexOf(...)``), which requests nothing and 404s nothing.
+        # The directory must exist; the stricter file check below is for
+        # references that name a file.
+        assert target.is_dir(), (
+            f"static/{name} is referenced by {sorted(REFERENCES[name])} "
+            f"as a directory but does not exist")
+        return
     assert target.is_file(), (
         f"static/{name} is referenced by {sorted(REFERENCES[name])} but does not exist")
 

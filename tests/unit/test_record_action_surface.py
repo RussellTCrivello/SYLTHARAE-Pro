@@ -593,8 +593,17 @@ class TestTheRecordPageRendersThem:
         assert "saveMetadata" not in html
         assert "Metadata saved successfully" not in html
         assert 'id="metaNotes"' not in html, "notes typed here would be discarded"
-        name = re.search(r'<input[^>]*id="metaName"[^>]*>', html)
-        assert name and "readonly" in name.group(0)
+        assert 'id="metaName"' not in html, "a name field would discard edits"
+        # The remediation removed the form outright rather than leaving a
+        # read-only field behind: the panel renders identity from the payload
+        # (static/js/modules/file-operations/file-details-panels.js), so it
+        # must hold no input at all. The retired strings survive only as
+        # obsolete catalog entries in translations/*/LC_MESSAGES/messages.po.
+        panel = re.search(r'id="fileDetailInspector".*?</details>', html, re.S)
+        assert panel and 'id="pageFileMetadataSection"' in panel.group(0), (
+            "the record page keeps its metadata panel")
+        assert "<input" not in panel.group(0), (
+            "the metadata panel is read-only presentation; no route stores edits")
         script = (PROJECT_ROOT / "static/js/pages/file-detail-page.js").read_text(encoding="utf-8")
         assert "function saveMetadata" not in script
 

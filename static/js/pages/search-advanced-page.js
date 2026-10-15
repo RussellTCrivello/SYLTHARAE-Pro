@@ -14,6 +14,7 @@ import {
     iconForFileType,
 } from '../modules/ui/multi-select-dropdown.js';
 import { onPageTeardown } from '../modules/core/page-lifecycle.js';
+import { escapeHtml } from '../modules/core/utils.js';
 
 const ADVANCED_MULTI_SELECT_IDS = [
     'fileType',
@@ -1031,6 +1032,7 @@ async function executeAdvancedSearch(preservePage = false) {
         searchState.nextCursor = null;
         searchState.fetchWithCursor = null;
     }
+    if (!preservePage) resetResultsScroll();
     const sort = getAdvancedSortDefinition();
     const definition = {
         query,
@@ -1348,7 +1350,9 @@ function displayResults(results, pagination) {
     
     if (!section || !container) return;
     
-    section.style.display = 'block';
+    // Cleared (not 'block') so the desktop stylesheet can lay the section out as
+    // a fixed-height panel; the hidden state is still set inline by resetAllFilters.
+    section.style.display = '';
     
     if (countEl) {
         const approx = pagination?.total_is_approximate;
@@ -1755,6 +1759,11 @@ async function removeAnalystCategoriesFromSelection() {
 
 // Lightweight toast for categorization feedback
 function showAnalystToast(message) {
+    // One notification stack for the whole app: use it when the shell has it.
+    if (window.Toast) {
+        window.Toast.success(message);
+        return;
+    }
     let toast = document.getElementById('analystActionToast');
     if (!toast) {
         toast = document.createElement('div');
@@ -1856,6 +1865,7 @@ function updatePagination(pagination) {
                     searchState.fetchWithCursor = null;
                 }
                 searchState.currentPage = page;
+                resetResultsScroll();
                 executeAdvancedSearch(true);
             },
             urlParams: {},
@@ -1911,12 +1921,13 @@ function resetAllFilters() {
 // Feeling lucky (get first result) — opens in a NEW tab so the search
 // page (and its results) stay intact.
 async function feelingLucky() {
+    const chosenPerPage = searchState.resultsPerPage;
     searchState.resultsPerPage = 1;
     await executeAdvancedSearch();
     if (searchState.results.length > 0) {
         window.open(fileDetailHref(searchState.results[0].id), '_blank', 'noopener');
     }
-    searchState.resultsPerPage = 20;
+    searchState.resultsPerPage = chosenPerPage;
 }
 
 // Load search history
@@ -1963,6 +1974,28 @@ async function saveToSearchHistory(query, filters) {
 function sortResults() {
     searchState.currentPage = 1;
     executeAdvancedSearch();
+}
+
+// Results per page (20 / 50 / 100 / 200 / 500). The choice is sent as per_page,
+// so the page, the exports and the server's paging all use the same size.
+const RESULTS_PAGE_SIZES = [20, 50, 100, 200, 500];
+
+function changeResultsPerPage(value) {
+    const size = Number(value);
+    if (!RESULTS_PAGE_SIZES.includes(size)) return;
+    searchState.resultsPerPage = size;
+    // Cursors belong to the old page size; start again from page 1.
+    searchState.currentPage = 1;
+    searchState.nextCursor = null;
+    searchState.fetchWithCursor = null;
+    executeAdvancedSearch();
+}
+
+// The results list is the only scroll region on desktop; return it to the top
+// whenever the content it shows is replaced (new search, page turn, sort).
+function resetResultsScroll() {
+    const container = document.getElementById('resultsContainer');
+    if (container) container.scrollTop = 0;
 }
 
 function toggleDuplicateFilter(_enabled) {
@@ -2387,11 +2420,6 @@ function printResults() {
 // Helper function to escape CSV values
 
 // Helper function to escape HTML
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
 
 // Attribute-context escaper: escapeHtml (innerHTML text serialization)
 // leaves quotes intact, which would let a crafted filename break out of
@@ -3623,6 +3651,7 @@ if (typeof window !== 'undefined') {
     window.toggleFiltersPanel = toggleFiltersPanel;
     window.feelingLucky = feelingLucky;
     window.sortResults = sortResults;
+    window.changeResultsPerPage = changeResultsPerPage;
     window.exportResults = exportResults;
     window.exportMatchingFilenames = exportMatchingFilenames;
     window.setSearchExportColumns = setSearchExportColumns;

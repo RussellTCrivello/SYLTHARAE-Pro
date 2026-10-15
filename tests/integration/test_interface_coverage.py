@@ -470,7 +470,13 @@ class TestTheEvidenceReport:
         embedded = document.split(BEGIN_APPLICATION, 1)[1].split(END_APPLICATION, 1)[0].strip()
 
         if self._writing():
-            self.REPORT.write_text(document.replace(embedded, generated))
+            # splice() replaces exactly what sits between the markers. A bare
+            # document.replace(embedded, generated) is a trap when the block is
+            # still empty: replacing "" inserts the whole generated text between
+            # every character of the document.
+            from core.interfaces.evidence import splice
+
+            self.REPORT.write_text(splice(document, None, generated.rstrip("\n") + "\n"))
             pytest.skip("evidence report regenerated")
 
         assert embedded == generated, (

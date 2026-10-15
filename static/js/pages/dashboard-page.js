@@ -128,9 +128,11 @@ async function loadAllStatistics() {
 
 // Load storage statistics
 async function loadStorageStatistics() {
+    const generation = currentDashboardGeneration();
     try {
         const response = await fetch('/api/analytics/storage-stats');
         const data = await response.json();
+        if (isStaleDashboard(generation)) return;
         storageData = data;
         
         // Update summary cards only if they exist (they're in the main dashboard)
@@ -245,7 +247,7 @@ function renderStorageChart(chartData) {
     }
     
     const ctx = canvas.getContext('2d');
-    charts.storage = new Chart(ctx, {
+    charts.storage = createChart(ctx, {
         type: 'doughnut',
         data: {
             labels: chartData.labels,
@@ -298,7 +300,7 @@ function renderStorageTimeline(timeline) {
     }
     
     const ctx = canvas.getContext('2d');
-    charts.storageTimeline = new Chart(ctx, {
+    charts.storageTimeline = createChart(ctx, {
         type: 'line',
         data: {
             labels: timeline.map(t => t.month),
@@ -363,9 +365,11 @@ function renderStorageTimeline(timeline) {
 
 // Load processing statistics
 async function loadProcessingStatistics() {
+    const generation = currentDashboardGeneration();
     try {
         const response = await fetch('/api/analytics/processing-statistics');
         const data = await response.json();
+        if (isStaleDashboard(generation)) return;
         
         // Update summary cards only if they exist
         const processingRateEl = document.getElementById('processingRate');
@@ -394,7 +398,7 @@ function renderSuccessRateChart(typeData) {
     }
     
     const ctx = canvas.getContext('2d');
-    charts.successRate = new Chart(ctx, {
+    charts.successRate = createChart(ctx, {
         type: 'bar',
         data: {
             labels: typeData.slice(0, 10).map(t => t.type),
@@ -445,7 +449,7 @@ function renderProcessingSpeedChart(speedData) {
     }
     
     const ctx = canvas.getContext('2d');
-    charts.processingSpeed = new Chart(ctx, {
+    charts.processingSpeed = createChart(ctx, {
         type: 'line',
         data: {
             labels: speedData.map(d => new Date(d.date).toLocaleDateString()),
@@ -490,12 +494,14 @@ function renderProcessingSpeedChart(speedData) {
 
 // Load content statistics
 async function loadContentStatistics() {
+    const generation = currentDashboardGeneration();
     try {
         const response = await fetch('/api/analytics/content-statistics');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        if (isStaleDashboard(generation)) return;
         
         // Validate response
         if (!data.success) {
@@ -534,7 +540,7 @@ function renderContentCoverageChart(coverage) {
     
     const canvas = document.getElementById('contentCoverageChart');
     if (!canvas) {
-        console.error('contentCoverageChart canvas not found');
+        /* contentCoverageChart is not on this view */
         return;
     }
     
@@ -543,7 +549,7 @@ function renderContentCoverageChart(coverage) {
     }
     
     const ctx = canvas.getContext('2d');
-    charts.contentCoverage = new Chart(ctx, {
+    charts.contentCoverage = createChart(ctx, {
         type: 'doughnut',
         data: {
             labels: [translations.withContent, translations.withWords, translations.noContent],
@@ -594,7 +600,7 @@ function renderTopCategoriesChart(categories) {
     
     const canvas = document.getElementById('topCategoriesChart');
     if (!canvas) {
-        console.error('topCategoriesChart canvas not found');
+        /* topCategoriesChart is not on this view */
         return;
     }
     
@@ -607,7 +613,7 @@ function renderTopCategoriesChart(categories) {
     const values = categories.map(c => c.file_count || c.count || 0);
     
     const ctx = canvas.getContext('2d');
-    charts.topCategories = new Chart(ctx, {
+    charts.topCategories = createChart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
@@ -643,6 +649,8 @@ function renderTopCategoriesChart(categories) {
 // Render top words cloud
 function renderTopWordsCloud(words) {
     const container = document.getElementById('topWordsCloud');
+    // The page may have been swapped out while the statistics were loading.
+    if (!container) return;
     container.innerHTML = '';
     
     words.forEach((word, index) => {
@@ -695,7 +703,53 @@ let currentWordLimit = 50;
 let currentTimelinePeriod = 'month';
 
 // 🚀 OPTIMIZED: Initialize dashboard with lazy loading
+// ---------------------------------------------------------------------------
+// Lifecycle. A soft navigation re-imports this module under a new URL, so the
+// previous copy's timers, charts and in-flight requests are still alive. The
+// window-level generation lets every loader tell whether it has been replaced.
+// ---------------------------------------------------------------------------
+function currentDashboardGeneration() {
+    return window.__dashboardGeneration || 0;
+}
+
+function isStaleDashboard(generation) {
+    return generation !== currentDashboardGeneration();
+}
+
+// Retire whatever the previous page instance left behind (any module copy).
+function retireDashboardInstance() {
+    window.__dashboardGeneration = currentDashboardGeneration() + 1;
+    const tracker = window.processingProgressTracker;
+    if (tracker && typeof tracker.stop === 'function') tracker.stop();
+    Object.keys(charts).forEach(function (key) {
+        try { charts[key].destroy(); } catch (e) { /* already gone */ }
+        delete charts[key];
+    });
+    if (window.Chart && window.Chart.instances) {
+        Object.values(window.Chart.instances).forEach(function (chart) {
+            if (!chart.canvas || !chart.canvas.isConnected) chart.destroy();
+        });
+    }
+}
+
+// Chart.js keeps a global registry per canvas. The page can boot more than once
+// (a full load and a soft navigation each run this module, and each copy has its
+// own `charts` map), so destroy whatever already owns the canvas before reuse.
+function createChart(ctx, config) {
+    const canvas = ctx && ctx.canvas ? ctx.canvas : ctx;
+    if (window.Chart && typeof Chart.getChart === 'function') {
+        const previous = Chart.getChart(canvas);
+        if (previous) previous.destroy();
+    }
+    return new Chart(ctx, config);
+}
+
 function bootDashboardPage() {
+    // Full load and DOMContentLoaded both boot this page: the same DOM must boot once.
+    const pageDataNode = document.getElementById('dashboard-page-data');
+    if (pageDataNode && pageDataNode.dataset.dashboardBooted === '1') return;
+    retireDashboardInstance();
+    if (pageDataNode) pageDataNode.dataset.dashboardBooted = '1';
     console.log('Dashboard page: boot');
 
     // Translations island (may live outside #mainContent on soft nav)
@@ -830,6 +884,7 @@ function switchTab(tabName, event) {
 
 // 🚀 OPTIMIZED: Load dashboard summary with error handling
 async function loadDashboardSummary() {
+    const generation = currentDashboardGeneration();
     console.log('loadDashboardSummary: Starting...');
     try {
         console.log('loadDashboardSummary: Fetching from /api/analytics/dashboard-summary');
@@ -838,6 +893,7 @@ async function loadDashboardSummary() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        if (isStaleDashboard(generation)) return;
         console.log('loadDashboardSummary: Data received:', data);
         
         // 🚀 OPTIMIZED: Check if elements exist before updating
@@ -916,6 +972,7 @@ async function loadDashboardSummary() {
 
 // Load timeline data
 async function loadTimelineData(period) {
+    const generation = currentDashboardGeneration();
     currentTimelinePeriod = period;
     try {
         const response = await fetch(`/api/analytics/timeline-data?period=${period}`);
@@ -923,6 +980,7 @@ async function loadTimelineData(period) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        if (isStaleDashboard(generation)) return;
         
         // Validate response
         if (!data.success) {
@@ -943,12 +1001,12 @@ async function loadTimelineData(period) {
         
         const canvas = document.getElementById('timelineChart');
         if (!canvas) {
-            console.error('timelineChart canvas not found');
+            /* timelineChart is not on this view */
             return;
         }
         
         const ctx = canvas.getContext('2d');
-        charts.timeline = new Chart(ctx, {
+        charts.timeline = createChart(ctx, {
             type: 'line',
             data: {
                 labels: data.labels,
@@ -1019,12 +1077,14 @@ function updateTimeline(period) {
 
 // Load category distribution
 async function loadCategoryDistribution() {
+    const generation = currentDashboardGeneration();
     try {
         const response = await fetch('/api/analytics/category-distribution');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        if (isStaleDashboard(generation)) return;
         
         // Validate response
         if (!data.success) {
@@ -1063,12 +1123,12 @@ async function loadCategoryDistribution() {
         
         const canvas = document.getElementById('processingChart');
         if (!canvas) {
-            console.error('processingChart canvas not found');
+            /* processingChart is not on this view */
             return;
         }
         
         const ctx = canvas.getContext('2d');
-        charts.processing = new Chart(ctx, {
+        charts.processing = createChart(ctx, {
             type: 'doughnut',
             data: {
                 labels: data.labels.slice(0, 5),
@@ -1119,12 +1179,14 @@ async function loadCategoryDistribution() {
 
 // Load category charts (for categories tab)
 async function loadCategoryCharts() {
+    const generation = currentDashboardGeneration();
     try {
         const response = await fetch('/api/analytics/category-distribution');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        if (isStaleDashboard(generation)) return;
         
         // Validate response
         if (!data.success) {
@@ -1176,12 +1238,12 @@ async function loadCategoryCharts() {
         
         const pieCanvas = document.getElementById('categoryPieChart');
         if (!pieCanvas) {
-            console.error('categoryPieChart canvas not found');
+            /* categoryPieChart is not on this view */
             return;
         }
         
         const pieCtx = pieCanvas.getContext('2d');
-        charts.categoryPie = new Chart(pieCtx, {
+        charts.categoryPie = createChart(pieCtx, {
             type: 'pie',
             data: {
                 labels: data.labels,
@@ -1227,12 +1289,12 @@ async function loadCategoryCharts() {
         
         const barCanvas = document.getElementById('categoryBarChart');
         if (!barCanvas) {
-            console.error('categoryBarChart canvas not found');
+            /* categoryBarChart is not on this view */
             return;
         }
         
         const barCtx = barCanvas.getContext('2d');
-        charts.categoryBar = new Chart(barCtx, {
+        charts.categoryBar = createChart(barCtx, {
             type: 'bar',
             data: {
                 labels: data.labels,
@@ -1305,12 +1367,14 @@ async function loadCategoryCharts() {
 
 // Load file type distribution
 async function loadFileTypeDistribution() {
+    const generation = currentDashboardGeneration();
     try {
         const response = await fetch('/api/analytics/file-type-distribution');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        if (isStaleDashboard(generation)) return;
         
         // Validate response
         if (!data.success) {
@@ -1330,12 +1394,12 @@ async function loadFileTypeDistribution() {
         
         const canvas = document.getElementById('fileTypeChart');
         if (!canvas) {
-            console.error('fileTypeChart canvas not found');
+            /* fileTypeChart is not on this view */
             return;
         }
         
         const ctx = canvas.getContext('2d');
-        charts.fileType = new Chart(ctx, {
+        charts.fileType = createChart(ctx, {
             type: 'bar',
             data: {
                 labels: data.types.map(t => t.type || 'Unknown').slice(0, 10),
@@ -1373,6 +1437,7 @@ async function loadFileTypeDistribution() {
 
 // Load word frequency
 async function loadWordFrequency(limit) {
+    const generation = currentDashboardGeneration();
     currentWordLimit = limit;
     const grid = document.getElementById('wordFrequencyGrid');
     grid.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>${translations.loadingWordFrequency}</p></div>`;
@@ -1380,6 +1445,7 @@ async function loadWordFrequency(limit) {
     try {
         const response = await fetch(`/api/analytics/word-frequency?limit=${limit}`);
         const data = await response.json();
+        if (isStaleDashboard(generation)) return;
         
         if (data.words && data.words.length > 0) {
             grid.innerHTML = '';
@@ -1424,6 +1490,7 @@ function updateWordLimit(limit) {
 
 // Load path hierarchy
 async function loadPathHierarchy() {
+    const generation = currentDashboardGeneration();
     const tree = document.getElementById('pathTree');
     if (!tree) return; // Element might not exist if tab not active
     
@@ -1432,6 +1499,7 @@ async function loadPathHierarchy() {
     try {
         const response = await fetch('/api/analytics/path-hierarchy');
         const data = await response.json();
+        if (isStaleDashboard(generation)) return;
         
         // 🚀 FIXED: Use 'structure' instead of 'hierarchy' to match API response
         const structure = data.structure || data.hierarchy || [];
@@ -1469,12 +1537,14 @@ async function loadPathHierarchy() {
 
 // Load file reports
 async function loadFileReports() {
+    const generation = currentDashboardGeneration();
     const grid = document.getElementById('fileReportsGrid');
     grid.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>${translations.loadingFileReports}</p></div>`;
     
     try {
         const response = await fetch('/api/analytics/search-files?limit=20');
         const data = await response.json();
+        if (isStaleDashboard(generation)) return;
         
         if (data.files && data.files.length > 0) {
             grid.innerHTML = '';
@@ -1515,9 +1585,11 @@ async function loadFileReports() {
 
 // Load file types for dropdown
 async function loadFileTypes() {
+    const generation = currentDashboardGeneration();
     try {
         const response = await fetch('/api/analytics/file-type-distribution');
         const data = await response.json();
+        if (isStaleDashboard(generation)) return;
         
         const select = document.getElementById('searchType');
         data.types.forEach(type => {

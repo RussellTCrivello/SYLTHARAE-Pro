@@ -703,16 +703,24 @@ def _query_statuses(cur, path_ids: Sequence[int]) -> List[Dict[str, Any]]:
 
 
 def _query_categories(cur, path_ids: Sequence[int]) -> List[Dict[str, Any]]:
+    # `words_paths` was renamed to `words_hashs` in m0011, when content-derived
+    # data became keyed by the canonical content (hash) instead of the path:
+    # the old query referenced a table that no longer exists, so every batch
+    # report logged "Batch report query failed: categories" and rendered an
+    # empty categories section. The join now walks paths -> hash_contexts ->
+    # words_hashs, the same shape `_query_keywords` below has used since.
     cur.execute(
         """
         SELECT w.word AS name,
-               COUNT(DISTINCT wp.path_id) AS file_count,
+               COUNT(DISTINCT p.id) AS file_count,
                COALESCE(SUM(wp.word_count), 0) AS occurrence_count
-        FROM words_paths wp
+        FROM paths p
+        JOIN hash_contexts hc ON hc.id = p.context_id
+        JOIN words_hashs wp ON wp.hash_id = hc.hash_id
         JOIN words_categorys wc ON wc.word_id = wp.word_id
         JOIN categorys c ON c.id = wc.category_id
         JOIN words w ON w.id = c.word_id
-        WHERE wp.path_id = ANY(%s)
+        WHERE p.id = ANY(%s)
         GROUP BY w.word
         ORDER BY file_count DESC, w.word
         LIMIT %s
@@ -811,6 +819,12 @@ def _query_places(cur, path_ids: Sequence[int]) -> List[Dict[str, Any]]:
     except Exception:
         pass
     try:
+        # One read path for place mentions: the ``path_geo_mentions`` view,
+        # which already unions the signal-derived places with the preserved
+        # m0015 rows (only for content no places run has covered). Reading the
+        # legacy table by name would be a second access path to the same
+        # entity - and would surface rows the view deliberately hides once a
+        # places run exists.
         cur.execute(
             """
             SELECT gm.place_name AS place,
@@ -818,7 +832,7 @@ def _query_places(cur, path_ids: Sequence[int]) -> List[Dict[str, Any]]:
                    COALESCE(SUM(gm.mention_count), 0) AS mentions
             FROM paths p
             JOIN hash_contexts hc ON hc.id = p.context_id
-            JOIN path_geo_mentions_m0015 gm ON gm.hash_id = hc.hash_id
+            JOIN path_geo_mentions gm ON gm.hash_id = hc.hash_id
             WHERE p.id = ANY(%s)
             GROUP BY gm.place_name
             ORDER BY mentions DESC, gm.place_name

@@ -2,6 +2,8 @@
  * File Classification Page JavaScript
  * Extracted from Analysis/file_classification.html
  */
+import { escapeHtml } from '../modules/core/utils.js';
+
 
 // Global state
 let currentMethod = 'rule_based';
@@ -418,9 +420,4 @@ function displayDatabaseResults(data, limit, container) {
 }
 
 // Utility: Escape HTML
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
 

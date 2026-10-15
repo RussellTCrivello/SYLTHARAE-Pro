@@ -1,4 +1,4 @@
-﻿"""
+"""
 API Routes for Archives sections with cursor-based pagination
 """
 

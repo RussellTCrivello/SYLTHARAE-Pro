@@ -9,6 +9,7 @@
 
 import { enhanceMultiSelects, refreshMultiSelect } from '../modules/ui/multi-select-dropdown.js';
 import { onPageTeardown } from '../modules/core/page-lifecycle.js';
+import { loadMoreBlockHtml } from '../modules/rendering/unified-pagination.js';
 
 let DATA = {};
 let L = {};
@@ -184,47 +185,46 @@ function currentView() {
     return state.tab === 'horizon' ? state.horizon : state.explorer;
 }
 
-function updateLoadMore(containerId, onMore) {
-    const nav = document.getElementById(containerId);
-    if (!nav) return;
-    const meta = nav.querySelector('[data-role="meta"]');
-    const more = nav.querySelector('[data-role="more"]');
-    const view = currentView();
+/**
+ * The Load More control for one table: the shared block (the same markup and
+ * engine every other list uses), rendered from the view's offset state.
+ * `failed` shows the engine's own retry message.
+ */
+function renderLoadMore(hostId, tableId, view, { failed = false, loading = false } = {}) {
+    const host = document.getElementById(hostId);
+    if (!host) return;
     const shown = view.items.length;
     const total = view.total || 0;
-    if (!total) {
-        if (meta) meta.textContent = '';
-        more?.classList.add('d-none');
+    if (!total || shown >= total) {
+        host.innerHTML = '';
         return;
     }
-    if (meta) {
-        meta.textContent = fmt(L.page, {
-            from: shown ? 1 : 0,
-            to: shown,
-            total,
-        });
-    }
-    if (!more) return;
-    const hasMore = shown < total;
-    more.classList.toggle('d-none', !hasMore);
-    more.disabled = state.loadingMore || !hasMore;
-    more.replaceChildren(
-        el('i', { class: 'bi bi-arrow-down-circle', 'aria-hidden': 'true' }),
-        document.createTextNode(` ${state.loadingMore ? (L.loading_more || 'Loading…') : (L.show_more || 'Show More')}`),
-    );
-    more.onclick = async () => {
-        if (state.loadingMore || !hasMore) return;
+    host.innerHTML = loadMoreBlockHtml({
+        tableId, page: 1, totalPages: 2, total, shown,
+        label: L.show_more || 'Show More',
+    });
+    const button = host.querySelector('[data-ut-load-more] button');
+    if (button && loading) button.disabled = true;
+    const error = host.querySelector('[data-ut-load-error]');
+    if (error && failed) error.hidden = false;
+}
+
+/** Route the table's Load More clicks to this page's offset loader. */
+function wireLoadMore(hostId, tableId, view, load) {
+    if (!window.UnifiedTable || typeof UnifiedTable.onLoadMore !== 'function') return;
+    UnifiedTable.onLoadMore(tableId, async () => {
+        if (state.loadingMore) return;
         state.loadingMore = true;
-        updateLoadMore(containerId, onMore);
+        renderLoadMore(hostId, tableId, view, { loading: true });
         try {
-            await onMore();
+            await load();
         } catch (err) {
+            renderLoadMore(hostId, tableId, view, { failed: true });
             showError(err.message);
         } finally {
             state.loadingMore = false;
-            updateLoadMore(containerId, onMore);
         }
-    };
+    });
 }
 
 function documentCell(item) {
@@ -449,7 +449,8 @@ async function loadHorizon({ append = false } = {}) {
         });
     }
 
-    updateLoadMore('horizonPager', () => loadHorizon({ append: true }));
+    wireLoadMore('horizonPager', 'horizonTable', state.horizon, () => loadHorizon({ append: true }));
+    renderLoadMore('horizonPager', 'horizonTable', state.horizon);
     renderActiveFilters();
 }
 
@@ -549,7 +550,8 @@ async function loadExplorer({ append = false } = {}) {
         contents: body.contents,
     });
 
-    updateLoadMore('explorerPager', () => loadExplorer({ append: true }));
+    wireLoadMore('explorerPager', 'explorerTable', state.explorer, () => loadExplorer({ append: true }));
+    renderLoadMore('explorerPager', 'explorerTable', state.explorer);
     renderActiveFilters();
 }
 

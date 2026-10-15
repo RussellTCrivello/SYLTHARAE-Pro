@@ -271,15 +271,6 @@ async function goToPage(page) {
 }
 
 /**
- * Escape HTML to prevent XSS
- */
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-/**
  * Highlight search terms in search results
  */
 function highlightSearchTerms() {
@@ -339,12 +330,12 @@ export {
     goToPage
 };
 
-
 // ---------------------------------------------------------------------------
 // The results table's selection: the count, and the two batch export kinds
 // (extracted content / original files) against the chosen rows.
 // ---------------------------------------------------------------------------
 import { exportSelectedFiles } from '../modules/file-operations/file-export.js';
+import { escapeHtml } from '../modules/core/utils.js';
 
 function selectedResultIds() {
     return Array.from(document.querySelectorAll('.result-checkbox:checked'))

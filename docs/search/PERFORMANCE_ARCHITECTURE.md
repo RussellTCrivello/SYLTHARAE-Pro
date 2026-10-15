@@ -103,8 +103,14 @@ API exposes `pagination.total_is_approximate` when timed count fails.
 | Index | Purpose |
 |-------|---------|
 | `idx_words_hashs_hash_id` | file → words |
-| `idx_words_hashs_hash_word` | hash-scoped term lookup (m0035) |
+| `uq_words_hashs_hash_word` | hash-scoped term lookup - the unique constraint's index, same columns as m0035's `idx_words_hashs_hash_word` |
 | `idx_words_hashs_word_hash` | word → files (m0036) |
+
+m0038 removed `idx_words_hashs_hash_word` (m0035) as an exact duplicate of
+`uq_words_hashs_hash_word`: same table, same columns in the same order, no
+predicate, no expression, default operator class. The constraint's index answers
+the identical lookups, so the hash-scoped term lookup above is unchanged - only
+the name `EXPLAIN` prints changed.
 
 Run `EXPLAIN (ANALYZE, BUFFERS)` on candidate + count queries per release;
 store outputs under `docs/search/explain/` (manual step until automated).
