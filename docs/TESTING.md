@@ -3,7 +3,10 @@
 What the test suite covers, how to run it, and what the live smoke tests add
 that a test process cannot. Development conventions are in
 [DEVELOPMENT.md](DEVELOPMENT.md); the deployment shape the smoke tests target is
-in [OPERATIONS.md](OPERATIONS.md).
+in [OPERATIONS.md](OPERATIONS.md). The environment the suite expects — RAM,
+disk, tool versions and the one-command setup — is in
+[TEST_ENVIRONMENT.md](TEST_ENVIRONMENT.md), and the currently measured baseline
+counts are in [STABILITY_BASELINE.md](STABILITY_BASELINE.md).
 
 ## The layered suite
 
