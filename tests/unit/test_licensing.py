@@ -206,6 +206,21 @@ def test_every_page_links_to_the_source_and_shows_the_real_version(web_app, monk
     assert version.__version__ in page
 
 
+def _setup_page_context():
+    """The variables ``Api.routes.setup.setup_page`` passes to the template.
+
+    Rendering the template without them makes ``|tojson`` receive an Undefined
+    and the page raises before any assertion runs. Built from the route's own
+    helpers so this stays in step with what a fresh install really renders.
+    """
+    from Api.routes.setup import _wizard_language_options, _wizard_script_strings
+
+    return {
+        "wizard_script_strings": _wizard_script_strings(),
+        "wizard_language_options": _wizard_language_options(),
+    }
+
+
 def test_the_first_run_setup_page_offers_the_source_and_the_version(web_app, monkeypatch):
     """AGPL section 13 must reach the only page a fresh install shows.
 
@@ -223,7 +238,7 @@ def test_the_first_run_setup_page_offers_the_source_and_the_version(web_app, mon
     monkeypatch.delenv("SOURCE_CODE_URL", raising=False)
     with web_app.test_request_context("/setup"):
         web_app.preprocess_request()
-        page = render_template("Setup/install_wizard.html")
+        page = render_template("Setup/install_wizard.html", **_setup_page_context())
     assert f'href="{DEFAULT_SOURCE_CODE_URL}"' in page
     assert f"Version {version.__version__}" in " ".join(page.split())
     assert "2.0.0" not in page
@@ -238,7 +253,7 @@ def test_the_setup_page_refuses_a_non_http_source_url(web_app, monkeypatch):
     monkeypatch.setenv("SOURCE_CODE_URL", "javascript:alert(1)")
     with web_app.test_request_context("/setup"):
         web_app.preprocess_request()
-        page = render_template("Setup/install_wizard.html")
+        page = render_template("Setup/install_wizard.html", **_setup_page_context())
     assert "javascript:" not in page
     assert f'href="{DEFAULT_SOURCE_CODE_URL}"' in page
 
