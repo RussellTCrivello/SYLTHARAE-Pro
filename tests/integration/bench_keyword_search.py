@@ -7,7 +7,7 @@ The last line printed is BENCH_JSON.
 """
 import gc, json, time, tracemalloc, uuid
 import pytest
-from _seed import connect
+from _seed import connect, remove_seeded
 from test_keyword_search_bounded import seed_keywords  # noqa: E402 (same directory)
 
 SIZES = [2500, 10000]
@@ -15,12 +15,14 @@ SIZES = [2500, 10000]
 
 @pytest.fixture(scope="module")
 def corpora(pg_db):
-    out = {}
+    out, ledgers = {}, []
     for n in SIZES:
         tag = f"bench{n}x" + uuid.uuid4().hex[:4]
-        seed_keywords(pg_db, tag, n, words=40, categories=4, seed=99, max_usage=6)
+        ledgers.append(seed_keywords(pg_db, tag, n, words=40, categories=4, seed=99, max_usage=6))
         out[n] = tag
-    return out
+    yield out
+    for ledger in ledgers:
+        remove_seeded(pg_db, ledger)
 
 
 def measure(fn, instrument_modules):

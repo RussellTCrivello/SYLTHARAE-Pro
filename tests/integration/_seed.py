@@ -76,3 +76,44 @@ def word_counts(cur, hash_id, counts):
         word_id = cur.fetchone()[0]
         cur.execute("INSERT INTO words_hashs (hash_id, word_id, word_count, position_indexer)"
                     " VALUES (%s, %s, %s, ''::bytea)", (hash_id, word_id, count))
+
+
+class SeedLedger:
+    """Ids of the rows one test created, so it can remove exactly those rows.
+
+    The session database is shared by every integration module, so a test that
+    leaves rows behind changes what other tests see (a report's first page, a
+    scan's window). Record every id that a seed call returns, then call
+    ``remove_seeded`` from a fixture finaliser."""
+
+    def __init__(self):
+        self.sources = []
+        self.sides = []
+        self.words = []
+        self.categories = []
+        self.keywords = []
+        self.paths = []
+        self.contexts = []
+        self.hashes = []
+
+
+def remove_seeded(pg_db, ledger):
+    """Delete what ``ledger`` recorded, children first. Ids that were already
+    removed by the test are simply absent and do nothing."""
+    conn = connect(pg_db)
+    try:
+        with conn, conn.cursor() as cur:
+            cur.execute("DELETE FROM keywords_hashs WHERE keyword_id = ANY(%s)",
+                        (ledger.keywords,))
+            cur.execute("DELETE FROM keywords WHERE id = ANY(%s)", (ledger.keywords,))
+            cur.execute("DELETE FROM categorys WHERE id = ANY(%s)", (ledger.categories,))
+            cur.execute("DELETE FROM words WHERE id = ANY(%s)", (ledger.words,))
+            cur.execute("DELETE FROM paths WHERE id = ANY(%s)", (ledger.paths,))
+            cur.execute("DELETE FROM hash_contexts WHERE id = ANY(%s)", (ledger.contexts,))
+            cur.execute("DELETE FROM contents WHERE hash_id = ANY(%s)", (ledger.hashes,))
+            cur.execute("DELETE FROM contents_raw WHERE hash_id = ANY(%s)", (ledger.hashes,))
+            cur.execute("DELETE FROM hashs WHERE id = ANY(%s)", (ledger.hashes,))
+            cur.execute("DELETE FROM sides WHERE id = ANY(%s)", (ledger.sides,))
+            cur.execute("DELETE FROM sources WHERE id = ANY(%s)", (ledger.sources,))
+    finally:
+        conn.close()

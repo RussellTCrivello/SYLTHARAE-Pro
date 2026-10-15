@@ -14,7 +14,7 @@ import pytest
 
 from core.serialization import pack_int_list, unpack_int_list
 from core.table_paging import BATCH_HEADER, BATCH_VALUE
-from _seed import connect, document, side, source
+from _seed import SeedLedger, connect, document, remove_seeded, side, source
 
 Row = namedtuple("Row", "id text usage cat cat_name")
 
@@ -25,29 +25,36 @@ Row = namedtuple("Row", "id text usage cat cat_name")
 def seed_keywords(pg_db, tag, count, *, words=24, categories=3, seed=1, max_usage=8):
     """``count`` keywords whose text is a few of ``words`` tag words. Words
     named ``...hit...`` match the search ``f"{tag}-hit"``; the rest do not.
-    Usage (distinct paths) varies from 0 to ``max_usage``."""
+    Usage (distinct paths) varies from 0 to ``max_usage``. Returns the
+    ``SeedLedger`` the caller must pass to ``remove_seeded`` when done."""
     import random
 
     rng = random.Random(seed)
+    ledger = SeedLedger()
     conn = connect(pg_db)
     try:
         with conn, conn.cursor() as cur:
             src, sd = source(cur), side(cur)
+            ledger.sources.append(src)
+            ledger.sides.append(sd)
             word_ids = {}
             for j in range(words):
                 name = f"{tag}-{'hit' if j % 4 == 0 else 'miss'}{j:02d}"
                 cur.execute("INSERT INTO words (word) VALUES (%s) ON CONFLICT (word)"
                             " DO UPDATE SET word = EXCLUDED.word RETURNING id", (name,))
                 word_ids[j] = cur.fetchone()[0]
+                ledger.words.append(word_ids[j])
             cat_ids = []
             for c in range(categories):
                 cur.execute("INSERT INTO words (word) VALUES (%s) ON CONFLICT (word)"
                             " DO UPDATE SET word = EXCLUDED.word RETURNING id",
                             (f"{tag}-cat{c}",))
                 wid = cur.fetchone()[0]
+                ledger.words.append(wid)
                 cur.execute("INSERT INTO categorys (word_id) VALUES (%s) ON CONFLICT (word_id)"
                             " DO UPDATE SET word_id = EXCLUDED.word_id RETURNING id", (wid,))
                 cat_ids.append(cur.fetchone()[0])
+                ledger.categories.append(cat_ids[-1])
 
             seen = set()
             made = 0
@@ -64,9 +71,13 @@ def seed_keywords(pg_db, tag, count, *, words=24, categories=3, seed=1, max_usag
                 cur.execute("INSERT INTO keywords (keyword, category_id) VALUES (%s, %s)"
                             " RETURNING id", (pack_int_list([word_ids[j] for j in combo]), category))
                 kid = cur.fetchone()[0]
+                ledger.keywords.append(kid)
                 if usage == 0:
                     continue
-                _path, hash_id, context_id = document(cur, source_id=src, side_id=sd, text=text)
+                path_id, hash_id, context_id = document(cur, source_id=src, side_id=sd, text=text)
+                ledger.paths.append(path_id)
+                ledger.hashes.append(hash_id)
+                ledger.contexts.append(context_id)
                 cur.execute("INSERT INTO keywords_hashs (keyword_id, hash_id) VALUES (%s, %s)",
                             (kid, hash_id))
                 for extra in range(usage - 1):
@@ -74,10 +85,12 @@ def seed_keywords(pg_db, tag, count, *, words=24, categories=3, seed=1, max_usag
                         "INSERT INTO paths (file_name, file_path, file_size, file_type,"
                         " file_status, file_date, date_creation, context_id, processing_status)"
                         " VALUES (%s, %s, 1, 'txt', 'Unread', CURRENT_DATE, CURRENT_DATE, %s,"
-                        " 'processed')",
+                        " 'processed') RETURNING id",
                         (f"x_{kid}_{extra}.txt", f"/seed/x_{kid}_{extra}.txt", context_id))
+                    ledger.paths.append(cur.fetchone()[0])
     finally:
         conn.close()
+    return ledger
 
 
 def snapshot(pg_db):
@@ -200,8 +213,9 @@ def tag():
 @pytest.fixture(scope="module")
 def corpus(pg_db, tag):
     """A corpus large enough for several pages and for usage ties."""
-    seed_keywords(pg_db, tag, 150, seed=3)
-    return tag
+    ledger = seed_keywords(pg_db, tag, 150, seed=3)
+    yield tag
+    remove_seeded(pg_db, ledger)
 
 
 # ---------------------------------------------------------- ordering & totals
@@ -369,8 +383,9 @@ def test_a_total_that_is_an_exact_multiple_has_a_full_last_page(admin_client, pg
 @pytest.fixture(scope="module")
 def big_corpus(pg_db):
     big = "kwbig" + uuid.uuid4().hex[:6]
-    seed_keywords(pg_db, big, 2500, words=40, categories=4, seed=9, max_usage=6)
-    return big
+    ledger = seed_keywords(pg_db, big, 2500, words=40, categories=4, seed=9, max_usage=6)
+    yield big
+    remove_seeded(pg_db, ledger)
 
 
 def test_large_set_spans_several_chunks_and_pages(admin_client, pg_db, big_corpus):
@@ -402,7 +417,14 @@ def test_large_set_html_total_and_order(pg_db, big_corpus):
 
 def test_matches_removed_between_requests_clamp_the_page(admin_client, pg_db):
     gone = "kwdel" + uuid.uuid4().hex[:6]
-    seed_keywords(pg_db, gone, 60, words=12, categories=2, seed=21, max_usage=3)
+    ledger = seed_keywords(pg_db, gone, 60, words=12, categories=2, seed=21, max_usage=3)
+    try:
+        _matches_removed(admin_client, pg_db, gone)
+    finally:
+        remove_seeded(pg_db, ledger)
+
+
+def _matches_removed(admin_client, pg_db, gone):
     q = f"{gone}-hit"
     first = api(admin_client, q=q, sort="id", order="asc", per_page=10)
     last_page = first["total_pages"]

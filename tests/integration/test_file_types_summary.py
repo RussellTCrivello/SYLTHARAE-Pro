@@ -11,23 +11,31 @@ import uuid
 
 import pytest
 
-from _seed import connect, document, side, source
+from _seed import SeedLedger, connect, document, remove_seeded, side, source
 
 
 @pytest.fixture(scope="module")
 def seeded(pg_db):
     tag = "fts" + uuid.uuid4().hex[:8]
+    ledger = SeedLedger()
     conn = connect(pg_db)
     try:
         with conn, conn.cursor() as cur:
             src, sd = source(cur), side(cur)
+            ledger.sources.append(src)
+            ledger.sides.append(sd)
             for ext, count in ((f"{tag}a", 3), (f"{tag}b", 2), ("   ", 1)):
                 for i in range(count):
-                    document(cur, source_id=src, side_id=sd,
-                             text=f"{tag} {ext!r} {i}", file_type=ext)
+                    path_id, hash_id, context_id = document(
+                        cur, source_id=src, side_id=sd,
+                        text=f"{tag} {ext!r} {i}", file_type=ext)
+                    ledger.paths.append(path_id)
+                    ledger.hashes.append(hash_id)
+                    ledger.contexts.append(context_id)
     finally:
         conn.close()
-    return tag
+    yield tag
+    remove_seeded(pg_db, ledger)
 
 
 def db_totals(pg_db):
