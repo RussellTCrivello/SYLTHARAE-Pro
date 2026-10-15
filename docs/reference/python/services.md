@@ -219,7 +219,7 @@ Unified job manager (spec sections 5, 11, 12, 14, 34).
   - `unsubscribe(self, q) -> None`
   - `create_job(self, job_type: str, source: str, options: Dict[str, Any], created_by: Optional[str] = None, starter: Optional[Callable[[Dict[str, Any]], Any]] = ...` - Persist a job and (unless synchronous) start a worker thread.
   - `cancel(self, job_id: str) -> Dict[str, Any]`
-  - `pause(self, job_id: str) -> Dict[str, Any]`
+  - `pause(self, job_id: str, wait_seconds: float = 0.0) -> Dict[str, Any]` - Request a pause and return the job.
   - `resume(self, job_id: str, created_by: Optional[str] = None) -> Dict[str, Any]`
   - `retry(self, job_id: str, created_by: Optional[str] = None) -> Dict[str, Any]` - Retry a failed/cancelled job as a new job with identical options.
   - `register_engine(self, job_id: str, engine) -> None`

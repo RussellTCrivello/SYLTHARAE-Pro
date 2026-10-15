@@ -222,7 +222,7 @@ Term Validator
 
 PostgreSQL Flask Web Application - MODERNIZED
 
-- `get_locale()` - Get the locale/language from session (user choice), system settings, or browser preference
+- `get_locale()` - Interface language for the current request. Shared with Api.routes.common.
 - `get_or_create_secret_key()` - Get SECRET_KEY from environment, file, or generate a new one
 - `add_performance_headers(response)` <sub>app.after_request</sub> - Add performance and caching headers to all responses
 - `before_request()` <sub>app.before_request</sub> - Track request timing

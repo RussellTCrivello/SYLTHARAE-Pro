@@ -248,6 +248,7 @@ Common routes (language, context processor, etc.)
 - `status_label(status)` - Just the label, translated.
 - `status_vocabulary()` - The vocabulary as a plain dict, for the JSON the page injects.
 - `interface_for(endpoint)` - Read-only presentation lookup: what is this page called, and its icon?
+- `resolve_interface_language(app)` - Return the interface language for the current request.
 - `register_common_routes(app, babel_instance)` - Register common routes and context processors with the Flask app
 
 ### `Api/routes/concurrency.py`
@@ -519,6 +520,10 @@ Web-based installation wizard routes.
 - `system_check()` <sub>setup_bp.route('/api/setup/system-check', methods=['GET'])</sub>
 - `test_database()` <sub>setup_bp.route('/api/setup/test-database', methods=['POST'])</sub>
 - `run_installation()` <sub>setup_bp.route('/api/setup/install', methods=['POST'])</sub>
+- `set_setup_language()` <sub>setup_bp.route('/api/setup/language', methods=['POST'])</sub> - Store the language chosen on the wizard as ``system.language``.
+- `dependency_report()` <sub>setup_bp.route('/api/setup/dependencies', methods=['GET'])</sub>
+- `dependency_install()` <sub>setup_bp.route('/api/setup/dependencies/install', methods=['POST'])</sub>
+- `dependency_job(job_id)` <sub>setup_bp.route('/api/setup/dependencies/jobs/<job_id>', methods=['GET'])</sub>
 - `check_setup_status()` <sub>setup_bp.route('/api/setup/check', methods=['GET'])</sub>
 - `register_setup_routes(app)`
 

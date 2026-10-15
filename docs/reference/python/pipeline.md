@@ -68,6 +68,7 @@ Storage Pipeline - Complete file storage implementation
   - `record_discovered(self, count: int = 1) -> None` - Record discovered files (called by the discovery phase).
   - `record_skipped(self, count: int = 1, reason: str = '') -> None` - Record skipped files with an optional reason (kept in stats).
   - `get_stats_summary(self) -> Dict[str, Any]` - Return stats plus consistency validation (DATA-04).
+  - `find_committed_occurrence(self, file_hash: str, source_name: Optional[str], side_name: Optional[str], location: Optional[str]) -> Optional[int]` - Path id of an already committed, processed occurrence, or None.
   - `check_duplicate_for_pipeline(self, file_hash: str, source_id: Optional[int] = None, side_id: Optional[int] = None, file_path: Optional[str] = None, hierarchy...` - Occurrence-level duplicate check via the identity authority.
   - `get_statistics(self) -> Dict[str, int]` - Get pipeline statistics
   - `get_store_outcome(self, file_path: str) -> Optional[str]` - Outcome of the last store attempt for ``file_path``, or None.

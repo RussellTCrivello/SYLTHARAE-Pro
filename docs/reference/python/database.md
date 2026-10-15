@@ -969,6 +969,7 @@ _No module docstring._
   - `get_or_create_source(self, name: str, importance: float = 1.0, country: str = '', job: str = '') -> Optional[int]` - Return the id of ``name``, creating the source if it is missing.
   - `get_or_create_side(self, name: str, importance: float = 1.0) -> Optional[int]` - Return the id of ``name``, creating the side if it is missing.
   - `register_occurrence(self, hash_value: str, source_id: int, side_id: int, path_row: Dict[str, Any], commit: bool = True) -> Dict[str, Any]` - Register content identity + context identity + one occurrence.
+  - `find_committed_occurrence(self, hash_value: str, source_name: str, side_name: str, location: str) -> Optional[int]` - Read-only lookup of a committed occurrence (see DeduplicationService).
   - `hash_exists(self, hash_value: str, source_id: int, side_id: Optional[int] = None) -> bool` - Check if the content has any live occurrence for the source (and optionally side).
   - `check_duplicate(self, hash_value: str, source_id: int, side_id: int, file_path: Optional[str] = None, hierarchy_path: Optional[str] = None)` - Layered duplicate check; see DeduplicationService.check_duplicate.
   - `get_spacing_id(space_char: str) -> int` *(static)* - Get spacing ID for a space character.
@@ -1026,6 +1027,7 @@ Identity authority (One Content, Many Contexts) - the ONLY place where
   - `extraction_exists(self, hash_id: int) -> bool` - True when canonical content-derived extraction already exists.
   - `find_live_path(self, content_hash: str, source_id: int, side_id: int, file_path: Optional[str] = None, hierarchy_path: Optional[str] = None) -> Optional[int]` - Return the path id of a matching live occurrence, or None.
   - `check_duplicate(self, content_hash: str, source_id: int, side_id: int, file_path: Optional[str] = None, hierarchy_path: Optional[str] = None) -> Tuple[bool, ...` - Return ``(is_duplicate, existing_path_id)``.
+  - `find_committed_occurrence(self, content_hash: str, source_name: str, side_name: str, location: str) -> Optional[int]` - Return the path id of a *committed* occurrence, or None. Read-only.
   - `hash_exists_with_live_path(self, content_hash: str, source_id: Optional[int] = None, side_id: Optional[int] = None) -> bool` - True when the content has any live occurrence (optionally scoped).
   - `path_identity(self, path_id: int) -> Optional[Dict[str, Any]]` - Full identity of a stored occurrence.
   - `content_contexts(self, content_hash: str) -> List[Dict[str, Any]]` - Every (source, side) context of one canonical content.
