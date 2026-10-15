@@ -131,6 +131,26 @@ try {
         const info = (await page.textContent('#searchResultsInfo')).replace(/\s+/g, ' ').trim();
         check('D1 Show More reveals rows', rows > 10, `rows=${rows}`);
         check('D1 counter follows the revealed rows', info.includes(`1–${rows}`), `rows=${rows} info="${info}"`);
+        const names = await page.$$eval('#keywordsTable tbody tr td:nth-child(2)', (tds) => tds.map((td) => td.textContent.trim()));
+        check('Show More rows are unique (no duplicates)', new Set(names).size === names.length, `unique=${new Set(names).size} of ${names.length}`);
+        const pagerPage = await page.$eval('.unified-pagination-container', (el) => el.getAttribute('data-current-page')).catch(() => null);
+        check('Show More does not move the pager off page 1', pagerPage === null || pagerPage === '1', `pager page=${pagerPage}`);
+        // Show More from page 2: the window stays on page 2 and extends below it.
+        await page.goto(`${BASE}/keywords?page=2`, { waitUntil: 'load' });
+        await settle(page);
+        const sel2 = await page.$eval('#perPage', (s) => s.value);
+        const before2 = await page.$$eval('#keywordsTable tbody tr', (trs) => trs.length);
+        const more2 = page.locator('button:has-text("Show More"), a:has-text("Show More")').first();
+        if (await more2.count() && await more2.isVisible()) {
+            await more2.click();
+            await settle(page);
+            const names2 = await page.$$eval('#keywordsTable tbody tr td:nth-child(2)', (tds) => tds.map((td) => td.textContent.trim()));
+            const page2 = await page.$eval('.unified-pagination-container', (el) => el.getAttribute('data-current-page')).catch(() => null);
+            check('Show More on page 2 keeps page 2 and appends a batch', page2 === null || page2 === '2', `pager page=${page2} rows ${before2} -> ${names2.length} (size ${sel2})`);
+            check('Show More on page 2 adds no duplicate rows', new Set(names2).size === names2.length, `unique=${new Set(names2).size} of ${names2.length}`);
+        } else {
+            check('Show More available on page 2', false, 'button not visible');
+        }
     } else {
         check('D1 Show More available for this data set', false, 'button not visible at 10 rows per page');
     }

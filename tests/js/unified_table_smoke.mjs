@@ -203,7 +203,7 @@ check('the counter moved to five shown',
       loadMore.getAttribute('data-shown') === '5'
       && loadMore.querySelector('[data-ut-last]').textContent === '5',
       loadMore.getAttribute('data-shown'));
-check('the control knows it is on page 2 now', loadMore.getAttribute('data-page') === '2',
+check('Show More keeps the control on page 1 (it reveals rows, it does not navigate)', loadMore.getAttribute('data-page') === '1',
       loadMore.getAttribute('data-page'));
 
 // The last batch: the control hides itself.

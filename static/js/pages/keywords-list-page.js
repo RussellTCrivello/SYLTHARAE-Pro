@@ -148,6 +148,8 @@ if (typeof window.translations === 'undefined') {
             if (!infoEl) return;
             const shown = Math.max(0, detail.shown || 0);
             const total = Math.max(0, detail.total || 0);
+            const first = Math.max(1, detail.first || 1);
+            const last = first + shown - 1;
             const query = searchInput.value.trim();
             if (shown === 0) {
                 infoEl.textContent = query
@@ -156,8 +158,8 @@ if (typeof window.translations === 'undefined') {
                 return;
             }
             infoEl.textContent = query
-                ? `Found ${total} result${total !== 1 ? 's' : ''} for "${query}" (1–${shown})`
-                : `${translations.showing} 1–${shown} ${translations.of} ${total} ${translations.keywords}`;
+                ? `Found ${total} result${total !== 1 ? 's' : ''} for "${query}" (${first}–${last})`
+                : `${translations.showing} ${first}–${last} ${translations.of} ${total} ${translations.keywords}`;
         });
     }
     
@@ -432,6 +434,7 @@ if (typeof window.translations === 'undefined') {
                 totalPages: total_pages,
                 // One control: the table's Load More is rendered by the pager.
                 tableId: 'keywordsTable',
+                pageSize: currentPerPage,
                 totalCount: loadMore.total ?? 0,
                 rowsShown: loadMore.shown ?? 0,
                 containerId: paginationContainer.id,

@@ -130,12 +130,24 @@ class TestTheEngineContract:
             assert marker in engine or marker in client, f"nothing writes {marker}"
         assert "data-ut-first" in client and "data-ut-last" in client
 
-    def test_an_empty_batch_does_not_advance_the_page(self):
+    def test_show_more_never_moves_the_page(self):
+        # Show More reveals rows; the pager's page is set only by navigation.
         engine = (STATIC_JS / "modules" / "ui" / "unified-table.js").read_text(encoding="utf-8")
         body = engine[engine.index("function updateLoadMoreBlock"):engine.index("function requestNextBatch")]
         assert "if (appended > 0)" in body
-        assert "state.page += 1" in body
+        assert "state.shown = Math.min(state.total - start, state.shown + appended)" in body
+        assert "state.page +=" not in body
+        assert "state.page =" not in body
         assert "state.page + 1" not in body
+
+    def test_the_batch_request_never_reads_the_pager_page(self):
+        # The batch URL is computed from the rows already shown (offset), not from
+        # the pager's data-page, so a batch cannot be a page navigation.
+        engine = (STATIC_JS / "modules" / "ui" / "unified-table.js").read_text(encoding="utf-8")
+        body = engine[engine.index("function nextBatchUrl"):engine.index("function adoptAppendedRows")]
+        assert "batchGeometry(block)" in body
+        assert "data-page" not in body
+        assert "geometry.batchPage" in body
 
     def test_the_numbered_window_is_drawn_from_the_servers_markup(self):
         # The engine clones the server's prototypes and fills the hooks the

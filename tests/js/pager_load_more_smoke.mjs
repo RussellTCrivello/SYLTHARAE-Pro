@@ -74,7 +74,7 @@ check('the rows were appended to the table body',
       documentRoot.querySelectorAll('#categoriesBody tr').length);
 check('the shown counter moved to 5 (pager-placed control)',
       block.getAttribute('data-shown') === '5', block.getAttribute('data-shown'));
-check('the pager knows it is on page 2', container.getAttribute('data-current-page') === '2',
+check('Show More keeps the pager on page 1', container.getAttribute('data-current-page') === '1',
       container.getAttribute('data-current-page'));
 check('the pager counter text moved too',
       container.querySelector('[data-ut-last]').textContent === '5',

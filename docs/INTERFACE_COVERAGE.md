@@ -102,31 +102,37 @@ extended to their table ids, plus seeded data where the table is empty today.
 - The four list pages have behavior coverage. The other rows in §2 have load coverage only.
 - Browser: Chromium via `@sparticuz/chromium`; single-process mode (closing a context takes the browser down), so one context is used per run.
 
-## 6. Show More contract (specification; implementation pending)
+## 6. Show More contract (implemented for the shared table engine)
 
-Terms:
-- **Items per page** — the number of rows in one page of paged navigation. Set by the page-size select.
-- **Show More batch** — the number of rows one Show More activation appends. Configurable; default equal to the saved page size **only until the batch size is made separate** (see open decision D-SM1).
-- **Pagination** — explicit page navigation. Changes the visible rows to another page. It never appends.
-- **Counter** — `visible range` and `total`, derived from the rows actually in the DOM and the server total. Never a stale label.
+Terms (decided by the user):
+- **Items per page** — the rows in one page of paged navigation (the page-size select). It also sets the Show More batch size.
+- **Show More** — reveals the next batch of rows below the rows already shown. It never changes the pager's page.
+- **Pagination** — moves to another page and replaces the rows. It resets the Show More window.
+- **Counter** — `first–last of total`, from the rows in the window and the server total.
 
-Required behavior (from the directive §3), with the current state:
+How it works (`static/js/modules/ui/unified-table.js`):
+1. The window starts at the page's first row (`data-first-row`) and holds `data-shown` rows.
+2. Show More requests the next block of `page size` rows after `first-1 + shown`. Because the window always grows in whole batches, that block is an aligned server page: `page = offset/size + 1`, `per_page = size`. The response is never larger than one page.
+3. Only the rows past the ones already shown are appended (`adoptAppendedRows` skips `offset mod size`). No duplicates.
+4. `data-page` (the pager) is never read or written by Show More. Its request does not carry the pager's page.
+5. Show More is offered while rows remain after the window (`renderUnifiedPagination`), not only when there is a next page. The block's first row comes from the page, not from 1.
+6. The `ut:loadmore` event carries `first`, `shown`, `total`; the keywords counter uses them.
 
-| # | Requirement | Current state (verified) |
+Implementation note: the user chose "reveal from a loaded set". The implementation instead requests only the next aligned block, so already shown rows are not fetched again. The reveal happens in the browser either way, and the rows, counter and pager behave as the option describes. Tell me if the literal re-fetch of shown + batch rows is required.
+
+| # | Requirement | Status after this change |
 |---|---|---|
-| 1 | Show More appends the next batch to the visible list | Keywords/Sides/Sources/Words: appends (verified on keywords, sides, sources) |
-| 2 | No duplicated rows | verified (unique count 20/20 after one activation) |
-| 3 | Batch size configurable and consistently interpreted | **Not met**: batch = page size |
-| 4 | Final partial batch loads only what remains | not yet tested |
-| 5 | Show More hidden when nothing remains | observed hidden on last page; not yet tested per display |
-| 6 | Filter/search resets the set | verified on keywords (filter); search reset not yet tested per display |
-| 7 | Sort reorders without loss/duplication | verified on the four list pages |
-| 8 | Page size and paging do not conflict with Show More | **Not met**: Show More advances the pager's page, so Next then shows rows already visible |
-| 9 | Empty, exact-boundary, final-partial, changed-dataset cases | empty verified; boundary and changed-dataset not yet tested |
-| 10 | Existing controls and layout kept | yes (no control moved) |
+| 1 | Show More appends the next batch | met on list pages (`verify_lists.cjs` 71/71 incl. Show More appends; keyword browser checks 13/13) |
+| 2 | No duplicated rows | met (unique-row checks on keywords, page 1 and page 2) |
+| 3 | Batch size configurable and consistently interpreted | met as decided: batch = Items Per Page |
+| 4 | Final partial batch reveals only what remains | met for keywords (page 2, size 50: 50 → 70 of 120, window 51–120) |
+| 5 | Show More hidden when nothing remains | met in the engine smoke test (`unified_state_sync_smoke`); not yet checked in a browser per display |
+| 6 | Filter/search resets the set | empty search verified (`verify_lists`); filter and search reset of the Show More window not yet verified |
+| 7 | Sort reorders without loss | sort asc/desc verified (`verify_lists`); sort combined with an expanded Show More window not yet verified |
+| 8 | Show More does not conflict with page size or paging | met for keywords: pager stays on its page (live check); Next/Prev after Show More not yet verified |
+| 9 | Empty, boundary, final-partial, changed-dataset | empty and final-partial pass in the engine smoke test; changed-dataset clamp is engine-only; exact-boundary per display not verified |
+| 10 | Controls and layout kept | yes |
 
-**Root cause of requirement 8 (verified in code):** `static/js/modules/ui/unified-table.js` `updateLoadMoreBlock` and `nextPageUrl` advance `data-page`, the same attribute the numbered pager reads. Show More therefore changes the pager's current page.
+Known gap: callers of `renderUnifiedPagination` that do not pass `pageSize` (about 10 call sites) keep the old offer rule and first-row formula. Keywords passes the page size. The others need the same one-line change, verified per display.
 
-Open decisions (need user confirmation before implementation):
-- **D-SM1:** Should the Show More batch size be a separate control, or stay tied to the page size?
-- **D-SM2:** Server-side Show More should use an offset (`offset`, `limit`) rather than a page number, so a batch can differ from a page. This needs an offset-capable fetch in each list route. The keywords route currently loads the full set (finding 2), so an offset fetch there also needs a SQL-level or cached sort.
+Open decision (unchanged): the server's default page size. See §4 item 4.

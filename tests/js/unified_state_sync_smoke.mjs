@@ -109,68 +109,60 @@ const activeNumber = () => (pager.querySelector('.unified-pagination-link.active
 const linkFor = (label) => Array.from(pager.querySelectorAll('.unified-pagination-link'))
     .find((node) => node.textContent.trim() === label);
 
-// Batch 1: page 2 -> 3.
+// Batch 1: Show More on page 2. The batch is the next aligned block (page 3 at
+// size 5); the pager stays on page 2 and only the revealed rows grow.
 block.querySelector('button').dispatch('click');
 await wait();
 check('the batch asks for page 3 of the same view (sort and page size ride along)',
       served.length === 1 && served[0].includes('page=3') && served[0].includes('per_page=5')
       && served[0].includes('sort=name') && served[0].includes('order=asc'), served[0]);
-check('the block moved to page 3 with 10 rows shown', block.getAttribute('data-page') === '3'
+check('Show More keeps the pager on page 2 and counts 10 rows shown', block.getAttribute('data-page') === '2'
       && block.getAttribute('data-shown') === '10', `${block.getAttribute('data-page')}/${block.getAttribute('data-shown')}`);
 check('the range reads 6-15 in the pager and in the toolbar',
       text('[data-ut-last]', pager) === '15' && text('[data-ut-last]', wrapperInfo) === '15'
       && text('[data-ut-first]', pager) === '6', text('[data-ut-last]', pager));
-check('the pager says page 3 of 5', text('[data-ut-page]', pager) === '3' && text('[data-ut-pages]', pager) === '5');
-check('the numbered links follow the page (window 1-5, page 3 active)',
-      activeNumber() === '3' && numberLinks().join(',') === '1,2,4,5', `${activeNumber()} / ${numberLinks()}`);
-check('Prev points at page 2, Next at page 4, Last at page 5',
-      linkFor('Prev').getAttribute('href').includes('page=2')
-      && linkFor('Next').getAttribute('href').includes('page=4')
+check('the pager still says page 2 of 5', text('[data-ut-page]', pager) === '2' && text('[data-ut-pages]', pager) === '5');
+check('the numbered window is unchanged (page 2 active; links 1,3,4 and Last 5)',
+      activeNumber() === '2' && numberLinks().join(',') === '1,3,4,5', `${activeNumber()} / ${numberLinks()}`);
+check('Prev points at page 1, Next at page 3, Last at page 5',
+      linkFor('Prev').getAttribute('href').includes('page=1')
+      && linkFor('Next').getAttribute('href').includes('page=3')
       && linkFor('Last').getAttribute('href').includes('page=5'));
 check('every page link keeps the sort (no lost view state)',
-      linkFor('2').getAttribute('href').includes('sort=name') && linkFor('2').getAttribute('href').includes('per_page=5'),
-      linkFor('2').getAttribute('href'));
-check('the jump input shows page 3', pager.querySelector('.unified-pagination-jump-input').value === '3');
-check('the pager container says page 3', pager.getAttribute('data-current-page') === '3');
+      linkFor('3').getAttribute('href').includes('sort=name') && linkFor('3').getAttribute('href').includes('per_page=5'),
+      linkFor('3').getAttribute('href'));
+check('the jump input shows page 2', pager.querySelector('.unified-pagination-jump-input').value === '2');
+check('the pager container says page 2', pager.getAttribute('data-current-page') === '2');
 check('the control is still offered (more pages)', block.hidden === false);
 
-// Batch 2: an empty batch must not move the page.
+// Batch 2: an empty batch must not move the page, and must add nothing.
 nextBatch = batchHtml(0, 0);
 block.querySelector('button').dispatch('click');
 await wait();
-check('an empty batch does not advance the page', block.getAttribute('data-page') === '3',
+check('an empty batch leaves the pager on page 2', block.getAttribute('data-page') === '2',
       block.getAttribute('data-page'));
 check('an empty batch leaves the shown count alone', block.getAttribute('data-shown') === '10', block.getAttribute('data-shown'));
 check('an empty batch hides the control (nothing more to load)', block.hidden === true);
-check('the pager still says page 3 after an empty batch', pager.getAttribute('data-current-page') === '3',
+check('the pager still says page 2 after an empty batch', pager.getAttribute('data-current-page') === '2',
       pager.getAttribute('data-current-page'));
 
-// The control was hidden by the empty batch; the view is complete from here.
-// Reset the state to page 3 with a visible control to continue the walk.
+// The control was hidden by the empty batch; re-offer it to continue the walk
+// from the same window (page 2, 10 rows shown).
 block.hidden = false;
-block.setAttribute('data-page', '3');
-block.setAttribute('data-shown', '10');
-block.setAttribute('data-total-pages', '5');
-pager.setAttribute('data-current-page', '3');
 
 block.querySelector('button').dispatch('click');
 await wait();
-check('the walk continues to page 4 (15 shown)', block.getAttribute('data-page') === '4'
-      && block.getAttribute('data-shown') === '15', block.getAttribute('data-shown'));
-check('the numbered links move with it: window 2-5 plus page 1, page 4 active',
-      activeNumber() === '4' && numberLinks().join(',') === '1,2,3,5', `${activeNumber()} / ${numberLinks()}`);
+check('Show More reveals a third batch: 15 shown, pager still on page 2', block.getAttribute('data-page') === '2'
+      && block.getAttribute('data-shown') === '15', `${block.getAttribute('data-page')}/${block.getAttribute('data-shown')}`);
+check('the numbered window does not move with Show More (page 2 active)',
+      activeNumber() === '2' && numberLinks().join(',') === '1,3,4,5', `${activeNumber()} / ${numberLinks()}`);
 
-// Last batch: page 5 brings 3 rows; the range closes at 23.
+// Last batch: the window closes at row 23 of 23 and the control hides itself.
 block.querySelector('button').dispatch('click');
 await wait();
-check('the last batch brings page 5 (18 shown of 23)', block.getAttribute('data-page') === '5'
-      && block.getAttribute('data-shown') === '18', block.getAttribute('data-shown'));
-check('the range closes at 6-23', text('[data-ut-last]', pager) === '23' && text('[data-ut-last]', wrapperInfo) === '23');
-check('the pager shows the last page: 1, ellipsis, 3-5 with page 5 active',
-      activeNumber() === '5' && numberLinks().join(',') === '1,3,4', `${activeNumber()} / ${numberLinks()}`);
-check('Next and Last are disabled on the last page',
-      linkFor('Next').classList.contains('disabled') && linkFor('Next').getAttribute('aria-disabled') === 'true'
-      && linkFor('Last').classList.contains('disabled'));
+check('the last batch brings 18 shown of 23 (window 6-23)', block.getAttribute('data-shown') === '18'
+      && block.getAttribute('data-page') === '2', block.getAttribute('data-shown'));
+check('the range closes at 23', text('[data-ut-last]', pager) === '23' && text('[data-ut-last]', wrapperInfo) === '23');
 check('the control hides itself at the end', block.hidden === true);
 check('the page list does not duplicate a number', new Set(numberLinks()).size === numberLinks().length,
       numberLinks().join(','));

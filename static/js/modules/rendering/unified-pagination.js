@@ -91,11 +91,20 @@ export function renderUnifiedPagination(options) {
 
     // Pagination controls
     html += '<div class="unified-pagination-controls">';
-    if (tableId && page < totalPagesFinal) {
+    // Show More belongs to the window this page shows: it is offered while rows
+    // remain after the window, whatever the page number. Its batch is the page
+    // size, and its first row is this page's first row.
+    const size = pageSize || rowsShown || 0;
+    const firstRow = ((page - 1) * size) + 1;
+    const remainingAfterWindow = totalCount == null
+        ? null
+        : totalCount - (firstRow - 1) - (rowsShown || 0);
+    const offerLoadMore = tableId && (remainingAfterWindow == null ? page < totalPagesFinal : remainingAfterWindow > 0);
+    if (offerLoadMore) {
         html += loadMoreBlockHtml({
             tableId, page, totalPages: totalPagesFinal,
             total: totalCount, shown: rowsShown, label: loadMoreLabel,
-            pageSize, firstRow: ((page - 1) * (pageSize || 0)) + 1,
+            pageSize: size, firstRow,
         });
     }
     html += '<nav aria-label="Page navigation">';

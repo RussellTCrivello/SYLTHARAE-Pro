@@ -521,19 +521,43 @@
     /** The next page of THIS view, as the same URL one page on. Everything
      *  the reader chose - search, sort, filters, batch size - rides along in
      *  the query string; only the page number moves. */
-    function nextPageUrl(table, config) {
+    /**
+     * Show More geometry. The rows of the list are numbered from 1; the
+     * pager's page is a separate thing and is never read or changed here.
+     *
+     *   start   rows before this view's window (the page's first row - 1)
+     *   size    the batch size: the current page size (Items Per Page)
+     *   offset  rows already displayed in the window (start .. start+shown)
+     *
+     * A batch is the next block of `size` rows after start+shown. Because the
+     * window starts at a multiple of `size` and grows by whole batches, that
+     * block is an aligned server page: batchPage = offset/size + 1, skip = 0.
+     * The request is therefore never larger than one page, and the server's
+     * per-page limit always applies.
+     */
+    function batchGeometry(block) {
+        const state = readBlockState(block);
+        const start = Math.max(0, state.firstRow - 1);
+        const size = state.pageSize > 0 ? state.pageSize : Math.max(1, state.shown);
+        const offset = start + state.shown;
+        const batchPage = Math.floor(offset / size) + 1;
+        const skip = offset - (batchPage - 1) * size;
+        return { start, size, offset, batchPage, skip, total: state.total };
+    }
+
+    function nextBatchUrl(table, config) {
+        const block = loadMoreBlock(table);
+        const geometry = batchGeometry(block);
         const url = new URL(global.location.href);
-        const pageParam = config.pageParam || 'page';
-        const current = parseInt(loadMoreBlock(table)?.getAttribute('data-page'), 10)
-            || parseInt(url.searchParams.get(pageParam), 10) || 1;
-        url.searchParams.set(pageParam, String(current + 1));
+        url.searchParams.set(config.pageParam || 'page', String(geometry.batchPage));
+        url.searchParams.set(config.sizeParam || 'per_page', String(geometry.size));
         url.searchParams.delete('cursor');
         return url.toString();
     }
 
     function adoptAppendedRows(table, doc, config) {
-        // The server rendered the next batch as a whole page; this table's
-        // body is the only part we take. Nothing else on the page moves.
+        // The server rendered the batch as a whole page; this table's body is
+        // the only part we take. Nothing else on the page moves.
         const incoming = table.id
             ? doc.querySelector('table#' + CSS.escape(table.id) + ' tbody')
             : doc.querySelector('[' + WRAPPER_ATTR + '] table tbody');
@@ -543,8 +567,11 @@
         // Only real rows are adopted. An empty or loading stand-in in the batch
         // (the server's empty state) is not a record: adopting it would put a
         // placeholder into the list, and an empty batch must add nothing.
+        const block = loadMoreBlock(table);
+        const { skip } = block ? batchGeometry(block) : { skip: 0 };
         Array.from(incoming.rows)
             .filter((row) => !row.hasAttribute(STATE_ATTR))
+            .slice(skip)
             .forEach((row) => fragment.appendChild(global.document.importNode(row, true)));
         const count = fragment.children.length;
         // A state row (empty/filtered) must never be adopted; the list has
@@ -723,20 +750,21 @@
         // A batch that brought rows moves the view on one page. An empty batch
         // (or a failed read) does not: the pager must not claim a page the
         // rows do not cover.
+        // Show More reveals rows; it never moves the pager. The counter grows by
+        // the rows it brought, bounded by what remains after the window's start.
+        const start = Math.max(0, state.firstRow - 1);
         if (appended > 0) {
-            state.shown = Math.min(state.total, state.shown + appended);
-            state.page += 1;
+            state.shown = Math.min(state.total - start, state.shown + appended);
         }
-        clampPage(state);
         writeBlockState(block, state);
         applyState(block, table, state, config);
-        // Nothing more to load: an empty batch, the last page, or every row shown.
-        block.hidden = appended === 0 || state.page >= state.totalPages || state.shown >= state.total;
+        // Nothing more to load: an empty batch, or every remaining row is shown.
+        block.hidden = appended === 0 || start + state.shown >= state.total;
         const wrapper = wrapperOf(table);
         if (wrapper) {
             wrapper.dispatchEvent(new CustomEvent('ut:loadmore', {
                 bubbles: true,
-                detail: { table: table.id, appended: appended, shown: state.shown, total: state.total }
+                detail: { table: table.id, appended: appended, first: state.firstRow, shown: state.shown, total: state.total }
             }));
         }
     }
@@ -753,7 +781,7 @@
         loadMoreBusy.add(table);
         block.setAttribute('data-loading', '');
         const config = configOf(table);
-        fetch(nextPageUrl(table, config), {
+        fetch(nextBatchUrl(table, config), {
             headers: { 'X-Requested-With': 'fetch' },
             credentials: 'same-origin',
         })

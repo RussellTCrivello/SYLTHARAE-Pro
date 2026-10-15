@@ -53,7 +53,7 @@ function captureContainer(id) {
 const bound = captureContainer('paginationContainer');
 renderUnifiedPagination({
     currentPage: 2, totalPages: 4, containerId: 'paginationContainer',
-    tableId: 'keywordsTable', totalCount: 18, rowsShown: 10,
+    tableId: 'keywordsTable', totalCount: 40, rowsShown: 10, pageSize: 10,
     onPageChange: () => {}, urlParams: {}, showInfo: true, showJump: false,
     baseUrl: '/keywords',
 });
