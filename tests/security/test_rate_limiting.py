@@ -57,8 +57,13 @@ def test_job_progress_polling_is_not_throttled_during_a_run(admin_client):
 
 @pytest.mark.usefixtures("rate_limited_app")
 def test_the_default_limit_still_applies_to_other_endpoints(admin_client):
-    """Polling endpoints are the exception, not the rule."""
-    codes = [admin_client.get("/api/jobs").status_code for _ in range(75)]
+    """Polling endpoints are the exception, not the rule.
+
+    ``/api/jobs`` is deliberately on INTERACTIVE_READ_LIMIT (600/minute) and
+    cannot demonstrate the default, so this uses ``/api/keywords``, which keeps
+    the strict default limit.
+    """
+    codes = [admin_client.get("/api/keywords?limit=1").status_code for _ in range(75)]
     assert 429 in codes, f"expected the default limit to still apply: {set(codes)}"
 
 
