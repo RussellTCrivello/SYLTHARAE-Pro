@@ -82,6 +82,11 @@ function escapeHtml(text) {
 
 let toastTimer = null;
 function showToast(message, isError = false) {
+    // One notification stack for the whole app: use it when the shell has it.
+    if (window.Toast) {
+        window.Toast[isError ? 'error' : 'success'](message);
+        return;
+    }
     let toast = document.getElementById('analystClassifyToast');
     if (!toast) {
         toast = document.createElement('div');

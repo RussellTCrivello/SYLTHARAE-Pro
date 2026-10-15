@@ -164,7 +164,7 @@ Every class a component renders has exactly one owner. **OWNED** means an SYLTHA
 
 | Ownership | Classes |
 | --- | --- |
-| OWNED (SYLTHARAE) | 164 |
+| OWNED (SYLTHARAE) | 165 |
 | THIRD_PARTY (Bootstrap, Bootstrap Icons) | 259 |
 | UNKNOWN | 0 |
 

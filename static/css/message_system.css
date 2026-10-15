@@ -427,3 +427,114 @@
     }
 }
 
+
+/* ==========================================================================
+   Notification stack - one top-end layer for every success and note.
+
+   Every message (Toast.* from core/toast.js, the message system's
+   showSuccess/messageRouter, and the per-page showToast helpers) is drawn
+   inside the single [data-toast-region]. That layer is fixed to the top-end
+   corner and sits above every other layer in the app: the highest z-index in
+   use is 10020 (sticky table headers) and modals are 1055, so the stack uses
+   --z-notice, which is above both. Nothing renders below the page or behind
+   a modal, and two stacks can no longer overlap in the same corner.
+   ========================================================================== */
+:root {
+    --z-notice: 10100;
+}
+
+.toast-stack {
+    position: fixed !important;
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: auto;
+    z-index: var(--z-notice) !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.6rem;
+    width: min(24rem, calc(100vw - 2rem));
+    max-width: none;
+    padding: 1rem !important;
+    pointer-events: none;
+}
+
+.toast-stack > * {
+    pointer-events: auto;
+}
+
+/* The message system draws its cards inside the stack, in normal flow, so the
+   two kinds of note share one column rather than fighting over the corner. */
+.toast-stack .message-container {
+    position: static;
+    top: auto;
+    right: auto;
+    z-index: auto;
+    width: 100%;
+    max-width: none;
+    gap: 0.6rem;
+    pointer-events: auto;
+}
+
+/* Refined toast card: a solid tone, rounded, lifted, and easy to read at a
+   glance. Tone colours still come from Bootstrap's text-bg-* classes. */
+.toast-stack .toast {
+    width: 100%;
+    min-width: 16rem;
+    border: 0;
+    border-radius: 0.75rem;
+    box-shadow: 0 0.75rem 2rem rgba(15, 23, 42, 0.25);
+    overflow: hidden;
+    animation: toast-stack-drop 220ms ease-out both;
+}
+
+.toast-stack .toast .toast-body {
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.toast-stack .toast > .d-flex {
+    align-items: center;
+}
+
+.toast-stack .toast .bi {
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+.toast-stack .toast .toast-action {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.toast-stack .toast .btn-close {
+    opacity: 0.85;
+}
+
+@keyframes toast-stack-drop {
+    from {
+        opacity: 0;
+        transform: translateY(-0.5rem);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toast-stack .toast {
+        animation: none;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .toast-stack {
+        width: calc(100vw - 1rem);
+        padding: 0.5rem !important;
+    }
+}

@@ -694,7 +694,7 @@ function escapeHtml(text) {
 
 // Toast notification helper: build nodes explicitly so messages stay text-only.
 function showToast(message, type = 'info') {
-    const toastContainer = document.getElementById('toastContainer') || createToastContainer();
+    const toastContainer = (document.querySelector('[data-toast-region]') || document.getElementById('toastContainer')) || createToastContainer();
     const isError = type === 'error';
     const variant = isError ? 'danger' : (type === 'success' ? 'success' : 'info');
     const toast = document.createElement('div');

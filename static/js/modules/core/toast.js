@@ -13,8 +13,8 @@
  *     own. Nothing disappears before it has been read unless the reader says so.
  *
  * API
- *   Toast.show({tone, message, detail, actionLabel, actionHref, correlationId,
- *               persistent, dismissible, timeout})
+ *   Toast.show({tone, title, message, detail, actionLabel, actionHref, onAction,
+ *               correlationId, persistent, dismissible, timeout})
  *   Toast.success(message, options) / .info / .warning / .error
  *   Toast.clear(region)
  *
@@ -69,6 +69,14 @@
         var text = document.createElement('div');
         text.className = 'toast-body flex-grow-1';
 
+        if (spec.title) {
+            var title = document.createElement('div');
+            title.className = 'fw-semibold';
+            title.setAttribute('data-toast-title', '');
+            title.textContent = String(spec.title);
+            text.appendChild(title);
+        }
+
         // Text, never markup: a message cannot become HTML here.
         var message = document.createElement('div');
         message.setAttribute('data-toast-message', '');
@@ -100,6 +108,18 @@
             action.href = String(spec.actionHref);
             action.textContent = String(spec.actionLabel);
             text.appendChild(action);
+        } else if (spec.actionLabel && typeof spec.onAction === 'function') {
+            // A callback action (for example "Undo"): a real button, so it is
+            // keyboard-reachable and never navigates.
+            var button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'toast-action btn btn-link btn-sm p-0 mt-1 text-white';
+            button.setAttribute('data-toast-action', '');
+            button.textContent = String(spec.actionLabel);
+            button.addEventListener('click', function () {
+                spec.onAction();
+            });
+            text.appendChild(button);
         }
 
         body.appendChild(icon);

@@ -1759,6 +1759,11 @@ async function removeAnalystCategoriesFromSelection() {
 
 // Lightweight toast for categorization feedback
 function showAnalystToast(message) {
+    // One notification stack for the whole app: use it when the shell has it.
+    if (window.Toast) {
+        window.Toast.success(message);
+        return;
+    }
     let toast = document.getElementById('analystActionToast');
     if (!toast) {
         toast = document.createElement('div');

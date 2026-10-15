@@ -148,7 +148,7 @@ async function getCSRFTokenAsync() {
 
 // Toast notification helper
 function showToast(message, type = 'info', duration = 4000) {
-    let toastContainer = document.getElementById('toastContainer');
+    let toastContainer = (document.querySelector('[data-toast-region]') || document.getElementById('toastContainer'));
     if (!toastContainer) {
         toastContainer = document.createElement('div');
         toastContainer.id = 'toastContainer';

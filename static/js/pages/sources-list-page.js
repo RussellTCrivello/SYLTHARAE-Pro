@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Toast notification helper function
 function showToast(message, type = 'info', duration = 4000) {
-    const toastContainer = document.getElementById('toastContainer');
+    const toastContainer = (document.querySelector('[data-toast-region]') || document.getElementById('toastContainer'));
     if (!toastContainer) {
         const container = document.createElement('div');
         container.id = 'toastContainer';
@@ -64,7 +64,7 @@ function showToast(message, type = 'info', duration = 4000) {
         </div>
     `;
     
-    document.getElementById('toastContainer').insertAdjacentHTML('beforeend', toastHtml);
+    (document.querySelector('[data-toast-region]') || document.getElementById('toastContainer')).insertAdjacentHTML('beforeend', toastHtml);
     const toastElement = document.getElementById(toastId);
     const toast = new bootstrap.Toast(toastElement, { delay: duration });
     toast.show();
