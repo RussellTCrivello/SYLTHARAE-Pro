@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     {#- Soft-nav module cache-bust: bump when shipping JS that must re-init
         after in-app navigations (DocumentActions, analysis, export modules). -#}
-    <meta name="asset-version" content="20261015d">
+    <meta name="asset-version" content="20261015e">
     {#- Runs data-on-<event> handlers without inline script (RES-CSP-01).
         Synchronous and first, so every control drawn below is live. -#}
     <script src="{{ url_for('static', filename='js/modules/core/declarative-events.js') }}"></script>

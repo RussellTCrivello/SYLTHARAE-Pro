@@ -742,6 +742,9 @@
             try {
                 // Use setTimeout to ensure chart is fully initialized
                 setTimeout(() => {
+                    // The chart may have been replaced (type change) or its
+                    // canvas removed before the timer fired: skip, do not throw.
+                    if (window.ChartCustomizer.isAttachable && !window.ChartCustomizer.isAttachable(chart)) return;
                     window.ChartCustomizer.attachCustomizationButton(container, chart, chartName);
                 }, 150);
             } catch (e) {
@@ -1030,6 +1033,8 @@
             // Also ensure customization button is attached (even if controls already exist)
             if (window.ChartCustomizer && typeof window.ChartCustomizer.attachCustomizationButton === 'function') {
                 setTimeout(() => {
+                    // Same rule as above: a replaced or detached chart is skipped.
+                    if (window.ChartCustomizer.isAttachable && !window.ChartCustomizer.isAttachable(chart)) return;
                     try {
                         window.ChartCustomizer.attachCustomizationButton(chartContainer, chart, chartName);
                     } catch (e) {
