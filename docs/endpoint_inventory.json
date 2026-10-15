@@ -3528,6 +3528,30 @@
     "internal": false
   },
   {
+    "endpoint": "files.same_context_duplicates_preview",
+    "rule": "/api/files/same-context-duplicates",
+    "methods": [
+      "GET"
+    ],
+    "blueprint": "files",
+    "module": "files",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "files.same_context_duplicates_remove",
+    "rule": "/api/files/same-context-duplicates/remove",
+    "methods": [
+      "POST"
+    ],
+    "blueprint": "files",
+    "module": "files",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
     "endpoint": "files.serve_file",
     "rule": "/api/file/serve",
     "methods": [
@@ -5177,6 +5201,42 @@
     "internal": true
   },
   {
+    "endpoint": "setup.dependency_install",
+    "rule": "/api/setup/dependencies/install",
+    "methods": [
+      "POST"
+    ],
+    "blueprint": "setup",
+    "module": "setup",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "setup.dependency_job",
+    "rule": "/api/setup/dependencies/jobs/<job_id>",
+    "methods": [
+      "GET"
+    ],
+    "blueprint": "setup",
+    "module": "setup",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "setup.dependency_report",
+    "rule": "/api/setup/dependencies",
+    "methods": [
+      "GET"
+    ],
+    "blueprint": "setup",
+    "module": "setup",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
     "endpoint": "setup.run_installation",
     "rule": "/api/setup/install",
     "methods": [
@@ -5185,6 +5245,18 @@
     "blueprint": "setup",
     "module": "setup",
     "classification": "SYSTEM_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "setup.set_setup_language",
+    "rule": "/api/setup/language",
+    "methods": [
+      "POST"
+    ],
+    "blueprint": "setup",
+    "module": "setup",
+    "classification": "API_ENDPOINT",
     "owned_by": null,
     "internal": true
   },
