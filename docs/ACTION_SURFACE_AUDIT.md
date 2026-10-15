@@ -41,7 +41,7 @@ This is a measurement of the product as it is, not a target.
 
 | Measure | Value |
 | --- | --- |
-| Registered interfaces | 35 |
+| Registered interfaces | 34 |
 | Navigable screens | 33 |
 | Screens with a described experience | 5 |
 | Screens nobody has described yet | 28 |

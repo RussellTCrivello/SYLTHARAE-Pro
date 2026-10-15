@@ -49,10 +49,10 @@ rather than being explained away.
 <!-- BEGIN GENERATED EXPERIENCE CONTRACT -->
 ### What this build declares
 
-- Contracts: **35** (described: **5**, derived from the registry only: **30**)
+- Contracts: **34** (described: **5**, derived from the registry only: **29**)
 - Definitions: **34** actions, **27** columns, **6** filters, **0** fields, **5** states
-- Translation keys the screens need: **255**
-- With help: **33**; with a shortcut: **18**; with a navigation entry: **35**
+- Translation keys the screens need: **250**
+- With help: **32**; with a shortcut: **18**; with a navigation entry: **34**
 
 ### Every screen
 
@@ -90,7 +90,6 @@ rather than being explained away.
 | `users` | ADMINISTRATION | derived | `screen.users.title` | — | — | — | — | yes |
 | `audit_log` | ADMINISTRATION | derived | `screen.audit_log.title` | — | — | — | — | yes |
 | `settings` | SETTINGS | derived | `screen.settings.title` | — | — | — | — | yes |
-| `interface_manager` | SETTINGS | derived | `screen.interface_manager.title` | — | — | — | — | yes |
 | `translation_manager` | SETTINGS | derived | `screen.translation_manager.title` | — | — | — | — | yes |
 | `concurrency_monitor` | INTERNAL | derived | `screen.concurrency_monitor.title` | — | — | — | — | — |
 
@@ -100,9 +99,9 @@ Counted from the catalogs the build ships - the Babel catalogs under `translatio
 
 | Language | Catalog entries | Source strings | Translated | Fallback | Missing | Coverage | Of which translated |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `ar` | 4053 | 3713 | 3618 | 18 | 77 | 97.9% | 97.4% |
-| `fa` | 3825 | 3713 | 3351 | 20 | 342 | 90.8% | 90.3% |
-| `he` | 3825 | 3713 | 3349 | 22 | 342 | 90.8% | 90.2% |
+| `ar` | 4218 | 3713 | 3619 | 18 | 76 | 98.0% | 97.5% |
+| `fa` | 3991 | 3713 | 3353 | 20 | 340 | 90.8% | 90.3% |
+| `he` | 3991 | 3713 | 3351 | 22 | 340 | 90.8% | 90.3% |
 | `hr` | 3779 | 3713 | 3604 | 27 | 82 | 97.8% | 97.1% |
 
 ### Coverage per screen
@@ -143,7 +142,6 @@ The strings a screen's contract asks for, and how many of them a language actual
 | `users` | 5 | 100.0% (0 by key) | 100.0% (0 by key) | 100.0% (0 by key) | 100.0% (0 by key) |
 | `audit_log` | 5 | 100.0% (0 by key) | 100.0% (0 by key) | 100.0% (0 by key) | 100.0% (0 by key) |
 | `settings` | 5 | 100.0% (0 by key) | 100.0% (0 by key) | 100.0% (0 by key) | 100.0% (0 by key) |
-| `interface_manager` | 5 | 100.0% (0 by key) | 100.0% (0 by key) | 100.0% (0 by key) | 100.0% (0 by key) |
 | `translation_manager` | 5 | 100.0% (0 by key) | 100.0% (0 by key) | 100.0% (0 by key) | 100.0% (0 by key) |
 | `concurrency_monitor` | 3 | 100.0% (0 by key) | 100.0% (0 by key) | 100.0% (0 by key) | 100.0% (0 by key) |
 
@@ -157,5 +155,5 @@ These have a contract derived from the registry, so they work: they have an iden
 
 Every contract passes the declarative checks: no SQL, no imports, no calls, no authorisation decisions, destructive actions carry a confirmation, bulk actions require a selection, and no key holds two different source strings.
 
-_Generated from 35 contracts, 3713 source strings and 5 catalogs._
+_Generated from 34 contracts, 3713 source strings and 5 catalogs._
 <!-- END GENERATED EXPERIENCE CONTRACT -->
