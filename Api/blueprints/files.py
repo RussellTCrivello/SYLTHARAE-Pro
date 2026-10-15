@@ -914,7 +914,9 @@ def api_file_type_statistics():
         return jsonify({
             'success': True,
             'types': rows,
+            # Every indexed document, unfiltered: the page's totals are dataset-wide.
             'total_files': sum(row['file_count'] for row in rows),
+            'total_files_scope': 'dataset',
         })
     except Exception as error:
         logger.error('Could not load file-type statistics: %s', error, exc_info=True)

@@ -34,16 +34,19 @@
         </nav>
     </header>
 
-    <section class="file-type-summary" aria-label="{{ _('Indexed file summary') }}">
+    {#- These totals cover every indexed document, whatever the table shows: the
+        column filters below the list only hide rows in the browser and never
+        change these numbers. -#}
+    <section class="file-type-summary" aria-label="{{ _('Indexed file summary for the whole dataset') }}">
         <div class="file-type-summary-icon"><i class="bi bi-collection" aria-hidden="true"></i></div>
         <div>
             <strong>{{ "{:,}".format(total_files|int) }}</strong>
-            <span>{{ _('indexed documents') }}</span>
+            <span>{{ _('indexed documents in the whole dataset') }}</span>
         </div>
         <div class="file-type-summary-divider" aria-hidden="true"></div>
         <div>
             <strong>{{ file_types|length }}</strong>
-            <span>{{ _('detected formats') }}</span>
+            <span>{{ _('detected formats in the whole dataset') }}</span>
         </div>
     </section>
 
@@ -63,7 +66,7 @@
             mode='client',
             sort_key='count',
             sort_dir='desc',
-            info_text=_('%(types)d detected formats across %(files)d indexed documents',
+            info_text=_('%(types)d detected formats across %(files)d indexed documents in the whole dataset',
                         types=file_types|length, files=total_files|int),
             empty_message=_('No indexed files yet.'),
             export_interface=export_interface_for(request.endpoint),
