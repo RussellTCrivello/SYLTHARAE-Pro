@@ -2,6 +2,8 @@
  * Sources List Page JavaScript
  * Extracted from Sources/sources_list.html
  */
+import { getCSRFToken } from '../modules/core/utils.js';
+
 
 // Load translations from JSON script tag
 let translations = {};
@@ -23,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Sources list page loaded');
 });
-
 
 // Toast notification helper function
 function showToast(message, type = 'info', duration = 4000) {
@@ -241,13 +242,7 @@ window.viewSourceCategoriesKeywords = viewSourceCategoriesKeywords;
 window.viewSource = viewSource;
 window.editSource = editSource;
 
-
-
 // ✅ SECURITY: Helper function to get CSRF token
-function getCSRFToken() {
-    const metaTag = document.querySelector('meta[name="csrf-token"]');
-    return metaTag ? metaTag.getAttribute('content') : '';
-}
 
 function duplicateSource(sourceId) {
     if (confirm(translations.createCopyOfSource)) {

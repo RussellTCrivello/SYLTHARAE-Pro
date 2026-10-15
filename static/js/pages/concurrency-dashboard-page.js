@@ -2,6 +2,8 @@
  * Concurrency Dashboard Page JavaScript
  * Extracted from concurrency/dashboard.html
  */
+import { escapeHtml } from '../modules/core/utils.js';
+
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', function() {
@@ -160,8 +162,3 @@ function updatePools() {
 }
 
 // Utility: Escape HTML
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}

@@ -5,7 +5,7 @@
 
 import notificationSystem from '../ui/notifications.js';
 import { translations } from '../core/config.js';
-import { getCSRFToken } from '../core/utils.js';
+import { getCSRFToken, escapeHtml } from '../core/utils.js';
 import { apiPost, apiGet } from '../api/api-client.js';
 import { endpoints } from '../api/endpoints.js';
 import * as select2Initializers from './select2-initializers.js';
@@ -935,11 +935,6 @@ export function setupModalKeyboardHandlers() {
 }
 
 // Helper functions for Bootstrap modals
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
 
 function getCSRFTokenForModal() {
     const metaTag = document.querySelector('meta[name="csrf-token"]');

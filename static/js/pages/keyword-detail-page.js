@@ -2,6 +2,8 @@
  * Keyword Detail Page JavaScript
  * Extracted from Keyword/keyword_detail.html
  */
+import { getCSRFToken } from '../modules/core/utils.js';
+
 
 // Load translations from JSON script tag
 let translations = {};
@@ -22,10 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ✅ SECURITY: Helper function to get CSRF token
-function getCSRFToken() {
-    const metaTag = document.querySelector('meta[name="csrf-token"]');
-    return metaTag ? metaTag.getAttribute('content') : '';
-}
 
 function deleteKeyword(id) {
     if (confirm(translations.deleteConfirm)) {

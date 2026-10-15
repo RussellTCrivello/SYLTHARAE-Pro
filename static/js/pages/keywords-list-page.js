@@ -3,6 +3,8 @@
  * Extracted from Keyword/keywords_list.html
  */
 
+import { getCSRFToken } from '../modules/core/utils.js';
+
 // Load translations from JSON script tag
 let translations = {};
 
@@ -1379,11 +1381,6 @@ if (typeof window.translations === 'undefined') {
         const div = document.createElement('div');
         div.textContent = String(text);
         return div.innerHTML;
-    }
-
-    function getCSRFToken() {
-        const metaTag = document.querySelector('meta[name="csrf-token"]');
-        return metaTag ? metaTag.getAttribute('content') : '';
     }
 
     async function getCSRFTokenAsync() {

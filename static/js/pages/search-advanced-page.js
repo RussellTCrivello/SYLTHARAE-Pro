@@ -14,6 +14,7 @@ import {
     iconForFileType,
 } from '../modules/ui/multi-select-dropdown.js';
 import { onPageTeardown } from '../modules/core/page-lifecycle.js';
+import { escapeHtml } from '../modules/core/utils.js';
 
 const ADVANCED_MULTI_SELECT_IDS = [
     'fileType',
@@ -2414,11 +2415,6 @@ function printResults() {
 // Helper function to escape CSV values
 
 // Helper function to escape HTML
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
 
 // Attribute-context escaper: escapeHtml (innerHTML text serialization)
 // leaves quotes intact, which would let a crafted filename break out of

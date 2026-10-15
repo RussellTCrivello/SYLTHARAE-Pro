@@ -6,6 +6,7 @@
  * to search, order and page the list by navigating with query parameters.
  * The unified table script owns the header sort (default server navigation).
  */
+import { getCSRFToken, escapeHtml } from '../modules/core/utils.js';
 
 // Use window.translations to avoid conflicts with other scripts
 if (typeof window.translations === 'undefined') {
@@ -123,10 +124,6 @@ function getCategoryId() {
 }
 
 // CSRF token helper functions
-function getCSRFToken() {
-    const metaTag = document.querySelector('meta[name="csrf-token"]');
-    return metaTag ? metaTag.getAttribute('content') : '';
-}
 
 async function getCSRFTokenAsync() {
     const metaToken = document.querySelector('meta[name="csrf-token"]');
@@ -774,11 +771,6 @@ async function addWordToList(wordId, wordText) {
 }
 
 // Helper function to escape HTML
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
 
 // Make functions available globally (must be done at module load time)
 // This ensures onclick handlers in HTML can access them

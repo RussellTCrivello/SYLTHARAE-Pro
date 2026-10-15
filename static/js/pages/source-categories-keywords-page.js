@@ -3,6 +3,8 @@
  * Displays categories and keywords for a specific source with file counts
  */
 
+import { escapeHtml } from '../modules/core/utils.js';
+
 document.addEventListener('DOMContentLoaded', function() {
     const pageDataEl = document.getElementById('source-categories-keywords-page-data');
     if (!pageDataEl) {
@@ -236,10 +238,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
 });
 
