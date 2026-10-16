@@ -74,6 +74,23 @@ def test_hsts_only_over_https_in_production(proxied_app, monkeypatch):
     assert "Strict-Transport-Security" not in plain.headers
 
 
+def test_same_origin_plain_http_login_works_without_disabling_csrf(app, admin_credentials, monkeypatch):
+    username, password = admin_credentials
+    monkeypatch.setitem(app.config, "WTF_CSRF_ENABLED", True)
+    monkeypatch.setitem(app.config, "SESSION_COOKIE_SECURE", False)
+    monkeypatch.setitem(app.config, "SESSION_COOKIE_SAMESITE", "Lax")
+    client = app.test_client()
+    page = client.get("/auth/login", base_url="http://lan-host:5000")
+    token = re.search(r'name="csrf-token" content="([^"]+)"',
+                      page.get_data(as_text=True)).group(1)
+    resp = client.post(
+        "/auth/login", json={"username": username, "password": password},
+        headers={"X-CSRFToken": token, "Referer": "http://lan-host:5000/auth/login"},
+        base_url="http://lan-host:5000")
+    assert resp.status_code == 200, resp.get_data(as_text=True)
+    assert resp.get_json()["success"] is True
+
+
 def test_without_a_trusted_proxy_forwarded_headers_are_ignored(app, admin_credentials):
     username, password = admin_credentials
     resp = app.test_client().post(
