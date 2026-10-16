@@ -22,7 +22,7 @@ exits with a non-zero status, which the systemd unit is configured to detect); a
 | `development_server` | warning | Production served by Flask's built-in server. | `pip install waitress` and set `WSGI_SERVER=waitress`. |
 | `waitress_missing` | warning | `WSGI_SERVER=waitress` but the package is absent. | Install it, or the built-in server is used instead. |
 | `proxy_bypassable` | warning | `TRUSTED_PROXY_COUNT` > 0 but the app listens on a non-loopback address. | Set `FLASK_HOST=127.0.0.1`, or firewall the app port — otherwise a client that reaches the app directly can forge `X-Forwarded-For` and evade rate limits, lockouts and audit attribution. |
-| `no_tls_proxy` | warning | Production, `TRUSTED_PROXY_COUNT=0`, non-loopback bind. | Terminate TLS in front (`deploy/nginx/syltharae.conf`); production cookies are `Secure`, so sign-in over plain HTTP fails and passwords would cross the network unencrypted. |
+| `no_tls_proxy` | warning | Production, `TRUSTED_PROXY_COUNT=0`, non-loopback bind. | Prefer TLS termination (`deploy/nginx/syltharae.conf`). With Secure cookies HTTP sign-in is rejected; turning Secure off allows it but sends passwords and session cookies unencrypted. |
 | `short_secret_key` | warning | `FLASK_SECRET_KEY` shorter than the minimum. | `python -c "import secrets; print(secrets.token_hex(32))"`, then restart. |
 
 Run the same evaluation without starting the server with
@@ -57,6 +57,24 @@ SOURCE_CODE_URL=https://…   # where users can get this deployment's source
 
 The setup wizard writes the production-shaped values when you let it, including
 `WSGI_SERVER=waitress` when the package is installed.
+
+## Direct HTTP on a trusted private network
+
+The app can serve direct HTTP for a trusted LAN or isolated test network. This keeps CSRF protection enabled and uses a non-Secure, SameSite=Lax session cookie, which browsers send for same-origin HTTP navigation and fetches. Set:
+
+```
+FLASK_ENV=development
+FLASK_DEBUG=false
+FLASK_HOST=0.0.0.0
+FLASK_PORT=5000
+TRUSTED_PROXY_COUNT=0
+SESSION_COOKIE_SECURE=false
+SESSION_COOKIE_SAMESITE=Lax
+```
+
+Then connect from another device using the server's LAN address, for example `http://192.168.1.20:5000` (replace with the actual address). Use that exact host consistently; do not open the app on one hostname and submit requests to a different IP/hostname. Keep the firewall limited to the intended private network. **Plain HTTP is not confidential:** usernames, passwords, session cookies and application data can be observed or modified by anyone able to intercept that network traffic. Do not use this mode on public Wi-Fi, an untrusted network or the public internet. For deployment beyond a trusted LAN, terminate TLS and use the production proxy configuration above.
+
+If viewing through a third-party embedded preview, browsers may block its cookies even with a valid CSRF token. Open the preview as a top-level page instead; this is a browser third-party-cookie restriction, not a reason to disable CSRF. Direct same-origin HTTP use on a LAN does not have that iframe restriction.
 
 ## First run
 

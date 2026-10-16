@@ -224,10 +224,11 @@ if not app.config.get('SECRET_KEY'):
     raise RuntimeError("SECRET_KEY is required but was not set!")
 logger.info(f"✅ SECRET_KEY configured (length: {len(app.config['SECRET_KEY'])})")
 
-# Initialize session configuration
-app.config['SESSION_COOKIE_SECURE'] = os.environ.get('FLASK_ENV') == 'production'
+# Initialize session configuration. Secure/Lax defaults are unchanged; explicit
+# overrides are useful for HTTPS reverse-proxy previews embedded cross-site.
+from apps.web.session_cookies import session_cookie_settings
+app.config.update(session_cookie_settings())
 app.config['SESSION_COOKIE_HTTPONLY'] = True
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 
 

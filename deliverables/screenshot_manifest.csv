@@ -1,0 +1,49 @@
+Filename,Interface / state,Route,CSS viewport,PNG dimensions,Dataset / verification context,Presentation reference
+00_login_authentic.png,00_login_authentic,/auth/login,1600×1050,2000×1313; 1600×1050 CSS @1.25x,"Actual login UI, unauthenticated",slides 88–91
+01_setup_wizard_authentic.png,01_setup_wizard_authentic,/setup,1600×1050,2000×1313; 1600×1050 CSS @1.25x,"Actual first-run wizard; screenshot only, installer backend completed separately",slides 88–91
+02_dashboard.png,02_dashboard,/,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+02_dashboard_navigation_open.png,02_dashboard_navigation_open,/,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,Product tour / interface reference
+03_file_library.png,03_file_library,/files,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+04_search.png,04_search,/search,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,Product tour / interface reference
+05_input_ingestion.png,05_input_ingestion,/operations/input,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+06_jobs.png,06_jobs,/operations/jobs,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+07_signals.png,07_signals,/signals,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+08_detection.png,08_detection,/signals/detection,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+09_monitoring.png,09_monitoring,/monitoring,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+10_reports.png,10_reports,/reports,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+11_settings.png,11_settings,/settings,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+12_map_viewer.png,12_map_viewer,/analytics/map-viewer,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+13_analyst_categories.png,13_analyst_categories,/analyst/categorization,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+14_import_export.png,14_import_export,/import-export,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+15_retention.png,15_retention,/retention,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+16_audit_log.png,16_audit_log,/admin/audit,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+17_ingestion_ready.png,17_ingestion_ready,/operations/input (selected sample files/source/side),1600×1050,2000×1313; 1600×1050 CSS @1.25x,Two synthetic TXT files; source Arena Synthetic Case File; side Synthetic Training Set,Product tour / interface reference
+17_sources.png,17_sources,/sources,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+18_ingestion_preflight.png,18_ingestion_preflight,/operations/input (dry-run result),1600×1050,2000×1313; 1600×1050 CSS @1.25x,"Actual dry-run: 2 discovered, 2 to read, 0 unreadable, 770 B",Product tour / interface reference
+18_job_detail_live.png,18_job_detail_live,/operations/jobs/4F247400BBD6,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual completed local synthetic ingestion job,Product tour / interface reference
+18_sides.png,18_sides,/sides,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+19_jobs_completed.png,19_jobs_completed,/operations/jobs,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual completed local synthetic ingestion job,Product tour / interface reference
+19_keywords.png,19_keywords,/keywords,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+20_search_results.png,20_search_results,/search?q=CASE-DEMO-042,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual query CASE-DEMO-042; two synthetic results,slides 54–87
+20_words.png,20_words,/words,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+21_categories.png,21_categories,/categories,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+22_email_words.png,22_email_words,/email-words,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+23_notifications.png,23_notifications,/notifications,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+24_path_analysis.png,24_path_analysis,/analytics/path-analysis,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+25_batch_analysis.png,25_batch_analysis,/analysis/batch,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+26_comprehensive_dashboard.png,26_comprehensive_dashboard,/dashboard/comprehensive,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+27_charts_dashboard.png,27_charts_dashboard,/dashboard/charts,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+28_reports_dashboard.png,28_reports_dashboard,/reports/dashboard,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+29_schedules.png,29_schedules,/schedules,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+30_import_center.png,30_import_center,/operations/import,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+31_archives.png,31_archives,/archives,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+32_translation_manager.png,32_translation_manager,/translations/manage,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+33_concurrency_monitor.png,33_concurrency_monitor,/concurrency/,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+34_users.png,34_users,/users,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87
+41_mobile_file_library.png,41_mobile_file_library,/files (mobile viewport),390×844,780×1688; 390×844 CSS @2x,Actual responsive screen spot-check; synthetic demo instance,Product tour / interface reference
+42_mobile_search.png,42_mobile_search,/search (mobile viewport),390×844,780×1688; 390×844 CSS @2x,Actual responsive screen spot-check; synthetic demo instance,Product tour / interface reference
+43_mobile_ingestion.png,43_mobile_ingestion,/operations/input (mobile viewport),390×844,780×1688; 390×844 CSS @2x,Actual responsive screen spot-check; synthetic demo instance,Product tour / interface reference
+44_mobile_settings.png,44_mobile_settings,/settings (mobile viewport),390×844,780×1688; 390×844 CSS @2x,Actual responsive screen spot-check; synthetic demo instance,Product tour / interface reference
+45_file_detail.png,45_file_detail,/file/1,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 88–91
+46_full_content.png,46_full_content,/file/1/full-content,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 88–91
+47_classification.png,47_classification,/analysis/classification,1600×1050,2000×1313; 1600×1050 CSS @1.25x,Actual authenticated live app capture; demo database; empty/low-data state where applicable,slides 54–87

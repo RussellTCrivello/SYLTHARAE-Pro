@@ -68,6 +68,14 @@ def test_unsafe_production_settings_warn_but_start(override, code):
     assert any(line.startswith("[ACTION]") for line in printed)
 
 
+def test_http_override_warning_explains_plaintext_exposure():
+    env = {**GOOD, "TRUSTED_PROXY_COUNT": "0", "FLASK_HOST": "0.0.0.0",
+           "SESSION_COOKIE_SECURE": "false", "SESSION_COOKIE_SAMESITE": "Lax"}
+    finding = next(f for f in check_deployment(env) if f.code == "no_tls_proxy")
+    assert "HTTP sign-in is enabled" in finding.message
+    assert "unencrypted" in finding.message
+
+
 def test_selected_but_missing_waitress_is_reported():
     assert codes(GOOD, waitress=False) == {"waitress_missing": "warning"}
 
