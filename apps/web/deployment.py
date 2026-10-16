@@ -144,13 +144,27 @@ def check_deployment(env: Optional[Mapping[str, str]] = None,
             "Set FLASK_HOST=127.0.0.1 when the proxy runs on the same machine, or "
             "firewall the app port so only the proxy can reach it."))
     elif proxies == 0 and not _is_loopback(host):
+        cookie_secure_value = (env.get("SESSION_COOKIE_SECURE") or "").strip().lower()
+        cookie_secure = (cookie_secure_value in {"1", "true", "yes", "on"}
+                         if cookie_secure_value else True)
+        if cookie_secure:
+            message = (
+                "Production with no reverse proxy (TRUSTED_PROXY_COUNT=0), listening on "
+                f"{host}. Secure session cookies prevent sign-in over plain HTTP, while "
+                "passwords would cross the network unencrypted."
+            )
+        else:
+            message = (
+                "Production with no reverse proxy (TRUSTED_PROXY_COUNT=0), listening on "
+                f"{host} with SESSION_COOKIE_SECURE=false. HTTP sign-in is enabled, but "
+                "credentials and session cookies cross the network unencrypted; restrict "
+                "access to a trusted private network."
+            )
         findings.append(Finding(
-            "warning", "no_tls_proxy",
-            "Production with no reverse proxy (TRUSTED_PROXY_COUNT=0), listening on "
-            f"{host}. Production session cookies are Secure, so browsers will not sign "
-            "in over plain HTTP, and passwords would cross the network unencrypted.",
-            "Put a TLS-terminating proxy in front (deploy/nginx/syltharae.conf) and set "
-            "TRUSTED_PROXY_COUNT=1 and FLASK_HOST=127.0.0.1."))
+            "warning", "no_tls_proxy", message,
+            "Prefer a TLS-terminating proxy (deploy/nginx/syltharae.conf) and set "
+            "TRUSTED_PROXY_COUNT=1 and FLASK_HOST=127.0.0.1. For HTTP on a trusted LAN "
+            "only, explicitly set SESSION_COOKIE_SECURE=false and SESSION_COOKIE_SAMESITE=Lax."))
 
     secret = env.get("FLASK_SECRET_KEY") or ""
     if secret and len(secret) < MIN_SECRET_KEY_LENGTH:
