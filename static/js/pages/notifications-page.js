@@ -387,8 +387,6 @@ notificationsPage.getTypeIcon = function (type) {
         error: '<i class="bi bi-x-octagon-fill" aria-hidden="true"></i>',
         warning: '<i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>',
         info: '<i class="bi bi-info-circle-fill" aria-hidden="true"></i>',
-        rule_match: '<i class="bi bi-funnel-fill" aria-hidden="true"></i>',
-        rule_status: '<i class="bi bi-slash-circle" aria-hidden="true"></i>',
         scenario_outcome: '<i class="bi bi-diagram-3-fill" aria-hidden="true"></i>',
         scenario_status: '<i class="bi bi-slash-circle" aria-hidden="true"></i>',
     };

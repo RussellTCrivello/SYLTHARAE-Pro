@@ -170,12 +170,30 @@
         append=True,
         pager=True) %}
     {% for category in categories %}
-    <tr class="category-item"
+    <tr class="category-item {% if category.parent_id %}subcategory{% endif %}"
         data-category-id="{{ category.id }}"
-        data-name="{{ category.name|lower }}">
+        data-name="{{ category.name|lower }}"
+        data-parent-id="{{ category.parent_id or '' }}">
         <td class="ut-index-cell"><span class="ut-badge ut-badge-neutral">#{{ category.id }}</span></td>
         <td data-ut-value="{{ category.name|lower }}">
+            {% if category.parent_id %}
+            <span class="text-muted" style="margin-right: 8px;">
+                <i class="bi bi-arrow-right-short"></i>
+            </span>
+            {% endif %}
             <a class="ut-name" href="{{ url_for('category_words', category_id=category.id) }}">{{ category.name }}</a>
+        </td>
+        <td data-ut-value="{{ category.parent_id or '' }}">
+            {% if category.parent_id %}
+                <a href="{{ url_for('categories_list') }}?search={{ categories|selectattr('id', 'equalto', category.parent_id)|first.name if categories|selectattr('id', 'equalto', category.parent_id)|first else '' }}" class="text-muted small">
+                    <i class="bi bi-tag"></i> Parent
+                {% else %}
+                    <span class="text-muted small">{{ _('Main Category') }}</span>
+                {% endif %}
+            </a>
+            {% else %}
+                <span class="text-muted small">{{ _('Main Category') }}</span>
+            {% endif %}
         </td>
         <td class="text-end" data-ut-value="{{ category.file_count }}">
             <span class="ut-badge ut-badge-primary">{{ category.file_count }}</span>

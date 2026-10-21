@@ -7,7 +7,7 @@ class CategoryQueries(BaseQueries):
     def get_by_id() -> str:
         """Get category by ID"""
         return """
-            SELECT c.id, w.word as category_name, c.word_id
+            SELECT c.id, w.word as category_name, c.word_id, c.parent_id
             FROM categorys c
             JOIN words w ON c.word_id = w.id
             WHERE c.id = %s
@@ -15,30 +15,31 @@ class CategoryQueries(BaseQueries):
     
     @staticmethod
     def list_all_join() -> str:
-        """List all categories"""
+        """List all categories with hierarchy info"""
         return """
-            SELECT c.id, w.word as category_name, c.word_id
+            SELECT c.id, w.word as category_name, c.word_id, c.parent_id
             FROM categorys c
             JOIN words w ON c.word_id = w.id
             ORDER BY w.word
             LIMIT %s
         """
+    
     @staticmethod
     def list_all() -> str:
         """List all categories"""
         return """
-            SELECT id, word_id FROM categorys
+            SELECT id, word_id, parent_id FROM categorys
         """
 
     @staticmethod
     def get_by_word_id() -> str:
         """Get category by word ID"""
-        return "SELECT id FROM categorys WHERE word_id = %s"
+        return "SELECT id, parent_id FROM categorys WHERE word_id = %s"
     
     @staticmethod
     def insert_category() -> str:
         """Insert new category"""
-        return "INSERT INTO categorys (word_id) VALUES (%s) RETURNING id"
+        return "INSERT INTO categorys (word_id, parent_id) VALUES (%s, %s) RETURNING id"
     
     @staticmethod
     def check_category_exists() -> str:
@@ -88,6 +89,7 @@ class CategoryQueries(BaseQueries):
             SELECT 
                 c.id, 
                 w.word as name,
+                c.parent_id,
                 COALESCE(file_counts.file_count, 0) as file_count,
                 COALESCE(word_counts.word_count, 0) as word_count
             FROM categorys c
@@ -112,6 +114,45 @@ class CategoryQueries(BaseQueries):
             ORDER BY file_count DESC, w.word ASC
             LIMIT %s
         """
+    
+    @staticmethod
+    def get_main_categories() -> str:
+        """Get main categories (no parent) with subcategory counts"""
+        return """
+            SELECT 
+                c.id, 
+                w.word as name,
+                c.parent_id,
+                COUNT(child.id) as subcategory_count
+            FROM categorys c
+            JOIN words w ON c.word_id = w.id
+            LEFT JOIN categorys child ON child.parent_id = c.id
+            WHERE c.parent_id IS NULL
+            GROUP BY c.id, w.word, c.parent_id
+            ORDER BY w.word
+        """
+    
+    @staticmethod
+    def get_subcategories() -> str:
+        """Get subcategories of a parent category"""
+        return """
+            SELECT c.id, w.word as name, c.word_id, c.parent_id
+            FROM categorys c
+            JOIN words w ON c.word_id = w.id
+            WHERE c.parent_id = %s
+            ORDER BY w.word
+        """
+    
+    @staticmethod
+    def get_parent_category() -> str:
+        """Get parent category of a category"""
+        return """
+            SELECT c.id, w.word as name, c.word_id, c.parent_id
+            FROM categorys c
+            JOIN words w ON c.word_id = w.id
+            WHERE c.id = (SELECT parent_id FROM categorys WHERE id = %s)
+        """
+    
     @staticmethod
     def update_category_by_id():
         """Update category word by category ID"""
@@ -121,6 +162,7 @@ class CategoryQueries(BaseQueries):
             WHERE id = %s
             RETURNING id;
         """
+    
     @staticmethod
     def update_category_by_word_id():
         """Update category word by category ID"""
@@ -128,6 +170,16 @@ class CategoryQueries(BaseQueries):
             UPDATE categorys
             SET word_id = %s
             WHERE word_id = %s
+            RETURNING id;
+        """
+    
+    @staticmethod
+    def update_parent_id():
+        """Update parent_id of a category"""
+        return """
+            UPDATE categorys
+            SET parent_id = %s
+            WHERE id = %s
             RETURNING id;
         """
 

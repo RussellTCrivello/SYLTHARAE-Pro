@@ -101,6 +101,11 @@ class JobManager:
     _instance_lock = threading.Lock()
     _instance: Optional["JobManager"] = None
 
+    #: Jobs that change stored content or signals, and the scenario-evaluation
+    #: trigger each one records.
+    _SCENARIO_TRIGGERS = {"ingestion": "ingestion", "batch_import": "ingestion",
+                          "signal_redetection": "redetection"}
+
     @classmethod
     def get_instance(cls) -> "JobManager":
         with cls._instance_lock:
@@ -325,7 +330,10 @@ class JobManager:
                 result = starter(self._job_context(record, progress_cb, throttle))
             else:
                 result = self._run_builtin(record, progress_cb, throttle)
-                self._enqueue_rule_evaluation(record, result)
+                if result is not None and not getattr(result, "cancelled", False):
+                    trigger = self._SCENARIO_TRIGGERS.get(record.get("job_type"))
+                    if trigger:
+                        self._enqueue_scenario_evaluation(record, result, trigger)
             throttle.flush(self.repo, job_id)
 
             finished = datetime.now(timezone.utc).isoformat()
@@ -559,23 +567,7 @@ class JobManager:
                 progress_cb=progress_cb, cancel_cb=cancelled,
                 detectors=options.get("detectors"),
             )
-        if job_type == "rule_evaluation":
-            # Monitoring rules (services/monitoring/rule_engine.py): each rule
-            # in its own transaction; a failing rule is recorded and reported
-            # in the job's errors, the others still run.
-            from Api.utils.utils import get_connection
-            from services.monitoring.rule_engine import run_rule_evaluation
-
-            job_id = record["job_id"]
-
-            def rules_cancelled():
-                current = self.repo.get(job_id)
-                return bool(current and current.get("cancellation_requested"))
-
-            return run_rule_evaluation(
-                get_connection, rule_ids=options.get("rule_ids"),
-                trigger=options.get("trigger", "all_rules"), job_id=job_id,
-                progress_cb=progress_cb, cancel_cb=rules_cancelled)
+        
         if job_type in ("scenario_evaluation", "scenario_dry_run"):
             # Scenarios (services/monitoring/scenario_engine.py). A dry-run
             # writes only its own record; an evaluation records outcomes and
@@ -599,34 +591,6 @@ class JobManager:
                 get_connection, scenario_ids=options.get("scenario_ids"),
                 trigger=options.get("trigger", "all_scenarios"), job_id=job_id,
                 progress_cb=progress_cb, cancel_cb=scenarios_cancelled)
-        if job_type == "report_run":
-            # Report runs (services/reporting/runs.py): every dataset of the
-            # run is read in one REPEATABLE READ snapshot; the outcome
-            # (completed / failed / refused / cancelled) is recorded on the run.
-            from Api.utils.utils import get_connection
-            from services.reporting.runs import run_report_job
-
-            job_id = record["job_id"]
-
-            def report_cancelled():
-                current = self.repo.get(job_id)
-                return bool(current and current.get("cancellation_requested"))
-
-            return run_report_job(get_connection, run_id=options["run_id"], job_id=job_id,
-                                  progress_cb=progress_cb, cancel_cb=report_cancelled)
-        if job_type == "report_artifact":
-            # Report artifacts (services/reporting/artifacts.py): render a
-            # completed run's stored datasets and store the bytes with their
-            # manifest and SHA-256, once per (run, format, dataset, renderer).
-            from Api.utils.utils import get_connection
-            from services.reporting.artifacts import run_artifact_job
-
-            return run_artifact_job(get_connection, run_id=options["run_id"],
-                                    fmt=options["format"], dataset_key=options.get("dataset_key"),
-                                    creator_id=options["creator_id"],
-                                    language=options.get("language", "en"),
-                                    job_id=record["job_id"],
-                                    progress_cb=progress_cb)
         if job_type == "retention":
             # Retention (services/retention/service.py): prune the areas whose
             # policy enables them (settings retention.<area>_days, 0 = keep
@@ -646,39 +610,8 @@ class JobManager:
                                  cancel_cb=retention_cancelled)
         raise ValueError(f"Unknown job type: {job_type}")
 
-    #: Jobs that change stored content or signals, and the rule-evaluation
-    #: trigger each one records.
-    _RULE_TRIGGERS = {"ingestion": "ingestion", "batch_import": "ingestion",
-                      "signal_redetection": "redetection"}
-
-    def _enqueue_rule_evaluation(self, record, result) -> None:
-        """After a job that changed content, evaluate the active monitoring
-        rules in a separate job - only when there are active rules, and never
-        for a cancelled job. A failure to enqueue is logged and added to the
-        finished job's warnings; it does not fail the job that ran."""
-        trigger = self._RULE_TRIGGERS.get(record.get("job_type"))
-        if trigger is None or result is None or getattr(result, "cancelled", False):
-            return
-        self._enqueue_scenario_evaluation(record, result, trigger)
-        try:
-            from Api.utils.utils import get_connection
-            from services.monitoring.rule_engine import active_rule_ids
-
-            with get_connection() as conn:
-                if not active_rule_ids(conn):
-                    return
-            self.create_job("rule_evaluation", source=f"rules:{trigger}:{record['job_id']}",
-                            options={"trigger": trigger}, created_by="system")
-        except Exception:
-            logger.exception("job %s: monitoring-rule evaluation could not be enqueued",
-                             record.get("job_id"))
-            warnings = getattr(result, "warnings", None)
-            if isinstance(warnings, list):
-                warnings.append("Monitoring rules were not evaluated after this job"
-                                " (see server logs)")
-
     def _enqueue_scenario_evaluation(self, record, result, trigger) -> None:
-        """Same contract as ``_enqueue_rule_evaluation``, for active scenarios."""
+        """Enqueue a scenario evaluation job after a content-changing job completes."""
         try:
             from Api.utils.utils import get_connection
             from services.monitoring.scenario_engine import active_scenario_ids

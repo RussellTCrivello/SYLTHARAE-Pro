@@ -12,9 +12,7 @@ def register_all_routes(app, babel_instance=None):
     from . import operations_api, operations_pages
     from . import signals
     from . import places
-    from . import rules
     from . import scenarios
-    from . import reports
     from . import schedules
     from . import retention
     from . import preferences
@@ -60,14 +58,9 @@ def register_all_routes(app, babel_instance=None):
     signals.register_signal_routes(app)
     # Phase 2 gazetteer (read-only)
     places.register_place_routes(app)
-    # Step 11 monitoring rules (evaluated by the rule_evaluation job)
-    rules.register_rule_routes(app)
     # Step 12 scenarios (dry-run + evaluation jobs)
     scenarios.register_scenario_routes(app)
-    # Step 14 report runs (report_run job, one snapshot per run)
-    reports.register_report_routes(app)
-    reports.register_report_artifact_routes(app)
-    # Step 20 schedules (report_run / rule_evaluation / scenario_evaluation
+    # Step 20 schedules (scenario_evaluation / retention
     # on an interval, fired through the JobManager by the scheduler)
     schedules.register_schedule_routes(app)
     # Step 21 retention (policy-driven pruning, administrators, audited)

@@ -25,12 +25,8 @@ class TestThePolicyTable:
         defaults = {area: p["default_days"] for area, p in POLICIES.items()}
         assert defaults == {
             "jobs": 90,
-            "rule_ledger": 180,
-            "rule_evaluations": 180,
             "scenario_outcomes": KEEP_FOREVER,
             "notifications": KEEP_FOREVER,
-            "report_artifacts": KEEP_FOREVER,
-            "report_runs": 365,
             "path_revisions": KEEP_FOREVER,
             "audit_log": KEEP_FOREVER,
         }
@@ -38,14 +34,13 @@ class TestThePolicyTable:
     def test_evidence_destroying_areas_default_to_keep_forever(self):
         # Deleting these would destroy evidence; the default must be an
         # explicit keep-forever, not a number somebody picked.
-        for area in ("scenario_outcomes", "notifications", "report_artifacts",
+        for area in ("scenario_outcomes", "notifications",
                      "path_revisions", "audit_log"):
             assert POLICIES[area]["default_days"] == KEEP_FOREVER, area
 
     def test_live_work_has_a_status_guard(self):
         assert "QUEUED" in POLICIES["jobs"]["status_guard"]
         assert "RUNNING" in POLICIES["jobs"]["status_guard"]
-        assert "finished_at IS NOT NULL" in POLICIES["report_runs"]["status_guard"]
 
     def test_every_area_states_what_it_deletes(self):
         for area in AREAS:
@@ -93,7 +88,7 @@ class TestEffectiveDays:
 
 def test_settings_keys_are_stable():
     assert setting_key("jobs") == "retention.jobs_days"
-    assert setting_key("report_runs") == "retention.report_runs_days"
+    assert setting_key("scenario_outcomes") == "retention.scenario_outcomes_days"
 
 
 def test_configured_days_reads_the_stored_setting(monkeypatch):

@@ -13,7 +13,7 @@
                 <i class="bi bi-clock-history me-2"></i>
                 {{ _('Schedules') }}
             </h1>
-            <p class="text-muted mb-0">{{ _('Run a report, or evaluate every active rule or scenario, on an interval. Each fire re-checks the owner and the payload before anything runs.') }}</p>
+            <p class="text-muted mb-0">{{ _('Evaluate every active scenario, or run retention pruning, on an interval. Each fire re-checks the owner before anything runs.') }}</p>
         </div>
         <div class="d-flex gap-2">
             {% if page_data.is_admin %}
@@ -33,9 +33,9 @@
     <div class="tips-section">
         <div class="tips-section-title"><i class="bi bi-info-circle"></i> {{ _('How scheduling works') }}</div>
         <ul class="tips-list">
-            <li>{{ _('A schedule runs a registered report as its owner, or evaluates every active monitoring rule or scenario, every N minutes.') }}</li>
-            <li>{{ _('Nothing is run by a person who may no longer run it: every fire re-reads the owner\'s role. An owner who loses the required role, or a report whose parameters no longer validate, disables the schedule with the reason stated.') }}</li>
-            <li>{{ _('A fire enqueues the same background job a manual run creates - one snapshot for a report, one evaluation per rule - visible on the Jobs page and in this schedule\'s history.') }}</li>
+            <li>{{ _('A schedule evaluates every active scenario, or runs retention pruning, every N minutes.') }}</li>
+            <li>{{ _('Nothing is run by a person who may no longer run it: every fire re-reads the owner\'s role. An owner who loses the required role disables the schedule with the reason stated.') }}</li>
+            <li>{{ _('A fire enqueues the same background job a manual run creates - visible on the Jobs page and in this schedule\'s history.') }}</li>
             <li>{{ _('Pause stops firing without deleting anything; resume fires again one interval from now, so a long pause never fires a burst.') }}</li>
         </ul>
     </div>
@@ -100,9 +100,7 @@
                     <div class="col-md-6">
                         <label class="form-label" for="scheduleType">{{ _('What runs') }}</label>
                         <select class="form-select" id="scheduleType">
-                            <option value="report_run">{{ _('A report run (as its owner)') }}</option>
                             {% if page_data.is_admin %}
-                            <option value="rule_evaluation">{{ _('Evaluate every active rule') }}</option>
                             <option value="scenario_evaluation">{{ _('Evaluate every active scenario') }}</option>
                             <option value="retention">{{ _('Prune by the retention policies') }}</option>
                             {% endif %}
@@ -112,16 +110,6 @@
                         <label class="form-label" for="scheduleName">{{ _('Name') }}</label>
                         <input class="form-control" id="scheduleName" maxlength="200" required>
                     </div>
-                    <div class="col-md-6" id="scheduleReportGroup">
-                        <label class="form-label" for="scheduleReport">{{ _('Report') }}</label>
-                        <select class="form-select" id="scheduleReport">
-                            {% for report in page_data.reports %}
-                            <option value="{{ report.report_id }}" data-version="{{ report.version }}">
-                                {{ report.report_id }} @{{ report.version }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                    </div>
                     <div class="col-md-6">
                         <label class="form-label" for="scheduleInterval">{{ _('Every (minutes)') }}</label>
                         <input class="form-control" id="scheduleInterval" type="number" min="{{ page_data.min_interval }}" max="{{ page_data.max_interval }}" value="1440" required>
@@ -130,7 +118,7 @@
                     <div class="col-12" id="scheduleParametersGroup">
                         <label class="form-label" for="scheduleParameters">{{ _('Parameters (JSON)') }}</label>
                         <textarea class="form-control font-monospace" id="scheduleParameters" rows="6" spellcheck="false"></textarea>
-                        <div class="form-text">{{ _('Validated against the report when you save and again at every fire.') }}</div>
+                        <div class="form-text">{{ _('Optional note for retention schedules; empty for scenario evaluations.') }}</div>
                     </div>
                     <div class="col-12 text-danger d-none" id="scheduleDialogError" role="alert"></div>
                 </form>
@@ -167,8 +155,6 @@
     "params_invalid": _('Parameters are not valid JSON.'),
     "load_failed": _('The schedules could not be loaded.'),
     "jobs_title": _('Jobs of'),
-    "what_report": _('report'),
-    "what_rules": _('every active rule'),
     "what_scenarios": _('every active scenario'),
     "what_retention": _('every enabled retention policy'),
 }|tojson }}</script>

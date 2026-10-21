@@ -527,20 +527,14 @@ class RetentionSettings:
     retention service re-validates whatever is stored here.
     """
     jobs_days: int = 90
-    rule_ledger_days: int = 180
-    rule_evaluations_days: int = 180
     scenario_outcomes_days: int = 0
     notifications_days: int = 0
-    report_artifacts_days: int = 0
-    report_runs_days: int = 365
     path_revisions_days: int = 0
     audit_log_days: int = 0
 
     def to_dict(self) -> Dict[str, Any]:
         return {f: getattr(self, f) for f in (
-            "jobs_days", "rule_ledger_days", "rule_evaluations_days",
-            "scenario_outcomes_days", "notifications_days",
-            "report_artifacts_days", "report_runs_days",
+            "jobs_days", "scenario_outcomes_days", "notifications_days",
             "path_revisions_days", "audit_log_days")}
 
     @classmethod
@@ -666,18 +660,6 @@ SETTING_DEFINITIONS = {
         description="Delete finished JobManager jobs and their events after "
                     "this many days. 0 keeps them forever.",
         category="retention", min_value=0, max_value=3650),
-    "retention.rule_ledger_days": SettingDefinition(
-        key="rule_ledger_days", type=SettingType.INTEGER, default=180,
-        label="Retention: rule match ledger (days)",
-        description="Delete the rule engine's matched-subject ledger rows "
-                    "after this many days. 0 keeps them forever.",
-        category="retention", min_value=0, max_value=3650),
-    "retention.rule_evaluations_days": SettingDefinition(
-        key="rule_evaluations_days", type=SettingType.INTEGER, default=180,
-        label="Retention: rule evaluation log (days)",
-        description="Delete monitoring-rule evaluation log rows after this "
-                    "many days. 0 keeps them forever.",
-        category="retention", min_value=0, max_value=3650),
     "retention.scenario_outcomes_days": SettingDefinition(
         key="scenario_outcomes_days", type=SettingType.INTEGER, default=0,
         label="Retention: scenario outcomes (days)",
@@ -689,19 +671,6 @@ SETTING_DEFINITIONS = {
         label="Retention: notifications (days)",
         description="Delete notifications for every recipient after this "
                     "many days, read or unread. 0 keeps them forever.",
-        category="retention", min_value=0, max_value=3650),
-    "retention.report_artifacts_days": SettingDefinition(
-        key="report_artifacts_days", type=SettingType.INTEGER, default=0,
-        label="Retention: report artifacts (days)",
-        description="Delete stored report artifacts (bytes and manifest) "
-                    "after this many days. 0 keeps them forever.",
-        category="retention", min_value=0, max_value=3650),
-    "retention.report_runs_days": SettingDefinition(
-        key="report_runs_days", type=SettingType.INTEGER, default=365,
-        label="Retention: report runs (days)",
-        description="Delete finished report runs with their datasets and "
-                    "remaining artifacts after this many days. 0 keeps them "
-                    "forever.",
         category="retention", min_value=0, max_value=3650),
     "retention.path_revisions_days": SettingDefinition(
         key="path_revisions_days", type=SettingType.INTEGER, default=0,

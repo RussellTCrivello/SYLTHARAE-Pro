@@ -58,6 +58,7 @@
     
     <!-- Page Tips Component Styles -->
     <link href="{{ url_for('static', filename='css/page-tips.css') }}" rel="stylesheet" crossorigin="anonymous">
+    {% block head_extra %}{% endblock %}
     
     <!-- Common Component Styles (loaded for all pages) -->
 
@@ -568,6 +569,7 @@
 
     <!-- Page-Specific JavaScript -->
     {% block extra_js %}{% endblock %}
+    {% block scripts_extra %}{% endblock %}
     
     <!-- Universal Page Initializer (Load Last) -->
     <!-- User account menu (logout / change password) -->

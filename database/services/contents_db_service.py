@@ -973,10 +973,16 @@ class ContentDBService:
     # CATEGORY OPERATIONS
     # ============================================================
 
-    def create_category(self, category_word: str) -> Optional[int]:
+    def create_category(self, category_word: str, parent_category_word: Optional[str] = None) -> Optional[int]:
         try:
             word_id = self.words_repo.insert_by_word(category_word)
-            return self.categorys_repo.insert_category(word_id)
+            parent_id = None
+            if parent_category_word:
+                parent_word_id = self.words_repo.insert_by_word(parent_category_word)
+                parent_cat = self.categorys_repo.select_category_by_word_id(parent_word_id)
+                if parent_cat:
+                    parent_id = parent_cat
+            return self.categorys_repo.insert_category(word_id, parent_id)
         except Exception as e:
             print(f"Error creating category: {e}")
             return None

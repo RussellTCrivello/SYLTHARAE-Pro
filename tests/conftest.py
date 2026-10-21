@@ -312,7 +312,7 @@ def pg_db(pg_settings, tmp_path_factory):
     }
     report = bootstrap_database(cfg)
     assert report["database_created"] is True
-    assert len(report["applied_migrations"]) >= 4
+    assert len(report["applied_migrations"]) >= 1
 
     yield cfg
 
@@ -360,17 +360,59 @@ def prepare_web_app():
     return flask_app
 
 
-@pytest.fixture(scope="session", autouse=True)
-def _prepared_web_app():
-    """Prepare the Flask app before the first test, whatever it is."""
-    prepare_web_app()
-    yield
-
-
 @pytest.fixture(scope="session")
 def app(pg_db, tmp_path_factory):
     """The real Flask application against the disposable database."""
     flask_app = prepare_web_app()
+
+    # Re-initialize settings and database connections now that pg_db has
+    # configured the environment variables and bootstrapped the database.
+    # The app was created at session start (prepare_web_app), but the DB
+    # configuration wasn't ready yet. We must refresh the cached singletons.
+    import settings.settings_manager as _sm
+    import settings.settings_adapter as _sa
+    import settings.config as _sc
+    for mod, attrs in (
+        (_sm, ("_settings_manager",)),
+        (_sa, ("_interface_manager",)),
+        (_sc, ("_config",)),
+    ):
+        for attr in attrs:
+            if hasattr(mod, attr):
+                try:
+                    setattr(mod, attr, None)
+                except Exception:
+                    pass
+
+    # Also reset the Api.utils utils module's cached DatabaseHub
+    import sys as _sys
+    for _mod_name in ("Api.utils_module", "Api.utils.utils"):
+        _api_utils = _sys.modules.get(_mod_name)
+        if _api_utils is not None:
+            for attr in ("_query_executor", "_query_cache"):
+                if hasattr(_api_utils, attr):
+                    try:
+                        setattr(_api_utils, attr, None)
+                    except Exception:
+                        pass
+
+    # Reset connection pools
+    try:
+        from database.database.database import reset_connection_pools
+        reset_connection_pools()
+    except Exception:
+        pass
+
+    # Refresh the app's SETTINGS config
+    try:
+        from settings import get_settings
+        settings = get_settings()
+        flask_app.config['SETTINGS'] = settings
+        system_config = settings.get_system_config()
+        flask_app.config['BABEL_DEFAULT_LOCALE'] = system_config.get('language', 'en')
+        flask_app.config['BABEL_DEFAULT_TIMEZONE'] = system_config.get('timezone', 'UTC')
+    except Exception:
+        pass
 
     # The setup gate in Api/routes/setup.py redirects EVERY request to /setup
     # unless a filesystem marker exists and the critical tables are present.

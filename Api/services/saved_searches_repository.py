@@ -4,7 +4,7 @@ The public dictionaries returned here keep the exact keys the JSON store
 returned (``id``, ``name``, ``query``, ``filters``, ``user_id``,
 ``created_at``, ``last_used``) so the page, the "Run" link and every API
 consumer keep working, plus the new canonical fields (``criteria``,
-``criteria_fingerprint``, ``monitor_enabled``, ``unowned``).
+``criteria_fingerprint``, ``unowned``).
 
 Authorisation lives here, not in the templates: ``can_read``/``can_write``
 decide per row, and every route calls them. A saved search belongs to its
@@ -36,7 +36,7 @@ LEGACY_SOURCE_JSON = "saved_searches.json"
 
 _COLUMNS = (
     "id, owner_user_id, name, query, filters, criteria, criteria_fingerprint, "
-    "criteria_schema_version, monitor_enabled, created_at, updated_at, "
+    "criteria_schema_version, created_at, updated_at, "
     "last_used_at, legacy_source, legacy_id, import_notes"
 )
 
@@ -70,7 +70,6 @@ def _row_to_public(row: Dict[str, Any]) -> Dict[str, Any]:
         "criteria": row["criteria"],
         "criteria_fingerprint": (row["criteria_fingerprint"] or "").strip(),
         "criteria_schema_version": row["criteria_schema_version"],
-        "monitor_enabled": bool(row["monitor_enabled"]),
         "legacy_id": row["legacy_id"],
         "import_notes": row["import_notes"],
     }
@@ -194,12 +193,6 @@ class SavedSearchRepository:
         with self._connect() as conn, conn.cursor() as cur:
             cur.execute("UPDATE saved_searches SET last_used_at = NOW() WHERE id = %s",
                         (search_id,))
-
-    def set_monitor_enabled(self, search_id: int, enabled: bool) -> bool:
-        with self._connect() as conn, conn.cursor() as cur:
-            cur.execute("UPDATE saved_searches SET monitor_enabled = %s, updated_at = NOW()"
-                        " WHERE id = %s", (bool(enabled), search_id))
-            return cur.rowcount > 0
 
     def assign_owner(self, search_id: int, owner_user_id: int) -> bool:
         with self._connect() as conn, conn.cursor() as cur:

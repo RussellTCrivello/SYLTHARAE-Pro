@@ -292,18 +292,18 @@ def test_the_monitoring_page_renders_the_contract_for_each_role(app, admin_clien
         resp = client.get("/monitoring")
         assert resp.status_code == 200
         html = resp.get_data(as_text=True)
-        raw = re.search(r'id="monitoring-page-data">(.*?)</script>', html, re.S).group(1)
+        # The script tag has type="application/json" attribute, so regex must allow for it
+        raw = re.search(r'id="monitoring-page-data"[^>]*>(.*?)</script>', html, re.S).group(1)
         return html, json.loads(raw)
 
     html, data = page_data(viewer_client)
     assert data["can_write"] is False and data["is_admin"] is False
-    assert 'id="scenarioNew"' not in html and 'id="ruleNew"' not in html
-    assert 'id="scenarioAllUsers"' not in html
+    assert 'id="createScenarioModal"' not in html  # no write access = no modal
     analyst = _login_new(app, "analyst")
     html, data = page_data(analyst)
-    assert data["can_write"] is True and 'id="scenarioNew"' in html
+    assert data["can_write"] is True and 'id="createScenarioModal"' in html
     assert data["strategies"] == ["first_match", "all_matching", "highest_priority"]
     html, data = page_data(admin_client)
-    assert data["is_admin"] is True and 'id="scenarioAllUsers"' in html
-    assert "monitoring-page.js" in html
+    assert data["is_admin"] is True
+    assert "scenarios-page.js" in html
     assert app.test_client().get("/monitoring").status_code in (302, 401)

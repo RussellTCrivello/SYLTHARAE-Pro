@@ -468,7 +468,6 @@ def _deliver(cur, row, definition, decision, eid, now, reference_date, counts) -
             id=None, type=NotificationType.SCENARIO_OUTCOME,
             priority=NotificationPriority(r["priority"]), title=row["name"],
             message=", ".join(labels[o] for o in entered), file_id=r["path_id"],
-            file_name=r["file_name"], file_path=r["file_path"],
             event_date=datetime.date.fromisoformat(earliest) if earliest else None,
             metadata={**base, "delivery": "immediate", "outcome_record_id": r["id"],
                       "hash_id": r["hash_id"], "outcomes": r["outcomes"],
@@ -495,8 +494,7 @@ def _deliver(cur, row, definition, decision, eid, now, reference_date, counts) -
         notifications.append(Notification(
             id=None, type=NotificationType.SCENARIO_OUTCOME,
             priority=NotificationPriority(prio), title=row["name"],
-            message=f"{agg['n']} further contents", file_id=None, file_name=None,
-            file_path=None, event_date=None,
+            message=f"{agg['n']} further contents", file_id=None, event_date=None,
             metadata={**base, "delivery": "overflow", "content_count": agg["n"],
                       "outcome_counts": per, "sample_hash_ids": sample,
                       "sample_truncated": agg["n"] > len(sample),

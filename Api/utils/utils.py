@@ -1272,10 +1272,10 @@ def return_connection(conn):
 def get_categories_with_stats(limit: int = 100) -> list:
     """
     Get categories with statistics (file count, word count)
-    
+
     Args:
         limit: Maximum number of categories to return
-    
+
     Returns:
         List of category dictionaries with stats
     """
@@ -1284,6 +1284,7 @@ def get_categories_with_stats(limit: int = 100) -> list:
             SELECT 
                 c.id,
                 w.word as name,
+                c.parent_id,
                 COUNT(DISTINCT p.id) as file_count,
                 COUNT(DISTINCT wc.word_id) as word_count
             FROM categorys c
@@ -1292,7 +1293,7 @@ def get_categories_with_stats(limit: int = 100) -> list:
             LEFT JOIN words_hashs wp ON wp.word_id = wc.word_id
             LEFT JOIN hash_contexts hc ON hc.hash_id = wp.hash_id
             LEFT JOIN paths p ON p.context_id = hc.id
-            GROUP BY c.id, w.word
+            GROUP BY c.id, w.word, c.parent_id
             ORDER BY file_count DESC, w.word
             LIMIT %s
         """
@@ -1302,8 +1303,9 @@ def get_categories_with_stats(limit: int = 100) -> list:
                 {
                     'id': row[0],
                     'name': row[1] or 'Unnamed Category',
-                    'file_count': row[2] or 0,
-                    'word_count': row[3] or 0
+                    'parent_id': row[2],
+                    'file_count': row[3] or 0,
+                    'word_count': row[4] or 0
                 }
                 for row in results
             ]
@@ -1383,6 +1385,7 @@ def get_categories_paged(
             SELECT
                 c.id,
                 w.word as name,
+                c.parent_id,
                 COUNT(DISTINCT p.id) as file_count,
                 COUNT(DISTINCT wc.word_id) as word_count
             FROM categorys c
@@ -1392,7 +1395,7 @@ def get_categories_paged(
             LEFT JOIN hash_contexts hc ON hc.hash_id = wp.hash_id
             LEFT JOIN paths p ON p.context_id = hc.id
             {where_sql}
-            GROUP BY c.id, w.word
+            GROUP BY c.id, w.word, c.parent_id
             ORDER BY {order_column} {direction}, w.word ASC
             LIMIT %s OFFSET %s
         """
@@ -1401,8 +1404,9 @@ def get_categories_paged(
             {
                 'id': row[0],
                 'name': row[1] or 'Unnamed Category',
-                'file_count': row[2] or 0,
-                'word_count': row[3] or 0
+                'parent_id': row[2],
+                'file_count': row[3] or 0,
+                'word_count': row[4] or 0
             }
             for row in (results or [])
         ]
@@ -1424,7 +1428,7 @@ def get_category(category_id: int) -> dict:
     """
     try:
         query = """
-            SELECT c.id, w.word as name
+            SELECT c.id, w.word as name, c.parent_id
             FROM categorys c
             JOIN words w ON c.word_id = w.id
             WHERE c.id = %s
@@ -1433,11 +1437,126 @@ def get_category(category_id: int) -> dict:
         if result:
             return {
                 'id': result[0],
-                'name': result[1] or 'Unnamed Category'
+                'name': result[1] or 'Unnamed Category',
+                'parent_id': result[2]
             }
         return None
     except Exception as e:
         logger.error(f"Error getting category {category_id}: {e}")
+        return None
+
+
+def get_subcategories(parent_id: int, limit: int = 100) -> list:
+    """
+    Get subcategories of a parent category
+
+    Args:
+        parent_id: Parent category ID
+        limit: Maximum number of subcategories to return
+
+    Returns:
+        List of subcategory dictionaries
+    """
+    try:
+        query = """
+            SELECT c.id, w.word as name, c.parent_id,
+                   COUNT(DISTINCT p.id) as file_count,
+                   COUNT(DISTINCT wc.word_id) as word_count
+            FROM categorys c
+            JOIN words w ON c.word_id = w.id
+            LEFT JOIN words_categorys wc ON wc.category_id = c.id
+            LEFT JOIN words_hashs wp ON wp.word_id = wc.word_id
+            LEFT JOIN hash_contexts hc ON hc.hash_id = wp.hash_id
+            LEFT JOIN paths p ON p.context_id = hc.id
+            WHERE c.parent_id = %s
+            GROUP BY c.id, w.word, c.parent_id
+            ORDER BY file_count DESC, w.word
+            LIMIT %s
+        """
+        results = execute_query(query, (parent_id, limit), fetch="all")
+        if results:
+            return [
+                {
+                    'id': row[0],
+                    'name': row[1] or 'Unnamed Category',
+                    'parent_id': row[2],
+                    'file_count': row[3] or 0,
+                    'word_count': row[4] or 0
+                }
+                for row in results
+            ]
+        return []
+    except Exception as e:
+        logger.error(f"Error getting subcategories for parent {parent_id}: {e}")
+        return []
+
+
+def get_main_categories(limit: int = 100) -> list:
+    """
+    Get main categories (those without parent)
+
+    Args:
+        limit: Maximum number of main categories to return
+
+    Returns:
+        List of main category dictionaries with subcategory counts
+    """
+    try:
+        query = """
+            SELECT c.id, w.word as name, c.parent_id,
+                   COUNT(DISTINCT p.id) as file_count,
+                   COUNT(DISTINCT wc.word_id) as word_count,
+                   COUNT(child.id) as subcategory_count
+            FROM categorys c
+            JOIN words w ON c.word_id = w.id
+            LEFT JOIN words_categorys wc ON wc.category_id = c.id
+            LEFT JOIN words_hashs wp ON wp.word_id = wc.word_id
+            LEFT JOIN hash_contexts hc ON hc.hash_id = wp.hash_id
+            LEFT JOIN paths p ON p.context_id = hc.id
+            LEFT JOIN categorys child ON child.parent_id = c.id
+            WHERE c.parent_id IS NULL
+            GROUP BY c.id, w.word, c.parent_id
+            ORDER BY file_count DESC, w.word
+            LIMIT %s
+        """
+        results = execute_query(query, (limit,), fetch="all")
+        if results:
+            return [
+                {
+                    'id': row[0],
+                    'name': row[1] or 'Unnamed Category',
+                    'parent_id': row[2],
+                    'file_count': row[3] or 0,
+                    'word_count': row[4] or 0,
+                    'subcategory_count': row[5] or 0
+                }
+                for row in results
+            ]
+        return []
+    except Exception as e:
+        logger.error(f"Error getting main categories: {e}")
+        return []
+
+
+def get_category_with_children(category_id: int) -> dict:
+    """
+    Get a category with its subcategories
+
+    Args:
+        category_id: Category ID
+
+    Returns:
+        Category dictionary with 'subcategories' key containing list of subcategories
+    """
+    try:
+        category = get_category(category_id)
+        if not category:
+            return None
+        subcategories = get_subcategories(category_id)
+        category['subcategories'] = subcategories
+        return category
+    except Exception as e:
+        logger.error(f"Error getting category with children {category_id}: {e}")
         return None
 
 
