@@ -614,7 +614,7 @@ msgstr "نسخه‌ها را بر اساس دستهٔ تحلیلگر، منبع 
 
 #: core/i18n/export_surface_strings.py:67
 msgid "What to export"
-msgstr "چه چیزی صادر شود"
+msgstr "چه چیزی خروجی گرفته شود"
 
 #: core/i18n/export_surface_strings.py:68
 msgid "Folder layout"
@@ -1433,7 +1433,7 @@ msgstr "همه انواع"
 #: templates/Category/category_words.html:139 templates/Category/category_words.html:252
 #: templates/Word/Word_list.html:177 templates/Word/Word_list.html:274
 msgid "Word"
-msgstr "Word"
+msgstr "واژه"
 
 #: templates/Analysis/analysis_batch.html:272
 msgid "Excel"
@@ -13234,13 +13234,11 @@ msgstr "در حال بارگذاری…"
 
 #: templates/components/cursor_pagination.html:37
 #: templates/components/cursor_pagination.html:43
-#, fuzzy
 msgid "Previous page"
 msgstr "صفحه قبل"
 
 #: templates/components/cursor_pagination.html:51
 #: templates/components/cursor_pagination.html:57
-#, fuzzy
 msgid "Next page"
 msgstr "صفحه بعد"
 
@@ -22413,3 +22411,998 @@ msgstr "می‌توانید ادامه دهید، اما ممکن است پیش 
 #, python-format
 msgid "pip exited with code %(code)s"
 msgstr "pip با کد %(code)s خاتمه یافت"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "LEXIS Cosmos"
+msgstr "لکسیس کازموس"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Cosmos"
+msgstr "کازموس"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Structure path"
+msgstr "مسیر ساختار"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Find a term"
+msgstr "یافتن اصطلاح"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Find a term…  ( / )"
+msgstr "یافتن اصطلاح…  ( / )"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Matching terms"
+msgstr "اصطلاحات منطبق"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Undo the last change"
+msgstr "بازگردانی آخرین تغییر"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Undo"
+msgstr "بازگردانی"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Redo the change"
+msgstr "تکرار تغییر"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Redo"
+msgstr "تکرار"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Overview and data health"
+msgstr "نمای کلی و سلامت داده‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Manage taxonomy, files and views (M)"
+msgstr "مدیریت طبقه‌بندی، فایل‌ها و نماها (M)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Clear the basket"
+msgstr "خالی کردن سبد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Basket"
+msgstr "سبد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyboard shortcuts (?)"
+msgstr "میان‌برهای صفحه‌کلید (؟)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Galaxy"
+msgstr "کهکشان"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Canvas tools"
+msgstr "ابزارهای بوم"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Zoom out (-)"
+msgstr "کوچک‌نمایی (-)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Reset to 100% (0)"
+msgstr "بازنشانی به ۱۰۰٪ (۰)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Zoom in (+)"
+msgstr "بزرگ‌نمایی (+)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Fit to screen (F)"
+msgstr "جای‌گیری در صفحه (F)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Fit"
+msgstr "جای‌گیری"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Centre on the focus (L)"
+msgstr "وسط‌چین کردن روی کانون (L)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Open the chart to a depth (D cycles)"
+msgstr "باز کردن نمودار تا یک عمق (D برای چرخش)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Depth"
+msgstr "عمق"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show 1 level"
+msgstr "نمایش ۱ سطح"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show 2 levels"
+msgstr "نمایش ۲ سطح"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show 3 levels"
+msgstr "نمایش ۳ سطح"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show 4 levels"
+msgstr "نمایش ۴ سطح"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show all levels"
+msgstr "نمایش همه سطوح"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show or hide items that contain no files"
+msgstr "نمایش یا پنهان کردن موارد بدون فایل"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Empty items"
+msgstr "موارد خالی"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "hidden"
+msgstr "پنهان"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Open one more level"
+msgstr "باز کردن یک سطح بیشتر"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Level"
+msgstr "سطح"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Close the deepest open level"
+msgstr "بستن عمیق‌ترین سطح باز"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show or hide the sidebar (B)"
+msgstr "نمایش یا پنهان کردن نوار کناری (B)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Sidebar"
+msgstr "نوار کناری"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Full screen (Shift+F)"
+msgstr "تمام‌صفحه (Shift+F)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Download the whole structure as Markdown"
+msgstr "بارگیری کل ساختار به‌صورت Markdown"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Outline"
+msgstr "نمای کلی"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Print the structure"
+msgstr "چاپ ساختار"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Search and filters"
+msgstr "جستجو و فیلترها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Drag to resize the sidebar · double-click to reset"
+msgstr "برای تغییر اندازه نوار کناری بکشید · برای بازنشانی دوبار کلیک کنید"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "LEXIS"
+msgstr "لکسیس"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Filter by file name…"
+msgstr "فیلتر بر اساس نام فایل…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Filter by file name"
+msgstr "فیلتر بر اساس نام فایل"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show or hide the filter cards"
+msgstr "نمایش یا پنهان کردن کارت‌های فیلتر"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Hide filters"
+msgstr "پنهان کردن فیلترها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Clear file types"
+msgstr "پاک کردن انواع فایل"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Clear sources"
+msgstr "پاک کردن منابع"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Clear side values"
+msgstr "پاک کردن مقادیر طرف"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Date range"
+msgstr "بازه تاریخ"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Clear dates"
+msgstr "پاک کردن تاریخ‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "From date"
+msgstr "از تاریخ"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "To date"
+msgstr "تا تاریخ"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Empty the basket"
+msgstr "خالی کردن سبد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Saved views"
+msgstr "نماهای ذخیره‌شده"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "save current"
+msgstr "ذخیره کنونی"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Select every file in the list, or clear the selection"
+msgstr "انتخاب همه فایل‌های فهرست یا پاک کردن انتخاب"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Export…"
+msgstr "خروجی…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "All file actions"
+msgstr "همه کنش‌های فایل"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Click a file to open it · Shift-click for a range · Ctrl/⌘-click to "
+"toggle · ✎ on a card to edit it."
+msgstr "برای باز کردن فایل روی آن کلیک کنید · با Shift کلیک کنید تا بازه "
+"انتخاب شود · با Ctrl/⌘ کلیک کنید تا وضعیت تغییر کند · ✎ روی کارت "
+"برای ویرایش."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Please confirm"
+msgstr "لطفاً تأیید کنید"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyboard shortcuts"
+msgstr "میان‌برهای صفحه‌کلید"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Word galaxy"
+msgstr "کهکشان واژه‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyword galaxy"
+msgstr "کهکشان کلیدواژه‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Lexicon"
+msgstr "واژه‌نامه"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Lens"
+msgstr "لنز"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Subcategory"
+msgstr "زیردسته"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Request failed"
+msgstr "درخواست ناموفق بود"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "terms"
+msgstr "اصطلاحات"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "subcategories"
+msgstr "زیردسته‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "hits"
+msgstr "تطابق‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Edit file"
+msgstr "ویرایش فایل"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Remove from basket"
+msgstr "حذف از سبد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add to basket"
+msgstr "افزودن به سبد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Structure"
+msgstr "ساختار"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "nodes"
+msgstr "گره‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Contents"
+msgstr "محتواها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Zoom"
+msgstr "بزرگ‌نمایی"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No terms in the basket."
+msgstr "هیچ اصطلاحی در سبد نیست."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "shown"
+msgstr "نمایش‌داده‌شده"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "terms in the basket"
+msgstr "اصطلاح در سبد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The basket overrides the focused node."
+msgstr "سبد بر گره کانونی اولویت دارد."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Library"
+msgstr "کتابخانه"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Every file that carries a taxonomy term."
+msgstr "هر فایلی که یک اصطلاح طبقه‌بندی دارد."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "on this page"
+msgstr "در این صفحه"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Remove this filter"
+msgstr "حذف این فیلتر"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Filter values…"
+msgstr "فیلتر مقادیر…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Filter values"
+msgstr "فیلتر مقادیر"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "All file types"
+msgstr "همه انواع فایل"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No files in this scope. Expand the structure or clear the filters."
+msgstr "در این دامنه فایلی نیست. ساختار را باز کنید یا فیلترها را پاک کنید."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No selection"
+msgstr "انتخابی نیست"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "First page"
+msgstr "صفحه نخست"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Last page"
+msgstr "صفحه آخر"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Per page"
+msgstr "در هر صفحه"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show more"
+msgstr "نمایش بیشتر"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show filters"
+msgstr "نمایش فیلترها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Nothing to open"
+msgstr "چیزی برای باز کردن نیست"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No saved views yet."
+msgstr "هنوز نمای ذخیره‌شده‌ای نیست."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Apply this view"
+msgstr "اعمال این نما"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "View applied"
+msgstr "نما اعمال شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Save view"
+msgstr "ذخیره نما"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "View name"
+msgstr "نام نما"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "View saved"
+msgstr "نما ذخیره شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Word terms"
+msgstr "اصطلاحات واژه"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyword expressions"
+msgstr "عبارت‌های کلیدواژه"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No matching terms."
+msgstr "اصطلاح منطبقی نیست."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Confirm"
+msgstr "تأیید"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Nothing to undo"
+msgstr "چیزی برای بازگردانی نیست"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Nothing to redo"
+msgstr "چیزی برای تکرار نیست"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Undone"
+msgstr "بازگردانی شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Redone"
+msgstr "تکرار شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Rename category"
+msgstr "تغییر نام دسته"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Colour (optional)"
+msgstr "رنگ (اختیاری)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Category renamed"
+msgstr "نام دسته تغییر کرد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "This node cannot be edited here."
+msgstr "این گره در اینجا قابل ویرایش نیست."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Edit term"
+msgstr "ویرایش اصطلاح"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The subcategory could not be resolved."
+msgstr "زیردسته قابل تشخیص نبود."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Term updated"
+msgstr "اصطلاح به‌روزرسانی شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Edit keyword"
+msgstr "ویرایش کلیدواژه"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyword updated"
+msgstr "کلیدواژه به‌روزرسانی شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Stored path (optional)"
+msgstr "مسیر ذخیره‌شده (اختیاری)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Rename file"
+msgstr "تغییر نام فایل"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "File renamed"
+msgstr "نام فایل تغییر کرد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Duplicate file"
+msgstr "تکثیر فایل"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "File duplicated"
+msgstr "فایل تکثیر شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Hash"
+msgstr "هش"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No term matched this file."
+msgstr "هیچ اصطلاحی با این فایل تطبیق نداشت."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Why it matched"
+msgstr "دلیل تطبیق"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Taxonomy path"
+msgstr "مسیر طبقه‌بندی"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Hits"
+msgstr "تطابق‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "chunks"
+msgstr "قطعه‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No text was stored for this file."
+msgstr "متنی برای این فایل ذخیره نشده است."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Matched"
+msgstr "تطبیق‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Term ID"
+msgstr "شناسه اصطلاح"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Files and details"
+msgstr "فایل‌ها و جزئیات"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Categories, terms and keywords"
+msgstr "دسته‌ها، اصطلاحات و کلیدواژه‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Structured (category folders)"
+msgstr "ساختارمند (پوشه‌های دسته)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Original paths"
+msgstr "مسیرهای اصلی"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Which files"
+msgstr "کدام فایل‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Everything in the current view"
+msgstr "همه چیز در نمای کنونی"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Only the selection"
+msgstr "فقط انتخاب‌شده‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "table in Markdown"
+msgstr "جدول در Markdown"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Exported"
+msgstr "خروجی گرفته شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "rows"
+msgstr "ردیف‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Nothing to export in this scope."
+msgstr "چیزی برای خروجی در این دامنه نیست."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Open in the viewer"
+msgstr "باز کردن در نمایشگر"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Export the scope"
+msgstr "خروجی دامنه"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Categories, terms and keywords (CSV)"
+msgstr "دسته‌ها، اصطلاحات و کلیدواژه‌ها (CSV)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Extracted text bundle"
+msgstr "بسته متن استخراج‌شده"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Original paths (CSV)"
+msgstr "مسیرهای اصلی (CSV)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Structured export (CSV)"
+msgstr "خروجی ساختارمند (CSV)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Files and details (CSV)"
+msgstr "فایل‌ها و جزئیات (CSV)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Change the files"
+msgstr "تغییر فایل‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Rename file…"
+msgstr "تغییر نام فایل…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Select exactly one file to rename."
+msgstr "برای تغییر نام دقیقاً یک فایل انتخاب کنید."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Select exactly one file to duplicate."
+msgstr "برای تکثیر دقیقاً یک فایل انتخاب کنید."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Move to side…"
+msgstr "انتقال به طرف…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Delete files…"
+msgstr "حذف فایل‌ها…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Select at least one file."
+msgstr "دست‌کم یک فایل انتخاب کنید."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No sides are recorded yet."
+msgstr "هنوز طرفی ثبت نشده است."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Move to side"
+msgstr "انتقال به طرف"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Files moved"
+msgstr "فایل‌ها منتقل شدند"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Delete the selected files? This cannot be undone."
+msgstr "فایل‌های انتخاب‌شده حذف شوند؟ این کار قابل بازگشت نیست."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Files deleted"
+msgstr "فایل‌ها حذف شدند"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "LEXIS taxonomy"
+msgstr "طبقه‌بندی لکسیس"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Generated"
+msgstr "ایجادشده"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Uncategorised"
+msgstr "بدون دسته"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Direct terms"
+msgstr "اصطلاحات مستقیم"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Outline downloaded"
+msgstr "نمای کلی بارگیری شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Print the taxonomy with the file count of every term. The browser "
+"print dialog opens next."
+msgstr "طبقه‌بندی را همراه با تعداد فایل‌های هر اصطلاح چاپ کنید. سپس پنجره "
+"چاپ مرورگر باز می‌شود."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Focus the term finder"
+msgstr "رفتن به جستجوی اصطلاح"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Zoom in and out"
+msgstr "بزرگ و کوچک کردن"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Reset the zoom"
+msgstr "بازنشانی بزرگ‌نمایی"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Fit the structure to the screen"
+msgstr "جای‌گیری ساختار در صفحه"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Centre on the focused node"
+msgstr "وسط‌چین کردن روی گره کانونی"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show or hide the sidebar"
+msgstr "نمایش یا پنهان کردن نوار کناری"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Cycle the depth"
+msgstr "چرخش عمق"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Open Manage"
+msgstr "باز کردن مدیریت"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "This help"
+msgstr "این راهنما"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Select a range of files"
+msgstr "انتخاب بازه‌ای از فایل‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Toggle one file"
+msgstr "تغییر وضعیت یک فایل"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Subcategories"
+msgstr "زیردسته‌ها"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Term coverage"
+msgstr "پوشش اصطلاحات"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No files yet."
+msgstr "هنوز فایلی وجود ندارد."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Files by side"
+msgstr "فایل‌ها بر اساس طرف"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Terms with no files"
+msgstr "اصطلاحات بدون فایل"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Every term matches at least one file."
+msgstr "هر اصطلاح با دست‌کم یک فایل تطبیق دارد."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Files no term matches"
+msgstr "فایل‌هایی که هیچ اصطلاحی با آن‌ها تطبیق ندارد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Every file is matched by at least one term."
+msgstr "هر فایل با دست‌کم یک اصطلاح تطبیق داده شده است."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Main category"
+msgstr "دسته اصلی"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "File record"
+msgstr "رکورد فایل"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Reload"
+msgstr "بارگیری مجدد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The taxonomy is empty. Add a main category to begin."
+msgstr "طبقه‌بندی خالی است. برای شروع یک دسته اصلی بیفزایید."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No terms in this subcategory."
+msgstr "هیچ اصطلاحی در این زیردسته نیست."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "New subcategory"
+msgstr "زیردسته جدید"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "New main category"
+msgstr "دسته اصلی جدید"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add subcategory"
+msgstr "افزودن زیردسته"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add category"
+msgstr "افزودن دسته"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Category created"
+msgstr "دسته ایجاد شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Delete this category? Terms are kept, only the category is removed."
+msgstr "این دسته حذف شود؟ اصطلاحات باقی می‌مانند و فقط دسته حذف می‌شود."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Category deleted"
+msgstr "دسته حذف شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "New word term"
+msgstr "اصطلاح واژه جدید"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "New keyword"
+msgstr "کلیدواژه جدید"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyword expression"
+msgstr "عبارت کلیدواژه"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Words separated by spaces; the expression is stored as the sequence "
+"of its words."
+msgstr "واژه‌ها با فاصله جدا می‌شوند؛ عبارت به‌صورت دنباله واژه‌هایش ذخیره "
+"می‌شود."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add term"
+msgstr "افزودن اصطلاح"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Term added"
+msgstr "اصطلاح افزوده شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add keyword"
+msgstr "افزودن کلیدواژه"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyword added"
+msgstr "کلیدواژه افزوده شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Remove this term from the subcategory?"
+msgstr "این اصطلاح از زیردسته حذف شود؟"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Term removed"
+msgstr "اصطلاح حذف شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyword removed"
+msgstr "کلیدواژه حذف شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add a file record"
+msgstr "افزودن رکورد فایل"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Stored path"
+msgstr "مسیر ذخیره‌شده"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The text is indexed against the taxonomy; existing words and phrases "
+"are counted."
+msgstr "متن در برابر طبقه‌بندی نمایه می‌شود و واژه‌ها و عبارت‌های موجود "
+"شمرده می‌شوند."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add file"
+msgstr "افزودن فایل"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "File added"
+msgstr "فایل افزوده شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Search names, sources, sides and text…"
+msgstr "جستجوی نام‌ها، منابع، طرف‌ها و متن…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Terms"
+msgstr "اصطلاحات"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Snippet"
+msgstr "بریده"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Save the current view"
+msgstr "ذخیره نمای کنونی"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Focus"
+msgstr "کانون"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Terms in basket"
+msgstr "اصطلاحات در سبد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Rename view"
+msgstr "تغییر نام نما"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "View renamed"
+msgstr "نام نما تغییر کرد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Delete this saved view?"
+msgstr "این نمای ذخیره‌شده حذف شود؟"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "View deleted"
+msgstr "نما حذف شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No activity has been recorded yet."
+msgstr "هنوز هیچ فعالیتی ثبت نشده است."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The taxonomy galaxy: root, word and keyword lenses, categories, "
+"subcategories and terms, with the file stack under each term, the "
+"scoped search sidebar, the document viewer and the taxonomy manager."
+msgstr "کهکشان طبقه‌بندی: ریشه، لنز واژه‌ها و کلیدواژه‌ها، دسته‌ها، "
+"زیردسته‌ها و اصطلاحات، همراه با پشته فایل‌های هر اصطلاح، نوار جستجوی "
+"محدود به دامنه، نمایشگر سند و مدیر طبقه‌بندی."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The taxonomy galaxy"
+msgstr "کهکشان طبقه‌بندی"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "This term already lives in %(path)s. Add it here as well?"
+msgstr "این اصطلاح از قبل در %(path)s وجود دارد. آن را اینجا هم بیفزایید؟"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Colour"
+msgstr "رنگ"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Set the category colour"
+msgstr "تعیین رنگ دسته"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Write the colour as #rrggbb."
+msgstr "رنگ را به شکل #rrggbb بنویسید."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "A colour must be written as #rrggbb."
+msgstr "رنگ باید به شکل #rrggbb نوشته شود."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Colour saved"
+msgstr "رنگ ذخیره شد"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Hidden"
+msgstr "پنهان"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Categories, subcategories and terms with no files in scope are left "
+"out of the structure."
+msgstr "دسته‌ها، زیردسته‌ها و اصطلاحاتی که در این محدوده فایلی ندارند از "
+"ساختار حذف می‌شوند."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Shown"
+msgstr "نمایش‌داده‌شده"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Items with no files are hidden"
+msgstr "موارد بدون فایل پنهان شدند"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Items with no files are shown"
+msgstr "موارد بدون فایل نمایش داده شدند"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The focused item had no files, so the view moved up one level."
+msgstr "مورد کانونی فایلی نداشت، بنابراین نما یک سطح بالاتر رفت."

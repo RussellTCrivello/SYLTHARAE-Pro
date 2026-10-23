@@ -1111,9 +1111,9 @@ Notification Service
 - **class `NotificationService`** - Centralized notification service for system-wide alerts.
   - `__init__(self)`
   - `create_similar_files_notification(self, file_id: int, file_name: str, file_path: str, similar_files: List[Dict], similarity_threshold: float = 0.8) -> Notifi...` - Create notification for similar files
-  - `create_future_date_notification(self, *, file_id: int, file_name: str, file_path: str, signal: Dict[str, Any], reference_date: date) -> Notification` - Queue a FUTURE_DATE notification for one stored temporal signal.
+  - `create_future_date_notification(self, *, file_id: int, signal: Dict[str, Any], reference_date: date) -> Notification` - Queue a FUTURE_DATE notification for one stored temporal signal.
   - `future_date_signals(signals: List[Dict[str, Any]], reference_date: date) -> List[Dict[str, Any]]` *(static)* - The earliest-first, one-per-date subset of ``signals`` that are
-  - `analyze_file_for_future_events(self, *, file_id: int, file_name: str, file_path: str, signals: List[Dict[str, Any]], reference_date: date, skip_dates: Option...` - Queue one FUTURE_DATE notification per future date in ``signals``.
+  - `analyze_file_for_future_events(self, *, file_id: int, signals: List[Dict[str, Any]], reference_date: date, skip_dates: Option...` - Queue one FUTURE_DATE notification per future date in ``signals``.
   - `flush_pending_notifications(self, batch_size: int = 100) -> int` - Flush pending notifications to database in batches.
   - `get_pending_count(self) -> int` - Get count of pending notifications waiting to be written to database
   - `get_notifications(self, notification_type: Optional[NotificationType] = None, priority: Optional[NotificationPriority] = None, unread_only: bool = False, lim...` - Get the notifications ``for_user_id`` may see, with filters.

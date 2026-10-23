@@ -17,6 +17,7 @@ def register_all_routes(app, babel_instance=None):
     from . import retention
     from . import preferences
     from . import audit
+    from . import lexis_cosmos
     # Import new settings routes (replaces old settings.py) - optional
     try:
         from settings.routes import register_settings_routes
@@ -69,6 +70,9 @@ def register_all_routes(app, babel_instance=None):
     preferences.register_preference_routes(app)
     # Audit log viewer (administrators, read-only)
     audit.register_audit_routes(app)
+    # LEXIS Cosmos: the taxonomy galaxy, its search, viewer, exports and
+    # management API (Api/services/lexis_queries.py holds every statement).
+    lexis_cosmos.register_lexis_cosmos_routes(app)
     # Unified operations API + pages (Input / Import Center / Job Center)
     app.register_blueprint(operations_api.operations_bp)
     operations_pages.register_operations_pages(app)

@@ -184,6 +184,52 @@ disposable databases, not applied to a deployment.
 
 ### Added
 
+* **LEXIS Cosmos** (`/lexis`, registry `lexis_cosmos`, CLASSIFY) — the taxonomy
+  browser from the supplied single-file design, rebuilt as a translated page
+  over the whole Q1.1-Q11.2 SQL catalogue. `Api/services/lexis_queries.py` holds
+  the statements, `Api/services/lexis_cosmos.py` the read/write service and
+  `Api/routes/lexis_cosmos.py` 43 rules (`/api/lexis/{health,lenses,tree,
+  outline,find,filter-options,scope,search,facets,file/<id>,file/<id>/text,
+  file/<id>/matches,files/<id>/{rename,duplicate},files/bulk-{delete,side},
+  manage/{dashboard,files},export/{review,text,originals,structured,columns},
+  taxonomy/{categories,categories/<id>,categories/<id>/color,duplicate,
+  keywords,keywords/<id>,terms},views,views/<id>,views/<id>/touch,activity}`).
+  Every URL the page script uses is rendered into it (`_page_payload()`), so no
+  endpoint is reachable only from documentation: the lens strip reads Q2.1, the
+  viewer's "why it matched" table reads Q5.4, and the manage tree's colour
+  action writes Q8.5. 307 strings are translated into ar/he/fa/hr by
+  `scripts/fill_lexis_cosmos_i18n.py` (0 missing, 0 unused rows), and
+  `tests/integration/test_lexis_cosmos_api.py` (28 tests) walks the real joins
+  against a seeded database. The "empty items" decision is one piece of state
+  with two controls - the canvas button and a switch in the sidebar's filter
+  cards, kept in step by `syncEmptyControls()` - and it hides categories and
+  subcategories that hold no files in scope, not just bare terms; turning it on
+  while a now-empty category is in focus steps the view up to its nearest
+  visible ancestor instead of leaving the chart pointing at a card that is no
+  longer part of the structure. Choosing a file type (or a source, a side, a
+  date range, a name) now narrows the *structure* as well: the filter controls
+  went through `refreshPanel()` only, which re-read the file list and left the
+  cached tree on the canvas, so a category whose every file the filter had
+  excluded stayed on screen with its unfiltered counts. All of them now call
+  `filtersChanged()`, which invalidates the tree and re-reads it; a node the new
+  envelope emptied is also dropped from the expanded set. Three defects a
+  screenshot pass exposed are
+  fixed with it: a lens card claimed "0 terms · 0 files" because it read
+  `info.counts`, a field no node carries (Q2.1 answers `term_count` and
+  `file_count`); breadcrumb, card and sidebar title read "words" because
+  `nodeLabel()` trusted the payload's machine name over the page's own name for
+  the lens; and the chart keyed its geometry by node id, so one document
+  matching two expanded terms produced a single file card with the other branch
+  pointing at nothing (positions are now addressed by path). The Depth selector
+  also reports the depth actually drawn instead of the depth last chosen, and
+  the page's CSS/JS carry a cache-busting `?v=` so an upgrade cannot be served
+  from a stale browser cache. Two defects the seeding exposed are fixed in the
+  same change: the Q2.2/Q2.3 category trees joined subcategories with a bare
+  `LEFT JOIN`, so a main category holding both direct terms and subcategories
+  reported zero terms and zero files and disappeared under `hide_empty` (now a
+  `UNION ALL` over the main row and its subs), and the keyword term list carried
+  a raw psycopg2 `memoryview` into the JSON response, which made every
+  keyword-subcategory request answer 500.
 * `THIRD_PARTY_NOTICES.md`: vendored front-end assets and fonts with the
   versions and licences their own shipped headers state, and the Python
   dependency closure grouped by the licence expression each distribution
