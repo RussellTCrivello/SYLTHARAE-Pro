@@ -169,8 +169,8 @@ def register_notification_routes(app):
                     'title': title,
                     'message': message,
                     'file_id': n.file_id,
-                    'file_name': n.file_name,
-                    'file_path': n.file_path,
+                    'file_name': n.metadata.get('file_name'),
+                    'file_path': n.metadata.get('file_path'),
                     'event_date': n.event_date.isoformat() if n.event_date else None,
                     'days_until': (n.event_date - today).days if n.event_date else None,
                     'metadata': n.metadata,
@@ -485,15 +485,15 @@ def register_notification_routes(app):
                         title=f"Duplicate Files Detected: {primary_file_name}",
                         message=f"Found {file_count} duplicate file(s) with the same hash. Files: {', '.join(file_names_display)}",
                         file_id=primary_file_id,
-                        file_name=primary_file_name,
-                        file_path=primary_file_path,
                         event_date=None,
                         metadata={
                             'hash': hash_value,
                             'duplicate_count': file_count,
                             'file_ids': file_ids,
                             'file_names': file_names,
-                            'file_paths': file_paths
+                            'file_paths': file_paths,
+                            'file_name': primary_file_name,
+                            'file_path': primary_file_path
                         },
                         created_at=datetime.now()
                     )
@@ -599,6 +599,9 @@ def register_notification_routes(app):
                             'sentence': evidence_sentence,
                         },
                         reference_date=today)
+                    # Store file_name and file_path in metadata for display
+                    notification.metadata['file_name'] = file_name
+                    notification.metadata['file_path'] = file_path
                     notification.metadata['future_dates'] = [
                         d.isoformat() for d in (future_dates or [])]
                     created_items.append(('future_date', notification, date_from.isoformat()))

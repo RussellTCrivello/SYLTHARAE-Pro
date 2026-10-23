@@ -5,7 +5,7 @@ fail-closed ``DATA_EXPORTED`` hook; nothing here writes to it. This module
 answers "who did what, to what, when, from where" over it:
 
 * filters: exact ``action``, exact ``username``, ``user_id``, a ``resource``
-  prefix (``report_run:12``, ``export:report_artifact``...), a time window
+  prefix (``scenario_evaluation:12``, ``export:search``...), a time window
   (``since`` inclusive, ``until`` exclusive, ISO 8601);
 * newest first, keyset-paged by id (``before_id``) so a page is stable while
   new entries arrive and deep pages cost the same as the first;

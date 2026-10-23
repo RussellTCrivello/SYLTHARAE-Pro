@@ -431,7 +431,7 @@ def register_archives_routes(app):
                         LEFT JOIN words_hashs wp ON wc.word_id = wp.word_id
                         LEFT JOIN hash_contexts hc ON hc.hash_id = wp.hash_id LEFT JOIN paths p ON p.context_id = hc.id
                         WHERE w.word ILIKE %s
-                        GROUP BY c.id, w.word
+                        GROUP BY c.id, w.word, c.parent_id
                         ORDER BY file_count DESC, w.word ASC
                         LIMIT 100
                     """
@@ -445,7 +445,7 @@ def register_archives_routes(app):
                         LEFT JOIN words_categorys wc ON c.id = wc.category_id
                         LEFT JOIN words_hashs wp ON wc.word_id = wp.word_id
                         LEFT JOIN hash_contexts hc ON hc.hash_id = wp.hash_id LEFT JOIN paths p ON p.context_id = hc.id
-                        GROUP BY c.id, w.word
+                        GROUP BY c.id, w.word, c.parent_id
                         ORDER BY file_count DESC, w.word ASC
                         LIMIT 100
                     """
@@ -740,8 +740,20 @@ def register_archives_routes(app):
                         })
             elif section == 'category':
                 # Build WHERE clause with optional source/side filters
-                where_clause = "wc.category_id = %s"
-                query_params = [item_id]
+                # Check if this is a main category (no parent) - if so, include its subcategories
+                cat_parent_check = execute_query(
+                    "SELECT parent_id FROM categorys WHERE id = %s",
+                    (item_id,), fetch="one"
+                )
+                is_main_category = cat_parent_check and cat_parent_check[0] is None
+                
+                if is_main_category:
+                    # Include both the main category and its subcategories
+                    where_clause = "wc.category_id = %s OR wc.category_id IN (SELECT id FROM categorys WHERE parent_id = %s)"
+                    query_params = [item_id, item_id]
+                else:
+                    where_clause = "wc.category_id = %s"
+                    query_params = [item_id]
                 
                 if source_id:
                     where_clause += " AND hc.source_id = %s"
@@ -1225,7 +1237,7 @@ def register_archives_routes(app):
             
             # Get categories for this source
             categories_query = """
-                SELECT DISTINCT c.id, w.word as category_name,
+                SELECT DISTINCT c.id, w.word as category_name, c.parent_id,
                        COUNT(DISTINCT p.id) as file_count
                 FROM categorys c
                 JOIN words w ON c.word_id = w.id
@@ -1234,7 +1246,7 @@ def register_archives_routes(app):
                 JOIN hash_contexts hc ON hc.hash_id = wp.hash_id JOIN paths p ON p.context_id = hc.id
                 
                 WHERE hc.source_id = %s
-                GROUP BY c.id, w.word
+                GROUP BY c.id, w.word, c.parent_id
                 ORDER BY file_count DESC, w.word ASC
                 LIMIT %s OFFSET %s
             """
@@ -1266,7 +1278,8 @@ def register_archives_routes(app):
                 categories.append({
                     'id': row[0],
                     'name': row[1] or 'Unnamed Category',
-                    'file_count': row[2] or 0
+                    'parent_id': row[2],
+                    'file_count': row[3] or 0
                 })
             
             # Get keywords for this source
@@ -1381,7 +1394,7 @@ def register_archives_routes(app):
             
             # Get categories for this side
             categories_query = """
-                SELECT DISTINCT c.id, w.word as category_name,
+                SELECT DISTINCT c.id, w.word as category_name, c.parent_id,
                        COUNT(DISTINCT p.id) as file_count
                 FROM categorys c
                 JOIN words w ON c.word_id = w.id
@@ -1390,7 +1403,7 @@ def register_archives_routes(app):
                 JOIN hash_contexts hc ON hc.hash_id = wp.hash_id JOIN paths p ON p.context_id = hc.id
                 
                 WHERE hc.side_id = %s
-                GROUP BY c.id, w.word
+                GROUP BY c.id, w.word, c.parent_id
                 ORDER BY file_count DESC, w.word ASC
                 LIMIT %s OFFSET %s
             """
@@ -1422,7 +1435,8 @@ def register_archives_routes(app):
                 categories.append({
                     'id': row[0],
                     'name': row[1] or 'Unnamed Category',
-                    'file_count': row[2] or 0
+                    'parent_id': row[2],
+                    'file_count': row[3] or 0
                 })
             
             # Get keywords for this side

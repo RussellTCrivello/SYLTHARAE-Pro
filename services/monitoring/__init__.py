@@ -1,1 +1,1 @@
-"""Monitoring rules (step 11): definitions, storage and evaluation."""
+"""Monitoring scenarios (step 12): definitions, storage and evaluation."""

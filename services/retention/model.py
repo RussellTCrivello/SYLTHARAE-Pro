@@ -35,25 +35,6 @@ POLICIES: Dict[str, Dict[str, Any]] = {
         "deletes": "finished jobs and their events (job_events cascade)",
         "description": "Finished JobManager jobs and their event streams.",
     },
-    "rule_ledger": {
-        "table": "rule_subject_ledger",
-        "age_column": "first_matched_at",
-        "status_guard": None,
-        "default_days": 180,
-        "deletes": "matched-subject ledger rows; pruning re-baselines the"
-                   " rule: subjects that still match are notified again",
-        "description": "The rule engine's matched-subject ledger (its"
-                       " deduplication memory).",
-    },
-    "rule_evaluations": {
-        "table": "rule_evaluations",
-        "age_column": "evaluated_at",
-        "status_guard": None,
-        "default_days": 180,
-        "deletes": "evaluation log rows (the per-rule history page reads"
-                   " this)",
-        "description": "Monitoring-rule evaluation log rows.",
-    },
     "scenario_outcomes": {
         "table": "scenario_outcomes",
         "age_column": "recorded_at",
@@ -70,28 +51,6 @@ POLICIES: Dict[str, Dict[str, Any]] = {
         "default_days": KEEP_FOREVER,
         "deletes": "notification rows for every recipient, read or unread",
         "description": "Notifications (alerts) for every recipient.",
-    },
-    "report_artifacts": {
-        "table": "report_artifacts",
-        "age_column": "created_at",
-        "status_guard": None,
-        "default_days": KEEP_FOREVER,
-        "deletes": "artifact rows including their bytes and manifests - the"
-                   " files and their verifiability are gone, stated here and"
-                   " in the audit row",
-        "description": "Stored report artifacts (bytes + manifest).",
-    },
-    "report_runs": {
-        "table": "report_runs",
-        "age_column": "finished_at",
-        # A run that never finished is state to reconcile, not litter.
-        "status_guard": ("status IN ('completed', 'failed', 'refused',"
-                         " 'cancelled') AND finished_at IS NOT NULL"),
-        "default_days": 365,
-        "deletes": "run rows with their datasets and any remaining artifacts"
-                   " (foreign keys cascade)",
-        "description": "Completed report runs, their stored datasets and"
-                       " remaining artifacts.",
     },
     "path_revisions": {
         "table": "path_revisions",

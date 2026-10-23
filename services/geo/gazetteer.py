@@ -1,20 +1,18 @@
 """The database gazetteer: seed loading, fingerprint and the detector index.
 
 The gazetteer lives in PostgreSQL (``geo_places``, ``geo_place_names``,
-created by migration 0019). Its reviewed content is the committed seed
+created by baseline migration m0001). Its reviewed content is the committed seed
 ``data/gazetteer/places_seed.json`` (built by ``tools/gazetteer/build_seed.py``
 from Wikidata, CC0). :func:`sync_seed` is the seed synchronizer; approved
 curation writes use :func:`record_curation_change` so their active detector
-fingerprint and immutable revision history stay in step:
+fingerprint stays in step:
 
-* idempotent upsert keyed on ``place_key`` / ``(place, language, match_key)``;
+* idempotent upsert keyed on (label, category_id, country_codes) / (place_id, language, match_key, name_type);
 * places that leave the seed are *retired*, never deleted - stored place
   signals keep pointing at them (``content_signal_places`` is ``ON DELETE
   RESTRICT``), so evidence is never orphaned;
-* every load that changes anything records a ``geo_gazetteer_loads`` row
-  with the seed's SHA-256 and a fingerprint computed **from the database
-  rows**. The place detector's version embeds that fingerprint, so editing
-  the gazetteer makes stored place signals stale for re-detection.
+* the fingerprint is computed at read time from live rows, cached in process
+  and invalidated by the loader and by ``record_curation_change``.
 """
 
 from __future__ import annotations
@@ -45,6 +43,18 @@ class GazetteerUnavailable(RuntimeError):
     """No gazetteer has been loaded into this database."""
 
 
+# In-process cache for fingerprint and detector index
+_FINGERPRINT_CACHE: Optional[str] = None
+_INDEX_CACHE: Dict[str, Any] = {}
+
+
+def _invalidate_cache() -> None:
+    """Invalidate the in-process fingerprint and detector cache."""
+    global _FINGERPRINT_CACHE
+    _FINGERPRINT_CACHE = None
+    _INDEX_CACHE.clear()
+
+
 def load_seed_file(path: Path = DEFAULT_SEED) -> Dict[str, Any]:
     """Read and verify a seed file (format, SHA-256 of the places payload)."""
     try:
@@ -62,37 +72,58 @@ def load_seed_file(path: Path = DEFAULT_SEED) -> Dict[str, Any]:
         for name in place["names"]:
             if script_of(match_key(name["name"])) != LANGUAGE_SCRIPT.get(name["language"]):
                 raise SeedIntegrityError(
-                    f"{place['place_key']}: {name['language']} name {name['name']!r} "
+                    f"{place.get('place_key', 'unknown')}: {name['language']} name {name['name']!r} "
                     "is not in the language's script")
     return seed
 
 
+def _get_category_id(cur, feature_type: str) -> int:
+    """Map feature_type to category_id by looking up the category word.
+    
+    Creates the main category if it doesn't exist (idempotent).
+    """
+    cur.execute(
+        "SELECT c.id FROM categorys c JOIN words w ON w.id = c.word_id WHERE w.word = %s",
+        (feature_type,)
+    )
+    row = cur.fetchone()
+    if row is not None:
+        return row[0]
+    # Create the main category (no parent) for this feature type
+    cur.execute("INSERT INTO words (word) VALUES (%s) ON CONFLICT DO NOTHING RETURNING id", (feature_type,))
+    row = cur.fetchone()
+    if row is None:
+        cur.execute("SELECT id FROM words WHERE word = %s", (feature_type,))
+        row = cur.fetchone()
+    word_id = row[0]
+    cur.execute("INSERT INTO categorys (word_id) VALUES (%s) ON CONFLICT DO NOTHING RETURNING id", (word_id,))
+    row = cur.fetchone()
+    if row is None:
+        cur.execute("SELECT id FROM categorys c JOIN words w ON w.id = c.word_id WHERE w.word = %s", (feature_type,))
+        row = cur.fetchone()
+    return row[0]
+
+
 _UPSERT_PLACE = (
-    "INSERT INTO geo_places (place_key, label, feature_type, country_codes, latitude,"
-    " longitude, source, source_title, seed_version) VALUES %s"
-    " ON CONFLICT (place_key) DO UPDATE SET label = EXCLUDED.label,"
-    " feature_type = EXCLUDED.feature_type, country_codes = EXCLUDED.country_codes,"
-    " latitude = EXCLUDED.latitude, longitude = EXCLUDED.longitude, source = EXCLUDED.source,"
-    " source_title = EXCLUDED.source_title, seed_version = EXCLUDED.seed_version,"
-    " retired = FALSE, updated_at = NOW()"
-    " WHERE (geo_places.label, geo_places.feature_type, geo_places.country_codes,"
-    " geo_places.latitude, geo_places.longitude, geo_places.source, geo_places.source_title,"
-    " geo_places.retired)"
-    " IS DISTINCT FROM (EXCLUDED.label, EXCLUDED.feature_type, EXCLUDED.country_codes,"
-    " EXCLUDED.latitude, EXCLUDED.longitude, EXCLUDED.source, EXCLUDED.source_title, FALSE)"
-    " RETURNING id, place_key, (xmax = 0) AS inserted"
+    "INSERT INTO geo_places (label, category_id, country_codes, latitude, longitude)"
+    " VALUES %s"
+    " ON CONFLICT (label, category_id, country_codes) DO UPDATE SET"
+    " latitude = EXCLUDED.latitude,"
+    " longitude = EXCLUDED.longitude,"
+    " retired = FALSE,"
+    " updated_at = NOW()"
+    " WHERE (geo_places.latitude, geo_places.longitude, geo_places.retired)"
+    " IS DISTINCT FROM (EXCLUDED.latitude, EXCLUDED.longitude, FALSE)"
+    " RETURNING (xmax = 0) AS inserted"
 )
 
 _UPSERT_NAME = (
-    "INSERT INTO geo_place_names (place_id, name, match_key, language, script, name_type,"
-    " homograph, source, note) VALUES %s"
-    " ON CONFLICT (place_id, language, match_key) DO UPDATE SET name = EXCLUDED.name,"
-    " script = EXCLUDED.script, name_type = EXCLUDED.name_type,"
-    " homograph = EXCLUDED.homograph, source = EXCLUDED.source, note = EXCLUDED.note"
-    " WHERE (geo_place_names.name, geo_place_names.script, geo_place_names.name_type,"
-    " geo_place_names.homograph, geo_place_names.source, geo_place_names.note)"
-    " IS DISTINCT FROM (EXCLUDED.name, EXCLUDED.script, EXCLUDED.name_type,"
-    " EXCLUDED.homograph, EXCLUDED.source, EXCLUDED.note)"
+    "INSERT INTO geo_place_names (place_id, name, match_key, language, script, name_type) VALUES %s"
+    " ON CONFLICT (place_id, language, match_key, name_type) DO UPDATE SET"
+    " name = EXCLUDED.name,"
+    " script = EXCLUDED.script"
+    " WHERE (geo_place_names.name, geo_place_names.script)"
+    " IS DISTINCT FROM (EXCLUDED.name, EXCLUDED.script)"
     " RETURNING (xmax = 0) AS inserted"
 )
 
@@ -103,15 +134,30 @@ def compute_fingerprint(cur) -> Tuple[str, int, int]:
     Computed from the database, not the seed file, so it describes exactly
     what the detector will match against.
     """
-    cur.execute("SELECT place_key, label, feature_type, country_codes, latitude, longitude"
-                " FROM geo_places WHERE NOT retired ORDER BY place_key")
+    cur.execute("""
+        SELECT c.word, g.label, g.category_id, g.country_codes, g.latitude, g.longitude
+        FROM geo_places g
+        JOIN categorys cat ON cat.id = g.category_id
+        JOIN words c ON c.id = cat.word_id
+        WHERE NOT g.retired
+        ORDER BY c.word, g.label, g.country_codes
+    """)
     places = [[r[0], r[1], r[2], list(r[3] or []),
                None if r[4] is None else repr(float(r[4])),
                None if r[5] is None else repr(float(r[5]))] for r in cur.fetchall()]
-    cur.execute("SELECT p.place_key, n.language, n.match_key, n.name, n.script, n.name_type,"
-                " n.homograph, n.note FROM geo_place_names n JOIN geo_places p ON p.id = n.place_id"
-                " WHERE NOT p.retired ORDER BY p.place_key, n.language, n.match_key")
+
+    cur.execute("""
+        SELECT c.word, g.label, g.country_codes, n.language, n.match_key, n.name, n.script,
+               n.name_type
+        FROM geo_place_names n
+        JOIN geo_places g ON g.id = n.place_id
+        JOIN categorys cat ON cat.id = g.category_id
+        JOIN words c ON c.id = cat.word_id
+        WHERE NOT g.retired
+        ORDER BY c.word, g.label, g.country_codes, n.language, n.match_key, n.name_type
+    """)
     names = [list(r) for r in cur.fetchall()]
+
     payload = json.dumps({"places": places, "names": names}, ensure_ascii=False,
                          separators=(",", ":"))
     return hashlib.sha256(payload.encode("utf-8")).hexdigest(), len(places), len(names)
@@ -129,50 +175,55 @@ def lock_curation(cur) -> None:
 def record_curation_change(cur, *, loaded_by: str, action: str) -> Dict[str, Any]:
     """Record a manual curation revision when detector-visible rows changed.
 
-    ``content_sha256`` remains the digest of the reviewed seed payload that
-    anchors this database. ``fingerprint`` is computed from the active stored
-    gazetteer, so every matching change advances the detector version. The
-    load table is append-only; user-facing history endpoints are read-only.
+    The fingerprint is computed from the active stored gazetteer, so every
+    matching change advances the detector version. The cache is invalidated.
     """
-    latest = current_load(cur)
-    if latest is None:
-        raise GazetteerUnavailable("no gazetteer load exists for curation")
     fingerprint, place_count, name_count = compute_fingerprint(cur)
-    changed = fingerprint != latest["fingerprint"]
+
+    # Check if fingerprint changed from cached value
+    global _FINGERPRINT_CACHE
+    old_fingerprint = _FINGERPRINT_CACHE
+    changed = fingerprint != old_fingerprint
+
     if changed:
-        stats = {
-            "kind": "admin_curation",
-            "action": str(action)[:80],
-            "places_active": place_count,
-            "names_active": name_count,
-        }
-        cur.execute(
-            "INSERT INTO geo_gazetteer_loads (seed_version, content_sha256, fingerprint,"
-            " place_count, name_count, stats, loaded_by)"
-            " VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id",
-            (latest["seed_version"], latest["content_sha256"], fingerprint,
-             place_count, name_count, psycopg2.extras.Json(stats), (loaded_by or "admin")[:80]),
-        )
-        load_id = cur.fetchone()[0]
-    else:
-        load_id = latest["id"]
-    return {"changed": changed, "load_id": load_id, "fingerprint": fingerprint,
+        _FINGERPRINT_CACHE = fingerprint
+        _INDEX_CACHE.clear()
+
+    logger.info("gazetteer curation by %s: action=%s changed=%s places=%d names=%d fingerprint=%s",
+                loaded_by, action, changed, place_count, name_count, fingerprint[:12])
+    return {"changed": changed, "fingerprint": fingerprint,
             "place_count": place_count, "name_count": name_count}
 
 
-def current_load(cur) -> Optional[Dict[str, Any]]:
-    """The latest gazetteer load, or None (also when migration 0019 is absent)."""
-    cur.execute("SELECT to_regclass('geo_gazetteer_loads') IS NOT NULL")
-    if not cur.fetchone()[0]:
+def current_fingerprint(cur) -> Optional[str]:
+    """The fingerprint of the currently loaded gazetteer, or None.
+
+    Computed from live rows and cached in process.
+    """
+    global _FINGERPRINT_CACHE
+    if _FINGERPRINT_CACHE is not None:
+        return _FINGERPRINT_CACHE
+
+    # Check if there are any active places
+    cur.execute("SELECT 1 FROM geo_places WHERE NOT retired LIMIT 1")
+    if cur.fetchone() is None:
         return None
-    cur.execute("SELECT id, seed_version, content_sha256, fingerprint, place_count, name_count,"
-                " loaded_by, loaded_at FROM geo_gazetteer_loads ORDER BY id DESC LIMIT 1")
-    row = cur.fetchone()
-    if row is None:
+
+    fingerprint, _, _ = compute_fingerprint(cur)
+    _FINGERPRINT_CACHE = fingerprint
+    return fingerprint
+
+
+def current_content_sha256(cur) -> Optional[str]:
+    """The content_sha256 of the reviewed seed payload, or None.
+
+    Computed from the seed file when needed.
+    """
+    try:
+        seed = load_seed_file()
+        return seed["content_sha256"]
+    except Exception:
         return None
-    keys = ("id", "seed_version", "content_sha256", "fingerprint", "place_count",
-            "name_count", "loaded_by", "loaded_at")
-    return dict(zip(keys, row))
 
 
 def sync_seed(cur, seed: Optional[Dict[str, Any]] = None, *, loaded_by: str) -> Dict[str, Any]:
@@ -180,6 +231,11 @@ def sync_seed(cur, seed: Optional[Dict[str, Any]] = None, *, loaded_by: str) -> 
 
     Runs inside the caller's transaction; a failure leaves nothing changed.
     Returns counts and whether anything changed.
+
+    Seed sync never retires by absence - a seed run only inserts new places,
+    updates changed ones (matched by label, category and country codes) and
+    adds missing names. Retirement happens only through the existing
+    ``retired`` flag set by curation.
     """
     if seed is None:
         seed = load_seed_file()
@@ -190,51 +246,89 @@ def sync_seed(cur, seed: Optional[Dict[str, Any]] = None, *, loaded_by: str) -> 
     stats = {"places_added": 0, "places_updated": 0, "places_retired": 0,
              "names_added": 0, "names_updated": 0, "names_removed": 0}
 
-    rows = [(p["place_key"], p["label"], p["feature_type"], list(p["country_codes"]),
-             p["latitude"], p["longitude"], SEED_SOURCE, p.get("source_title"),
-             seed["seed_version"]) for p in places]
-    for _pid, _key, inserted in psycopg2.extras.execute_values(
+    # Compute fingerprint BEFORE changes to detect if anything actually changed
+    cur.execute("SELECT 1 FROM geo_places WHERE NOT retired LIMIT 1")
+    has_existing = cur.fetchone() is not None
+    old_fingerprint = None
+    if has_existing:
+        old_fingerprint, _, _ = compute_fingerprint(cur)
+
+    # Build place rows with category_id instead of feature_type
+    # Ensure main categories exist for all feature types in the seed
+    rows = []
+    for p in places:
+        category_id = _get_category_id(cur, p["feature_type"])
+        rows.append((p["label"], category_id, list(p["country_codes"]),
+                     p["latitude"], p["longitude"]))
+
+    for (inserted,) in psycopg2.extras.execute_values(
             cur, _UPSERT_PLACE, rows, page_size=500, fetch=True):
         stats["places_added" if inserted else "places_updated"] += 1
-    cur.execute("SELECT id, place_key FROM geo_places WHERE place_key = ANY(%s)",
-                ([p["place_key"] for p in places],))
-    ids = dict((key, pid) for pid, key in cur.fetchall())
 
-    cur.execute("UPDATE geo_places SET retired = TRUE, updated_at = NOW()"
-                " WHERE source = %s AND NOT retired AND NOT (place_key = ANY(%s))",
-                (SEED_SOURCE, list(ids)))
-    stats["places_retired"] = cur.rowcount
+    # NOTE: We do NOT retire places that leave the seed.
+    # Retirement happens only through curation (the retired flag).
 
+    # Map label+category+country_codes to place_id for names
+    cur.execute("""
+        SELECT g.id, c.word, g.label, g.country_codes
+        FROM geo_places g
+        JOIN categorys cat ON cat.id = g.category_id
+        JOIN words c ON c.id = cat.word_id
+        WHERE c.word = ANY(%s) AND NOT g.retired
+    """, ([p["feature_type"] for p in places],))
+    ids = {}
+    for pid, ftype, label, cc in cur.fetchall():
+        key = (ftype, label, tuple(cc))
+        ids[key] = pid
+
+    # Build desired names
     desired = []
     for p in places:
+        cat_id = _get_category_id(cur, p["feature_type"])
+        key = (p["feature_type"], p["label"], tuple(p["country_codes"]))
+        place_id = ids[key]
         for n in p["names"]:
-            desired.append((ids[p["place_key"]], n["name"], match_key(n["name"]), n["language"],
-                            n["script"], n["name_type"], bool(n["homograph"]), n["source"],
-                            n.get("note")))
-    cur.execute("CREATE TEMP TABLE _gz_names (place_id INTEGER, language VARCHAR(8),"
-                " match_key VARCHAR(255)) ON COMMIT DROP")
+            desired.append((place_id, n["name"], match_key(n["name"]), n["language"],
+                            n["script"], n["name_type"]))
+
+    # Remove names for these places that are not in desired
+    cur.execute("""
+        CREATE TEMP TABLE _gz_names (place_id INTEGER, language VARCHAR(8),
+                                     match_key VARCHAR(255), name_type VARCHAR(16))
+        ON COMMIT DROP
+    """)
     psycopg2.extras.execute_values(cur, "INSERT INTO _gz_names VALUES %s",
-                                   [(d[0], d[3], d[2]) for d in desired], page_size=1000)
-    cur.execute("DELETE FROM geo_place_names n WHERE n.place_id = ANY(%s) AND n.source <> 'user' AND NOT EXISTS ("
-                " SELECT 1 FROM _gz_names d WHERE d.place_id = n.place_id"
-                " AND d.language = n.language AND d.match_key = n.match_key)",
-                (list(ids.values()),))
+                                   [(d[0], d[3], d[2], d[5]) for d in desired], page_size=1000)
+    cur.execute("""
+        DELETE FROM geo_place_names n
+        WHERE n.place_id = ANY(%s)
+        AND NOT EXISTS (
+            SELECT 1 FROM _gz_names d
+            WHERE d.place_id = n.place_id
+            AND d.language = n.language
+            AND d.match_key = n.match_key
+            AND d.name_type = n.name_type
+        )
+    """, (list(ids.values()),))
     stats["names_removed"] = cur.rowcount
     cur.execute("DROP TABLE _gz_names")
+
+    # Upsert names
     for (inserted,) in psycopg2.extras.execute_values(cur, _UPSERT_NAME, desired,
                                                       page_size=1000, fetch=True):
         stats["names_added" if inserted else "names_updated"] += 1
 
+    # Compute fingerprint AFTER changes
     fingerprint, place_count, name_count = compute_fingerprint(cur)
-    latest = current_load(cur)
-    changed = (latest is None or latest["fingerprint"] != fingerprint
-               or latest["content_sha256"] != seed["content_sha256"])
+    changed = fingerprint != old_fingerprint
+    
     if changed:
-        cur.execute("INSERT INTO geo_gazetteer_loads (seed_version, content_sha256, fingerprint,"
-                    " place_count, name_count, stats, loaded_by)"
-                    " VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                    (seed["seed_version"], seed["content_sha256"], fingerprint, place_count,
-                     name_count, psycopg2.extras.Json(stats), loaded_by[:80]))
+        _FINGERPRINT_CACHE = fingerprint
+        _INDEX_CACHE.clear()
+    else:
+        # No actual change - restore cache
+        _FINGERPRINT_CACHE = old_fingerprint
+
     logger.info("gazetteer sync by %s: changed=%s %s fingerprint=%s", loaded_by, changed,
                 stats, fingerprint[:12])
     return {"changed": changed, "fingerprint": fingerprint, "place_count": place_count,
@@ -245,30 +339,34 @@ def sync_seed(cur, seed: Optional[Dict[str, Any]] = None, *, loaded_by: str) -> 
 # Detector index
 # ---------------------------------------------------------------------------
 
-_INDEX_CACHE: Dict[str, Any] = {}
-
 
 def detector_gazetteer(cur):
     """The ``place_intel.Gazetteer`` for the current load, cached per fingerprint.
 
-    One cheap query per call (the latest load row); names are read only when
-    the fingerprint changes. Raises :class:`GazetteerUnavailable` when no
-    gazetteer is loaded - a place run then fails loudly instead of recording
-    "no places found".
+    Names are read only when the fingerprint changes. Raises :class:`GazetteerUnavailable`
+    when no gazetteer is loaded - a place run then fails loudly instead of
+    recording "no places found".
     """
     from core.detection import place_intel
 
-    load = current_load(cur)
-    if load is None:
-        raise GazetteerUnavailable("no gazetteer is loaded (migration 0019 not applied?)")
-    fingerprint = load["fingerprint"]
+    fingerprint = current_fingerprint(cur)
+    if fingerprint is None:
+        raise GazetteerUnavailable("no gazetteer is loaded (migration m0001 not applied?)")
+
     cached = _INDEX_CACHE.get("gazetteer")
     if cached is not None and cached.fingerprint == fingerprint:
         return cached
-    cur.execute("SELECT p.id, p.place_key, p.label, p.feature_type, p.country_codes, n.name,"
-                " n.language, n.script, n.name_type, n.homograph, n.note"
-                " FROM geo_place_names n JOIN geo_places p ON p.id = n.place_id"
-                " WHERE NOT p.retired ORDER BY p.place_key, n.language, n.match_key")
+
+    cur.execute("""
+        SELECT g.id, c.word, g.label, g.country_codes, g.latitude, g.longitude,
+               n.name, n.language, n.script, n.name_type
+        FROM geo_place_names n
+        JOIN geo_places g ON g.id = n.place_id
+        JOIN categorys cat ON cat.id = g.category_id
+        JOIN words c ON c.id = cat.word_id
+        WHERE NOT g.retired
+        ORDER BY g.id, n.language, n.match_key, n.name_type
+    """)
     gazetteer = place_intel.Gazetteer.from_rows(cur.fetchall(), fingerprint)
     _INDEX_CACHE["gazetteer"] = gazetteer
     return gazetteer
@@ -278,5 +376,5 @@ def current_detector_version(cur) -> Optional[str]:
     """``places-X.Y.Z+g<fingerprint>`` for the loaded gazetteer, or None."""
     from core.detection import place_intel
 
-    load = current_load(cur)
-    return place_intel.detector_version(load["fingerprint"]) if load else None
+    fingerprint = current_fingerprint(cur)
+    return place_intel.detector_version(fingerprint) if fingerprint else None

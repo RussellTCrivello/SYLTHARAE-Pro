@@ -124,9 +124,6 @@ def duplicate_key_checks(cur, tables: set) -> List[Dict[str, object]]:
         ("content_signal_runs", "hash_id, detector"),
         # Rows with a declared business key.
         ("hash_contexts", "hash_id, source_id, side_id"),
-        ("report_run_datasets", "run_id, dataset_key"),
-        ("report_run_analyses", "run_id, analysis_key"),
-        ("monitoring_rules", "name"),
         ("scenarios", "name"),
         ("analyst_categories", "name"),
         ("sources", "name"),

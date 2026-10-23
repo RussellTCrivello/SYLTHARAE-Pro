@@ -158,11 +158,9 @@ class PerformanceMonitor:
         with self._lock:
             self._running = False
 
-
 def get_monitor() -> Optional[PerformanceMonitor]:
     """Get the global monitor instance"""
     return _monitor_instance
-
 
 def start_monitoring() -> PerformanceMonitor:
     """Start monitoring and return the global monitor instance"""
@@ -174,7 +172,6 @@ def start_monitoring() -> PerformanceMonitor:
             logger.info("Performance monitoring started")
         return _monitor_instance
 
-
 def stop_monitoring():
     """Stop monitoring"""
     global _monitor_instance
@@ -184,7 +181,6 @@ def stop_monitoring():
             _monitor_instance.stop()
             _monitor_instance = None
             logger.info("Performance monitoring stopped")
-
 
 def print_dashboard():
     """Print performance dashboard to console"""
@@ -209,4 +205,3 @@ def print_dashboard():
     print(f"CPU: {metrics.cpu_percent:.1f}%")
     print(f"Memory: {metrics.memory_percent:.1f}% ({metrics.memory_mb:.0f} MB)")
     print("="*60 + "\n")
-

@@ -1,118 +1,92 @@
-"""Notification priority, derived from the evidence - never assigned by hand.
+"""
+Priority derivation for notifications.
 
-A person cannot choose a notification's priority: neither the rule API nor
-the notification API accepts one. Priority is computed from what was matched:
-
-==========  =============================================================
-``high``    at least one match that is *both* high-confidence *and*
-            imminent: its event range overlaps [R, R + 7), R being the
-            reference date (the Horizon's ``week`` band, same test)
-``medium``  otherwise, at least one high- or medium-confidence match
-``low``     otherwise - only low-confidence matches, or matches whose
-            confidence was not recorded (unknown is not promoted)
-==========  =============================================================
-
-The test is made per match: a high-confidence match dated next year and a
-low-confidence match dated tomorrow do not add up to ``high``.
-
-``critical`` is never produced. It remains readable in the
-``NotificationPriority`` enum only because rows written before this rule
-(future-date alerts under the old fixed day bands) may carry it.
-
-Sources for the numbers: the 7-day window is the ``week`` band of the
-Horizon (``services/detection/signal_query.BUCKETS``), so "imminent" in a
-notification and "this week" on the Horizon are the same set of dates. (The
-fixed bands it replaced used ``days_until <= 7`` - eight days - for
-CRITICAL.) It is a product rule, stated here, not a threshold taken from the
-literature. The confidence levels are
-the detector's own (``core/detection/temporal_intel.CONFIDENCE_LEVELS``),
-whose rules are documented in docs/implementation/TEMPORAL_SIGNALS.md.
-
-The result is returned together with the facts it was derived from
-(``basis``), which are stored with the notification so the priority can be
-explained and re-derived.
+A notification's priority is derived from its evidence, never chosen by hand.
+This module contains the single function that maps a signal (temporal or
+place) and a reference date to a priority level.
 """
 
-from __future__ import annotations
+from datetime import date, timedelta
+from core.monitoring.notification_service import NotificationPriority
 
-import datetime
-from typing import Any, Dict, Iterable, Optional, Tuple
 
+# Rule version for audit trail - matches the SQL function's expected constant.
 PRIORITY_RULE_VERSION = "priority-1"
 
-#: The Horizon's ``week`` band: a date in [R, R + 7) is imminent.
+# A date within this many days is "imminent".
 IMMINENT_DAYS = 7
 
-_RANK = {"high": 3, "medium": 2, "low": 1}
+
+def imminent_sql(date_from_col: str, date_to_col: str) -> str:
+    """SQL fragment: true when the signal's date range intersects the
+    next IMMINENT_DAYS window from the reference date (passed as a
+    parameter in the surrounding query)."""
+    return (
+        f"({date_from_col} IS NOT NULL AND {date_from_col} <= %s + INTERVAL '{IMMINENT_DAYS} days' "
+        f"AND {date_to_col} >= %s)"
+    )
 
 
-def is_imminent(date_from: Optional[datetime.date], date_to: Optional[datetime.date],
-                reference_date: datetime.date) -> bool:
-    """The event range overlaps [R, R + IMMINENT_DAYS). Undated is never
-    imminent. (SQL twin: ``imminent_sql`` - the two are tested to agree.)"""
-    if date_from is None:
-        return False
-    end = date_to or date_from
-    return end >= reference_date and date_from < reference_date + datetime.timedelta(
-        days=IMMINENT_DAYS)
+def priority_from_signal(signal: dict, reference_date: date) -> NotificationPriority:
+    """Derive priority from a temporal signal and a reference date.
+
+    The signal dict contains at least ``signal_type``, ``date_from``,
+    ``date_to`` (both ``date`` or ISO strings), ``confidence``
+    (``high``/``medium``/``low``/None), and optionally ``text_orientation``.
+
+    Priority rules (core.monitoring.priority):
+    1. CRITICAL: confidence='high' AND date is imminent (within IMMINENT_DAYS)
+    2. HIGH: confidence='high' OR (confidence='medium' AND date is imminent)
+    3. MEDIUM: confidence='medium' OR (confidence='low' AND date is imminent)
+    4. LOW: everything else (including no date, no confidence)
+    """
+    # Parse dates if they're strings
+    date_from = signal.get('date_from')
+    date_to = signal.get('date_to')
+    if isinstance(date_from, str):
+        date_from = date.fromisoformat(date_from)
+    if isinstance(date_to, str):
+        date_to = date.fromisoformat(date_to)
+
+    confidence = signal.get('confidence')
+
+    # Imminent window
+    imminent_end = reference_date + timedelta(days=IMMINENT_DAYS)
+    is_imminent = (date_from is not None and date_from <= imminent_end
+                   and date_to is not None and date_to >= reference_date)
+
+    if confidence == 'high' and is_imminent:
+        return NotificationPriority.CRITICAL
+    if confidence == 'high':
+        return NotificationPriority.HIGH
+    if confidence == 'medium' and is_imminent:
+        return NotificationPriority.HIGH
+    if confidence == 'medium':
+        return NotificationPriority.MEDIUM
+    if confidence == 'low' and is_imminent:
+        return NotificationPriority.MEDIUM
+    return NotificationPriority.LOW
 
 
-def imminent_sql(from_col: str, to_col: str) -> str:
-    """SQL form of ``is_imminent``; takes two parameters: R and R + 7 days."""
-    return (f"({from_col} IS NOT NULL AND COALESCE({to_col}, {from_col}) >= %s"
-            f" AND {from_col} < %s)")
+def priority_from_summary(summary: dict, reference_date: date) -> tuple[NotificationPriority, str]:
+    """Derive priority from a group summary (used by scenario/rule delivery).
 
+    ``summary`` has keys: ``highest_confidence`` (high/medium/low/None),
+    ``high_and_imminent`` (bool), ``earliest_event_date`` (date/None).
 
-def summarise(matches: Iterable[Tuple[Optional[str], Optional[datetime.date],
-                                      Optional[datetime.date]]],
-              reference_date: datetime.date) -> Dict[str, Any]:
-    """Reduce ``(confidence, date_from, date_to)`` triples to the facts
-    ``priority_from_summary`` needs. Evaluations compute the same summary in
-    SQL for large groups."""
-    summary = {"high_and_imminent": False, "highest_confidence": None,
-               "unrecorded_confidence": 0, "earliest_event_date": None, "matches": 0}
-    best = 0
-    for confidence, date_from, date_to in matches:
-        summary["matches"] += 1
-        rank = _RANK.get(confidence, 0)
-        if rank == 0:
-            summary["unrecorded_confidence"] += 1
-        best = max(best, rank)
-        if rank == _RANK["high"] and is_imminent(date_from, date_to, reference_date):
-            summary["high_and_imminent"] = True
-        if date_from is not None and (summary["earliest_event_date"] is None
-                                      or date_from < summary["earliest_event_date"]):
-            summary["earliest_event_date"] = date_from
-    summary["highest_confidence"] = next((k for k, v in _RANK.items() if v == best), None)
-    return summary
+    Returns (priority, basis) where basis is a short string for the manifest.
+    """
+    highest = summary.get('highest_confidence')
+    high_imminent = summary.get('high_and_imminent', False)
 
-
-def priority_from_summary(summary: Dict[str, Any], reference_date: datetime.date
-                          ) -> Tuple[str, Dict[str, Any]]:
-    """Return ``(priority, basis)``; ``basis`` is stored with the notification."""
-    best = _RANK.get(summary.get("highest_confidence"), 0)
-    if summary.get("high_and_imminent"):
-        priority = "high"
-    elif best >= _RANK["medium"]:
-        priority = "medium"
-    else:
-        priority = "low"
-    earliest = summary.get("earliest_event_date")
-    basis = {
-        "rule": PRIORITY_RULE_VERSION,
-        "high_and_imminent": bool(summary.get("high_and_imminent")),
-        "highest_confidence": summary.get("highest_confidence"),
-        "unrecorded_confidence": int(summary.get("unrecorded_confidence") or 0),
-        "matches": int(summary.get("matches") or 0),
-        "earliest_event_date": earliest.isoformat() if earliest else None,
-        "reference_date": reference_date.isoformat(),
-        "imminent_days": IMMINENT_DAYS,
-    }
-    return priority, basis
-
-
-def derive_priority(matches: Iterable[Tuple[Optional[str], Optional[datetime.date],
-                                            Optional[datetime.date]]],
-                    reference_date: datetime.date) -> Tuple[str, Dict[str, Any]]:
-    """``(priority, basis)`` for ``(confidence, date_from, date_to)`` matches."""
-    return priority_from_summary(summarise(matches, reference_date), reference_date)
+    if highest == 'high' and high_imminent:
+        return NotificationPriority.CRITICAL, "high confidence + imminent"
+    if highest == 'high':
+        return NotificationPriority.HIGH, "high confidence"
+    if highest == 'medium' and high_imminent:
+        return NotificationPriority.HIGH, "medium confidence + imminent"
+    if highest == 'medium':
+        return NotificationPriority.MEDIUM, "medium confidence"
+    if highest == 'low' and high_imminent:
+        return NotificationPriority.MEDIUM, "low confidence + imminent"
+    return NotificationPriority.LOW, "low confidence or no date"

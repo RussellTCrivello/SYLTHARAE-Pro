@@ -130,22 +130,21 @@ def register_scenario_routes(app):
     @app.route("/monitoring", methods=["GET"])
     @login_required
     def monitoring_page():
-        """Rules and scenarios (registry ``monitoring``). A view over the rules
-        and scenarios APIs only; write controls are hidden from viewers as a
-        convenience - the API refuses their writes either way."""
+        """Scenarios (registry ``monitoring``). A view over the scenarios API
+        only; write controls are hidden from viewers as a convenience - the API
+        refuses their writes either way."""
         from flask import render_template
 
         from services.detection.signal_query import MAX_PAGE_SIZE
-        from services.monitoring.rules import MAX_LIST as RULES_MAX_LIST
         from services.monitoring.scenario_model import STRATEGIES
 
         user, uid, is_admin = _actor()
         return render_template("Monitoring/monitoring.html", page_data={
             "user_id": uid, "is_admin": is_admin,
             "can_write": bool(user and user.has_role("analyst", "admin")),
-            "max_page_size": MAX_PAGE_SIZE, "list_limit": min(store.MAX_LIST, RULES_MAX_LIST),
+            "max_page_size": MAX_PAGE_SIZE, "list_limit": store.MAX_LIST,
             "strategies": list(STRATEGIES),
-            "starter_scenario": STARTER_SCENARIO, "starter_rule": STARTER_RULE,
+            "starter_scenario": STARTER_SCENARIO,
             "job_poll_ms": 1500, "job_poll_limit": 400,
         })
 

@@ -1,5 +1,5 @@
 /**
- * Schedules page (step 20) — scheduled report runs and evaluations.
+ * Schedules page (step 20) — scheduled evaluations and retention.
  *
  * The list is the unified table component (`record_table` +
  * static/js/modules/ui/unified-table.js) and nothing else: the same frame,
@@ -89,8 +89,8 @@ function statusCell(row) {
 }
 
 function escapeCell(value) {
-    return String(value == null ? '' : value).replace(/[&<>"']/g, (ch) => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    return String(value == null ? '' : value).replace(/[&<>\"']/g, (ch) => ({
+        '&': '&', '<': '<', '>': '>', '"': '"', "'": ''',
     }[ch]));
 }
 
@@ -101,13 +101,8 @@ function fmtWhen(iso) {
 }
 
 function whatRuns(row) {
-    if (row.schedule_type === 'report_run') {
-        const payload = row.payload || {};
-        const version = payload.version ? `@${payload.version}` : '';
-        return `${L.what_report}: ${escapeCell(payload.report_id || '?')}${version}`;
-    }
     if (row.schedule_type === 'retention') return L.what_retention;
-    return row.schedule_type === 'rule_evaluation' ? L.what_rules : L.what_scenarios;
+    return L.what_scenarios;
 }
 
 function actionsCell(row) {
@@ -219,7 +214,7 @@ function openCreate() {
         document.querySelector('label[for="scheduleType"]').textContent;
     document.getElementById('scheduleName').value = '';
     document.getElementById('scheduleInterval').value = 1440;
-    syncParameterPlaceholder();
+    document.getElementById('scheduleParameters').value = '';
     showDialog();
 }
 
@@ -230,41 +225,12 @@ function openEdit(id) {
     document.getElementById('scheduleName').value = row.name;
     document.getElementById('scheduleInterval').value = row.interval_minutes;
     document.getElementById('scheduleType').value = row.schedule_type;
-    const payload = row.payload || {};
-    if (payload.report_id) {
-        const select = document.getElementById('scheduleReport');
-        select.value = payload.report_id;
-    }
-    const parameters = { ...(payload.parameters || {}) };
     document.getElementById('scheduleParameters').value =
-        JSON.stringify(parameters, null, 2);
-    syncTypeControls();
+        JSON.stringify(row.payload || {}, null, 2);
     showDialog();
 }
 
-function syncParameterPlaceholder() {
-    const select = document.getElementById('scheduleReport');
-    const option = select && select.selectedOptions && select.selectedOptions[0];
-    const report = DATA.reports.find((r) => String(r.report_id)
-        === String(option ? option.value : ''));
-    const defaults = {};
-    (report ? report.parameters : []).forEach((p) => {
-        defaults[p.name] = p.type === 'criteria' ? { text: '' } : null;
-    });
-    document.getElementById('scheduleParameters').value =
-        JSON.stringify(defaults, null, 2);
-}
-
-function syncTypeControls() {
-    const isReport = document.getElementById('scheduleType').value === 'report_run';
-    document.getElementById('scheduleReportGroup').classList
-        .toggle('d-none', !isReport);
-    document.getElementById('scheduleParametersGroup').classList
-        .toggle('d-none', !isReport);
-}
-
 function showDialog() {
-    syncTypeControls();
     const el = document.getElementById('scheduleDialog');
     const dialog = bootstrap.Modal.getOrCreateInstance(el);
     document.getElementById('scheduleDialogError').classList.add('d-none');
@@ -282,24 +248,15 @@ async function save() {
     const name = document.getElementById('scheduleName').value.trim();
     const minutes = Number(document.getElementById('scheduleInterval').value);
     const body = { schedule_type: type, name, interval_minutes: minutes };
-    if (type === 'report_run') {
-        const select = document.getElementById('scheduleReport');
-        const option = select.selectedOptions[0];
-        let parameters;
-        try {
-            parameters = JSON.parse(document.getElementById('scheduleParameters')
-                .value || '{}');
-        } catch (error) {
-            dialogError(L.params_invalid);
-            return;
-        }
-        body.payload = {
-            report_id: option ? option.value : '',
-            version: option && option.dataset.version
-                ? Number(option.dataset.version) : null,
-            parameters,
-        };
+    let parameters;
+    try {
+        parameters = JSON.parse(document.getElementById('scheduleParameters')
+            .value || '{}');
+    } catch (error) {
+        dialogError(L.params_invalid);
+        return;
     }
+    body.payload = { parameters };
     try {
         if (editingId == null) {
             await api('POST', '/api/schedules', body);
@@ -376,16 +333,6 @@ function wireSchedulesPage() {
             allUsers = toggle.checked;
             refresh();
         });
-    }
-    const type = document.getElementById('scheduleType');
-    if (type && type.dataset.bound !== 'true') {
-        type.dataset.bound = 'true';
-        type.addEventListener('change', syncTypeControls);
-    }
-    const report = document.getElementById('scheduleReport');
-    if (report && report.dataset.bound !== 'true') {
-        report.dataset.bound = 'true';
-        report.addEventListener('change', syncParameterPlaceholder);
     }
     return refresh();
 }

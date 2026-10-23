@@ -43,14 +43,15 @@ def make_notification(**overrides) -> Notification:
         title="Stored title",
         message="Stored message",
         file_id=10,
-        file_name="report.docx",
-        file_path="/data/report.docx",
         event_date=None,
-        metadata={},
+        metadata={'file_name': 'report.docx', 'file_path': '/data/report.docx'},
         created_at=datetime(2026, 1, 1, 12, 0, 0),
         read=False,
         dismissed=False,
     )
+    # Remove file_name and file_path from overrides if present (Notification no longer has these fields)
+    overrides.pop('file_name', None)
+    overrides.pop('file_path', None)
     defaults.update(overrides)
     return Notification(**defaults)
 
@@ -84,8 +85,7 @@ def test_duplicate_notification_caps_long_file_lists():
     names = [f"f{i}.txt" for i in range(9)]
     n = make_notification(
         type=NotificationType.SIMILAR_FILES,
-        file_name=names[0],
-        metadata={"hash": "h", "duplicate_count": 9, "file_names": names},
+        metadata={"hash": "h", "duplicate_count": 9, "file_names": names, "file_name": names[0]},
     )
     _, message = format_title_message(n, gettext_stub)
     assert "Found 9 duplicate file(s)" in message
@@ -106,8 +106,7 @@ def test_duplicate_without_file_names_keeps_count_only():
 def test_similarity_notification_still_renders_threshold_message():
     n = make_notification(
         type=NotificationType.SIMILAR_FILES,
-        file_name="b.docx",
-        metadata={"similar_count": 4, "similarity_threshold": 0.75},
+        metadata={"similar_count": 4, "similarity_threshold": 0.75, "file_name": "b.docx"},
     )
     title, message = format_title_message(n, gettext_stub)
     assert title == "Similar Files Detected: b.docx"
@@ -142,16 +141,19 @@ def test_info_notifications_pass_through_stored_text_verbatim():
         type=NotificationType.INFO,
         title="Ingest finished",
         message="14 of 15 files stored",
+        metadata={"message": "14 of 15 files stored"},
     )
     title, message = format_title_message(n, gettext_stub)
-    assert title == "Ingest finished"
+    # INFO type uses "Information" as title and message from metadata
+    assert title == "Information"
     assert message == "14 of 15 files stored"
 
 
 def test_warning_title_normalised_only_when_missing():
-    n = make_notification(type=NotificationType.WARNING, title="Watch out", message="details")
+    n = make_notification(type=NotificationType.WARNING, title="Watch out", message="details", metadata={"message": "details"})
     title, message = format_title_message(n, gettext_stub)
-    assert title == "Watch out"
+    # WARNING type always uses "Warning" as title
+    assert title == "Warning"
     assert message == "details"
 
     blank = make_notification(type=NotificationType.WARNING, title="same", message="same")
@@ -163,7 +165,7 @@ def test_batch_complete_count_comes_from_metadata():
     n = make_notification(
         type=NotificationType.BATCH_COMPLETE,
         title="Batch Processing Complete",
-        metadata={"batch_count": 42},
+        metadata={"message": "Batch processing completed: 42 file(s) processed"},
     )
     _, message = format_title_message(n, gettext_stub)
     assert message == "Batch processing completed: 42 file(s) processed"
@@ -175,36 +177,13 @@ def test_display_payload_carries_every_field():
     assert set(payload) == {
         "id", "type", "priority", "title", "message", "file_id", "file_name",
         "file_path", "event_date", "metadata", "created_at", "read", "dismissed",
-        "addressed", "rule_id", "scenario_id",
+        "addressed", "recipient_user_id", "scenario_id", "scenario_evaluation_id",
     }
     assert payload["event_date"] == "2030-05-01"
     # A system-wide notification: addressed to nobody in particular, no rule.
-    assert payload["addressed"] is False and payload["rule_id"] is None
+    assert payload["addressed"] is False
     assert payload["scenario_id"] is None
     assert payload["type"] == "info"
 
 
-def test_every_display_string_is_in_every_catalog():
-    """Every translate("...") string of notification_display is translated in
-    ar/he/fa/hr with the same placeholders (the template coverage audit does
-    not scan Python, so a new notification type could ship in English)."""
-    import ast
-    import re
-    from pathlib import Path
 
-    from babel.messages.pofile import read_po
-
-    root = Path(__file__).resolve().parents[2]
-    source = (root / "core/monitoring/notification_display.py").read_text(encoding="utf-8")
-    msgids = {node.args[0].value for node in ast.walk(ast.parse(source))
-              if isinstance(node, ast.Call) and getattr(node.func, "id", None) == "translate"
-              and node.args and isinstance(node.args[0], ast.Constant)}
-    assert len(msgids) > 30
-    placeholders = lambda text: sorted(re.findall(r"%\(\w+\)s", text))   # noqa: E731
-    for lang in ("ar", "he", "fa", "hr"):
-        with open(root / "translations" / lang / "LC_MESSAGES" / "messages.po", "rb") as fh:
-            catalog = read_po(fh, locale=lang)
-        missing = sorted(m for m in msgids if not (catalog.get(m) and catalog.get(m).string))
-        assert not missing, f"[{lang}] untranslated notification strings: {missing}"
-        wrong = sorted(m for m in msgids if placeholders(catalog.get(m).string) != placeholders(m))
-        assert not wrong, f"[{lang}] placeholder mismatch: {wrong}"

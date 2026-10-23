@@ -37,6 +37,11 @@ class TestBootstrap:
         assert current_version(db_conn) == migrations[-1].version
 
     def test_required_tables_exist(self, db_conn):
+        # Single baseline migration (m0001_baseline) - nine legacy tables removed:
+        # monitoring_rules, monitoring_rule_versions, rule_evaluations, rule_subject_ledger,
+        # report_runs, report_run_datasets, report_artifacts, report_baselines, report_run_analyses,
+        # path_geo_mentions_m0015
+        # Gazetteer redesign: geo_gazetteer_loads removed, gazetteer_metadata added
         expected = {
             "words", "punctuation", "categorys", "words_categorys", "sides",
             "sources", "hashs", "hash_contexts", "paths", "contents", "contents_raw",
@@ -47,12 +52,17 @@ class TestBootstrap:
             "saved_searches", "saved_search_imports",
             # m0017: Phase 1 temporal signals, keyed on content (hash_id)
             "content_signals", "content_signal_runs",
-            # m0020 / m0021: monitoring rules and scenarios
-            "monitoring_rules", "monitoring_rule_versions", "rule_evaluations",
-            "rule_subject_ledger", "scenarios", "scenario_versions",
+            # m0021: scenarios (kept)
+            "scenarios", "scenario_versions",
             "scenario_evaluations", "scenario_outcomes",
-            # m0022: report runs (step 14)
-            "report_runs", "report_run_datasets",
+            # m0031: job schedules
+            "job_schedules",
+            # m0033: user navigation prefs
+            "user_navigation_prefs",
+            # m0019: gazetteer (redesigned: no geo_gazetteer_loads, no gazetteer_metadata)
+            "geo_places", "geo_place_names", "content_signal_places",
+            # m0029: path revisions
+            "path_revisions",
         }
         with db_conn.cursor() as cur:
             cur.execute(
@@ -65,15 +75,16 @@ class TestBootstrap:
 
     def test_required_indexes_exist(self, db_conn):
         """DB-06: the performance indexes exist after bootstrap."""
-        # Content-identity schema (m0011): content-keyed uniques and the
-        # context/lineage lookups. The old path-keyed and (hash,source,side)
-        # names are gone by design.
+        # Index names match the baseline migration (m0001_baseline).
+        # Unique constraints appear as indexes with system-generated names.
+        # Gazetteer redesign: old unique indexes removed (place_key, old uq_geo_place_names),
+        # new unique indexes on (label, category_id, country_codes) and (place_id, language, match_key, name_type)
         expected = {
             "hashs_hash_key",
-            "uq_hash_contexts_identity",
-            "uq_words_hashs_hash_word",
-            "uq_keywords_hashs_hash_keyword",
-            "uq_contents_raw_hash_chunk",
+            "hash_contexts_hash_id_source_id_side_id_key",  # uq_hash_contexts_identity
+            "words_hashs_pkey",  # uq_words_hashs_hash_word (now PK)
+            "keywords_hashs_pkey",  # uq_keywords_hashs_hash_keyword (now PK)
+            "contents_raw_hash_id_chunk_seq_key",  # uq_contents_raw_hash_chunk
             "idx_words_hashs_word_id",
             "idx_paths_context_id",
             "idx_paths_file_name",
@@ -83,49 +94,38 @@ class TestBootstrap:
             # m0016
             "idx_saved_searches_owner_created",
             "idx_saved_searches_fingerprint",
-            "idx_saved_searches_monitor",
-            "uq_saved_searches_legacy",
-            "uq_saved_search_imports_sha",
+            "saved_searches_legacy_source_legacy_id_key",  # uq_saved_searches_legacy
+            "saved_search_imports_file_sha256_key",  # uq_saved_search_imports_sha
             # m0017
-            "uq_content_signals_dedup",
+            "content_signals_dedup_key_key",  # uq_content_signals_dedup
             "idx_content_signals_hash",
             "idx_content_signals_dates",
             "idx_content_signals_type",
             "idx_content_signal_runs_version",
             # m0018
             "idx_content_signals_confidence",
-            # m0019
-            "uq_geo_places_key",
-            "uq_geo_place_names",
+            # m0019 (gazetteer redesign)
             "idx_geo_place_names_key",
             "idx_geo_place_names_place",
             "content_signal_places_pkey",
             "idx_content_signal_places_place",
             "idx_content_signals_detector",
-            # m0020
-            "uq_monitoring_rules_owner_name",
-            "idx_monitoring_rules_active",
-            "idx_monitoring_rules_saved_search",
-            "monitoring_rule_versions_pkey",
-            "idx_rule_evaluations_rule",
-            "rule_subject_ledger_pkey",
-            "idx_rule_ledger_pending",
-            "idx_rule_ledger_alert",
-            "idx_alerts_recipient_dismissed_created",
-            # m0021
+            # m0021 (scenarios kept)
             "uq_scenarios_owner_name",
             "idx_scenarios_active",
             "scenario_versions_pkey",
             "idx_scenario_evaluations_scenario",
             "idx_scenario_outcomes_latest",
             "idx_scenario_outcomes_evaluation",
-            # m0022
-            "idx_report_runs_requester",
-            "idx_report_runs_report",
-            "idx_report_runs_job",
-            "idx_report_runs_saved_search",
-            "report_run_datasets_pkey",
-            "uq_report_run_datasets_key",
+            # m0031
+            "job_schedules_owner_user_id_name_key",  # unique constraint
+            "idx_job_schedules_due",
+            "idx_job_schedules_owner",
+            # m0033
+            "idx_user_navigation_prefs_user",
+            # m0029
+            "idx_path_revisions_path_id",
+            "idx_path_revisions_changed_at",
         }
         with db_conn.cursor() as cur:
             cur.execute("SELECT indexname FROM pg_indexes WHERE schemaname = 'public'")

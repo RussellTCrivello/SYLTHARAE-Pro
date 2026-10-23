@@ -46,8 +46,8 @@ def note_disclosure(**detail: Any) -> None:
 
     Well-known keys: ``kind`` (e.g. ``search_export``), ``scope``, ``format``,
     ``row_count``, ``total``, ``truncated``, ``criteria_fingerprint``,
-    ``query_fingerprint``, ``sources``, ``columns``, ``artifact_sha256``,
-    ``report_run_id``. Values must be JSON-serialisable.
+    ``query_fingerprint``, ``sources``, ``columns``, ``artifact_sha256``.
+    Values must be JSON-serialisable.
     """
     current = g.get("_disclosure") or {}
     current.update({k: v for k, v in detail.items()})

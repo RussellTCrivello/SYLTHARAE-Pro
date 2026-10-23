@@ -19,15 +19,13 @@
 ``GET    /api/schedules/<id>/jobs``       the jobs this schedule created
 ========================================  ======================================
 
-What may be scheduled: a registered report (``report_run`` - created and
-executed as the schedule's owner, so its visibility is exactly a manual
-run's), and periodic evaluation of every active rule / scenario
-(administrators only, like the manual triggers).
+What may be scheduled: periodic evaluation of every active scenario
+(administrators only, like the manual trigger), or retention pruning
+(administrators only).
 
 Authorization is a hard boundary, at creation and at every fire: the
-owner's current role and activity are re-read each time the schedule runs,
-and a report payload is revalidated against the registry. A schedule whose
-owner lost the required role, or whose report no longer validates, is
+owner's current role and activity are re-read each time the schedule runs.
+A schedule whose owner lost the required role is
 disabled with a stated reason - nothing runs as somebody who may no longer
 run it. Every management change and every fire is audited.
 """
@@ -89,7 +87,7 @@ def register_schedule_routes(app):
     @app.route("/schedules", methods=["GET"])
     @login_required
     def schedules_page():
-        """Scheduled report runs and evaluations (registry ``schedules``).
+        """Scheduled evaluations and retention (registry ``schedules``).
         A view over the schedules API; the same unified table component as
         every other list."""
         from flask import render_template
@@ -101,24 +99,7 @@ def register_schedule_routes(app):
             "schedule_types": list(model.SCHEDULE_TYPES),
             "min_interval": model.MIN_INTERVAL_MINUTES,
             "max_interval": model.MAX_INTERVAL_MINUTES,
-            "reports": with_conn(_registered_reports),
         })
-
-    def _registered_reports(conn):
-        """The registry, for the create dialog: id, current version, and the
-        parameter names (labels resolved server-side)."""
-        from core.reporting.registry import REGISTRY
-
-        out = []
-        for definition in REGISTRY.active():
-            out.append({
-                "report_id": definition.report_id,
-                "version": definition.version,
-                "title": definition.title,
-                "parameters": [{"name": p.name, "type": p.type,
-                                "required": p.required} for p in definition.parameters],
-            })
-        return out
 
     # -- list / create -----------------------------------------------------
     @app.route("/api/schedules", methods=["GET"])
