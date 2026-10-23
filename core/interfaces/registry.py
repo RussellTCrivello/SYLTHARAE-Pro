@@ -194,6 +194,19 @@ REGISTRY: Tuple[Interface, ...] = (
         help_topic="discover/email-words",
     ),
     _if(
+        "lexis_cosmos", "LEXIS Cosmos",
+        "The taxonomy galaxy: root, word and keyword lenses, categories, "
+        "subcategories and terms, with the file stack under each term, the "
+        "scoped search sidebar, the document viewer and the taxonomy manager.",
+        Domain.CLASSIFY, "lexis_cosmos_page", "bi-diagram-2",
+        # No ``dependencies``: the galaxy reads the taxonomy tables through its
+        # own statements (Api/services/lexis_queries.py), so switching the
+        # Categories or Keywords *pages* off leaves it complete. Declaring them
+        # would refuse an operator the right to hide those pages while LEXIS
+        # is on - a coupling that does not exist in the request path.
+        help_topic="classify/lexis-cosmos", keyboard_shortcut="g x",
+    ),
+    _if(
         "analyst_categorization", "Analyst Categories",
         "The analyst's own layer: categories and assignments made by hand, "
         "kept separate from automatic classification.",

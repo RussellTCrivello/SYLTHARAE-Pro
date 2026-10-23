@@ -1855,7 +1855,7 @@ msgstr "Sve vrste"
 #: templates/Word/Word_list.html:177 templates/Word/Word_list.html:274
 #: templates/file/File_Management_Analysis_System.html:1055
 msgid "Word"
-msgstr "Word"
+msgstr "Riječ"
 
 #: templates/Analysis/analysis_batch.html:272
 msgid "Excel"
@@ -14041,13 +14041,11 @@ msgstr "Učitavanje…"
 
 #: templates/components/cursor_pagination.html:37
 #: templates/components/cursor_pagination.html:43
-#, fuzzy
 msgid "Previous page"
 msgstr "Prethodna stranica"
 
 #: templates/components/cursor_pagination.html:51
 #: templates/components/cursor_pagination.html:57
-#, fuzzy
 msgid "Next page"
 msgstr "Sljedeća stranica"
 
@@ -15446,7 +15444,7 @@ msgstr "Filtriraj od datuma"
 
 #: templates/file/File_Management_Analysis_System.html:295
 msgid "From date"
-msgstr "Datum od"
+msgstr "Od datuma"
 
 #: templates/file/File_Management_Analysis_System.html:296
 msgid "Filter to date"
@@ -15454,7 +15452,7 @@ msgstr "Filtriraj do datuma"
 
 #: templates/file/File_Management_Analysis_System.html:296
 msgid "To date"
-msgstr "Datum do"
+msgstr "Do datuma"
 
 #: templates/file/File_Management_Analysis_System.html:301
 msgid "Reset Filters"
@@ -24244,3 +24242,985 @@ msgstr "Izvješće serije"
 #~ msgid "Cross-cutting and internal"
 #~ msgstr "Poprečno i interno"
 
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "LEXIS Cosmos"
+msgstr "LEXIS Kozmos"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Cosmos"
+msgstr "Kozmos"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Structure path"
+msgstr "Put strukture"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Find a term"
+msgstr "Nađi pojam"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Find a term…  ( / )"
+msgstr "Nađi pojam…  ( / )"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Matching terms"
+msgstr "Odgovarajući pojmovi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Undo the last change"
+msgstr "Poništi posljednju promjenu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Undo"
+msgstr "Poništi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Redo the change"
+msgstr "Ponovi promjenu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Redo"
+msgstr "Ponovi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Overview and data health"
+msgstr "Pregled i zdravlje podataka"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Manage taxonomy, files and views (M)"
+msgstr "Upravljaj taksonomijom, datotekama i prikazima (M)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Clear the basket"
+msgstr "Isprazni košaricu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Basket"
+msgstr "Košarica"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyboard shortcuts (?)"
+msgstr "Tipkovnički prečaci (?)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Galaxy"
+msgstr "Galaksija"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Canvas tools"
+msgstr "Alati platna"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Zoom out (-)"
+msgstr "Smanji (-)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Reset to 100% (0)"
+msgstr "Vrati na 100% (0)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Zoom in (+)"
+msgstr "Povećaj (+)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Fit to screen (F)"
+msgstr "Prilagodi zaslonu (F)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Fit"
+msgstr "Prilagodi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Centre on the focus (L)"
+msgstr "Centriraj na fokus (L)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Open the chart to a depth (D cycles)"
+msgstr "Otvori grafikon do dubine (D za kruženje)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Depth"
+msgstr "Dubina"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show 1 level"
+msgstr "Prikaži 1 razinu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show 2 levels"
+msgstr "Prikaži 2 razine"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show 3 levels"
+msgstr "Prikaži 3 razine"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show 4 levels"
+msgstr "Prikaži 4 razine"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show all levels"
+msgstr "Prikaži sve razine"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show or hide items that contain no files"
+msgstr "Prikaži ili sakrij stavke bez datoteka"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Empty items"
+msgstr "Prazne stavke"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "hidden"
+msgstr "skriveno"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Open one more level"
+msgstr "Otvori još jednu razinu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Level"
+msgstr "Razina"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Close the deepest open level"
+msgstr "Zatvori najdublju otvorenu razinu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show or hide the sidebar (B)"
+msgstr "Prikaži ili sakrij bočnu traku (B)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Sidebar"
+msgstr "Bočna traka"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Full screen (Shift+F)"
+msgstr "Cijeli zaslon (Shift+F)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Download the whole structure as Markdown"
+msgstr "Preuzmi cijelu strukturu kao Markdown"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Outline"
+msgstr "Skica"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Print the structure"
+msgstr "Ispiši strukturu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Search and filters"
+msgstr "Pretraga i filtri"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Drag to resize the sidebar · double-click to reset"
+msgstr "Povucite za promjenu širine trake · dvoklik za vraćanje"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "LEXIS"
+msgstr "LEXIS"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Filter by file name…"
+msgstr "Filtriraj po nazivu datoteke…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Filter by file name"
+msgstr "Filtriraj po nazivu datoteke"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show or hide the filter cards"
+msgstr "Prikaži ili sakrij kartice filtara"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Hide filters"
+msgstr "Sakrij filtre"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Clear file types"
+msgstr "Očisti vrste datoteka"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Clear sources"
+msgstr "Očisti izvore"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Clear side values"
+msgstr "Očisti vrijednosti strane"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Date range"
+msgstr "Raspon datuma"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Clear dates"
+msgstr "Očisti datume"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Empty the basket"
+msgstr "Isprazni košaricu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Saved views"
+msgstr "Spremljeni prikazi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "save current"
+msgstr "spremi trenutačno"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Select every file in the list, or clear the selection"
+msgstr "Odaberi sve datoteke na popisu ili očisti odabir"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Export…"
+msgstr "Izvezi…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "All file actions"
+msgstr "Sve radnje s datotekom"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Click a file to open it · Shift-click for a range · Ctrl/⌘-click to "
+"toggle · ✎ on a card to edit it."
+msgstr "Kliknite datoteku da je otvorite · Shift-klik za raspon · "
+"Ctrl/⌘-klik za prebacivanje · ✎ na kartici za uređivanje."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Please confirm"
+msgstr "Potvrdite"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyboard shortcuts"
+msgstr "Tipkovnički prečaci"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Word galaxy"
+msgstr "Galaksija riječi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyword galaxy"
+msgstr "Galaksija ključnih riječi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Lexicon"
+msgstr "Leksikon"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Lens"
+msgstr "Leća"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Subcategory"
+msgstr "Potkategorija"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Request failed"
+msgstr "Zahtjev nije uspio"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "terms"
+msgstr "pojmova"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "subcategories"
+msgstr "potkategorija"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "hits"
+msgstr "pogodaka"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Edit file"
+msgstr "Uredi datoteku"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Remove from basket"
+msgstr "Ukloni iz košarice"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add to basket"
+msgstr "Dodaj u košaricu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Structure"
+msgstr "Struktura"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "nodes"
+msgstr "čvorova"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Contents"
+msgstr "Sadržaji"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Zoom"
+msgstr "Zum"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No terms in the basket."
+msgstr "Nema pojmova u košarici."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "shown"
+msgstr "prikazano"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "terms in the basket"
+msgstr "pojmova u košarici"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The basket overrides the focused node."
+msgstr "Košarica nadjačava fokusirani čvor."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Library"
+msgstr "Knjižnica"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Every file that carries a taxonomy term."
+msgstr "Svaka datoteka koja nosi pojam taksonomije."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "on this page"
+msgstr "na ovoj stranici"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Remove this filter"
+msgstr "Ukloni ovaj filtar"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Filter values…"
+msgstr "Filtriraj vrijednosti…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Filter values"
+msgstr "Filtriraj vrijednosti"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "All file types"
+msgstr "Sve vrste datoteka"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No files in this scope. Expand the structure or clear the filters."
+msgstr "Nema datoteka u ovom opsegu. Proširite strukturu ili očistite filtre."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No selection"
+msgstr "Nema odabira"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "First page"
+msgstr "Prva stranica"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Last page"
+msgstr "Posljednja stranica"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show more"
+msgstr "Prikaži više"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show filters"
+msgstr "Prikaži filtre"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Nothing to open"
+msgstr "Nema što otvoriti"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No saved views yet."
+msgstr "Još nema spremljenih prikaza."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Apply this view"
+msgstr "Primijeni ovaj prikaz"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "View applied"
+msgstr "Prikaz je primijenjen"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Save view"
+msgstr "Spremi prikaz"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "View name"
+msgstr "Naziv prikaza"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "View saved"
+msgstr "Prikaz je spremljen"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Word terms"
+msgstr "Pojmovi riječi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyword expressions"
+msgstr "Izrazi ključnih riječi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No matching terms."
+msgstr "Nema odgovarajućih pojmova."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Confirm"
+msgstr "Potvrdi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Nothing to undo"
+msgstr "Nema što poništiti"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Nothing to redo"
+msgstr "Nema što ponoviti"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Undone"
+msgstr "Poništeno"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Redone"
+msgstr "Ponovljeno"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Rename category"
+msgstr "Preimenuj kategoriju"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Colour (optional)"
+msgstr "Boja (neobavezno)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Category renamed"
+msgstr "Kategorija je preimenovana"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "This node cannot be edited here."
+msgstr "Ovaj se čvor ovdje ne može uređivati."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Edit term"
+msgstr "Uredi pojam"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The subcategory could not be resolved."
+msgstr "Potkategoriju nije moguće odrediti."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Term updated"
+msgstr "Pojam je ažuriran"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Edit keyword"
+msgstr "Uredi ključnu riječ"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyword updated"
+msgstr "Ključna riječ je ažurirana"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Stored path (optional)"
+msgstr "Pohranjeni put (neobavezno)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Rename file"
+msgstr "Preimenuj datoteku"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "File renamed"
+msgstr "Datoteka je preimenovana"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Duplicate file"
+msgstr "Dupliciraj datoteku"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "File duplicated"
+msgstr "Datoteka je duplicirana"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Hash"
+msgstr "Otisak"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No term matched this file."
+msgstr "Nijedan pojam ne odgovara ovoj datoteci."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Why it matched"
+msgstr "Zašto se podudara"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Taxonomy path"
+msgstr "Put taksonomije"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Hits"
+msgstr "Pogoci"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "chunks"
+msgstr "dijelovi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No text was stored for this file."
+msgstr "Za ovu datoteku nije spremljen tekst."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Matched"
+msgstr "Podudaranja"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Term ID"
+msgstr "ID pojma"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Files and details"
+msgstr "Datoteke i pojedinosti"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Categories, terms and keywords"
+msgstr "Kategorije, pojmovi i ključne riječi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Structured (category folders)"
+msgstr "Strukturirano (mape kategorija)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Original paths"
+msgstr "Izvorni putovi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Which files"
+msgstr "Koje datoteke"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Everything in the current view"
+msgstr "Sve u trenutačnom prikazu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Only the selection"
+msgstr "Samo odabir"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "table in Markdown"
+msgstr "tablica u Markdownu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Exported"
+msgstr "Izvezeno"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "rows"
+msgstr "redaka"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Nothing to export in this scope."
+msgstr "Nema što izvesti u ovom opsegu."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Open in the viewer"
+msgstr "Otvori u pregledniku"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Export the scope"
+msgstr "Izvezi opseg"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Categories, terms and keywords (CSV)"
+msgstr "Kategorije, pojmovi i ključne riječi (CSV)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Extracted text bundle"
+msgstr "Paket izdvojenog teksta"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Original paths (CSV)"
+msgstr "Izvorni putovi (CSV)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Structured export (CSV)"
+msgstr "Strukturirani izvoz (CSV)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Files and details (CSV)"
+msgstr "Datoteke i pojedinosti (CSV)"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Change the files"
+msgstr "Promijeni datoteke"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Rename file…"
+msgstr "Preimenuj datoteku…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Select exactly one file to rename."
+msgstr "Odaberite točno jednu datoteku za preimenovanje."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Select exactly one file to duplicate."
+msgstr "Odaberite točno jednu datoteku za dupliciranje."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Move to side…"
+msgstr "Premjesti na stranu…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Delete files…"
+msgstr "Izbriši datoteke…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Select at least one file."
+msgstr "Odaberite barem jednu datoteku."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No sides are recorded yet."
+msgstr "Još nema zabilježenih strana."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Move to side"
+msgstr "Premjesti na stranu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Files moved"
+msgstr "Datoteke su premještene"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Delete the selected files? This cannot be undone."
+msgstr "Izbrisati odabrane datoteke? Ovo se ne može poništiti."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Files deleted"
+msgstr "Datoteke su izbrisane"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "LEXIS taxonomy"
+msgstr "LEXIS taksonomija"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Generated"
+msgstr "Generirano"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Uncategorised"
+msgstr "Nekategorizirano"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Direct terms"
+msgstr "Izravni pojmovi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Outline downloaded"
+msgstr "Skica je preuzeta"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Print the taxonomy with the file count of every term. The browser "
+"print dialog opens next."
+msgstr "Ispišite taksonomiju s brojem datoteka svakog pojma. Zatim se otvara "
+"dijalog za ispis preglednika."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Focus the term finder"
+msgstr "Fokusiraj tražilicu pojmova"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Zoom in and out"
+msgstr "Povećaj i smanji"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Reset the zoom"
+msgstr "Vrati zum"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Fit the structure to the screen"
+msgstr "Prilagodi strukturu zaslonu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Centre on the focused node"
+msgstr "Centriraj na fokusirani čvor"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Show or hide the sidebar"
+msgstr "Prikaži ili sakrij bočnu traku"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Cycle the depth"
+msgstr "Kruži dubinu"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Open Manage"
+msgstr "Otvori upravljanje"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "This help"
+msgstr "Ova pomoć"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Select a range of files"
+msgstr "Odaberi raspon datoteka"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Toggle one file"
+msgstr "Prebaci jednu datoteku"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Subcategories"
+msgstr "Potkategorije"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Term coverage"
+msgstr "Pokrivenost pojmova"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No files yet."
+msgstr "Još nema datoteka."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Files by side"
+msgstr "Datoteke po strani"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Terms with no files"
+msgstr "Pojmovi bez datoteka"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Every term matches at least one file."
+msgstr "Svaki pojam odgovara barem jednoj datoteci."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Files no term matches"
+msgstr "Datoteke bez ijednog pojma"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Every file is matched by at least one term."
+msgstr "Svaka datoteka odgovara barem jednom pojmu."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Main category"
+msgstr "Glavna kategorija"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "File record"
+msgstr "Zapis datoteke"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Reload"
+msgstr "Ponovno učitaj"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The taxonomy is empty. Add a main category to begin."
+msgstr "Taksonomija je prazna. Dodajte glavnu kategoriju za početak."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No terms in this subcategory."
+msgstr "Nema pojmova u ovoj potkategoriji."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "New subcategory"
+msgstr "Nova potkategorija"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "New main category"
+msgstr "Nova glavna kategorija"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add subcategory"
+msgstr "Dodaj potkategoriju"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add category"
+msgstr "Dodaj kategoriju"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Category created"
+msgstr "Kategorija je stvorena"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Delete this category? Terms are kept, only the category is removed."
+msgstr "Izbrisati ovu kategoriju? Pojmovi ostaju, uklanja se samo kategorija."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Category deleted"
+msgstr "Kategorija je izbrisana"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "New word term"
+msgstr "Novi pojam riječi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "New keyword"
+msgstr "Nova ključna riječ"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyword expression"
+msgstr "Izraz ključne riječi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Words separated by spaces; the expression is stored as the sequence "
+"of its words."
+msgstr "Riječi odvojene razmacima; izraz se sprema kao slijed svojih riječi."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add term"
+msgstr "Dodaj pojam"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Term added"
+msgstr "Pojam je dodan"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add keyword"
+msgstr "Dodaj ključnu riječ"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyword added"
+msgstr "Ključna riječ je dodana"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Remove this term from the subcategory?"
+msgstr "Ukloniti ovaj pojam iz potkategorije?"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Term removed"
+msgstr "Pojam je uklonjen"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Keyword removed"
+msgstr "Ključna riječ je uklonjena"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add a file record"
+msgstr "Dodaj zapis datoteke"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Stored path"
+msgstr "Pohranjeni put"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The text is indexed against the taxonomy; existing words and phrases "
+"are counted."
+msgstr "Tekst se indeksira prema taksonomiji i broje se postojeće riječi i "
+"izrazi."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Add file"
+msgstr "Dodaj datoteku"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "File added"
+msgstr "Datoteka je dodana"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Search names, sources, sides and text…"
+msgstr "Pretraži nazive, izvore, strane i tekst…"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Terms"
+msgstr "Pojmovi"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Snippet"
+msgstr "Isječak"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Save the current view"
+msgstr "Spremi trenutačni prikaz"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Focus"
+msgstr "Fokus"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Terms in basket"
+msgstr "Pojmovi u košarici"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Rename view"
+msgstr "Preimenuj prikaz"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "View renamed"
+msgstr "Prikaz je preimenovan"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Delete this saved view?"
+msgstr "Izbrisati ovaj spremljeni prikaz?"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "View deleted"
+msgstr "Prikaz je izbrisan"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "No activity has been recorded yet."
+msgstr "Aktivnost još nije zabilježena."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The taxonomy galaxy: root, word and keyword lenses, categories, "
+"subcategories and terms, with the file stack under each term, the "
+"scoped search sidebar, the document viewer and the taxonomy manager."
+msgstr "Galaksija taksonomije: korijen, leće riječi i ključnih riječi, "
+"kategorije, potkategorije i pojmovi, s hrpom datoteka pod svakim "
+"pojmom, ograđenom pretragom u bočnoj traci, preglednikom dokumenata "
+"i upraviteljem taksonomije."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The taxonomy galaxy"
+msgstr "Galaksija taksonomije"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "This term already lives in %(path)s. Add it here as well?"
+msgstr "Ovaj pojam već postoji u %(path)s. Dodati ga i ovdje?"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Colour"
+msgstr "Boja"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Set the category colour"
+msgstr "Postavi boju kategorije"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Write the colour as #rrggbb."
+msgstr "Zapišite boju kao #rrggbb."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "A colour must be written as #rrggbb."
+msgstr "Boja se piše kao #rrggbb."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Colour saved"
+msgstr "Boja je spremljena"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Hidden"
+msgstr "Skriveno"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Categories, subcategories and terms with no files in scope are left "
+"out of the structure."
+msgstr "Kategorije, potkategorije i pojmovi bez datoteka u opsegu "
+"izostavljeni su iz strukture."
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Shown"
+msgstr "Prikazano"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Items with no files are hidden"
+msgstr "Stavke bez datoteka su skrivene"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "Items with no files are shown"
+msgstr "Stavke bez datoteka su prikazane"
+
+#: core/interfaces/registry.py templates/Lexis/cosmos.html static/js/pages/lexis-cosmos-page.js
+msgid "The focused item had no files, so the view moved up one level."
+msgstr "Fokusirana stavka nije imala datoteka pa se prikaz pomaknuo jednu "
+"razinu više."

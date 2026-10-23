@@ -74,6 +74,13 @@ NAME_ROWS: tuple[tuple[str, str, str, str, str], ...] = (
         "نکات صفحه و مستندات",
         "Savjeti stranice i dokumentacija",
     ),
+    (
+        "LEXIS Cosmos",
+        "لكسيس كوزموس",
+        "לקסיס קוסמוס",
+        "لکسیس کازموس",
+        "LEXIS Kozmos",
+    ),
 )
 
 DESC_ROWS: tuple[tuple[str, str, str, str, str], ...] = (
@@ -272,6 +279,23 @@ DESC_ROWS: tuple[tuple[str, str, str, str, str], ...] = (
         "כל פעולה ארוכה: מה היא עושה, מה עשתה וזרם האירועים מאחוריה. זה ספר הרשום לעיבוד.",
         "هر عملیات طولانی: چه می‌کند، چه کرد و جریان رویداد پشت آن. این سابقه پردازش سامانه است.",
         "Svaka dugotrajna operacija: što radi, što je učinila i tok događaja iza nje. Sustavni zapis obrade.",
+    ),
+    (
+        "The taxonomy galaxy: root, word and keyword lenses, categories, "
+        "subcategories and terms, with the file stack under each term, the "
+        "scoped search sidebar, the document viewer and the taxonomy manager.",
+        "مجرة التصنيف: الجذر وعدسات الكلمات والكلمات المفتاحية والفئات والفئات الفرعية "
+        "والمصطلحات، مع رزمة الملفات تحت كل مصطلح، وشريط البحث المحدود النطاق، "
+        "وعارض المستندات، ومدير التصنيف.",
+        "גלקסיית הטקסונומיה: השורש, עדשות המילים ומילות המפתח, קטגוריות, "
+        "תת־קטגוריות ומונחים, עם ערימת הקבצים תחת כל מונח, סרגל החיפוש המוגבל "
+        "בהיקף, מציג המסמכים ומנהל הטקסונומיה.",
+        "کهکشان طبقه‌بندی: ریشه، لنز واژه‌ها و کلیدواژه‌ها، دسته‌ها، زیردسته‌ها و "
+        "اصطلاحات، همراه با پشته فایل‌های هر اصطلاح، نوار جستجوی محدود به دامنه، "
+        "نمایشگر سند و مدیر طبقه‌بندی.",
+        "Galaksija taksonomije: korijen, leće riječi i ključnih riječi, kategorije, "
+        "potkategorije i pojmovi, s hrpom datoteka pod svakim pojmom, ograđenom "
+        "pretragom u bočnoj traci, preglednikom dokumenata i upraviteljem taksonomije.",
     ),
     (
         "The earlier one-page console for batch import, database backups and settings exchange. Superseded by the Import Center and Settings; kept working until everything it does has moved.",
