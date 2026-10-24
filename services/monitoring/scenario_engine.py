@@ -122,8 +122,12 @@ def decision_sql(definition, scope, reference_date: datetime.date) -> Decision:
 
     signal_conds = [c for c in definition.conditions if c.kind == "signal"]
     idx = {c.name: i for i, c in enumerate(signal_conds)}
-    imminent = (reference_date,
-                reference_date + datetime.timedelta(days=priority_rules.IMMINENT_DAYS))
+    # ``imminent_sql`` renders "date_from <= %s + IMMINENT_DAYS AND date_to >= %s":
+    # the window is [reference_date, reference_date + IMMINENT_DAYS], so both
+    # placeholders are the reference date. Binding the window *end* second
+    # compared ``date_to`` against reference+7 and nothing inside the window
+    # counted as imminent (see tests/unit/test_scenario_imminent_window.py).
+    imminent = (reference_date, reference_date)
     if signal_conds:
         q.add(", sx AS (SELECT s.hash_id, s.id, s.confidence, s.date_from,"
               f" {rule_engine._CONF_RANK_SQL} AS rank,"
