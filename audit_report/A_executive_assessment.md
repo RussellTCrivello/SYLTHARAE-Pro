@@ -2,7 +2,7 @@
 ## A. Executive Assessment
 
 **Repository:** RussellTCrivello/SYLTHARAE-Pro
-**Working directory:** /home/user/SYLTHARAE-Pro
+**Working directory:** the repository root (paths below are relative to it)
 **Branch:** `arena/a5145290-syltharae-pro` (branched from `main`)
 **HEAD commit:** `2670f3b` "updates for main all" (single squashed commit; no prior history on this branch)
 **Working tree:** Clean at baseline (restored after test pollution — see Baseline)

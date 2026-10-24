@@ -4,7 +4,7 @@
 
 | Field | Value |
 |-------|-------|
-| Repository | /home/user/SYLTHARAE-Pro (clone of https://github.com/RussellTCrivello/SYLTHARAE-Pro.git) |
+| Repository | the checkout under test (clone of https://github.com/RussellTCrivello/SYLTHARAE-Pro.git) |
 | Branch | `arena/a5145290-syltharae-pro` (tracking `remotes/origin/main`) |
 | HEAD commit | `2670f3b` "updates for main all" |
 | Commit count on branch | 1 (single squashed commit; no incremental history) |
