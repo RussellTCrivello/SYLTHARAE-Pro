@@ -11,6 +11,7 @@ filter by source and side, export, and open the containing document.
 from __future__ import annotations
 
 import re
+from bisect import bisect_left
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
@@ -20,12 +21,19 @@ from core.detection.signal_model import ContentSignal
 DETECTOR_NAME = "identifiers"
 DETECTOR_VERSION = "identifiers-1.0.0"
 
+#: The kind of identifier a match is. These are *evidence kinds*, not signal
+#: types: ``content_signals.signal_type`` has one value for identifiers
+#: (``identifier``), and the kind travels in the evidence JSON, which is what
+#: the explorer's identifier presets filter on.
 SIGNAL_EMAIL = "email"
 SIGNAL_PHONE = "phone"
 SIGNAL_IPV4 = "ipv4"
 SIGNAL_IPV6 = "ipv6"
 SIGNAL_URL = "url"
-SIGNAL_TYPES = (SIGNAL_EMAIL, SIGNAL_PHONE, SIGNAL_IPV4, SIGNAL_IPV6, SIGNAL_URL)
+KINDS = (SIGNAL_EMAIL, SIGNAL_PHONE, SIGNAL_IPV4, SIGNAL_IPV6, SIGNAL_URL)
+#: The single ``signal_type`` every signal from this detector carries.
+SIGNAL_IDENTIFIER = "identifier"
+SIGNAL_TYPES = (SIGNAL_IDENTIFIER,)
 RESOLUTIONS = ("literal",)
 CONFIDENCE_LEVELS = ("high", "medium", "low")
 MAX_SCAN_CHARS = 20_000_000
@@ -174,18 +182,34 @@ def _candidates(text: str) -> List[Tuple[int, int, str, str, str, str]]:
 
 def _merge_overlaps(cands: List[Tuple[int, int, str, str, str, str]]
                     ) -> List[Tuple[int, int, str, str, str, str]]:
+    """Keep the longest candidate of every overlapping group.
+
+    Longest first, then by identifier priority, then by start offset; a
+    candidate overlapping anything already kept is dropped. Kept spans are
+    therefore disjoint and can be held in a sorted list: a candidate can only
+    overlap the kept span that starts before it (if that one ends after it) or
+    the one that starts after it (if it starts before the candidate ends).
+
+    Sorting the kept spans and bisecting replaces the previous scan of every
+    kept span for every candidate, which is what made identifier detection
+    quadratic on large documents (see
+    audit_report/evidence_scale/ingest_profile.json).
+    """
     ranked = sorted(
         cands,
         key=lambda c: (-(c[1] - c[0]), -_PRIORITY.get(c[2], 0), c[0]),
     )
-    taken: List[Tuple[int, int]] = []
+    starts: List[int] = []
     kept: List[Tuple[int, int, str, str, str, str]] = []
     for cand in ranked:
         start, end = cand[0], cand[1]
-        if any(start < e and s < end for s, e in taken):
+        at = bisect_left(starts, start)
+        if at and kept[at - 1][1] > start:
             continue
-        taken.append((start, end))
-        kept.append(cand)
+        if at < len(kept) and starts[at] < end:
+            continue
+        starts.insert(at, start)
+        kept.insert(at, cand)
     kept.sort(key=lambda c: (c[0], c[1], c[2], c[4]))
     return kept
 
@@ -208,11 +232,11 @@ def detect(text: Optional[str], *, anchor_date: Optional[object] = None) -> Dete
         sentence, s_start, s_end, cut = textspan.quote_sentence(
             scanned, lambda a, b: (a, b), sentence_index, start, start, end,
         )
-        evidence = {"pattern": method, "normalised": value}
+        evidence = {"kind": signal_type, "pattern": method, "normalised": value}
         if cut:
             evidence["sentence_truncated"] = True
         signals.append(IdentifierSignal(
-            signal_type=signal_type,
+            signal_type=SIGNAL_IDENTIFIER,
             value=value,
             surface=surface,
             char_start=start,
@@ -222,7 +246,7 @@ def detect(text: Optional[str], *, anchor_date: Optional[object] = None) -> Dete
             detector_ver=DETECTOR_VERSION,
             method=method,
             confidence=confidence,
-            confidence_basis=f"{signal_type}_pattern",
+            confidence_basis=f"{signal_type}_pattern",  # kind, for the analyst
             sentence=sentence,
             sentence_start=s_start,
             sentence_end=s_end,
