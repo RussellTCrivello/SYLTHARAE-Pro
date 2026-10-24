@@ -1,0 +1,565 @@
+msgid,used_in,missing_from,status
+%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database ,templates/Signals/detection.html,"en,ar,he,fa,hr",UNTOUCHED
+%(count)d results for ,templates/Search/search.html,"en,ar,he,fa,hr",UNTOUCHED
+%(label)s cannot contain line breaks or null characters.,Api/routes/setup.py,hr,UNTOUCHED
+%(label)s is required.,Api/routes/setup.py,hr,UNTOUCHED
+%(label)s must be a whole number.,Api/routes/setup.py,hr,UNTOUCHED
+%(label)s must be between %(minimum)s and %(maximum)s.,Api/routes/setup.py,hr,UNTOUCHED
+%(label)s must be no more than %(n)s characters.,Api/routes/setup.py,hr,UNTOUCHED
+%(label)s must be text.,Api/routes/setup.py,hr,UNTOUCHED
+"%(n)s of %(t)s matching documents have not been analysed by the current date detector (never analysed: %(never)s, older ",templates/Signals/signals.html,"en,ar,he,fa,hr",UNTOUCHED
+"%(n)s references have no single date (ambiguous: %(a)s, unresolved: %(u)s) and are not placed on the horizon.",templates/Signals/signals.html,"en,ar,he,fa,hr",UNTOUCHED
+%(name)s is not a declared dependency.,Api/routes/setup.py,hr,UNTOUCHED
+%(types)d detected formats across %(files)d indexed documents in the whole dataset,templates/file/file_types.html,"en,ar,he,fa,hr",UNTOUCHED
+(Content truncated for display),templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+(optional),templates/Setup/install_wizard.html,hr,UNTOUCHED
+"0 days means keep forever - the default for everything whose deletion would destroy evidence: scenario outcomes, notific",templates/Retention/retention.html,"en,ar,he,fa,hr",UNTOUCHED
+0.0.0.0 = all interfaces; 127.0.0.1 = local only,templates/Setup/install_wizard.html,hr,UNTOUCHED
+A fire enqueues the same background job a manual run creates - visible on the Jobs page and in this schedule\'s history.,templates/Scheduling/schedules.html,"en,ar,he,fa,hr",UNTOUCHED
+"A schedule evaluates every active scenario, or runs retention pruning, every N minutes.",templates/Scheduling/schedules.html,"en,ar,he,fa,hr",UNTOUCHED
+API Client: Centralized API communication handles all server requests with proper error handling and CSRF token manageme,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Access: The filters panel can be toggled to show/hide advanced filtering options,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Account locked after this many failures,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Actions for this file,templates/components/record_actions.html,"en,ar,hr",UNTOUCHED
+Active Indicator: The current analysis view is highlighted to show which mode you are in,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Add Category: Create categories by selecting or creating a word. Categories organize files into logical groups,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Add Keyword: Create keyword phrases by selecting or creating multiple words (minimum 2 words required). Keywords can be ,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Add Relationship,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Add Side: Create new sides/parties with name and importance level. Sides help organize data by different groups or entit,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Add Source: Create new information sources with details like name, job/type, importance, country, city, description, soc",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Add Word-Category,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Add Word-Category Relationship,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Add Word-Category Relationship: Link existing words to categories, creating associations that help with file classificat",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Adding New Items (Modals),templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Admin & Security,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Admin Password,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Admin Username,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Admin password must be at least %(n)s characters.,Api/routes/setup.py,hr,UNTOUCHED
+Administrator Account,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Advanced Filters Panel,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Affects security defaults, logging, and rate limits",templates/Setup/install_wizard.html,hr,UNTOUCHED
+All charts are interactive: Hover your mouse over any data point to see detailed tooltips with exact values,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"All navigation is handled by JavaScript, maintaining state and history for easy back/forward navigation",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"All statistics and charts reflect data from your database. If data seems incorrect, check file processing status and ens",templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+An installation is already running.,Api/routes/setup.py,hr,UNTOUCHED
+Analysis View Navigation,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Analysis started for,templates/file/files_list.html,"he,fa",UNTOUCHED
+Analyst assignment,"core/i18n/ui_catalog.py,templates/file/file_detail.html","he,fa",UNTOUCHED
+Analytics,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Application Settings,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Apply Filters: Click ,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Apply multiple filters simultaneously to create complex queries and find exactly what you need,templates/Analysis/comprehensive_dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Are you sure you want to remove all duplicate categories? This action cannot be undone.,templates/Category/categories_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Assign the analyst category to every selected file,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Assigned ,"templates/Search/search_advanced.html,templates/components/analyst_classify_page_data.html,templates/file/File_Management_Analysis_System.html","en,ar,he,fa,hr",UNTOUCHED
+Assigned At,templates/Analyst/analyst_categorization.html,"he,fa",UNTOUCHED
+Assigned By,templates/Analyst/analyst_categorization.html,"he,fa",UNTOUCHED
+Assigned manually by analysts. Fully separate from the smart classification shown beside it.,templates/components/analyst_classify.html,"en,ar,he,fa,hr",UNTOUCHED
+Assignment & in-document search,"core/i18n/ui_catalog.py,templates/file/file_detail.html","he,fa",UNTOUCHED
+At least one word is required,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Authentication required,Api/routes/setup.py,hr,UNTOUCHED
+Back in archive history,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Batch Analysis: Access batch processing tools for analyzing multiple files simultaneously,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Bind Address,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Both word and category are required,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Breadcrumb Navigation: Shows your current location path (e.g., Home > Category > Item Name) - click any part to navigate",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Bringing Files In: open ,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Browse by type,templates/file/files_list.html,"he,fa",UNTOUCHED
+Browse geotagged files on offline or online basemaps; download map packages into the project for use without network acc,core/i18n/ui_catalog.py,"en,ar,he,fa,hr",UNTOUCHED
+"Browse places, multilingual names, and immutable load history. Seed-managed facts stay source-controlled; administrators",templates/Settings/settings.html,"en,ar,he,fa,hr",UNTOUCHED
+Cannot verify system state. Installation blocked for safety. Use CLI for recovery.,Api/routes/setup.py,hr,UNTOUCHED
+"Categories, subcategories and terms with no files in scope are left out of the structure.",templates/Lexis/cosmos.html,"en,ar,he,fa,hr",UNTOUCHED
+Categories: Add categories from the Categories page in the sidebar to organize your files,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Category Filter: Filter files by specific categories. Select from a dropdown of available categories,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Category Name ,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Category Search: When adding keywords, you can search and select categories from the categories table",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Category Tags: Click on category filter tags below the search bar to filter by specific categories,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Category created successfully!,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Category name is required,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Category: Browse files organized by categories. Each category shows the number of associated files. Click to view all ca,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Changing database settings may require application restart and could affect database connectivity.,templates/Settings/settings.html,"en,ar,he,fa,hr",UNTOUCHED
+Chars,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Checking that your system meets the requirements…,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Checking…,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Choose a supported language.,Api/routes/setup.py,hr,UNTOUCHED
+Choose a supported log level.,Api/routes/setup.py,hr,UNTOUCHED
+Choose at least one dependency to install.,Api/routes/setup.py,hr,UNTOUCHED
+Choose which interfaces appear in your sidebar and in which order. These choices are yours alone: other accounts keep th,templates/Settings/settings.html,"en,ar,he,fa,hr",UNTOUCHED
+Classification & Analysis,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Classification & Analysis: View all categories, keywords, sources, sides, and other classifications associated with the ",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Click ,"templates/Category/categories_list.html,templates/Category/category_words.html,templates/Keyword/keywords_list.html","en,ar,he,fa,hr",UNTOUCHED
+Click a file to open it · Shift-click for a range · Ctrl/⌘-click to toggle · ✎ on a card to edit it.,templates/Lexis/cosmos.html,"en,ar,he,fa,hr",UNTOUCHED
+"Click on any file to view detailed information, content preview, and analysis results",templates/file/files_list.html,"he,fa",UNTOUCHED
+Close File Details,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Close Filters,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Collapse section,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Comprehensive Search: Find information across all data types with a single search interface, saving time and effort",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Comprehensive Search: The global search bar searches across all data types: files, categories, keywords, sources, sides,",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Comprehensive analysis, classification, and insights","core/i18n/ui_catalog.py,templates/file/File_Management_Analysis_System.html","he,fa",UNTOUCHED
+Concurrent file analysis threads,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Configure the application environment and processing options.,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Confirm Password,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Contained In / Contains,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Contained in,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Content Analysis: Charts showing content coverage (with/without content) and top categories distribution,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Content Chunks,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Content Hash,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Copy Content,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Could not load analysis,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Could not read package metadata: %(error)s,Api/routes/setup.py,hr,UNTOUCHED
+Create the initial administrator account and configure security policies.,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Created automatically if missing,templates/Setup/install_wizard.html,hr,UNTOUCHED
+"Creates or restores a .sylmap.tar.gz with catalog, SQLite registry, packages, and installed layers.",templates/map/map_viewer.html,"en,ar,he,fa,hr",UNTOUCHED
+Current page,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Cursor Pagination: Uses efficient cursor-based pagination for large datasets, loading only what you need",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Customize colors, typography, spacing, and visual elements across your entire application",templates/Settings/settings.html,"en,ar,he,fa,hr",UNTOUCHED
+"DATA_EXPORTED entries record every file that left the system: who took it, which report, search or record it came from, ",templates/auth/audit.html,"en,ar,he,fa,hr",UNTOUCHED
+DEBUG (verbose),templates/Setup/install_wizard.html,hr,UNTOUCHED
+Data Distribution,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Database Configuration,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Date (newest),templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Date (oldest),templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Date Range: Specify a date range using ,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Dates, places and other signals detected in stored documents, with the evidence for each.",templates/Signals/signals.html,"en,ar,he,fa,hr",UNTOUCHED
+"Dedicated template: identity, analyst classifications, and the full extracted text of each selected file — ready to prin",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Default Sort: File Count (High to Low) - shows items with most files first, helping identify most important categories/k",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Default: 5000,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Default: 5432,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Delete analyst category ,templates/Analyst/analyst_categorization.html,"en,ar,he,fa,hr",UNTOUCHED
+"Delete categories that are no longer needed, but be aware this may affect file classifications",templates/Category/categories_list.html,"en,ar,he,fa,hr",UNTOUCHED
+"Delete files that are no longer needed, but be aware this action cannot be undone",templates/file/files_list.html,"he,fa",UNTOUCHED
+Delete files? This cannot be undone.,templates/file/files_list.html,"he,fa",UNTOUCHED
+"Delete keywords that are no longer needed, but check usage first to avoid breaking associations",templates/Keyword/keywords_list.html,"en,ar,he,fa,hr",UNTOUCHED
+"Delete sources that are no longer needed, but ensure no important files are associated with them",templates/Sources/sources_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Delete these files?,templates/components/confirm_dialog.html,"en,ar,he,fa,hr",UNTOUCHED
+Delete this file? This cannot be undone.,templates/file/files_list.html,"he,fa",UNTOUCHED
+Deleted,templates/file/files_list.html,"he,fa",UNTOUCHED
+Deleting a category will remove it from all associated files. Consider merging categories instead of deleting them.,templates/Category/categories_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Deleting report artifacts removes their bytes and manifests: those files can no longer be verified afterwards. The audit,templates/Retention/retention.html,"en,ar,he,fa,hr",UNTOUCHED
+Dependencies,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Dependency details,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Deselect All Files,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Development,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Disk Space,templates/Setup/install_wizard.html,hr,UNTOUCHED
+"Displays file name, processing status, percentage complete, and estimated time remaining",templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Document Status,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Document analysis,"core/i18n/ui_catalog.py,templates/file/file_detail.html","he,fa",UNTOUCHED
+Document content,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Document status,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Document toolbar,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Download Content,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Download Original,core/i18n/ui_catalog.py,"he,fa",UNTOUCHED
+Download compressed tile packs into map_data for use without network access. Copy map_data to move packs between devices,templates/map/map_viewer.html,"en,ar,he,fa,hr",UNTOUCHED
+Download the original source files of the selection as one zip,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Duplicates are decided by content hash + source + side: the same file can exist under a different source without being a,templates/Operations/input.html,"en,ar,he,fa,hr",UNTOUCHED
+Dynamic Loading: The main content area (unifiedContentView) dynamically loads content without page refreshes using JavaS,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+ERROR (minimal),templates/Setup/install_wizard.html,hr,UNTOUCHED
+"Each content is analysed once by each detector, at ingestion or by re-detection. The run records the detector version, t",templates/Signals/detection.html,"en,ar,he,fa,hr",UNTOUCHED
+"Each policy deletes rows older than its number of days, in batches, with the deleted count audited.",templates/Retention/retention.html,"en,ar,he,fa,hr",UNTOUCHED
+"Each source can have additional information like country, city, ownership, and access status",templates/Sources/sources_list.html,"en,ar,he,fa,hr",UNTOUCHED
+"Easy Data Management: Add sources, sides, categories, keywords, and relationships through intuitive modal interfaces",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Efficient Data Exploration: Navigate through thousands of files and items without page reloads, with smooth transitions ",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Email, phone and IP signals are detected when documents are stored or re-analysed. Run signal re-detection on older cont",templates/Signals/signals.html,"en,ar,he,fa,hr",UNTOUCHED
+Enter your PostgreSQL connection details. The database and tables will be created automatically.,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Enter your PostgreSQL password,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Environment,templates/Setup/install_wizard.html,hr,UNTOUCHED
+"Environment must be production, staging, or development.",Api/routes/setup.py,hr,UNTOUCHED
+Error adding,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Error adding category,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Error adding keyword,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Error adding side,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Error adding source,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Error adding word-category relationship,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Error deleting file,templates/file/files_list.html,"he,fa",UNTOUCHED
+Error deleting files,templates/file/files_list.html,"he,fa",UNTOUCHED
+Error loading file details,"templates/file/File_Management_Analysis_System.html,templates/file/file_detail.html","he,fa",UNTOUCHED
+Error loading items,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Error processing server response. Please try again or refresh the page.,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Error starting analysis,templates/file/files_list.html,"he,fa",UNTOUCHED
+"Evaluate every active scenario, or run retention pruning, on an interval. Each fire re-checks the owner before anything ",templates/Scheduling/schedules.html,"en,ar,he,fa,hr",UNTOUCHED
+"Event Delegation: Efficient event handling using delegation for dynamic content, reducing memory usage and improving per",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Every categorization action with analyst, timestamp, category, originating query and affected files.",templates/Analyst/analyst_categorization.html,"en,ar,he,fa,hr",UNTOUCHED
+Everything that brings files into the system — in one place. Each finished intake has its own printable batch report.,templates/Operations/input.html,"en,ar,he,fa,hr",UNTOUCHED
+Exact repeats,templates/file/files_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Expand section,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Export Charts: Right-click on any chart or use the export menu (if available) to save as PNG, JPG, SVG, or PDF",templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"Export Data: Export charts, search results, and reports using export buttons (when available) or from the File Library p",templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Export Extracted Text,core/i18n/ui_catalog.py,"he,fa",UNTOUCHED
+"Export Options: Copy content to clipboard, download as text file, or export the entire file",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Export Selected Files,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Export selected files or view them in different formats,templates/file/files_list.html,"he,fa",UNTOUCHED
+Extracted,"core/i18n/ui_catalog.py,templates/file/file_detail.html","he,fa",UNTOUCHED
+File Analysis: The default view for comprehensive file management and analysis with all sections accessible,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+File Classification automatically categorizes files based on their content and characteristics,templates/Analysis/file_classification.html,"en,ar,he,fa,hr",UNTOUCHED
+"File Content Section: View the complete extracted text content with search functionality, copy, download, and export opt",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+File Count (High to Low),"core/i18n/ui_catalog.py,templates/file/File_Management_Analysis_System.html","he,fa",UNTOUCHED
+File Count (Low to High),"core/i18n/ui_catalog.py,templates/file/File_Management_Analysis_System.html","he,fa",UNTOUCHED
+"File Counter: Shows your position (e.g., ",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+File Details Modal,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+File Library Overview,templates/file/files_list.html,"he,fa",UNTOUCHED
+File Navigation: Use Previous/Next buttons in the modal header to navigate between files without closing the modal,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+File Operations,templates/file/files_list.html,"he,fa",UNTOUCHED
+"File Operations: Modules for file details, export, navigation, selection, and management provide comprehensive file hand",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+File Path,templates/file/file_detail.html,"he,fa",UNTOUCHED
+File Title,templates/file/file_detail.html,"he,fa",UNTOUCHED
+"File Types: Browse by file type (extension). Open a type to list every matching file with search, sort, and Show More",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"File Types: Shows the number of unique file formats (PDF, DOCX, etc.) in your collection",templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"File View Modes: When viewing files, you can also switch between grid and list views for different perspectives",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"File View: Displays files in either grid or list format, with options to view details, export, or perform bulk operation",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+File deleted,templates/file/files_list.html,"he,fa",UNTOUCHED
+Files Auto-Analyze: Newly uploaded files are automatically analyzed - progress appears in Active Processing Tasks,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"Files are automatically analyzed after upload to extract text, metadata, and keywords",templates/file/files_list.html,"he,fa",UNTOUCHED
+Files are grouped by their detected format after ingestion. Choose a format to open its documents in the panel beside th,templates/file/file_types.html,"en,ar,he,fa,hr",UNTOUCHED
+Files containing ,templates/Analysis/path_analysis.html,"en,ar,he,fa,hr",UNTOUCHED
+Files in ,templates/Analysis/path_analysis.html,"en,ar,he,fa,hr",UNTOUCHED
+Files processed,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Filter Persistence: Applied filters are maintained as you navigate between sections until you reset them,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Filter by Category,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Filter by Side,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Filter by Source,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Filter from date,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Filter to date,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Filters applied! (This will filter all sections),templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Find terms in extracted text with match navigation,templates/file/file_detail.html,"he,fa",UNTOUCHED
+"Flexible Filtering: Combine multiple filters to create precise queries, helping you find exactly what you need",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Forward,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Forward in archive history,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Full reader,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Function Manager: Central module system (FunctionManager) coordinates all page functionality through organized modules,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Generate a new temporary password for this user? Their current sessions will be revoked.,templates/auth/users.html,"en,ar,he,fa,hr",UNTOUCHED
+Geolocation,"core/i18n/ui_catalog.py,templates/file/File_Management_Analysis_System.html","he,fa",UNTOUCHED
+Geolocation: Browse files by geographic location. Clicking a location directly opens the file details modal,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Global Search Bar,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Grid View: Displays items in a card-based grid layout. Best for visual browsing and quick scanning of items,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Guided setup,templates/Setup/install_wizard.html,hr,UNTOUCHED
+"Hide Tips: Toggle this tips section using the chevron icon in the top-right, or disable permanently in Settings → Displa",templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"History Management: The system maintains a complete navigation history, allowing you to go back and forward through your",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Home Button: Click the house icon to return to the root view showing all available sections,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Horizon groups dated references by where their date falls relative to the reference date: overdue, next 7 days, next 30 ",templates/Signals/signals.html,"en,ar,he,fa,hr",UNTOUCHED
+ID (Ascending),"core/i18n/ui_catalog.py,templates/file/File_Management_Analysis_System.html","he,fa",UNTOUCHED
+ID (Descending),"core/i18n/ui_catalog.py,templates/file/File_Management_Analysis_System.html","he,fa",UNTOUCHED
+INFO (recommended),templates/Setup/install_wizard.html,hr,UNTOUCHED
+I\'m Feeling Lucky,templates/Search/search_advanced.html,"en,ar,he,fa,hr",UNTOUCHED
+Idle Timeout (hours),templates/Setup/install_wizard.html,hr,UNTOUCHED
+Idle timeout cannot exceed the session lifetime.,Api/routes/setup.py,hr,UNTOUCHED
+Import did not finish within %(seconds)s seconds,Api/routes/setup.py,hr,UNTOUCHED
+Import domain classification data (Excel/CSV/JSON from the application import-data directory).,templates/Operations/import_center.html,"en,ar,he,fa,hr",UNTOUCHED
+Importing existing data is a distinct operation from file ingestion. Validate and preview before you commit - large impo,templates/Operations/import_center.html,"en,ar,he,fa,hr",UNTOUCHED
+In-Modal Search: Search within the file content using the search bar. Supports case-sensitive and whole-word matching,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+In-document search,"core/i18n/ui_catalog.py,templates/file/file_detail.html","he,fa",UNTOUCHED
+Indexed file summary for the whole dataset,templates/file/file_types.html,"en,ar,he,fa,hr",UNTOUCHED
+Ingest a list of server-side files (restricted to configured ingestion roots). One path per line.,templates/Operations/import_center.html,"en,ar,he,fa,hr",UNTOUCHED
+Ingestion Roots,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Install,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Install selected,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Installation Complete!,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Installation is already in progress. Please wait for it to complete.,Api/routes/setup.py,hr,UNTOUCHED
+Installation job not found.,Api/routes/setup.py,hr,UNTOUCHED
+Installed %(installed)s; requires %(requires)s,Api/routes/setup.py,hr,UNTOUCHED
+Installed (command-line tool),Api/routes/setup.py,hr,UNTOUCHED
+Installing…,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Insufficient permissions,Api/routes/setup.py,hr,UNTOUCHED
+Intake path,templates/Operations/job_detail.html,"en,ar,he,fa,hr",UNTOUCHED
+Invalid navigation parameters,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Invalid request.,Api/routes/setup.py,hr,UNTOUCHED
+"Item Count Display: Shows current position (e.g., ",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Item View: Clicking an item (e.g., a specific category) shows all files associated with that item",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Items Per Page: Adjust how many items display in tables from Settings → Display → Items Per Page,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Items per page,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+JavaScript Functionality,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Job %(id)s: %(status)s. %(processed)s contents analysed, %(signals)s signals, %(failed)s failed.",templates/Signals/detection.html,"en,ar,he,fa,hr",UNTOUCHED
+Keep them,templates/file/files_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Key Benefits,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Keyboard Accessibility: Full keyboard navigation support for all interactive elements, improving accessibility",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Keyword associations updated successfully!,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Keyword created successfully!,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Keywords Tab: Word frequency analysis with Top 25/50/100 word lists and usage statistics,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"Keywords are automatically extracted from file content during analysis, or can be manually added",templates/Keyword/keywords_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Keywords are important terms used to tag and categorize files for easier searching and organization,templates/Keyword/keywords_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Keywords checked,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Keywords must contain at least 2 words. Please select multiple words to create a keyword phrase.,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Keywords: Explore keyword phrases (combinations of 2+ words). Keywords help identify themes and topics across your files,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Keywords: Manage keywords from the Keywords page - they are automatically extracted or can be manually added,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Language: Change interface language from Settings → User Preferences → Language or the sidebar language selector,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Large exports may take time - be patient and don\'t close the browser,templates/ImportExport/import_export.html,"en,ar,he,fa,hr",UNTOUCHED
+"Largest Files Table: Sortable table showing the biggest files with name, type, size, source, and path",templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Lineage partially unavailable,templates/file/file_detail.html,"he,fa",UNTOUCHED
+List View: Shows items in a compact list format. Better for seeing more items at once and detailed information,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Live rows are never pruned: queued or running jobs, and report runs that never finished, stay whatever their age.",templates/Retention/retention.html,"en,ar,he,fa,hr",UNTOUCHED
+Loading analysis...,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Loading content...,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Loading files containing ,templates/Analysis/path_analysis.html,"en,ar,he,fa,hr",UNTOUCHED
+Loading metadata...,"templates/file/File_Management_Analysis_System.html,templates/file/file_detail.html","he,fa",UNTOUCHED
+Lockout Duration (min),templates/Setup/install_wizard.html,hr,UNTOUCHED
+Main Category,templates/Category/categories_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Manual categories only — independent from smart classification,templates/file/file_detail.html,"he,fa",UNTOUCHED
+"Manual, analyst-driven categorization layer — fully separate from system-generated smart categorization.",templates/Analyst/analyst_categorization.html,"en,ar,he,fa,hr",UNTOUCHED
+Map,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Max Failed Logins,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Max Processing Workers,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Metadata & lineage,"core/i18n/ui_catalog.py,templates/file/file_detail.html","he,fa",UNTOUCHED
+"Metadata Section: See complete file metadata including file path, size, dates, hash values, and technical information",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Min 12 characters,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Min Password Length,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Minimum 12 characters,templates/Setup/install_wizard.html,hr,UNTOUCHED
+"Modal Management: Centralized modal system handles opening, closing, and managing all modals on the page",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Monitor processing status in the statistics cards and file list,templates/file/files_list.html,"he,fa",UNTOUCHED
+Multiple View Modes: Choose between grid and list views based on your preference and task requirements,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Must be at least the per-minute limit.,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Name (A–Z),templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Name (Z-A),"core/i18n/ui_catalog.py,templates/file/File_Management_Analysis_System.html","he,fa",UNTOUCHED
+Name (Z–A),templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Navigation Bar: Use Back/Forward buttons to navigate through your browsing history, just like a web browser",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Navigation History: Never get lost - use browser-like back/forward navigation to retrace your exploration path,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Navigation Module: Handles all navigation logic, history management, breadcrumb updates, and URL synchronization",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Navigation System,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Navigation: Click any search result to navigate directly to that item or file,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Network error: Unable to connect to server. Please check your connection and try again.,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+New associations,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Newest entries come first. Use Older and Newer to move through the log; the total is not counted because the log grows w,templates/auth/audit.html,"en,ar,he,fa,hr",UNTOUCHED
+Next File,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+No categories assigned,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+No files found in the ,templates/Analysis/path_analysis.html,"en,ar,he,fa,hr",UNTOUCHED
+No items found in this section,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+No keywords yet.,templates/components/states.html,"en,ar,he,fa,hr",UNTOUCHED
+No metadata available,templates/file/file_detail.html,"he,fa",UNTOUCHED
+No results found for ,templates/Search/search.html,"en,ar,he,fa,hr",UNTOUCHED
+No words found in the ,templates/Analysis/path_analysis.html,"en,ar,he,fa,hr",UNTOUCHED
+Nothing is run by a person who may no longer run it: every fire re-reads the owner\'s role. An owner who loses the requi,templates/Scheduling/schedules.html,"en,ar,he,fa,hr",UNTOUCHED
+OCR Provenance,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Only the first %(n)s sources and sides by name are listed. Use a saved search to filter by others.,templates/Signals/signals.html,"en,ar,he,fa,hr",UNTOUCHED
+Open Full View in New Tab for,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Open an item to see its documents: search, sort, load more, select, export, rename, copy.",templates/components/documents_panel.html,"en,ar,he,fa,hr",UNTOUCHED
+Opening Files: Click any file card or list item to open the comprehensive file details modal,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Opening or editing a native file and opening its operating-system folder require the trusted local SYLTHARAE companion. ,templates/Search/search_advanced.html,"en,ar,he,fa,hr",UNTOUCHED
+Operating System,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Optional note for retention schedules; empty for scenario evaluations.,templates/Scheduling/schedules.html,"en,ar,he,fa,hr",UNTOUCHED
+Origin,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Original,"core/i18n/ui_catalog.py,templates/file/file_detail.html","he,fa",UNTOUCHED
+Overdue means the sentence spoke of the future and the date has passed. Other past dates are listed under Past.,templates/Signals/signals.html,"en,ar,he,fa,hr",UNTOUCHED
+Page Navigation,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Page Overview,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Pagination Controls: Navigate between pages using Previous/Next buttons or direct page number links,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Paste CSS here to override unified styles. This CSS is injected globally and applies to ALL pages. You can target unifie,templates/Settings/settings.html,"en,ar,he,fa,hr",UNTOUCHED
+Path Analysis: Navigate to path-based analysis for exploring file system structures and relationships,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Pause stops firing without deleting anything; resume fires again one interval from now, so a long pause never fires a bu",templates/Scheduling/schedules.html,"en,ar,he,fa,hr",UNTOUCHED
+"Per Page: Control how many items display per page (10, 25, 50, 100, or 200). Default is 50 items per page",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Per-file timeout,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Pin section open,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Place matches come from a gazetteer; a name shared by several places stays ambiguous and lists every candidate.,templates/Signals/signals.html,"en,ar,he,fa,hr",UNTOUCHED
+Places Mentioned,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Please select files to delete,templates/file/files_list.html,"he,fa",UNTOUCHED
+Please select files to export,templates/file/files_list.html,"he,fa",UNTOUCHED
+PostgreSQL,templates/Setup/install_wizard.html,hr,UNTOUCHED
+PostgreSQL server address,templates/Setup/install_wizard.html,hr,UNTOUCHED
+PostgreSQL superuser,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Previous File,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Processing Error,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Processing Performance: Two charts showing success rates by file type and processing speed trends,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Processing Timeout (sec),templates/Setup/install_wizard.html,hr,UNTOUCHED
+Production (recommended),templates/Setup/install_wizard.html,hr,UNTOUCHED
+Python,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Rate Limit (req/hour),templates/Setup/install_wizard.html,hr,UNTOUCHED
+Rate Limit (req/min),templates/Setup/install_wizard.html,hr,UNTOUCHED
+Re-detection runs as a background job and replaces the stored signals of each content it analyses. It is recorded in the,templates/Signals/detection.html,"en,ar,he,fa,hr",UNTOUCHED
+"Real-time Search: As you type, the system performs searches and updates results dynamically",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Records with the same name, content and details, in the same source and the same side, are removed; one record is kept. ",templates/file/files_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Redirecting to login…,templates/Setup/install_wizard.html,hr,UNTOUCHED
+"Refresh Data: Statistics update automatically, but you can refresh the page to ensure latest data is displayed",templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Regularly updating keyword associations ensures your files remain properly tagged and searchable.,templates/Keyword/keywords_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Relations,"core/i18n/ui_catalog.py,templates/file/File_Management_Analysis_System.html","he,fa",UNTOUCHED
+"Relations (Hash): View files grouped by hash values. Files with identical content share the same hash, helping identify ",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Remove all analyst categories from this file? It will return to ,templates/components/analyst_classify_page_data.html,"en,ar,he,fa,hr",UNTOUCHED
+Remove all analyst categories from {count} selected file(s)? They return to uncategorized for analyst scope.,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Remove all analyst categories from {count} selected file(s)? They will return to ,templates/Search/search_advanced.html,"en,ar,he,fa,hr",UNTOUCHED
+Remove analyst categories from every selected file,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Remove analyst category from this file? It returns to uncategorized status for search scope.,"templates/Analyst/analyst_categorization.html,templates/components/analyst_classify.html,templates/components/analyst_classify_page_data.html","en,ar,he,fa,hr",UNTOUCHED
+Remove exact repeats,templates/file/files_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Remove exact repeats in the same source and side?,templates/file/files_list.html,"en,ar,he,fa,hr",UNTOUCHED
+"Remove exact repeats: same name, content and details in the same source and side (keeps one)",templates/file/files_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Removing a word from this category does not delete the word from your vocabulary. It can be added back at any time.,templates/Category/category_words.html,"en,ar,he,fa,hr",UNTOUCHED
+"Rendering Modules: Grid and list renderers create the visual display, with pagination handling cursor-based navigation",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Request body must be a JSON object.,Api/routes/setup.py,hr,UNTOUCHED
+Reset Filters,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Reset Filters: Click ,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Responsive Design: Works seamlessly on different screen sizes, adapting layout for optimal viewing",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Restore previously exported application data (allowlist-validated JSON backup, transactional).",templates/Operations/import_center.html,"en,ar,he,fa,hr",UNTOUCHED
+Result Count: The number of matching files is displayed next to ,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Retention can be scheduled like any report: create a retention schedule on the Schedules page (administrators).,templates/Retention/retention.html,"en,ar,he,fa,hr",UNTOUCHED
+Revision records are append-only and read-only. A curation that changes detection matching creates a new fingerprint rev,templates/Settings/settings.html,"en,ar,he,fa,hr",UNTOUCHED
+"Rich File Details: Access complete file information, content, classifications, and metadata in one comprehensive modal",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Root View: Initially shows a grid of all available sections (Category, Keywords, Titles, etc.) with item counts",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Run Validate or Preview on an import source to see what would happen. Nothing is imported until you confirm.,templates/Operations/import_center.html,"en,ar,he,fa,hr",UNTOUCHED
+Run a search on the Advanced Search page and use ,templates/Search/saved_searches.html,"en,ar,he,fa,hr",UNTOUCHED
+Save a search from the Advanced Search page using the ,templates/Search/saved_searches.html,"en,ar,he,fa,hr",UNTOUCHED
+Saved edits take effect across server-rendered and browser-rendered screens. Reset a row to return to the checked-in cat,templates/Settings/translation_manager.html,"en,ar,he,fa,hr",UNTOUCHED
+Scalable Performance: Cursor-based pagination and efficient rendering handle large datasets without performance issues,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Scan looks for duplicate content and future dates, then creates alerts for new findings.",templates/Notifications/notifications.html,"en,ar,he,fa,hr",UNTOUCHED
+"Search & Filter Tab: Search bar, type filters, category tags, and search results display",templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Search Navigation: Use Previous/Next buttons to jump between search matches within the file,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Search Results: Results appear in a grid below with file details - click any file to view full details,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"Search Results: Results are displayed in the unified content view, showing matching items from all sections",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Search Scope: Searches file content, metadata, names, descriptions, and all associated data",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Search System: Global search and modal search modules provide comprehensive search capabilities across all data,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Search all data in database,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Search all data: files, categories, keywords, sources, sides, words, titles...","core/i18n/ui_catalog.py,templates/file/File_Management_Analysis_System.html","he,fa",UNTOUCHED
+"Search by name, content...",templates/file/files_list.html,"he,fa",UNTOUCHED
+Search displayed files,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Search in document,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Search in document...,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Search in document…,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Search options,templates/file/file_detail.html,"he,fa",UNTOUCHED
+"Section View: When you click a sidebar item, it loads all items in that section (e.g., all categories) with pagination",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Security Policies,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Select All Files,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Select multiple files to perform batch operations like export or delete,templates/file/files_list.html,"he,fa",UNTOUCHED
+Select or Create Category,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Select processing options like text extraction, metadata extraction, and hash calculation",templates/ImportExport/import_export.html,"en,ar,he,fa,hr",UNTOUCHED
+Selected,templates/file/files_list.html,"he,fa",UNTOUCHED
+Semicolon-separated server directories the app may read. Leave empty for uploads only.,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Session Lifetime (hours),templates/Setup/install_wizard.html,hr,UNTOUCHED
+Setting up your File Analysis system. This takes 15–60 seconds.,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Setup progress,templates/Setup/install_wizard.html,hr,UNTOUCHED
+Share this temporary password with the user. It is shown only once and all their sessions have been revoked.,templates/auth/users.html,"en,ar,he,fa,hr",UNTOUCHED
+"Show a read-only panel that reports which interface, component, action and binding owns an element on the page. Administ",templates/Settings/settings.html,"en,ar,he,fa,hr",UNTOUCHED
+Show only this user\'s entries,templates/auth/audit.html,"en,ar,he,fa,hr",UNTOUCHED
+Showing the %(shown)s most-used of %(total)s categories - use the section search for the rest,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Showing the %(shown)s most-used of %(total)s sides - use the section search for the rest,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Showing the %(shown)s most-used of %(total)s sources - use the section search for the rest,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Side Filter: Filter by sides/parties. Helps analyze data related to specific groups or entities,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Side name is required,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Sidebar Counts: Each section displays the total number of items, updated dynamically as you navigate",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Sidebar Sections,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Sides represent different parties, organizations, or entities in your file analysis system",templates/Side/sides_list.html,"en,ar,he,fa,hr",UNTOUCHED
+"Sides: Organize data by sides/parties. Similar to sources, sides show categories and keywords first, then files",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Signals are detected once, when a document is stored or re-analysed. This page reads the stored results; it does not re-",templates/Signals/signals.html,"en,ar,he,fa,hr",UNTOUCHED
+Size (largest),templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Size (smallest),templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Some configuration is managed via environment variables. Changes require application restart.,templates/Settings/settings.html,"en,ar,he,fa,hr",UNTOUCHED
+Something went wrong on our end. We\'re working to fix it.,templates/500.html,"en,ar,he,fa,hr",UNTOUCHED
+"Sort By: Dropdown menu to sort items by ID (ascending/descending), Name (A-Z/Z-A), or File Count (high to low/low to hig",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"Sort files by name, date, size, or status using the column headers",templates/file/files_list.html,"he,fa",UNTOUCHED
+Sorting and Pagination Controls,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Source / Side,templates/Analyst/analyst_categorization.html,"he,fa",UNTOUCHED
+Source Filter: Narrow results to files from specific sources. Useful for analyzing data from particular organizations,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Source name is required,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Source/Side Special View: For sources and sides, clicking an item first shows its associated categories and keywords, th",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Sources & Sides: Configure sources and sides from their respective pages to classify file origins,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"Sources represent the origin or provider of your files (e.g., organizations, departments, external entities)",templates/Sources/sources_list.html,"en,ar,he,fa,hr",UNTOUCHED
+"Sources: Manage information sources (news agencies, organizations, etc.). Each source shows associated categories and ke",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Staging,templates/Setup/install_wizard.html,hr,UNTOUCHED
+"Stale content was never analysed, was analysed by an older version (for places, an older gazetteer), or its last run fai",templates/Signals/detection.html,"en,ar,he,fa,hr",UNTOUCHED
+"State Management: Centralized state objects track navigation history, current view, filters, pagination, and file select",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+"State Management: The system maintains navigation state, pagination, filters, and view preferences throughout your sessi",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Step %(current)s of %(total)s,templates/Setup/install_wizard.html,hr,UNTOUCHED
+"Storage & Analytics Tab: Storage distribution charts, growth timeline, processing performance, content analysis, word cl",templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Storage Details: Scrollable list showing breakdown of storage by selected view with file counts and sizes,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Storage Distribution: Use ,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Submitting...,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Successfully added,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Successfully added word-category relationship,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Switch to Grid View,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Switch to List View,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+System Check,templates/Setup/install_wizard.html,hr,UNTOUCHED
+System Prerequisites,templates/Setup/install_wizard.html,hr,UNTOUCHED
+System is already initialized. Re-installation is not permitted through this endpoint.,Api/routes/setup.py,hr,UNTOUCHED
+Test Connection,templates/Setup/install_wizard.html,hr,UNTOUCHED
+"The File Library displays all files in your system with their status, metadata, and analysis results",templates/file/files_list.html,"en,ar,he,fa,hr",UNTOUCHED
+The current version cannot be determined (for places: no gazetteer is loaded). Every content counts as stale until it ca,templates/Signals/detection.html,"en,ar,he,fa,hr",UNTOUCHED
+"The filename export reached the 50,000-row limit; narrow the search to export everything.",templates/Search/search_advanced.html,"en,ar,he,fa,hr",UNTOUCHED
+"The label is added as an English endonym. Add, edit, and remove additional multilingual aliases in the Place Names tab.",templates/Settings/settings.html,"en,ar,he,fa,hr",UNTOUCHED
+The page header shows the current view name and description - click navigation buttons to switch views instantly,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"The page uses a unified content view that dynamically loads different sections without page refreshes, providing a smoot",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+The page you\'re looking for doesn\'t exist or has been moved.,templates/404.html,"en,ar,he,fa,hr",UNTOUCHED
+The password you set during PostgreSQL installation,templates/Setup/install_wizard.html,hr,UNTOUCHED
+The per-minute rate limit cannot exceed the per-hour limit.,Api/routes/setup.py,hr,UNTOUCHED
+The selected filename list is too large to export in one file.,templates/file/files_list.html,"he,fa",UNTOUCHED
+The system supports cursor-based pagination for efficient handling of large datasets,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Their sessions are revoked immediately and this cannot be undone. The audit history is kept.,templates/auth/users.html,"en,ar,he,fa,hr",UNTOUCHED
+"These files failed to save, were not saved, or had processing errors. Click Retry to attempt reading and saving again.",templates/Analysis/analysis_batch.html,"en,ar,he,fa,hr",UNTOUCHED
+These labels belong exclusively to the analyst (manual) taxonomy. They are never shared with smart categories.,templates/Analyst/analyst_categorization.html,"en,ar,he,fa,hr",UNTOUCHED
+"This browser can preview and download the source file. Launching or editing it in a native app, or opening its operating",templates/Search/search_advanced.html,"en,ar,he,fa,hr",UNTOUCHED
+"This dashboard displays visual analytics and charts for files, categories, keywords, sources, and words",templates/Analysis/charts_dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+This dashboard provides a comprehensive overview of your file analysis system with real-time statistics and visualizatio,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"This dashboard provides a unified view of all your data across files, categories, keywords, sources, and words",templates/Analysis/comprehensive_dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"This file has no analyst-assigned category yet. Assign one here, or from the Advanced Search results.",templates/components/analyst_classify.html,"en,ar,he,fa,hr",UNTOUCHED
+This folder appears to be empty or the path pattern doesn,templates/Analysis/path_analysis.html,"en,ar,he,fa,hr",UNTOUCHED
+"This is the File Management and Analysis System - a comprehensive interface for exploring, analyzing, and managing all y",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+This permanently removes the record and everything ,Api/blueprints/files.py,"en,ar,he,fa,hr",UNTOUCHED
+This permanently removes the record and everything extracted from it. The original file on disk is not touched.,templates/file/file_detail.html,"en,ar,he,fa,hr",UNTOUCHED
+This permanently removes the selected records.,templates/components/confirm_dialog.html,"en,ar,he,fa,hr",UNTOUCHED
+This scope filters on analyst (manual) categorization only. It is completely independent of smart categorization.,templates/Search/search_advanced.html,"en,ar,he,fa,hr",UNTOUCHED
+This will scan all files in the database and update keyword associations. This may take a while. Continue?,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+This will:\n- Find all keywords with the same text\n- Keep the first occurrence (lowest ID)\n- Transfer all usage statis,templates/Keyword/keywords_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Timeline Chart: Use the 24H/Week/Month/Year buttons above the chart to change the time period view,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"Tip: You can target all pages via common selectors (e.g., .page-header, .sidebar, .main-content).",templates/Settings/settings.html,"en,ar,he,fa,hr",UNTOUCHED
+Title Analysis,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Titles,"core/i18n/ui_catalog.py,templates/file/File_Management_Analysis_System.html","he,fa",UNTOUCHED
+Titles: View all file titles. Titles are extracted from documents and provide quick identification of file content,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Toggle Views: Use the grid/list toggle buttons in the navigation bar to switch between view modes,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Too many dependencies in one request.,Api/routes/setup.py,hr,UNTOUCHED
+Top Categories by File Count,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Top Sources Distribution,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Top-level object,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Total Files: Shows the complete count of all files in your system with period change indicator (up/down arrow),templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Type (A–Z),templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Type (Z–A),templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Type Filter: Use the dropdown next to the search bar to filter by specific file types (PDF, DOCX, etc.)",templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"Type a new word name to create it, or search for an existing word. You must select at least 2 words to create a keyword ","templates/Keyword/keywords_list.html,templates/file/File_Management_Analysis_System.html","en,ar,he,fa,hr",UNTOUCHED
+Type to search and select words...,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Type to search for a word...,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Type to search for categories from the categories table,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"URL Updates: The browser URL updates as you navigate, allowing you to bookmark specific views or share links",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Unable to obtain security token. Please refresh the page.,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Unable to retrieve security token. Please refresh the page and try again.,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Unified Content View,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Updating...,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+Upload Files,templates/file/files_list.html,"he,fa",UNTOUCHED
+Upload from this computer — files or whole folders — or point the engine at a folder already on the server.,templates/Operations/input.html,"en,ar,he,fa,hr",UNTOUCHED
+Upload new files using the ,templates/file/files_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Use ,"templates/Analysis/path_analysis.html,templates/Category/categories_list.html,templates/Category/category_words.html","en,ar,he,fa,hr",UNTOUCHED
+Use Sort and Show More to page through large result sets without reloading the filters.,templates/Signals/signals.html,"en,ar,he,fa,hr",UNTOUCHED
+"Use filters to find files by type, status, source, category, or date range",templates/file/files_list.html,"he,fa",UNTOUCHED
+"Use quotation marks to search for exact phrases, e.g., ",templates/Search/search.html,"en,ar,he,fa,hr",UNTOUCHED
+"Use quotes for exact phrases, e.g., ",templates/Search/search.html,"en,ar,he,fa,hr",UNTOUCHED
+Use quotes for exact phrases: ,templates/Search/search_advanced.html,"en,ar,he,fa,hr",UNTOUCHED
+Use the search box to quickly find files by name or content,templates/file/files_list.html,"he,fa",UNTOUCHED
+"Use the tab navigation to switch between different data views (Files, Categories, Keywords, Sources, Words)",templates/Analysis/comprehensive_dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"Use the three navigation buttons at the top to switch between: Overview (this page), Comprehensive Dashboard (multi-view",templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+"Use the value-kind shortcuts (dates, places, email, phone, IP, …) on the Explorer tab, or open Advanced filters for any ",templates/Signals/signals.html,"en,ar,he,fa,hr",UNTOUCHED
+View Details for,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+View Modes,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"View Modules: Separate modules for root view, section view, item view, and file view - each handles its specific renderi",templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+View Original,core/i18n/ui_catalog.py,"he,fa",UNTOUCHED
+View Persistence: Your preferred view mode is remembered as you navigate between sections,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+View content statistics to understand the file\'s text characteristics,templates/file/full_content.html,"en,ar,he,fa,hr",UNTOUCHED
+"View detailed statistics for each source, including document count and importance level",templates/Sources/sources_list.html,"en,ar,he,fa,hr",UNTOUCHED
+View history of all batch analysis operations you\'ve performed,templates/Analysis/analysis_batch.html,"en,ar,he,fa,hr",UNTOUCHED
+"View statistics showing total files, analyzed files, and pending files",templates/file/files_list.html,"he,fa",UNTOUCHED
+View word statistics to understand content distribution and identify frequently used terms,templates/Word/Word_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Viewed areas are stored as compressed images in map_data/registry.db and work offline on this device. Respect third-part,"core/i18n/ui_catalog.py,templates/map/map_viewer.html","en,ar,he,fa,hr",UNTOUCHED
+Viewing and Managing Files,templates/file/files_list.html,"he,fa",UNTOUCHED
+WARNING (quiet),templates/Setup/install_wizard.html,hr,UNTOUCHED
+Web Port,templates/Setup/install_wizard.html,hr,UNTOUCHED
+"What is pruned, how old, and what it would delete right now. Every prune is audited with its count.",templates/Retention/retention.html,"en,ar,he,fa,hr",UNTOUCHED
+Which detector version analysed which content and with what outcome. Content that was never analysed is counted separate,templates/Signals/detection.html,"en,ar,he,fa,hr",UNTOUCHED
+"Who did what, to what, when and from where. This page only reads the log; nothing here changes it.",templates/auth/audit.html,"en,ar,he,fa,hr",UNTOUCHED
+Word Cloud: Visual representation of most frequent words - larger words appear more often,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Word Frequency: Use Top 25/50/100 buttons to change how many words are displayed in the frequency analysis,templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Word Search: All modals include intelligent word search - type to search existing words or create new ones on the fly,templates/file/File_Management_Analysis_System.html,"en,ar,he,fa,hr",UNTOUCHED
+Word frequency,templates/file/file_detail.html,"he,fa",UNTOUCHED
+Words ,templates/file/File_Management_Analysis_System.html,"he,fa",UNTOUCHED
+"Words are typically added automatically during file analysis, but can be manually created",templates/Word/Word_list.html,"en,ar,he,fa,hr",UNTOUCHED
+"Words help identify common themes, patterns, and important terminology in your documents",templates/Word/Word_list.html,"en,ar,he,fa,hr",UNTOUCHED
+Words in ,templates/Analysis/path_analysis.html,"en,ar,he,fa,hr",UNTOUCHED
+"You can hide these tips anytime by clicking the chevron icon above, or disable them permanently from Settings → Display ",templates/Analysis/dashboard.html,"en,ar,he,fa,hr",UNTOUCHED
+Your File Analysis system is ready to use.,templates/Setup/install_wizard.html,hr,UNTOUCHED
+"archives, compressed files, e-mail attachments, embedded objects — extracted with parent/child links",templates/Operations/input.html,"en,ar,he,fa,hr",UNTOUCHED
+detected formats in the whole dataset,templates/file/file_types.html,"en,ar,he,fa,hr",UNTOUCHED
+file{s} contain ,templates/Analysis/path_analysis.html,"en,ar,he,fa,hr",UNTOUCHED
+indexed documents in the whole dataset,templates/file/file_types.html,"en,ar,he,fa,hr",UNTOUCHED
+item,templates/components/action_toolbar.html,"en,ar,he,fa,hr",UNTOUCHED
+more,templates/file/file_detail.html,"he,fa",UNTOUCHED
+pip exited with code %(code)s,Api/routes/setup.py,hr,UNTOUCHED
+—,templates/Analyst/analyst_categorization.html,"he,fa",UNTOUCHED
+…,core/i18n/export_surface_strings.py,"en,ar,he,fa,hr",UNTOUCHED

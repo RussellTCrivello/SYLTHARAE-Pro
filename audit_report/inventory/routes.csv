@@ -1,0 +1,486 @@
+rule,methods,endpoint,view_module,arguments,auth_decorator,roles,status
+/,GET,index,Api.routes.dashboard,,middleware-default-deny,,VERIFIED-OK
+/admin/audit,GET,audit_page,Api.routes.audit,,admin_required,admin,VERIFIED-OK
+/analysis/batch,GET,analysis_batch,Api.routes.analysis,,middleware-default-deny,,VERIFIED-OK
+/analysis/batch/process,POST,analysis_batch_process,Api.routes.analysis,,login_required,,VERIFIED-OK
+/analysis/classification,GET,file_classification_page,Api.routes.analytics,,middleware-default-deny,,VERIFIED-OK
+/analyst/categorization,GET,analyst_categorization_page,Api.routes.analyst_categories,,middleware-default-deny,,VERIFIED-OK
+/analytics/map-viewer,GET,map_viewer_page,Api.routes.map_api,,login_required,,VERIFIED-OK
+/analytics/path-analysis,GET,path_analysis_page,Api.routes.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analysis/batch,POST,content_analysis.analyze_batch,Api.blueprints.content_analysis,,middleware-default-deny,,VERIFIED-OK
+/api/analysis/entities/<int:file_id>,GET,content_analysis.get_entities,Api.blueprints.content_analysis,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/analysis/file/<int:file_id>,GET,content_analysis.analyze_file,Api.blueprints.content_analysis,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/analysis/retry/<int:file_id>,POST,retry_file_analysis,Api.routes.analysis,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/analysis/sentiment/<int:file_id>,GET,content_analysis.get_sentiment,Api.blueprints.content_analysis,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/analysis/statistics/<int:file_id>,GET,content_analysis.get_statistics,Api.blueprints.content_analysis,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/analysis/topics/<int:file_id>,GET,content_analysis.get_topics,Api.blueprints.content_analysis,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/analyst/analysts,GET,api_analyst_analysts,Api.routes.analyst_categories,,middleware-default-deny,,VERIFIED-OK
+/api/analyst/assign,POST,api_analyst_assign,Api.routes.analyst_categories,,middleware-default-deny,,VERIFIED-OK
+/api/analyst/assignments,GET,api_analyst_assignments,Api.routes.analyst_categories,,middleware-default-deny,,VERIFIED-OK
+/api/analyst/categories,GET,api_analyst_categories,Api.routes.analyst_categories,,middleware-default-deny,,VERIFIED-OK
+/api/analyst/categories,POST,api_analyst_category_create,Api.routes.analyst_categories,,middleware-default-deny,,VERIFIED-OK
+/api/analyst/categories/<int:category_id>,DELETE,api_analyst_category_delete,Api.routes.analyst_categories,category_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/analyst/categories/<int:category_id>,PATCH,api_analyst_category_update,Api.routes.analyst_categories,category_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/analyst/export,GET,api_analyst_export,Api.routes.analyst_categories,,middleware-default-deny,,VERIFIED-OK
+/api/analyst/log,GET,api_analyst_log,Api.routes.analyst_categories,,middleware-default-deny,,VERIFIED-OK
+/api/analyst/remove,POST,api_analyst_remove,Api.routes.analyst_categories,,middleware-default-deny,,VERIFIED-OK
+/api/analyst/stats,GET,api_analyst_stats,Api.routes.analyst_categories,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/category-distribution,GET,analytics.api_category_distribution,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/content-statistics,GET,analytics.api_content_statistics,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/dashboard-summary,GET,analytics.api_dashboard_summary,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/file-type-distribution,GET,analytics.api_file_type_distribution,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/path-hierarchy,GET,analytics.api_path_hierarchy,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/path/analytics,GET,analytics.api_path_analytics,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/path/category-files,GET,analytics.api_path_category_files,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/path/category-words-analysis,GET,analytics.api_path_category_words_analysis,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/path/category-words-detail,GET,analytics.api_path_category_words_detail,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/path/classifications,GET,analytics.api_path_classifications,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/path/files,GET,analytics.api_path_files,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/path/word-files,GET,analytics.api_path_word_files,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/path/words,GET,analytics.api_path_words,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/paths/hierarchical,GET,analytics.api_paths_hierarchical,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/paths/structure,GET,analytics.api_paths_hierarchical,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/processing-statistics,GET,analytics.api_processing_statistics,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/search-files,GET,analytics.api_search_files,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/sides,GET,analytics.api_analytics_sides,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/sources,GET,analytics.api_analytics_sources,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/storage-stats,GET,analytics.api_storage_stats,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/timeline-data,GET,analytics.api_timeline_data,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/analytics/word-frequency,GET,analytics.api_word_frequency,Api.blueprints.analytics,,middleware-default-deny,,VERIFIED-OK
+/api/archives/addresses,GET,archives_api.api_archives_addresses,Api.routes.archives_api,,middleware-default-deny,,VERIFIED-OK
+/api/archives/categories,GET,archives_api.api_archives_categories,Api.routes.archives_api,,middleware-default-deny,,VERIFIED-OK
+/api/archives/files,GET,api_archives_files,Api.routes.archives,,middleware-default-deny,,VERIFIED-OK
+/api/archives/filetypes,GET,archives_api.api_archives_filetypes,Api.routes.archives_api,,middleware-default-deny,,VERIFIED-OK
+/api/archives/geolocation,GET,archives_api.api_archives_geolocation,Api.routes.archives_api,,middleware-default-deny,,VERIFIED-OK
+/api/archives/geolocation/export,GET,archives_api.api_archives_geolocation_export,Api.routes.archives_api,,middleware-default-deny,,VERIFIED-OK
+/api/archives/hashs,GET,archives_api.api_archives_hashs,Api.routes.archives_api,,middleware-default-deny,,VERIFIED-OK
+/api/archives/keywords,GET,archives_api.api_archives_keywords,Api.routes.archives_api,,middleware-default-deny,,VERIFIED-OK
+/api/archives/search,GET,api_archives_search,Api.routes.archives,,middleware-default-deny,,VERIFIED-OK
+/api/archives/side-categories-keywords,GET,api_side_categories_keywords,Api.routes.archives,,middleware-default-deny,,VERIFIED-OK
+/api/archives/sides,GET,archives_api.api_archives_sides,Api.routes.archives_api,,middleware-default-deny,,VERIFIED-OK
+/api/archives/source-categories-keywords,GET,api_source_categories_keywords,Api.routes.archives,,middleware-default-deny,,VERIFIED-OK
+/api/archives/sources,GET,archives_api.api_archives_sources,Api.routes.archives_api,,middleware-default-deny,,VERIFIED-OK
+/api/archives/titles,GET,archives_api.api_archives_titles,Api.routes.archives_api,,middleware-default-deny,,VERIFIED-OK
+/api/archives/titles/all,GET,archives_api.api_archives_titles_all,Api.routes.archives_api,,middleware-default-deny,,VERIFIED-OK
+/api/archives/titles/count,GET,archives_api.api_archives_titles_count,Api.routes.archives_api,,middleware-default-deny,,VERIFIED-OK
+/api/audit,GET,api_audit_entries,Api.routes.audit,,admin_required,admin,VERIFIED-OK
+/api/audit/<int:entry_id>,GET,api_audit_entry,Api.routes.audit,entry_id,admin_required,admin,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/audit/actions,GET,api_audit_actions,Api.routes.audit,,admin_required,admin,VERIFIED-OK
+/api/auth/users,POST,auth.api_create_user,Api.routes.auth,,middleware-default-deny,,VERIFIED-OK
+/api/auth/users,GET,auth.api_list_users,Api.routes.auth,,middleware-default-deny,,VERIFIED-OK
+/api/auth/users/<int:user_id>,DELETE,auth.api_delete_user,Api.routes.auth,user_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/auth/users/<int:user_id>,PATCH,auth.api_update_user,Api.routes.auth,user_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/auth/users/<int:user_id>/reset-password,POST,auth.api_reset_password,Api.routes.auth,user_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/cache/clear,POST,clear_cache_ui_alias,Api.routes.performance,,middleware-default-deny,,VERIFIED-OK
+/api/cache/stats,GET,get_cache_stats_ui_alias,Api.routes.performance,,middleware-default-deny,,VERIFIED-OK
+/api/categories,GET,api_categories,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/api/categories/<int:category_id>,DELETE,api_delete_category,Api.routes.categories,category_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/categories/<int:category_id>,GET,api_get_category,Api.routes.categories,category_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/categories/<int:category_id>/words,GET,api_category_words,Api.routes.categories,category_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/categories/<int:category_id>/words/<int:word_id>,DELETE,api_remove_word_from_category,Api.routes.categories,"category_id,word_id",middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/categories/all-words,GET,api_all_categories_words,Api.routes.categories,,middleware-default-deny,,VERIFIED-OK
+/api/categories/find-duplicates,GET,api_find_duplicate_categories,Api.routes.categories,,middleware-default-deny,,VERIFIED-OK
+/api/categories/remove-duplicates,POST,api_remove_duplicate_categories,Api.routes.categories,,middleware-default-deny,,VERIFIED-OK
+/api/categories/search,GET,api_categories_search,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/api/category/check,POST,category_check,Api.routes.categories,,middleware-default-deny,,VERIFIED-OK
+/api/content/<int:hash_id>/signals,GET,api_content_signals,Api.routes.signals,hash_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/csrf-token,GET,get_csrf_token,apps.web.app,,middleware-default-deny,,VERIFIED-OK
+/api/dashboard/categories-filtered,GET,api_dashboard_categories_filtered,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/api/dashboard/files-filtered,GET,api_dashboard_files_filtered,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/api/dashboard/keywords-filtered,GET,api_dashboard_keywords_filtered,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/api/dashboard/sides-filtered,GET,api_dashboard_sides_filtered,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/api/dashboard/similar-files,GET,api_dashboard_similar_files,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/api/dashboard/sources-filtered,GET,api_dashboard_sources_filtered,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/api/dashboard/stats,GET,api_dashboard_stats,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/api/dashboard/words,GET,api_dashboard_words,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/api/email-words/all,GET,api_email_words_all,Api.routes.keywords,,middleware-default-deny,,VERIFIED-OK
+/api/email-words/files,GET,api_email_words_files,Api.routes.keywords,,middleware-default-deny,,VERIFIED-OK
+/api/errors/metrics,GET,error_dashboard.get_error_metrics,Api.routes.error_dashboard,,middleware-default-deny,,VERIFIED-OK
+/api/errors/patterns,GET,error_dashboard.get_error_patterns,Api.routes.error_dashboard,,middleware-default-deny,,VERIFIED-OK
+/api/errors/recent,GET,error_dashboard.get_recent_errors,Api.routes.error_dashboard,,middleware-default-deny,,VERIFIED-OK
+/api/errors/stats,GET,error_dashboard.get_error_stats,Api.routes.error_dashboard,,middleware-default-deny,,VERIFIED-OK
+/api/experience/actions,GET,experience_actions,Api.routes.experience_api,,middleware-default-deny,,VERIFIED-OK
+/api/experience/actions/<action_id>,GET,experience_action,Api.routes.experience_api,action_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/experience/contracts,GET,experience_contracts,Api.routes.experience_api,,middleware-default-deny,,VERIFIED-OK
+/api/experience/contracts/<interface_id>,GET,experience_contract,Api.routes.experience_api,interface_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/experience/coverage,GET,experience_coverage,Api.routes.experience_api,,middleware-default-deny,,VERIFIED-OK
+/api/experience/inspect,GET,experience_inspect,Api.routes.experience_api,,admin_required,admin,VERIFIED-OK
+/api/experience/permissions,GET,experience_permissions,Api.routes.experience_api,,middleware-default-deny,,VERIFIED-OK
+/api/export/<interface_id>,GET,exports.export_interface,Api.routes.exports,interface_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/export/structured/plan,POST,exports.structured_export_plan,Api.routes.exports,,middleware-default-deny,,VERIFIED-OK
+/api/file-analysis/categories,GET,file_analysis.fa_categories,Api.routes.file_analysis,,middleware-default-deny,,VERIFIED-OK
+/api/file-analysis/categories/<int:category_id>,GET,file_analysis.fa_category_detail,Api.routes.file_analysis,category_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file-analysis/categories/<int:category_id>/keywords,GET,file_analysis.fa_category_keywords,Api.routes.file_analysis,category_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file-analysis/categories/<int:category_id>/words,GET,file_analysis.fa_category_words,Api.routes.file_analysis,category_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file-analysis/geolocation/places,GET,file_analysis.fa_geolocation_places,Api.routes.file_analysis,,middleware-default-deny,,VERIFIED-OK
+/api/file-analysis/geolocation/scan,POST,file_analysis.fa_geolocation_scan,Api.routes.file_analysis,,middleware-default-deny,,VERIFIED-OK
+/api/file-analysis/keywords,GET,file_analysis.fa_keywords,Api.routes.file_analysis,,middleware-default-deny,,VERIFIED-OK
+/api/file-analysis/overview,GET,file_analysis.fa_overview,Api.routes.file_analysis,,middleware-default-deny,,VERIFIED-OK
+/api/file-analysis/relations,GET,file_analysis.fa_relations,Api.routes.file_analysis,,middleware-default-deny,,VERIFIED-OK
+/api/file-analysis/rows,GET,file_analysis.fa_rows,Api.routes.file_analysis,,middleware-default-deny,,VERIFIED-OK
+/api/file-analysis/sides,GET,file_analysis.fa_sides,Api.routes.file_analysis,,middleware-default-deny,,VERIFIED-OK
+/api/file-analysis/sides/<int:side_id>/categories,GET,file_analysis.fa_side_categories,Api.routes.file_analysis,side_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file-analysis/sides/<int:side_id>/keywords,GET,file_analysis.fa_side_keywords,Api.routes.file_analysis,side_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file-analysis/sides/<int:side_id>/words,GET,file_analysis.fa_side_words,Api.routes.file_analysis,side_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file-analysis/sources,GET,file_analysis.fa_sources,Api.routes.file_analysis,,middleware-default-deny,,VERIFIED-OK
+/api/file-analysis/sources/<int:source_id>/categories,GET,file_analysis.fa_source_categories,Api.routes.file_analysis,source_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file-analysis/sources/<int:source_id>/keywords,GET,file_analysis.fa_source_keywords,Api.routes.file_analysis,source_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file-analysis/sources/<int:source_id>/words,GET,file_analysis.fa_source_words,Api.routes.file_analysis,source_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file-analysis/titles,GET,file_analysis.fa_titles,Api.routes.file_analysis,,middleware-default-deny,,VERIFIED-OK
+/api/file-analysis/words,GET,file_analysis.fa_words,Api.routes.file_analysis,,middleware-default-deny,,VERIFIED-OK
+/api/file/<int:file_id>/analysis,GET,files.file_document_analysis,Api.blueprints.files,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file/<int:file_id>/copy,POST,file_operations.copy_file,Api.routes.file_operations,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file/<int:file_id>/details,GET,api_file_details,Api.routes.api,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file/<int:file_id>/locate,GET,file_operations.locate_file,Api.routes.file_operations,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file/<int:file_id>/original,GET,files.original_file_info,Api.blueprints.files,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file/<int:file_id>/original/content,GET,files.original_file_content,Api.blueprints.files,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file/<int:file_id>/rename,POST,file_operations.rename_file,Api.routes.file_operations,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file/<int:file_id>/serve,GET,files.serve_file_by_id,Api.blueprints.files,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/file/serve,GET,files.serve_file,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/api/files/<int:file_id>/export,GET,files.file_export,Api.blueprints.files,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/files/analysis,POST,files.files_document_analysis_batch,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/api/files/details/export,POST,files.export_file_details,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/api/files/excerpt/export,POST,files.export_excerpt,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/api/files/extract-contacts/export,POST,files.export_selected_contacts,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/api/files/first-pages/export,POST,files.export_selected_first_pages,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/api/files/names/export,POST,files.export_file_names,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/api/files/same-context-duplicates,GET,files.same_context_duplicates_preview,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/api/files/same-context-duplicates/remove,POST,files.same_context_duplicates_remove,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/api/files/types,GET,files.api_file_type_statistics,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/api/formats/overview,GET,api_formats_overview,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/api/gazetteer,GET,api_gazetteer,Api.routes.places,,login_required,,VERIFIED-OK
+/api/i18n/catalog,GET,translations.get_i18n_catalog,Api.routes.translations,,middleware-default-deny,,VERIFIED-OK
+/api/import-export/backup/export,"GET,POST",import_export.export_database_backup,Api.routes.import_export,,admin_required,admin,VERIFIED-OK
+/api/import-export/backup/import,POST,import_export.import_database_backup,Api.routes.import_export,,admin_required,admin,VERIFIED-OK
+/api/import-export/batch-import,POST,import_export.batch_import_files,Api.routes.import_export,,middleware-default-deny,,VERIFIED-OK
+/api/import-export/batch-import/csv,POST,import_export.batch_import_from_csv,Api.routes.import_export,,middleware-default-deny,,VERIFIED-OK
+/api/import-export/settings/export,GET,import_export.export_settings,Api.routes.import_export,,middleware-default-deny,,VERIFIED-OK
+/api/import-export/settings/import,POST,import_export.import_settings,Api.routes.import_export,,middleware-default-deny,,VERIFIED-OK
+/api/import/jobs,POST,operations_api.api_create_import_job,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/import/jobs,GET,operations_api.api_list_import_jobs,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/import/preview,POST,operations_api.api_import_preview,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/import/validate,POST,operations_api.api_import_validate,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/input/jobs,POST,operations_api.api_create_input_job,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/input/jobs,GET,operations_api.api_list_input_jobs,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/input/options-info,GET,operations_api.api_input_options_info,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/input/sides,POST,operations_api.api_input_create_side,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/input/sides,GET,operations_api.api_input_sides,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/input/sources,POST,operations_api.api_input_create_source,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/input/sources,GET,operations_api.api_input_sources,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/input/uploads,POST,operations_api.api_input_upload,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/input/uploads/chunked/<upload_id>,DELETE,operations_api.api_chunked_cancel,Api.routes.operations_api,upload_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/input/uploads/chunked/<upload_id>,GET,operations_api.api_chunked_status,Api.routes.operations_api,upload_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/input/uploads/chunked/<upload_id>/chunk/<int:index>,POST,operations_api.api_chunked_chunk,Api.routes.operations_api,"index,upload_id",middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/input/uploads/chunked/<upload_id>/complete,POST,operations_api.api_chunked_complete,Api.routes.operations_api,upload_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/input/uploads/chunked/start,POST,operations_api.api_chunked_start,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/interfaces,GET,interfaces_registry,Api.routes.interfaces_api,,middleware-default-deny,,VERIFIED-OK
+/api/interfaces/<interface_id>,GET,interface_detail,Api.routes.interfaces_api,interface_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/interfaces/coverage,GET,interfaces_coverage,Api.routes.interfaces_api,,middleware-default-deny,,VERIFIED-OK
+/api/interfaces/inventory,GET,interfaces_inventory,Api.routes.interfaces_api,,middleware-default-deny,,VERIFIED-OK
+/api/jobs,GET,operations_api.api_list_jobs,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/jobs/<job_id>,DELETE,operations_api.api_delete_job,Api.routes.operations_api,job_id,admin_required,admin,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/jobs/<job_id>,GET,operations_api.api_get_job,Api.routes.operations_api,job_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/jobs/<job_id>/cancel,POST,operations_api.api_cancel_job,Api.routes.operations_api,job_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/jobs/<job_id>/errors,GET,operations_api.api_job_errors,Api.routes.operations_api,job_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/jobs/<job_id>/events,GET,operations_api.api_job_events,Api.routes.operations_api,job_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/jobs/<job_id>/pause,POST,operations_api.api_pause_job,Api.routes.operations_api,job_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/jobs/<job_id>/results,GET,operations_api.api_job_results,Api.routes.operations_api,job_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/jobs/<job_id>/resume,POST,operations_api.api_resume_job,Api.routes.operations_api,job_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/jobs/<job_id>/retry,POST,operations_api.api_retry_job,Api.routes.operations_api,job_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/jobs/stream,GET,operations_api.api_job_stream,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/jobs/summary,GET,operations_api.api_jobs_summary,Api.routes.operations_api,,middleware-default-deny,,VERIFIED-OK
+/api/keyword/check,POST,keyword_check,Api.routes.keywords,,middleware-default-deny,,VERIFIED-OK
+/api/keywords,GET,api_keywords,Api.routes.keywords,,middleware-default-deny,,VERIFIED-OK
+/api/keywords/<int:keyword_id>,DELETE,delete_keyword_api,Api.routes.keywords,keyword_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/keywords/<int:keyword_id>,GET,get_keyword,Api.routes.keywords,keyword_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/keywords/<int:keyword_id>,PUT,update_keyword,Api.routes.keywords,keyword_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/keywords/<int:keyword_id>/delete,"DELETE,POST",api_delete_keyword,Api.routes.keywords,keyword_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/keywords/bulk-delete,POST,bulk_delete_keywords,Api.routes.keywords,,middleware-default-deny,,VERIFIED-OK
+/api/keywords/export,GET,export_keywords,Api.routes.keywords,,middleware-default-deny,,VERIFIED-OK
+/api/keywords/merge-all-duplicates,POST,merge_all_duplicates,Api.routes.keywords,,middleware-default-deny,,VERIFIED-OK
+/api/keywords/merge-duplicates,POST,merge_duplicates,Api.routes.keywords,,middleware-default-deny,,VERIFIED-OK
+/api/keywords/update-associations,POST,update_keyword_associations,Api.routes.keywords,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/activity,GET,lexis_activity_list,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/activity,POST,lexis_activity_record,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/export/columns,"GET,POST",lexis_export_columns,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/export/originals,"GET,POST",lexis_export_originals,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/export/review,"GET,POST",lexis_export_review,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/export/structured,"GET,POST",lexis_export_structured,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/export/text,"GET,POST",lexis_export_text,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/facets,"GET,POST",lexis_facets,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/file/<int:path_id>,GET,lexis_file,Api.routes.lexis_cosmos,path_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/lexis/file/<int:path_id>/matches,GET,lexis_file_matches,Api.routes.lexis_cosmos,path_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/lexis/file/<int:path_id>/text,GET,lexis_file_text,Api.routes.lexis_cosmos,path_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/lexis/files/<int:path_id>/duplicate,POST,lexis_file_duplicate,Api.routes.lexis_cosmos,path_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/lexis/files/<int:path_id>/rename,POST,lexis_files_rename,Api.routes.lexis_cosmos,path_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/lexis/files/bulk-delete,POST,lexis_files_bulk_delete,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/files/bulk-side,POST,lexis_files_bulk_side,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/filter-options,GET,lexis_filter_options,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/find,GET,lexis_find,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/health,GET,lexis_health,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/lenses,GET,lexis_lenses,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/manage/dashboard,GET,lexis_dashboard,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/manage/files,POST,lexis_file_ingest,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/manage/files,GET,lexis_manage_files,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/outline,GET,lexis_outline,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/scope,"GET,POST",lexis_scope,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/search,"GET,POST",lexis_search,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/taxonomy/categories,POST,lexis_category_create,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/taxonomy/categories/<int:category_id>,DELETE,lexis_category_delete,Api.routes.lexis_cosmos,category_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/lexis/taxonomy/categories/<int:category_id>,PATCH,lexis_category_update,Api.routes.lexis_cosmos,category_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/lexis/taxonomy/categories/<int:category_id>/color,"PATCH,POST",lexis_category_color,Api.routes.lexis_cosmos,category_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/lexis/taxonomy/duplicate,GET,lexis_term_duplicate,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/taxonomy/keywords,POST,lexis_keyword_create,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/taxonomy/keywords/<int:keyword_id>,DELETE,lexis_keyword_delete,Api.routes.lexis_cosmos,keyword_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/lexis/taxonomy/keywords/<int:keyword_id>,PATCH,lexis_keyword_update,Api.routes.lexis_cosmos,keyword_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/lexis/taxonomy/terms,POST,lexis_term_create,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/taxonomy/terms,DELETE,lexis_term_delete,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/taxonomy/terms,PATCH,lexis_term_update,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/tree,GET,lexis_tree,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/views,GET,lexis_views_list,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/views,POST,lexis_views_save,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/api/lexis/views/<int:view_id>,DELETE,lexis_views_delete,Api.routes.lexis_cosmos,view_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/lexis/views/<int:view_id>,PATCH,lexis_views_rename,Api.routes.lexis_cosmos,view_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/lexis/views/<int:view_id>/touch,POST,lexis_views_touch,Api.routes.lexis_cosmos,view_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/map/bundle/export,GET,map_api.api_map_bundle_export,Api.routes.map_api,,login_required,,VERIFIED-OK
+/api/map/bundle/import,POST,map_api.api_map_bundle_import,Api.routes.map_api,,login_required,,VERIFIED-OK
+/api/map/cache/<layer_id>/<source_id>/<int:z>/<int:x>/<int:y>.png,GET,map_api.api_map_cache_tile,Api.routes.map_api,"layer_id,source_id,x,y,z",login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/map/layers,GET,map_api.api_map_layers,Api.routes.map_api,,login_required,,VERIFIED-OK
+/api/map/packages,GET,map_api.api_map_packages,Api.routes.map_api,,login_required,,VERIFIED-OK
+/api/map/packages/<package_id>,DELETE,map_api.api_map_package_remove,Api.routes.map_api,package_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/map/packages/<package_id>/download,POST,map_api.api_map_package_download,Api.routes.map_api,package_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/map/packages/<package_id>/download/status,GET,map_api.api_map_package_download_status,Api.routes.map_api,package_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/map/pmtiles/<package_id>,GET,map_api.api_map_pmtiles,Api.routes.map_api,package_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/map/raster/<package_id>/<int:z>/<int:x>/<int:y>.png,GET,map_api.api_map_raster_tile,Api.routes.map_api,"package_id,x,y,z",login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/map/storage,GET,map_api.api_map_storage,Api.routes.map_api,,login_required,,VERIFIED-OK
+/api/notifications,GET,get_notifications,Api.routes.notifications,,middleware-default-deny,,VERIFIED-OK
+/api/notifications/<int:notification_id>,GET,get_notification,Api.routes.notifications,notification_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/notifications/<int:notification_id>/dismiss,POST,dismiss_notification,Api.routes.notifications,notification_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/notifications/<int:notification_id>/read,POST,mark_notification_read,Api.routes.notifications,notification_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/notifications/analyze-file/<int:file_id>,POST,analyze_file_for_events,Api.routes.notifications,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/notifications/paginated,GET,get_paginated_notifications,Api.routes.notifications_page,,middleware-default-deny,,VERIFIED-OK
+/api/notifications/refresh,POST,refresh_notifications,Api.routes.notifications,,middleware-default-deny,,VERIFIED-OK
+/api/notifications/scan,POST,scan_for_notifications,Api.routes.notifications,,middleware-default-deny,,VERIFIED-OK
+/api/notifications/stats,GET,get_notification_stats,Api.routes.notifications,,middleware-default-deny,,VERIFIED-OK
+/api/notifications/upcoming,GET,get_upcoming_events,Api.routes.notifications,,middleware-default-deny,,VERIFIED-OK
+/api/paths,POST,paths.api_create_path,Api.blueprints.paths,,middleware-default-deny,,VERIFIED-OK
+/api/paths,GET,paths.api_list_paths,Api.blueprints.paths,,middleware-default-deny,,VERIFIED-OK
+/api/paths/<int:path_id>,GET,paths.api_get_path,Api.blueprints.paths,path_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/performance/analyze,GET,performance.analyze_performance,Api.routes.performance,,middleware-default-deny,,VERIFIED-OK
+/api/performance/cache/cleanup,POST,performance.cleanup_cache,Api.routes.performance,,middleware-default-deny,,VERIFIED-OK
+/api/performance/cache/clear,POST,performance.clear_cache,Api.routes.performance,,middleware-default-deny,,VERIFIED-OK
+/api/performance/cache/stats,GET,performance.get_cache_stats,Api.routes.performance,,middleware-default-deny,,VERIFIED-OK
+/api/performance/indexes,GET,performance.get_index_analysis,Api.routes.performance,,middleware-default-deny,,VERIFIED-OK
+/api/performance/queries/slow,GET,performance.get_slow_queries,Api.routes.performance,,middleware-default-deny,,VERIFIED-OK
+/api/performance/report,GET,performance.get_performance_report,Api.routes.performance,,middleware-default-deny,,VERIFIED-OK
+/api/place-names,POST,api_place_name_create,Api.routes.places,,login_required,,VERIFIED-OK
+/api/place-names,GET,api_place_names,Api.routes.places,,login_required,,VERIFIED-OK
+/api/place-names/<int:name_id>,DELETE,api_place_name_delete,Api.routes.places,name_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/place-names/<int:name_id>,PUT,api_place_name_update,Api.routes.places,name_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/places,GET,api_places,Api.routes.places,,login_required,,VERIFIED-OK
+/api/places,POST,api_places_create,Api.routes.places,,login_required,,VERIFIED-OK
+/api/places/<int:place_id>,GET,api_place,Api.routes.places,place_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/places/<int:place_id>,DELETE,api_places_delete,Api.routes.places,place_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/places/<int:place_id>,PUT,api_places_update,Api.routes.places,place_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/preferences/navigation,DELETE,api_navigation_prefs_delete,Api.routes.preferences,,login_required,,VERIFIED-OK
+/api/preferences/navigation,GET,api_navigation_prefs_get,Api.routes.preferences,,login_required,,VERIFIED-OK
+/api/preferences/navigation,PUT,api_navigation_prefs_put,Api.routes.preferences,,login_required,,VERIFIED-OK
+/api/preview/<int:file_id>,GET,preview.get_file_preview,Api.routes.preview,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/preview/<int:file_id>/image,GET,preview.get_file_preview_image,Api.routes.preview,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/query/cursor,GET,cursor_api.api_query_cursor,Api.routes.cursor_api,,middleware-default-deny,,VERIFIED-OK
+/api/query/integrity,GET,cursor_api.api_query_integrity,Api.routes.cursor_api,,middleware-default-deny,,VERIFIED-OK
+/api/query/stream,"GET,POST",cursor_api.api_query_stream,Api.routes.cursor_api,,middleware-default-deny,,VERIFIED-OK
+/api/reports/dashboard,GET,api_reports_dashboard,Api.routes.reports,,login_required,,VERIFIED-OK
+/api/reports/overview,GET,api_reports_overview,Api.routes.reports,,login_required,,VERIFIED-OK
+/api/retention,GET,api_retention_overview,Api.routes.retention,,admin_required,admin,VERIFIED-OK
+/api/retention/<area>,PUT,api_retention_set_days,Api.routes.retention,area,admin_required,admin,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/retention/run,POST,api_retention_run,Api.routes.retention,,admin_required,admin,VERIFIED-OK
+/api/scenarios,POST,api_scenarios_create,Api.routes.scenarios,,middleware-default-deny,,FIXED+TEST
+/api/scenarios,GET,api_scenarios_list,Api.routes.scenarios,,login_required,,VERIFIED-OK
+/api/scenarios/<int:scenario_id>,DELETE,api_scenario_archive,Api.routes.scenarios,scenario_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/scenarios/<int:scenario_id>,GET,api_scenario_get,Api.routes.scenarios,scenario_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/scenarios/<int:scenario_id>,PUT,api_scenario_update,Api.routes.scenarios,scenario_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/scenarios/<int:scenario_id>/activate,POST,api_scenario_activate,Api.routes.scenarios,scenario_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/scenarios/<int:scenario_id>/dry-run,POST,api_scenario_dry_run,Api.routes.scenarios,scenario_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/scenarios/<int:scenario_id>/dry-runs,GET,api_scenario_dry_runs,Api.routes.scenarios,scenario_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/scenarios/<int:scenario_id>/evaluate,POST,api_scenario_evaluate,Api.routes.scenarios,scenario_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/scenarios/<int:scenario_id>/evaluations,GET,api_scenario_evaluations,Api.routes.scenarios,scenario_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/scenarios/<int:scenario_id>/evaluations/<int:evaluation_id>,GET,api_scenario_evaluation,Api.routes.scenarios,"evaluation_id,scenario_id",login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/scenarios/<int:scenario_id>/outcomes,GET,api_scenario_outcomes,Api.routes.scenarios,scenario_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/scenarios/<int:scenario_id>/pause,POST,api_scenario_pause,Api.routes.scenarios,scenario_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/scenarios/<int:scenario_id>/resume,POST,api_scenario_resume,Api.routes.scenarios,scenario_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/scenarios/<int:scenario_id>/versions,GET,api_scenario_versions,Api.routes.scenarios,scenario_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/scenarios/validate,POST,api_scenarios_validate,Api.routes.scenarios,,login_required,,VERIFIED-OK
+/api/schedules,POST,api_schedules_create,Api.routes.schedules,,middleware-default-deny,,VERIFIED-OK
+/api/schedules,GET,api_schedules_list,Api.routes.schedules,,login_required,,VERIFIED-OK
+/api/schedules/<int:schedule_id>,DELETE,api_schedules_delete,Api.routes.schedules,schedule_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/schedules/<int:schedule_id>,GET,api_schedules_get,Api.routes.schedules,schedule_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/schedules/<int:schedule_id>,PUT,api_schedules_update,Api.routes.schedules,schedule_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/schedules/<int:schedule_id>/jobs,GET,api_schedules_jobs,Api.routes.schedules,schedule_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/schedules/<int:schedule_id>/pause,POST,api_schedules_pause,Api.routes.schedules,schedule_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/schedules/<int:schedule_id>/resume,POST,api_schedules_resume,Api.routes.schedules,schedule_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/schedules/<int:schedule_id>/run_now,POST,api_schedules_run_now,Api.routes.schedules,schedule_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/search,"GET,POST",api_search,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/search/autocomplete,GET,api_autocomplete,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/search/cancel,POST,api_search_cancel,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/search/export,POST,api_export_search_results,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/search/export-filenames,POST,api_export_search_filenames,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/search/export/columns,GET,api_export_search_columns,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/search/group-similar,POST,files.group_similar_search_results,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/api/search/history,DELETE,api_clear_search_history,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/search/history,"GET,POST",api_search_history,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/search/metrics,GET,api_search_metrics,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/search/ripgrep-status,GET,api_search_ripgrep_status,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/search/saved,GET,api_get_saved_searches,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/search/saved,POST,api_save_search,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/search/saved/<int:search_id>,DELETE,api_delete_saved_search,Api.routes.search,search_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/search/saved/<int:search_id>,GET,api_get_saved_search,Api.routes.search,search_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/search/saved/<int:search_id>,PUT,api_update_saved_search,Api.routes.search,search_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/search/snippets,POST,api_search_snippets,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/search/suggestions,GET,api_suggestions,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/api/settings/,GET,settings_api.get_all_settings,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/<category>,GET,settings_api.get_category_settings,settings.routes,category,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/settings/<category>/<key>,GET,settings_api.get_single_setting,settings.routes,"category,key",middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/settings/<category>/<key>,"POST,PUT",settings_api.update_single_setting,settings.routes,"category,key",middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/settings/backups,POST,settings_api.create_backup,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/backups,GET,settings_api.list_backups,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/backups/<filename>/restore,POST,settings_api.restore_backup,settings.routes,filename,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/settings/batch,"POST,PUT",settings_api.batch_update_settings,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/database,GET,settings_api.get_database_settings,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/database,POST,settings_api.update_database_settings,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/export,GET,settings_api.export_settings,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/import,POST,settings_api.import_settings,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/interfaces,GET,settings_api.get_interfaces,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/interfaces/<interface_id>,POST,settings_api.toggle_interface,settings.routes,interface_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/settings/interfaces/reset,POST,settings_api.reset_interfaces,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/logo/remove,POST,settings_api.remove_logo,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/logo/upload,POST,settings_api.upload_logo,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/page,GET,settings_api.settings_page,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/reload,POST,settings_api.reload_settings,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/reset,POST,settings_api.reset_to_defaults,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/storage,GET,settings_api.get_storage_settings,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/storage/<key>,POST,settings_api.update_storage_setting,settings.routes,key,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/settings/theme,GET,settings_api.get_theme_settings,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/theme/<key>,POST,settings_api.update_theme_setting,settings.routes,key,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/settings/theme/bulk,POST,settings_api.update_theme_bulk,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/theme/custom_css,"GET,POST",settings_api.theme_custom_css,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/settings/validate,POST,settings_api.validate_settings,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/api/setup/check,GET,setup.check_setup_status,Api.routes.setup,,middleware-default-deny,,VERIFIED-OK
+/api/setup/dependencies,GET,setup.dependency_report,Api.routes.setup,,middleware-default-deny,,VERIFIED-OK
+/api/setup/dependencies/install,POST,setup.dependency_install,Api.routes.setup,,middleware-default-deny,,VERIFIED-OK
+/api/setup/dependencies/jobs/<job_id>,GET,setup.dependency_job,Api.routes.setup,job_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/setup/install,POST,setup.run_installation,Api.routes.setup,,middleware-default-deny,,VERIFIED-OK
+/api/setup/language,POST,setup.set_setup_language,Api.routes.setup,,middleware-default-deny,,VERIFIED-OK
+/api/setup/system-check,GET,setup.system_check,Api.routes.setup,,middleware-default-deny,,VERIFIED-OK
+/api/setup/test-database,POST,setup.test_database,Api.routes.setup,,middleware-default-deny,,VERIFIED-OK
+/api/sides,"GET,POST",api_sides,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/api/sides/<int:side_id>,"DELETE,GET,PUT",api_side_detail,Api.routes.api,side_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/sides/<int:side_id>/duplicate,POST,api_side_duplicate,Api.routes.api,side_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/signals,GET,api_signal_explorer,Api.routes.signals,,login_required,,VERIFIED-OK
+/api/signals/<int:signal_id>,GET,api_signal_detail,Api.routes.signals,signal_id,login_required,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/signals/detection/runs,GET,api_detection_runs,Api.routes.signals,,admin_required,admin,VERIFIED-OK
+/api/signals/detection/status,GET,api_detection_status,Api.routes.signals,,admin_required,admin,VERIFIED-OK
+/api/signals/horizon,GET,api_signal_horizon,Api.routes.signals,,login_required,,VERIFIED-OK
+/api/signals/redetect,POST,api_signals_redetect,Api.routes.signals,,admin_required,admin,VERIFIED-OK
+/api/sources,"GET,POST",api_sources,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/api/sources/<int:source_id>,"DELETE,GET,PUT",api_source_detail,Api.routes.api,source_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/sources/<int:source_id>/duplicate,POST,api_source_duplicate,Api.routes.api,source_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/sources/<int:source_id>/export,GET,api_source_export,Api.routes.api,source_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/translations,GET,translations.get_translations,Api.routes.translations,,middleware-default-deny,,VERIFIED-OK
+/api/translations/available,GET,translations.get_available_locales,Api.routes.translations,,middleware-default-deny,,VERIFIED-OK
+/api/translations/locale,GET,translations.get_current_locale,Api.routes.translations,,middleware-default-deny,,VERIFIED-OK
+/api/translations/manage/catalog,PUT,translations.save_translation_management_catalog_api,Api.routes.translations,,admin_required,admin,VERIFIED-OK
+/api/translations/manage/catalog,GET,translations.translation_management_catalog_api,Api.routes.translations,,admin_required,admin,VERIFIED-OK
+/api/words,GET,api_words,Api.routes.words,,middleware-default-deny,,VERIFIED-OK
+/api/words,POST,api_words_create,Api.routes.words,,middleware-default-deny,,VERIFIED-OK
+/api/words-categorys/add,POST,words_categorys_add,Api.routes.categories,,middleware-default-deny,,VERIFIED-OK
+/api/words/<int:word_id>,DELETE,delete_word_api,Api.routes.words,word_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/words/<int:word_id>,GET,get_word,Api.routes.words,word_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/words/<int:word_id>,PUT,update_word_api,Api.routes.words,word_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/api/words/bulk-delete,POST,api_words_bulk_delete,Api.routes.words,,middleware-default-deny,,VERIFIED-OK
+/api/words/search,GET,api_words_search,Api.routes.api,,middleware-default-deny,,VERIFIED-OK
+/archives,GET,archives_page,Api.routes.archives,,middleware-default-deny,,VERIFIED-OK
+/auth/change-password,POST,auth.change_password,Api.routes.auth,,middleware-default-deny,,VERIFIED-OK
+/auth/first-admin,POST,auth.first_admin_create,Api.routes.auth,,middleware-default-deny,,VERIFIED-OK
+/auth/first-admin,GET,auth.first_admin_page,Api.routes.auth,,middleware-default-deny,,VERIFIED-OK
+/auth/login,POST,auth.login,Api.routes.auth,,middleware-default-deny,,VERIFIED-OK
+/auth/login,GET,auth.login_page,Api.routes.auth,,middleware-default-deny,,VERIFIED-OK
+/auth/logout,POST,auth.logout,Api.routes.auth,,middleware-default-deny,,ENV-BLOCKED: excluded from the sweep on purpose - logging out ends the session mid-matrix; covered by tests/security (session revocation) instead
+/auth/me,GET,auth.me,Api.routes.auth,,middleware-default-deny,,VERIFIED-OK
+/categories,GET,categories_list,Api.routes.categories,,middleware-default-deny,,VERIFIED-OK
+/categories/<int:category_id>/documents,GET,category_documents,Api.routes.categories,category_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/categories/<int:category_id>/words,GET,category_words,Api.routes.categories,category_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/category/add,POST,category_add,Api.routes.categories,,middleware-default-deny,,VERIFIED-OK
+/concurrency/,GET,concurrency.dashboard,Api.routes.concurrency,,middleware-default-deny,,VERIFIED-OK
+/concurrency/api/async-tasks,GET,concurrency.get_async_tasks,Api.routes.concurrency,,middleware-default-deny,,VERIFIED-OK
+/concurrency/api/metrics,GET,concurrency.get_metrics,Api.routes.concurrency,,middleware-default-deny,,VERIFIED-OK
+/concurrency/api/pools,GET,concurrency.get_pools,Api.routes.concurrency,,middleware-default-deny,,VERIFIED-OK
+/concurrency/api/processes,GET,concurrency.get_processes,Api.routes.concurrency,,middleware-default-deny,,VERIFIED-OK
+/concurrency/api/threads,GET,concurrency.get_threads,Api.routes.concurrency,,middleware-default-deny,,VERIFIED-OK
+/dashboard/charts,GET,charts_dashboard,Api.routes.dashboard,,middleware-default-deny,,VERIFIED-OK
+/dashboard/comprehensive,GET,comprehensive_dashboard,Api.routes.dashboard,,middleware-default-deny,,VERIFIED-OK
+/email-words,GET,email_words,Api.routes.keywords,,middleware-default-deny,,VERIFIED-OK
+/favicon.ico,GET,favicon,apps.web.app,,middleware-default-deny,,VERIFIED-OK
+/file/<int:file_id>,GET,files.file_detail,Api.blueprints.files,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/file/<int:file_id>/chart-data,GET,files.file_chart_data,Api.blueprints.files,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/file/<int:file_id>/content,GET,files.file_content_lazy,Api.blueprints.files,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/file/<int:file_id>/content/page,GET,files.file_content_page,Api.blueprints.files,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/file/<int:file_id>/delete,"DELETE,POST",files.delete_file,Api.blueprints.files,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/file/<int:file_id>/full-content,GET,files.file_full_content,Api.blueprints.files,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/file/<int:file_id>/search,GET,files.file_search_all_pages,Api.blueprints.files,file_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/files,GET,files.files_list,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/files/bulk-delete,POST,files.bulk_delete_files,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/files/export,POST,files.bulk_export_files,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/files/types,GET,files.file_types_page,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/files/types/<file_type>/documents,GET,files.file_type_documents,Api.blueprints.files,file_type,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/health,GET,health.health,Api.routes.health,,middleware-default-deny,,VERIFIED-OK
+/import-export,GET,import_export_page,Api.routes.import_export,,middleware-default-deny,,VERIFIED-OK
+/keywords,GET,keywords_list,Api.routes.keywords,,middleware-default-deny,,VERIFIED-OK
+/keywords/<int:keyword_id>,GET,keyword_detail,Api.routes.keywords,keyword_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/keywords/<int:keyword_id>/documents,GET,keyword_documents,Api.routes.keywords,keyword_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/keywords/add,"GET,POST",keywords_add,Api.routes.keywords,,middleware-default-deny,,VERIFIED-OK
+/lexis,GET,lexis_cosmos_page,Api.routes.lexis_cosmos,,middleware-default-deny,,VERIFIED-OK
+/monitoring,GET,monitoring_page,Api.routes.scenarios,,login_required,,VERIFIED-OK
+/notifications,GET,notifications_page,Api.routes.notifications_page,,middleware-default-deny,,VERIFIED-OK
+/operations/import,GET,operations_import_page,Api.routes.operations_pages,,middleware-default-deny,,VERIFIED-OK
+/operations/input,GET,operations_input_page,Api.routes.operations_pages,,middleware-default-deny,,VERIFIED-OK
+/operations/input/reports/<job_id>,GET,ingestion_batch_print,Api.routes.operations_pages,job_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/operations/jobs,GET,operations_jobs_page,Api.routes.operations_pages,,middleware-default-deny,,VERIFIED-OK
+/operations/jobs/<job_id>,GET,operations_job_detail_page,Api.routes.operations_pages,job_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/reports,GET,reports_page,Api.routes.reports,,login_required,,VERIFIED-OK
+/reports/dashboard,GET,reports_dashboard_page,Api.routes.reports,,login_required,,VERIFIED-OK
+/reports/entries/print,GET,entry_dossier_print,Api.routes.reports,,login_required,,VERIFIED-OK
+/retention,GET,retention_page,Api.routes.retention,,admin_required,admin,VERIFIED-OK
+/schedules,GET,schedules_page,Api.routes.schedules,,login_required,,VERIFIED-OK
+/search,GET,search_page,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/search/advanced,GET,search_advanced,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/search/advanced,POST,search_advanced_api,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/search/enhanced,GET,search_enhanced_page,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/search/saved,GET,saved_searches_page,Api.routes.search,,middleware-default-deny,,VERIFIED-OK
+/set_language/<language>,GET,set_language,Api.routes.common,language,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/settings,GET,settings_page_direct,settings.routes,,middleware-default-deny,,VERIFIED-OK
+/setup,GET,setup.setup_page,Api.routes.setup,,middleware-default-deny,,VERIFIED-OK
+/side/add,"GET,POST",side_add,Api.routes.sides,,middleware-default-deny,,VERIFIED-OK
+/sides,GET,sides_list,Api.routes.sides,,middleware-default-deny,,VERIFIED-OK
+/sides/<int:side_id>,GET,side_detail,Api.routes.sides,side_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/sides/<int:side_id>/categories-keywords,GET,side_categories_keywords,Api.routes.sides,side_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/sides/<int:side_id>/edit,"GET,POST",side_edit,Api.routes.sides,side_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/signals,GET,signals_page,Api.routes.signals,,login_required,,VERIFIED-OK
+/signals/detection,GET,detection_page,Api.routes.signals,,admin_required,admin,VERIFIED-OK
+/source/add,"GET,POST",source_add,Api.routes.sources,,middleware-default-deny,,VERIFIED-OK
+/sources,GET,sources_list,Api.routes.sources,,middleware-default-deny,,VERIFIED-OK
+/sources/<int:source_id>,GET,source_detail,Api.routes.sources,source_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/sources/<int:source_id>/categories-keywords,GET,source_categories_keywords,Api.routes.sources,source_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/sources/<int:source_id>/edit,"GET,POST",source_edit,Api.routes.sources,source_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/static/<path:filename>,GET,static,flask.app,filename,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/translations/manage,GET,translations.translation_management_page,Api.routes.translations,,admin_required,admin,VERIFIED-OK
+/upload,GET,files.upload_page,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/upload/active-tasks,GET,files.get_active_tasks,Api.blueprints.files,,middleware-default-deny,,VERIFIED-OK
+/upload/cancel/<task_id>,POST,files.api_cancel_task,Api.blueprints.files,task_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/upload/pause/<task_id>,POST,files.pause_task,Api.blueprints.files,task_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/upload/progress/<task_id>,GET,files.upload_progress,Api.blueprints.files,task_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/upload/resume/<task_id>,POST,files.resume_task,Api.blueprints.files,task_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/users,GET,users_page,Api.routes.auth,,middleware-default-deny,,VERIFIED-OK
+/words,GET,words_list,Api.routes.words,,middleware-default-deny,,VERIFIED-OK
+/words/<int:word_id>,GET,word_detail,Api.routes.words,word_id,middleware-default-deny,,"ENV-BLOCKED: path-parameterised route - the audit database holds no fixture row of that kind, so it was never requested"
+/words/add,"GET,POST",words_add,Api.routes.words,,middleware-default-deny,,VERIFIED-OK

@@ -1,0 +1,83 @@
+{
+  "routes_runtime.csv": {
+    "rows": 342,
+    "verdicts": {
+      "VERIFIED-OK": 342
+    }
+  },
+  "routes.csv": {
+    "rows": 485,
+    "verdicts": {
+      "ENV-BLOCKED": 156,
+      "FIXED+TEST": 1,
+      "VERIFIED-OK": 328
+    }
+  },
+  "interfaces.csv": {
+    "rows": 35,
+    "verdicts": {
+      "FIXED+TEST": 2,
+      "VERIFIED-OK": 33
+    }
+  },
+  "templates.csv": {
+    "rows": 79,
+    "verdicts": {
+      "DEAD-CODE": 1,
+      "VERIFIED-OK": 78
+    }
+  },
+  "schema.csv": {
+    "rows": 40,
+    "verdicts": {
+      "VERIFIED-OK": 40
+    }
+  },
+  "sql.csv": {
+    "rows": 2324,
+    "verdicts": {
+      "VERIFIED-OK": 2324
+    }
+  },
+  "i18n_msgids.csv": {
+    "rows": 7141,
+    "verdicts": {
+      "DEFECT-OPEN": 564,
+      "NEEDS-DECISION": 3708,
+      "VERIFIED-OK": 2869
+    }
+  },
+  "env_vars.csv": {
+    "rows": 68,
+    "verdicts": {
+      "DEFECT-OPEN": 25,
+      "VERIFIED-OK": 43
+    }
+  },
+  "css.csv": {
+    "rows": 45,
+    "verdicts": {
+      "DEAD-CODE": 1,
+      "VERIFIED-OK": 44
+    }
+  },
+  "js_modules.csv": {
+    "rows": 178,
+    "verdicts": {
+      "VERIFIED-OK": 178
+    }
+  },
+  "modules.csv": {
+    "rows": 422,
+    "verdicts": {
+      "DEAD-CODE": 2,
+      "VERIFIED-OK": 420
+    }
+  },
+  "jobs.csv": {
+    "rows": 29,
+    "verdicts": {
+      "VERIFIED-OK": 29
+    }
+  }
+}
