@@ -1,0 +1,671 @@
+{
+  "base_url": "http://127.0.0.1:5055",
+  "corpus_files": 400,
+  "steps": [
+    {
+      "action": "stop",
+      "rc": 0,
+      "out": "waiting for server to shut down.... done\nserver stopped",
+      "seconds": 0.1
+    },
+    {
+      "action": "start",
+      "rc": 0,
+      "out": "waiting for server to start.... done\nserver started",
+      "seconds": 0.1
+    }
+  ],
+  "login": {
+    "status": 200,
+    "body": "{\"redirect\":\"/\",\"success\":true,\"user\":{\"id\":1,\"is_active\":true,\"must_change_password\":false,\"role\":\"admin\",\"username\":\"admin\"}}\n"
+  },
+  "fixtures": {
+    "source_id": 1,
+    "side_id": 1
+  },
+  "import_request": {
+    "status": 200,
+    "ms": 107.3,
+    "body": "{\"accepted\":400,\"queued\":5,\"rejected\":0,\"results\":[{\"path\":\"/tmp/inject_corpus/inject_0000.docx\",\"resolved_path\":\"/tmp/inject_corpus/inject_0000.docx\",\"status\":\"queued\",\"task_id\":\"36899285-cb81-4a84-9eb2-3af814a83aa0\"},{\"path\":\"/tmp/inject_corpus/inject_0001.pdf\",\"resolved_path\":\"/tmp/inject_corpus/inject_0001.pdf\",\"status\":\"queued\",\"task_id\":\"c8b453af-9a66-4f52-bf8f-4362ecbcf4e3\"},{\"path\":\"/tmp/i"
+  },
+  "before_outage": [
+    {
+      "at": "05:58:37",
+      "path": "/api/jobs?limit=5",
+      "status": 200,
+      "ms": 12.8,
+      "bytes": 27,
+      "leak": [],
+      "body_head": "{\"jobs\":[],\"success\":true}"
+    },
+    {
+      "at": "05:58:37",
+      "path": "/api/paths?limit=5",
+      "status": 200,
+      "ms": 10.6,
+      "bytes": 1079,
+      "leak": [],
+      "body_head": "[{\"context_id\":5,\"date_creation\":\"2026-10-24\",\"file_date\":\"2026-10-24\",\"file_name\":\"inject_0003.pdf\",\"file_path\":\"/tmp/inject_corpus/inject_0003.pdf\",\"file_size\":1859,\"file_status\":\"Read\",\"file_type\":\".pdf\",\"id\":5},{\"con"
+    }
+  ],
+  "during_outage": [
+    {
+      "at": "05:58:37",
+      "path": "/health",
+      "status": 503,
+      "ms": 4.6,
+      "bytes": 107,
+      "leak": [
+        "OperationalError"
+      ],
+      "body_head": "{\"checks\":{\"database\":\"error: OperationalError\",\"settings\":\"ok\"},\"status\":\"degraded\",\"uptime_seconds\":266}"
+    },
+    {
+      "at": "05:58:37",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 2.4,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:58:37",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 2.2,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:58:37",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 2.2,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:58:53",
+      "path": "/health",
+      "status": null,
+      "ms": 15016.6,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "05:58:53",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 4.3,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:58:53",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 3.0,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:58:53",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 2.1,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:59:09",
+      "path": "/health",
+      "status": null,
+      "ms": 15016.5,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "05:59:09",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 4.3,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:59:09",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 3.3,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:59:09",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 2.8,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:59:25",
+      "path": "/health",
+      "status": null,
+      "ms": 15002.6,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "05:59:25",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 3.3,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:59:25",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 2.6,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:59:25",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 2.1,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:59:41",
+      "path": "/health",
+      "status": null,
+      "ms": 15016.4,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "05:59:41",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 3.3,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:59:41",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 3.8,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:59:41",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 2.8,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:59:57",
+      "path": "/health",
+      "status": null,
+      "ms": 15017.0,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "05:59:57",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 4.9,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:59:57",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 4.0,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "05:59:57",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 3.1,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:00:13",
+      "path": "/health",
+      "status": null,
+      "ms": 15017.0,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "06:00:13",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 4.2,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:00:13",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 4.3,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:00:13",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 3.0,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:00:29",
+      "path": "/health",
+      "status": null,
+      "ms": 15016.8,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "06:00:29",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 3.2,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:00:29",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 2.6,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:00:29",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 1.9,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:00:45",
+      "path": "/health",
+      "status": null,
+      "ms": 15016.3,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "06:00:45",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 3.2,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:00:45",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 2.6,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:00:45",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 2.0,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:01:01",
+      "path": "/health",
+      "status": null,
+      "ms": 15016.6,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "06:01:01",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 5.5,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:01:01",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 4.8,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:01:01",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 3.6,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:01:17",
+      "path": "/health",
+      "status": null,
+      "ms": 15016.5,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "06:01:17",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 4.2,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:01:17",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 3.2,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:01:17",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 2.8,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:01:33",
+      "path": "/health",
+      "status": null,
+      "ms": 15016.9,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "06:01:33",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 4.3,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:01:33",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 2.9,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:01:33",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 2.9,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:01:49",
+      "path": "/health",
+      "status": null,
+      "ms": 15016.7,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "06:01:49",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 5.0,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:01:49",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 4.3,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:01:49",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 3.7,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:02:05",
+      "path": "/health",
+      "status": null,
+      "ms": 15016.7,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "06:02:05",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 3.3,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:02:05",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 2.8,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:02:05",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 2.0,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:02:21",
+      "path": "/health",
+      "status": null,
+      "ms": 15016.4,
+      "error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=5055): Read timed out. (read timeout=15)",
+      "leak": [],
+      "body_head": ""
+    },
+    {
+      "at": "06:02:21",
+      "path": "/api/jobs?limit=5",
+      "status": 401,
+      "ms": 3.5,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:02:21",
+      "path": "/api/paths?limit=5",
+      "status": 401,
+      "ms": 2.8,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    },
+    {
+      "at": "06:02:21",
+      "path": "/api/reports/overview",
+      "status": 401,
+      "ms": 2.4,
+      "bytes": 61,
+      "leak": [],
+      "body_head": "{\"code\":\"unauthenticated\",\"error\":\"Authentication required\"}"
+    }
+  ],
+  "recovery_health": {
+    "at": "06:02:23",
+    "path": "/health",
+    "status": 200,
+    "ms": 16.4,
+    "bytes": 85,
+    "leak": [],
+    "body_head": "{\"checks\":{\"database\":\"ok\",\"settings\":\"ok\"},\"status\":\"healthy\",\"uptime_seconds\":492}"
+  },
+  "recovery_login": {
+    "login_status": 200,
+    "body": "{\"redirect\":\"/\",\"success\":true,\"user\":{\"id\":1,\"is_active\":true,\"must_change_password\":false,\"role\":\"admin\",\"username\":\"admin\"}}\n"
+  },
+  "after_recovery": [
+    {
+      "at": "06:02:23",
+      "path": "/api/jobs?limit=5",
+      "status": 200,
+      "ms": 10.8,
+      "bytes": 27,
+      "leak": [],
+      "body_head": "{\"jobs\":[],\"success\":true}"
+    },
+    {
+      "at": "06:02:23",
+      "path": "/api/paths?limit=5",
+      "status": 200,
+      "ms": 10.6,
+      "bytes": 1079,
+      "leak": [],
+      "body_head": "[{\"context_id\":5,\"date_creation\":\"2026-10-24\",\"file_date\":\"2026-10-24\",\"file_name\":\"inject_0003.pdf\",\"file_path\":\"/tmp/inject_corpus/inject_0003.pdf\",\"file_size\":1859,\"file_status\":\"Read\",\"file_type\":\".pdf\",\"id\":5},{\"con"
+    },
+    {
+      "at": "06:02:23",
+      "path": "/api/reports/overview",
+      "status": 200,
+      "ms": 15.1,
+      "bytes": 668,
+      "leak": [],
+      "body_head": "{\"by_file_type\":[{\"failed\":0,\"file_type\":\".docx\",\"partial\":0,\"skipped\":0,\"success\":2,\"success_pct\":100.0,\"total\":2},{\"failed\":0,\"file_type\":\".pdf\",\"partial\":0,\"skipped\":0,\"success\":2,\"success_pct\":100.0,\"total\":2},{\"fail"
+    },
+    {
+      "at": "06:02:23",
+      "path": "/api/signals?limit=1",
+      "status": 200,
+      "ms": 14.0,
+      "bytes": 3533,
+      "leak": [],
+      "body_head": "{\"contents\":4,\"criteria\":{\"analyst_categories\":[],\"analyst_scope\":\"all\",\"case_sensitive\":false,\"categories\":[],\"date_field\":\"file_date\",\"date_from\":null,\"date_to\":null,\"file_statuses\":null,\"file_types\":[],\"hide_duplicate"
+    }
+  ],
+  "job_state_after_recovery": {
+    "jobs": [],
+    "success": true
+  },
+  "import_after_recovery": {
+    "status": 200,
+    "body": "{\"accepted\":20,\"queued\":5,\"rejected\":0,\"results\":[{\"path\":\"/tmp/inject_corpus/inject_0000.docx\",\"resolved_path\":\"/tmp/inject_corpus/inject_0000.docx\",\"status\":\"queued\",\"task_id\":\"d67e96d2-ab65-4c95-9dea-f15999d9d3ed\"},{\"path\":\"/tmp/inject_corpus/inject_0001.pdf\",\"resolved_path\":\"/tmp/inject_corpus/inject_0001.pdf\",\"status\":\"queued\",\"task_id\":\"5e67f816-5573-46c8-af15-223b877f1220\"},{\"path\":\"/tmp/in"
+  },
+  "paths_after_second_import": {
+    "at": "06:02:31",
+    "path": "/api/paths?limit=1",
+    "status": 200,
+    "ms": 12.9,
+    "bytes": 216,
+    "leak": [],
+    "body_head": "[{\"context_id\":5,\"date_creation\":\"2026-10-24\",\"file_date\":\"2026-10-24\",\"file_name\":\"inject_0003.pdf\",\"file_path\":\"/tmp/inject_corpus/inject_0003.pdf\",\"file_size\":1859,\"file_status\":\"Read\",\"file_type\":\".pdf\",\"id\":5}]"
+  },
+  "db_snapshot": {
+    "database": "file_analysis_failinject",
+    "paths": 5,
+    "hashs": 5,
+    "jobs": [],
+    "job_status_counts": {},
+    "paths_not_processed": 0
+  }
+}

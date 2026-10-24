@@ -1,0 +1,318 @@
+{
+  "base_url": "http://127.0.0.1:5055",
+  "files": [
+    "big_0.txt",
+    "big_1.txt",
+    "big_2.txt",
+    "big_3.txt",
+    "big_4.txt",
+    "big_5.txt"
+  ],
+  "sizes": [
+    8120028,
+    8120028,
+    8120028,
+    8120028,
+    8120028,
+    8120028
+  ],
+  "login": 200,
+  "db_before": {
+    "paths": 10,
+    "hashs": 10,
+    "hash_contexts": 10,
+    "paths_processing": 0,
+    "paths_partial": 0,
+    "paths_processed": 10,
+    "signals": 113,
+    "jobs": 0,
+    "job_events": 0,
+    "orphan_hashs": 0,
+    "recent_paths": [
+      {
+        "file": "inject_0101.pptx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0102.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0104.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0100.xlsx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0103.xlsx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0003.pdf",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0001.pdf",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0002.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0000.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0004.txt",
+        "status": "processed"
+      }
+    ]
+  },
+  "import_request": {
+    "status": 200,
+    "ms": 19.4,
+    "body": "{\"accepted\":6,\"queued\":5,\"rejected\":0,\"results\":[{\"path\":\"/tmp/inject_corpus/big/big_0.txt\",\"resolved_path\":\"/tmp/inject_corpus/big/big_0.txt\",\"status\":\"queued\",\"task_id\":\"6b4daf5b-878c-41bc-b03c-81eb929cfdab\"},{\"path\":\"/tmp/inject_corpus/big/big_1.txt\",\"resolved_path\":\"/tmp/inject_corpus/big/big_1.txt\",\"status\":\"queued\",\"task_id\":\"6418ab9b-7dba-4a9c-a571-9148c37b82dc\"},{\"path\":\"/tmp/inject_corpus/big/big_2.txt\",\"resolved_path\":\"/tmp/inject_corpus/big/big_2.txt\",\"status\":\"queued\",\"task_id\":\"efc45ed5-62d9-485f-9178-1a5600d0767c\"},{\"path\":\"/tmp/inject_corpus/big/big_3.txt\",\"resolved_path\":\"/tmp/"
+  },
+  "import_counts": {
+    "total": 6,
+    "accepted": 6,
+    "rejected": 0,
+    "queued": 5
+  },
+  "import_entry_statuses": {
+    "queued": 5,
+    "error": 1
+  },
+  "seconds_to_first_row": null,
+  "db_at_kill": {
+    "paths": 10,
+    "hashs": 10,
+    "hash_contexts": 10,
+    "paths_processing": 0,
+    "paths_partial": 0,
+    "paths_processed": 10,
+    "signals": 113,
+    "jobs": 0,
+    "job_events": 0,
+    "orphan_hashs": 0,
+    "recent_paths": [
+      {
+        "file": "inject_0101.pptx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0102.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0104.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0100.xlsx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0103.xlsx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0003.pdf",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0001.pdf",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0002.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0000.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0004.txt",
+        "status": "processed"
+      }
+    ]
+  },
+  "alive_before_kill": true,
+  "process_gone": true,
+  "kill_wall_seconds": 3.0,
+  "db_after_kill": {
+    "paths": 10,
+    "hashs": 10,
+    "hash_contexts": 10,
+    "paths_processing": 0,
+    "paths_partial": 0,
+    "paths_processed": 10,
+    "signals": 113,
+    "jobs": 0,
+    "job_events": 0,
+    "orphan_hashs": 0,
+    "recent_paths": [
+      {
+        "file": "inject_0101.pptx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0102.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0104.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0100.xlsx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0103.xlsx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0003.pdf",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0001.pdf",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0002.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0000.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0004.txt",
+        "status": "processed"
+      }
+    ]
+  },
+  "restarted_pid": 69101,
+  "restart_reached_health": true,
+  "login_after_restart": 200,
+  "paths_after_restart": 200,
+  "jobs_after_restart": {
+    "status": 200,
+    "body": "{\"jobs\":[],\"success\":true}\n"
+  },
+  "db_after_restart": {
+    "paths": 10,
+    "hashs": 10,
+    "hash_contexts": 10,
+    "paths_processing": 0,
+    "paths_partial": 0,
+    "paths_processed": 10,
+    "signals": 113,
+    "jobs": 0,
+    "job_events": 0,
+    "orphan_hashs": 0,
+    "recent_paths": [
+      {
+        "file": "inject_0101.pptx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0102.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0104.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0100.xlsx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0103.xlsx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0003.pdf",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0001.pdf",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0002.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0000.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0004.txt",
+        "status": "processed"
+      }
+    ]
+  },
+  "db_after_waiting": {
+    "paths": 10,
+    "hashs": 10,
+    "hash_contexts": 10,
+    "paths_processing": 0,
+    "paths_partial": 0,
+    "paths_processed": 10,
+    "signals": 113,
+    "jobs": 0,
+    "job_events": 0,
+    "orphan_hashs": 0,
+    "recent_paths": [
+      {
+        "file": "inject_0101.pptx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0102.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0104.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0100.xlsx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0103.xlsx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0003.pdf",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0001.pdf",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0002.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0000.docx",
+        "status": "processed"
+      },
+      {
+        "file": "inject_0004.txt",
+        "status": "processed"
+      }
+    ]
+  },
+  "resumed": false
+}
