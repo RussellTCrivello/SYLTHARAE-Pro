@@ -82,6 +82,35 @@ def test_the_script_offers_accept_and_correct():
     assert "correct" in script.lower()
 
 
+def _function_source(name: str) -> str:
+    """The text of one top-level ``function name(...) {`` in the script."""
+    script = SCRIPT.read_text(encoding="utf-8")
+    start = script.index(f"function {name}(")
+    end = script.index("\n}\n", start) + 3
+    return script[start:end]
+
+
+def test_accepting_a_translation_asks_the_analyst_nothing():
+    """Accept is one click: the engine's wording is confirmed, not re-typed.
+
+    Correct is where the analyst types; if Accept also opened the prompt the
+    two buttons would do the same thing, and accepting would look like a task.
+    """
+    body = _function_source("acceptTranslation")
+    assert "window.prompt" not in body, "Accept must not open the correction prompt"
+    # Nor may it reach the prompt through the correction path.
+    assert "saveCorrection" not in body, (
+        "Accept must record the approval itself instead of calling the "
+        "correcting path, which asks the analyst for text")
+    assert "/api/translation/memory/correct" in body, (
+        "Accept must store the approval as the analyst's wording")
+
+
+def test_correcting_a_translation_asks_for_the_analysts_wording():
+    body = _function_source("saveCorrection")
+    assert "window.prompt(" in body, "Correct must ask for the analyst's own wording"
+
+
 def test_new_msgids_are_listed_for_the_human_translator():
     assert MSGIDS.exists(), "new msgids were not listed for translation"
     with MSGIDS.open(encoding="utf-8") as handle:

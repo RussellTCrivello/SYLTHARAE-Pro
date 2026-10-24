@@ -210,13 +210,36 @@ async function saveCorrection(row) {
     }
 }
 
-function acceptTranslation(row) {
+async function acceptTranslation(row) {
+    // Accepting is one click: the analyst says "this wording is right" and the
+    // wording is stored as their correction, with their name on it. No prompt -
+    // there is nothing to type; Correct is where typing happens.
     const index = Number(row.dataset.segmentIndex);
     const segment = (state.lastResult?.segments || [])[index];
-    if (!segment) return;
-    // Accepting is the analyst saying "this wording is right": it is stored as
-    // their correction, with their name on it.
-    saveCorrection(row);
+    const cell = row.querySelector('[data-translation-target]');
+    const text = (cell ? cell.textContent : '').trim();
+    if (!segment || !text) return;
+
+    const result = state.lastResult;
+    const { ok, payload } = await postJson('/api/translation/memory/correct', {
+        source_text: segment.source,
+        target_text: text,
+        source_lang: result.source_lang,
+        target_lang: result.target_lang,
+    });
+    if (!ok) {
+        showError(payload?.error || 'Translation failed');
+        return;
+    }
+    clearError();
+    if (row.dataset.accepted !== 'true') {
+        row.dataset.accepted = 'true';
+        const badge = document.createElement('span');
+        badge.className = 'badge bg-success ms-2';
+        badge.textContent = 'Corrected translation saved';
+        if (cell) cell.appendChild(badge);
+        if (segment) segment.origin = 'user';
+    }
 }
 
 function wirePanel() {
