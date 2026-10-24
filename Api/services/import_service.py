@@ -667,11 +667,27 @@ class ImportService:
         server-path import entirely; clients must upload files instead.
 
         Returns a per-path result list; never raises to the caller.
+
+        Accounting: every submitted path ends in exactly one outcome, and the
+        response says which one.
+
+        * ``rejected`` - path validation refused it (unsafe, missing, not a
+          file). Nothing was queued.
+        * ``queued`` - validation passed and a processing task was started.
+        * ``deferred`` - validation passed but no task could be started (the
+          concurrent-task cap, or the task subsystem being unavailable). The
+          file was NOT queued and has to be resubmitted later; it is reported
+          rather than dropped.
+
+        ``accepted`` is the number that passed validation, so it always equals
+        ``queued + deferred``, and ``accepted + rejected == total``: no file can
+        disappear from the counters (a deferred file used to be counted as
+        accepted *and* as an error, which is what this accounting removes).
         """
         from core.path_safety import validate_ingestion_path, PathSafetyError
 
         results: List[Dict[str, Any]] = []
-        accepted = 0
+        validated: List[Dict[str, Any]] = []
         rejected = 0
 
         if not isinstance(file_paths, list) or not file_paths:
@@ -687,57 +703,78 @@ class ImportService:
             try:
                 resolved = validate_ingestion_path(raw_path)
                 if not resolved.is_file():
-                    entry.update({'status': 'error', 'error': 'File not found'})
+                    entry.update({'status': 'rejected', 'error': 'File not found'})
                     rejected += 1
                 else:
                     entry['resolved_path'] = str(resolved)
-                    entry['status'] = 'accepted'
-                    accepted += 1
+                    # validated: whether it is queued or deferred is decided
+                    # below, when the task manager is asked for a slot
+                    validated.append(entry)
             except PathSafetyError as exc:
                 entry.update({'status': 'rejected', 'error': str(exc)})
                 rejected += 1
             except Exception:
                 logger.exception("Unexpected error validating import path")
-                entry.update({'status': 'error', 'error': 'Path validation failed'})
+                entry.update({'status': 'rejected', 'error': 'Path validation failed'})
                 rejected += 1
             results.append(entry)
 
-        # Queue accepted files through the task manager (wired concurrency
-        # subsystem); each task runs the full reader -> storage pipeline.
-        tasks = []
-        if accepted:
+        # Queue validated files through the task manager (wired concurrency
+        # subsystem); each task runs the full reader -> storage pipeline. A file
+        # the task manager refuses is deferred and said so, never silently
+        # dropped: create_task raises at the concurrent-task cap, and the
+        # operator has to submit that file again once a slot frees up.
+        queued = 0
+        deferred = 0
+        if validated:
             try:
                 from Api.task_manager import get_task_manager
 
                 tm = get_task_manager()
-                for entry in results:
-                    if entry.get('status') != 'accepted':
-                        continue
-                    try:
-                        task_id = tm.create_task(
-                            file_path=entry['resolved_path'],
-                            source_id=int(source_id),
-                            side_id=int(side_id),
-                        )
-                        entry['task_id'] = task_id
-                        entry['status'] = 'queued'
-                        tasks.append(task_id)
-                    except Exception as task_exc:
-                        logger.error("Failed to queue task: %s", task_exc.__class__.__name__)
-                        entry.update({'status': 'error',
-                                      'error': 'Failed to queue processing task'})
             except Exception:
                 logger.exception("Task manager unavailable for batch import")
-                for entry in results:
-                    if entry.get('status') == 'queued':
-                        entry.update({'status': 'error',
-                                      'error': 'Processing subsystem unavailable'})
+                tm = None
+            for entry in validated:
+                if tm is None:
+                    entry.update({'status': 'deferred',
+                                  'error': 'Processing subsystem unavailable '
+                                           '(deferred); resubmit this file later'})
+                    deferred += 1
+                    continue
+                try:
+                    task_id = tm.create_task(
+                        file_path=entry['resolved_path'],
+                        source_id=int(source_id),
+                        side_id=int(side_id),
+                    )
+                except Exception as task_exc:
+                    # Not an error of the file: the batch is larger than the
+                    # concurrent-task capacity. Reported, and counted.
+                    logger.warning("Deferred %s: %s", entry['path'],
+                                   task_exc.__class__.__name__)
+                    entry.update({'status': 'deferred',
+                                  'error': 'No processing slot was free (deferred); '
+                                           'resubmit this file later'})
+                    deferred += 1
+                else:
+                    entry['task_id'] = task_id
+                    entry['status'] = 'queued'
+                    queued += 1
+
+        accepted = queued + deferred
+        # Every submitted path has one outcome; this is the accounting the
+        # response promises (and tests/unit/test_batch_import_accounting.py
+        # pins it).
+        if accepted + rejected != len(results):
+            logger.error("Batch import accounting mismatch: accepted=%s rejected=%s "
+                         "results=%s", accepted, rejected, len(results))
 
         return {
             'valid': True,
             'total': len(file_paths),
             'accepted': accepted,
             'rejected': rejected,
-            'queued': len(tasks),
+            'queued': queued,
+            'deferred': deferred,
             'results': results,
         }
