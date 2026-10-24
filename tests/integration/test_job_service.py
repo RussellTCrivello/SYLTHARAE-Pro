@@ -291,7 +291,10 @@ class TestIngestionJobs:
         # Events survived the crash (history is never deleted).
         kinds = [e["event_type"] for e in sync_manager.events(job_id)]
         assert "JOB_CREATED" in kinds
-        assert "FAILED" in kinds  # recovery publishes the terminal status
+        # Recovery publishes the terminal status; ``job_events.event_type``
+        # admits only the JOB_* vocabulary, so FAILED is stored as JOB_FAILED
+        # (the worker's own name is kept in payload.event_kind).
+        assert "JOB_FAILED" in kinds
 
         # Operator retries after the restart.
         retry = sync_manager.retry(job_id, created_by="tester")

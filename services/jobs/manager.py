@@ -699,9 +699,12 @@ class JobManager:
             self.repo.add_event(job_id, "JOB_CANCELLED", {"queued": True})
             self._publish(job_id, "JOB_CANCELLED", {"queued": True})
             return self.repo.get(job_id)
-        self.repo.update_fields(job_id, {
-            "status": job_state.CANCELLING, "cancellation_requested": True,
-        })
+        # ``jobs.status`` has a closed vocabulary (ck_jobs_status) that does
+        # not include CANCELLING, so a cancellation *request* is a flag: the
+        # job stays RUNNING while its worker stops at the next boundary and
+        # then becomes CANCELLED. The API already exposes the flag, so the UI
+        # can show "cancelling" without a status the schema cannot store.
+        self.repo.update_fields(job_id, {"cancellation_requested": True})
         self.repo.add_event(job_id, "WARNING", {"message": "Cancellation requested"})
         with self._active_lock:
             info = self._active.get(job_id)
