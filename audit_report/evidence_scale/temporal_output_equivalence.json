@@ -1,0 +1,23 @@
+{
+  "what": "temporal_intel.detect output before and after replacing the pairwise overlap scan with the sorted _Spans set",
+  "text": [
+    "/tmp/profile_corpus/profile_512kb.txt",
+    "/tmp/profile_corpus/profile_1mb.txt"
+  ],
+  "signal_counts": {
+    "512kb": 5166,
+    "1mb": 10332
+  },
+  "dumps": {
+    "before": {
+      "bytes": 14731672,
+      "sha256": "d52ecbf56963a5a5da0e7991b85799337f0e08d2d71156eb1716cffdb3792f00"
+    },
+    "after": {
+      "bytes": 14731672,
+      "sha256": "d52ecbf56963a5a5da0e7991b85799337f0e08d2d71156eb1716cffdb3792f00"
+    }
+  },
+  "identical": true,
+  "note": "same detector, same inputs, signal list serialised with TemporalSignal.to_dict()"
+}
