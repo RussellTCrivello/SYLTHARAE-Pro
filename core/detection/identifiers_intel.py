@@ -11,6 +11,7 @@ filter by source and side, export, and open the containing document.
 from __future__ import annotations
 
 import re
+from bisect import bisect_left
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
@@ -181,18 +182,34 @@ def _candidates(text: str) -> List[Tuple[int, int, str, str, str, str]]:
 
 def _merge_overlaps(cands: List[Tuple[int, int, str, str, str, str]]
                     ) -> List[Tuple[int, int, str, str, str, str]]:
+    """Keep the longest candidate of every overlapping group.
+
+    Longest first, then by identifier priority, then by start offset; a
+    candidate overlapping anything already kept is dropped. Kept spans are
+    therefore disjoint and can be held in a sorted list: a candidate can only
+    overlap the kept span that starts before it (if that one ends after it) or
+    the one that starts after it (if it starts before the candidate ends).
+
+    Sorting the kept spans and bisecting replaces the previous scan of every
+    kept span for every candidate, which is what made identifier detection
+    quadratic on large documents (see
+    audit_report/evidence_scale/ingest_profile.json).
+    """
     ranked = sorted(
         cands,
         key=lambda c: (-(c[1] - c[0]), -_PRIORITY.get(c[2], 0), c[0]),
     )
-    taken: List[Tuple[int, int]] = []
+    starts: List[int] = []
     kept: List[Tuple[int, int, str, str, str, str]] = []
     for cand in ranked:
         start, end = cand[0], cand[1]
-        if any(start < e and s < end for s, e in taken):
+        at = bisect_left(starts, start)
+        if at and kept[at - 1][1] > start:
             continue
-        taken.append((start, end))
-        kept.append(cand)
+        if at < len(kept) and starts[at] < end:
+            continue
+        starts.insert(at, start)
+        kept.insert(at, cand)
     kept.sort(key=lambda c: (c[0], c[1], c[2], c[4]))
     return kept
 
