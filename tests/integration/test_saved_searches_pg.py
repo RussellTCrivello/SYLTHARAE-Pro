@@ -225,19 +225,40 @@ def _insert(cur, **overrides):
     return cur.fetchone()[0]
 
 
-@pytest.mark.parametrize("overrides, constraint", [
-    ({"name": "   "}, "ck_saved_searches_name_nonempty"),
-    ({"criteria_fingerprint": "Z" * 64}, "ck_saved_searches_fingerprint_hex"),
-    ({"legacy_source": "x"}, "ck_saved_searches_legacy_pair"),
-    ({"owner_user_id": 2_000_000_000}, "saved_searches_owner_user_id_fkey"),
+def _constraint_definitions(conn, table):
+    """Every CHECK/FOREIGN KEY on ``table``, name -> normalised definition.
+
+    The frozen baseline (database/migrations/m0001_baseline.py) writes its own
+    constraint names; nothing in the application reads them, so a test that
+    pins a name pins a decision the schema never made. These tests pin the
+    *rule* instead: the definition the constraint carries.
+    """
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT conname, pg_get_constraintdef(oid) FROM pg_constraint"
+            " WHERE conrelid = %s::regclass AND contype IN ('c', 'f')", (table,))
+        return {name: " ".join(definition.split()) for name, definition in cur.fetchall()}
+
+
+@pytest.mark.parametrize("overrides, rule", [
+    ({"name": "   "}, "btrim"),
+    ({"criteria_fingerprint": "Z" * 64}, "criteria_fingerprint ~"),
+    ({"legacy_source": "x"}, "(legacy_source IS NULL) = (legacy_id IS NULL)"),
+    ({"owner_user_id": 2_000_000_000}, "FOREIGN KEY (owner_user_id)"),
 ])
-def test_constraints_reject_invalid_rows(pg_db, overrides, constraint):
+def test_constraints_reject_invalid_rows(pg_db, overrides, rule):
     conn = connect(pg_db)
     try:
+        definitions = _constraint_definitions(conn, "saved_searches")
         with conn.cursor() as cur:
             with pytest.raises(psycopg2.Error) as info:
                 _insert(cur, **overrides)
-        assert info.value.diag.constraint_name == constraint
+        violated = info.value.diag.constraint_name
+        matching = {name for name, definition in definitions.items() if rule in definition}
+        assert matching, f"no constraint on saved_searches enforces {rule!r}"
+        assert violated in matching, (
+            f"the row was rejected by {violated!r}, whose definition is"
+            f" {definitions.get(violated)!r}; the rule asked for {rule!r}")
     finally:
         conn.rollback()
         conn.close()
