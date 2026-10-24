@@ -21,6 +21,7 @@ from core.monitoring.priority import (
     PRIORITY_RULE_VERSION,
     IMMINENT_DAYS,
     imminent_sql,
+    priority_basis,
     priority_from_signal,
     priority_from_summary,
 )
@@ -41,6 +42,7 @@ __all__ = [
     "PRIORITY_RULE_VERSION",
     "IMMINENT_DAYS",
     "imminent_sql",
+    "priority_basis",
     "priority_from_signal",
     "priority_from_summary",
 ]

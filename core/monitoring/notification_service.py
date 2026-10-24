@@ -42,13 +42,22 @@ ADDRESSED_TYPES = frozenset({NotificationType.SCENARIO_OUTCOME,
                              NotificationType.SCENARIO_STATUS})
 
 
-class NotificationPriority(Enum):
+class NotificationPriority(str, Enum):
     """Notification priority levels.
 
     Notification priority is derived, never chosen (core/monitoring/priority.py).
     ``critical`` is produced by the signal rule for a high-confidence, imminent
     date and is storable in ``alerts.priority``; the scenario summary rule
     stops at ``high`` because ``scenario_outcomes.priority`` does not admit it.
+
+    A ``str`` mixin, not a bare ``Enum``: the stored vocabulary *is* these
+    strings (``alerts.priority``, ``scenario_outcomes.priority``), so a value
+    read back from the database must compare equal to the one this module
+    derives. With a bare ``Enum`` ``NotificationPriority.HIGH == 'high'`` is
+    False, and the SQL/derivation cross-check in test_scenario_engine_pg
+    fails on the type rather than on the rule. ``.value`` is unchanged, as is
+    ``str()`` on 3.11 - writing code that needs the text still asks for
+    ``.value``.
     """
     LOW = "low"
     MEDIUM = "medium"
