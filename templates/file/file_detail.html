@@ -153,7 +153,11 @@
                             {% set file_path = file[2] if file|length > 2 else '' %}
                             {% set file_id = file[0] if file|length > 0 else 0 %}
                             {% if content_length > 0 %}
+                            {#- data-translatable: the reader may select any part of
+                                this text and ask for a translation; the panel
+                                below the viewer renders it side by side. -#}
                             <div class="content-viewer" id="contentViewer" 
+                                 data-translatable
                                  data-file-type="{{ file_type }}" 
                                  data-file-path="{{ file_path }}"
                                  data-file-id="{{ file_id }}"
@@ -416,6 +420,9 @@
         "similarTitles": _('Similar Titles')
     }
 }|tojson|safe }}</script>
+{#- Manual translation of a selection: original and translation side by side,
+    labelled as machine translation, with accept/correct. -#}
+{% include 'Translation/_selection_panel.html' %}
 {#- file-detail-page.js is loaded by universal-initializer.js (full load + soft-nav). -#}
 {% from 'components/analyst_classify_page_data.html' import analyst_classify_page_data %}
 {{ analyst_classify_page_data(current_user.is_authenticated and current_user.has_role('admin', 'analyst')) }}

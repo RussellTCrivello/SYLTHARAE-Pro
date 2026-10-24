@@ -211,7 +211,9 @@
             </button>
         </div>
     </div>
-    <div class="section-content" id="searchResults">
+    {#- The results are readable text: a reader may select a file name or an
+        excerpt and ask for its translation (data-translatable). -#}
+    <div class="section-content" id="searchResults" data-translatable>
     {% if results %}
     {#- The results are the unified table: the same headers, the same
         column filters, the same selection, the same Load More as the File
@@ -305,5 +307,6 @@
     </div>
 </div>
 {% endif %}
+{% include 'Translation/_selection_panel.html' %}
 <script src="{{ url_for('static', filename='js/modules/ui/unified-table.js') }}?v=20261014b" defer></script>
 {% endblock %}
