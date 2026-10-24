@@ -10,8 +10,11 @@
 
 from __future__ import annotations
 
+import json
 import logging
 from functools import wraps
+
+from urllib.parse import unquote
 
 from flask import g, jsonify, redirect, request, session
 
@@ -114,7 +117,16 @@ def init_auth(app) -> None:
     #: Individual endpoints outside those blueprints that expose configuration.
     app.config.setdefault(
         "AUTH_ADMIN_READ_ENDPOINTS",
-        frozenset({"settings_page_direct"}),
+        frozenset({
+            "settings_page_direct",
+            # AUTHZ-02: the legacy import-export surface returns the same
+            # three configuration blocks as /api/settings/export, which is
+            # admin-read. It lives on the import_export blueprint, so the
+            # admin-*read* set (settings, settings_api, concurrency,
+            # error_dashboard) did not cover it and a viewer downloaded
+            # system configuration the settings page refuses them.
+            "import_export.export_settings",
+        }),
     )
     #: Settings paths every authenticated user may *read*.
     #: ``/api/settings/theme`` is rendered inline into base.html for every
@@ -147,23 +159,35 @@ def init_auth(app) -> None:
     )
     #: Non-safe (mutating) methods requiring analyst/admin by default.
     app.config.setdefault("AUTH_WRITE_METHODS", frozenset({"POST", "PUT", "PATCH", "DELETE"}))
+    #: Endpoints whose JSON body is legitimately a list. None today - every
+    #: handler reads named keys from a mapping - but the escape hatch exists so
+    #: one future array endpoint does not weaken the rule for all of them.
+    app.config.setdefault("JSON_ARRAY_BODY_ENDPOINTS", frozenset())
 
     @app.before_request
     def _load_current_user():  # pragma: no cover - exercised via tests
         g.user = AnonymousUser()
+        #: True when the session could not be *checked* (the store raised), as
+        #: opposed to the store answering "no such session". The difference is
+        #: visible to the client: one means "sign in", the other means "retry".
+        g.session_store_unavailable = False
         token = session.get(_SESSION_TOKEN_KEY)
         if token:
             try:
                 result = get_auth_service().validate_session(token)
             except Exception:
                 logger.exception("Session validation failed")
+                g.session_store_unavailable = True
                 result = None
             if result is not None:
                 user, _record = result
                 g.user = user
                 g.session_record = _record
                 session[_SESSION_USER_KEY] = user.id
-            else:
+            elif not g.session_store_unavailable:
+                # Only drop the cookie when the store positively said the
+                # session is gone. Discarding it on a store failure signed the
+                # user out for good because of a database that came back later.
                 session.pop(_SESSION_TOKEN_KEY, None)
                 session.pop(_SESSION_USER_KEY, None)
 
@@ -183,6 +207,21 @@ def init_auth(app) -> None:
             or request.is_json
             or request.accept_mimetypes.best == "application/json"
         ):
+            if g.session_store_unavailable:
+                # Fail closed, but say which failure it is: signing in cannot
+                # work while the session store is unreachable, so a bare
+                # "unauthenticated" sent the user to a password prompt that
+                # could not succeed.
+                return (
+                    jsonify({
+                        "error": "Authentication is temporarily unavailable: "
+                                 "the session store could not be reached",
+                        "code": "authentication_unavailable",
+                        "reason": "session store unavailable; retry this request shortly",
+                        "retry_after_seconds": 5,
+                    }),
+                    401,
+                )
             return (
                 jsonify({"error": "Authentication required", "code": "unauthenticated"}),
                 401,
@@ -261,6 +300,72 @@ def init_auth(app) -> None:
         if not g.user.has_role(ROLE_ADMIN, ROLE_ANALYST):
             return _forbidden()
         return None
+
+    @app.before_request
+    def _reject_control_characters():
+        """A NUL byte in the request target is malformed, not a value.
+
+        PostgreSQL cannot store it and psycopg2 raises while the statement is
+        built, so ``?q=a%00b`` turned several read endpoints into 500s. The
+        request line is the right place to refuse it: a NUL cannot be meant in
+        a URL, and refusing it says so instead of silently searching "ab".
+        """
+        raw_query = request.query_string or b""
+        # ``%00`` arrives as three harmless-looking bytes and only becomes a NUL
+        # after percent-decoding, which is when it reaches the driver.
+        decoded = unquote(raw_query.decode("latin-1"))
+        if (b"\x00" in raw_query or "\x00" in decoded
+                or "\x00" in (request.path or "")):
+            return (
+                jsonify({
+                    "error": "The request contains a NUL character, which is not "
+                             "valid in a URL",
+                    "code": "invalid_request_target",
+                }),
+                400,
+            )
+        return None
+
+    @app.before_request
+    def _reject_non_object_json_body():
+        """A JSON body that is not an object is a client mistake, not a crash.
+
+        Every mutating view reads its input as a mapping (``data.get(...)``).
+        When the client sends a scalar, a string, a list or ``null`` the view
+        raised ``AttributeError`` and the caller got a 500 with a correlation
+        id - 68 routes did, measured by ``tools/audit/probe_malformed.py``.
+        The shape is checked once here, after authentication (so an
+        unauthenticated caller still gets 401, not a hint about the body) and
+        before the view runs.
+
+        A body that does not parse at all is left to the view: Flask already
+        answers 400 for it, and so do the views that parse it themselves.
+        """
+        if request.method not in app.config["AUTH_WRITE_METHODS"]:
+            return None
+        if not request.is_json:
+            return None
+        if request.endpoint in app.config["JSON_ARRAY_BODY_ENDPOINTS"]:
+            return None
+        raw = request.get_data(cache=True)
+        if not raw.strip():
+            return None                      # no body at all: the view decides
+        try:
+            payload = json.loads(raw)
+        except (TypeError, ValueError):
+            return None                      # unparsable: the view answers 400
+        if isinstance(payload, dict):
+            return None
+        kind = {list: "a list", str: "a string", int: "a number",
+                float: "a number", bool: "a boolean"}.get(type(payload),
+                                                          "not an object")
+        return (
+            jsonify({
+                "error": f"Request body must be a JSON object, not {kind}",
+                "code": "invalid_json_body",
+            }),
+            400,
+        )
 
     @app.context_processor
     def _inject_user():  # pragma: no cover - template helper
@@ -380,6 +485,14 @@ def is_authenticated() -> bool:
 
 def _unauthorized():
     if request.path.startswith("/api/") or request.is_json:
+        if g.get("session_store_unavailable"):
+            return jsonify({
+                "error": "Authentication is temporarily unavailable: "
+                         "the session store could not be reached",
+                "code": "authentication_unavailable",
+                "reason": "session store unavailable; retry this request shortly",
+                "retry_after_seconds": 5,
+            }), 401
         return jsonify({"error": "Authentication required", "code": "unauthenticated"}), 401
     return redirect("/auth/login?next=" + request.path)
 
