@@ -42,12 +42,22 @@ ADDRESSED_TYPES = frozenset({NotificationType.SCENARIO_OUTCOME,
                              NotificationType.SCENARIO_STATUS})
 
 
-class NotificationPriority(Enum):
+class NotificationPriority(str, Enum):
     """Notification priority levels.
 
-    New notifications derive their priority (core/monitoring/priority.py),
-    which never yields CRITICAL; the value stays readable for rows written
-    before that rule existed.
+    Notification priority is derived, never chosen (core/monitoring/priority.py).
+    ``critical`` is produced by the signal rule for a high-confidence, imminent
+    date and is storable in ``alerts.priority``; the scenario summary rule
+    stops at ``high`` because ``scenario_outcomes.priority`` does not admit it.
+
+    A ``str`` mixin, not a bare ``Enum``: the stored vocabulary *is* these
+    strings (``alerts.priority``, ``scenario_outcomes.priority``), so a value
+    read back from the database must compare equal to the one this module
+    derives. With a bare ``Enum`` ``NotificationPriority.HIGH == 'high'`` is
+    False, and the SQL/derivation cross-check in test_scenario_engine_pg
+    fails on the type rather than on the rule. ``.value`` is unchanged, as is
+    ``str()`` on 3.11 - writing code that needs the text still asks for
+    ``.value``.
     """
     LOW = "low"
     MEDIUM = "medium"
@@ -74,6 +84,9 @@ class Notification:
     #: The scenario that produced it, if any.
     scenario_id: Optional[int] = None
     scenario_evaluation_id: Optional[int] = None
+    #: The file is referenced by ``file_id`` only (the path id). Name and
+    #: path are read by joining ``paths`` - they are not columns of
+    #: ``alerts`` and not attributes of this object.
 
 
 #: Column order shared by every ``SELECT ... FROM alerts`` in this service.
@@ -104,6 +117,21 @@ def utc_today() -> date:
     return datetime.now(timezone.utc).date()
 
 
+def _naive_utc(stamp: Optional[datetime]) -> Optional[datetime]:
+    """``alerts.created_at`` is a TIMESTAMP (no zone): store UTC wall time.
+
+    The objects carry timezone-aware datetimes, so sending them unchanged
+    makes PostgreSQL drop the offset and the value that comes back no longer
+    equals the one that went in - which is how a batch flush lost the mapping
+    between rows and notifications.
+    """
+    if stamp is None:
+        return None
+    if stamp.tzinfo is None:
+        return stamp
+    return stamp.astimezone(timezone.utc).replace(tzinfo=None)
+
+
 def insert_alerts(cur, notifications: List["Notification"]) -> List[int]:
     """Insert notifications through the caller's cursor, in the caller's
     transaction, and return their ids in order.
@@ -118,7 +146,8 @@ def insert_alerts(cur, notifications: List["Notification"]) -> List[int]:
     for n in notifications:
         if n.type in ADDRESSED_TYPES and n.recipient_user_id is None:
             raise ValueError("scenario notifications must be addressed to a user")
-        scenario_eval = (n.metadata.get("scenario_evaluation_id")
+        meta = n.metadata
+        scenario_eval = (meta.get("scenario_evaluation_id")
                          if n.scenario_id is not None else None)
         cur.execute(
             "INSERT INTO alerts (type, priority, title, message, file_id, event_date,"
@@ -127,9 +156,9 @@ def insert_alerts(cur, notifications: List["Notification"]) -> List[int]:
             " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             " RETURNING id",
             (n.type.value, n.priority.value, n.title, n.message, n.file_id,
-             n.event_date, json.dumps(n.metadata, ensure_ascii=False),
-             n.created_at, n.read, n.dismissed, n.recipient_user_id, n.scenario_id,
-             scenario_eval))
+             n.event_date, json.dumps(meta, ensure_ascii=False),
+             _naive_utc(n.created_at), n.read, n.dismissed, n.recipient_user_id,
+             n.scenario_id, scenario_eval))
         row = cur.fetchone()
         n.id = row["id"] if isinstance(row, dict) else row[0]
         ids.append(n.id)
@@ -277,68 +306,112 @@ class NotificationService:
             return len(self._pending_notifications)
 
     def _save_notification(self, notification: Notification) -> Notification:
-        """Save a single notification to the database."""
-        from Api.utils import execute_query
-        from psycopg2.extras import Json
-        scenario_eval = (notification.metadata.get("scenario_evaluation_id")
-                         if notification.scenario_id is not None else None)
-        row = execute_query(
-            "INSERT INTO alerts (type, priority, title, message, file_id, event_date,"
-            " metadata, created_at, read, dismissed,"
-            " recipient_user_id, scenario_id, scenario_evaluation_id)"
-            " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            " RETURNING id",
-            (notification.type.value, notification.priority.value,
-             notification.title, notification.message, notification.file_id,
-             notification.event_date, Json(notification.metadata),
-             notification.created_at, notification.read, notification.dismissed,
-             notification.recipient_user_id, notification.scenario_id,
-             scenario_eval),
-            fetch="one")
-        if row:
-            notification.id = row[0] if not isinstance(row, dict) else row["id"]
+        """Queue ``notification`` for the next flush and give it a temporary id.
+
+        Nothing is written here: ``flush_pending_notifications`` performs one
+        multi-row INSERT for the whole batch, which is what keeps a burst of
+        notifications to a single round trip and lets every object learn its
+        real id from the same statement. A negative id means "not persisted
+        yet"; callers that need the row immediately call flush.
+        """
+        with self._lock:
+            if notification not in self._pending_notifications:
+                notification.id = self._next_temp_id
+                self._next_temp_id -= 1
+                self._pending_notifications.append(notification)
+            if notification not in self._notifications:
+                self._notifications.insert(0, notification)
         return notification
 
-    def flush_pending_notifications(self) -> None:
-        """Flush pending notifications to the database."""
+    #: Column order of the batch insert; ``created_at`` (index 7) is returned
+    #: so the rows can be matched back to the objects that produced them.
+    _FLUSH_COLUMNS = (
+        "type", "priority", "title", "message", "file_id", "event_date",
+        "metadata", "created_at", "read", "dismissed", "recipient_user_id",
+        "scenario_id", "scenario_evaluation_id",
+    )
+    _CREATED_AT_INDEX = _FLUSH_COLUMNS.index("created_at")
+
+    def flush_pending_notifications(self) -> int:
+        """Write every queued notification in one statement; return the count.
+
+        One multi-row INSERT keeps a batch atomic (a single round trip) and
+        lets the real ids be mapped back to the objects that produced them.
+        If the write fails nothing is lost: the batch stays queued and the
+        next flush retries it.
+        """
         from Api.utils import execute_query
         from psycopg2.extras import Json
 
         with self._lock:
             pending = list(self._pending_notifications)
-            self._pending_notifications.clear()
+            if not pending:
+                return 0
+            # Identical timestamps would make the returned rows ambiguous, so
+            # a batch that shares one moment is spread by a microsecond each.
+            used = set()
+            for notice in pending:
+                stamp = _naive_utc(notice.created_at)
+                while stamp in used:
+                    stamp = stamp + timedelta(microseconds=1)
+                used.add(stamp)
+                notice.created_at = stamp
 
-        if not pending:
-            return
+        rows = []
+        for notice in pending:
+            scenario_eval = (notice.metadata.get("scenario_evaluation_id")
+                             if notice.scenario_id is not None else None)
+            rows.append((
+                notice.type.value, notice.priority.value, notice.title,
+                notice.message, notice.file_id, notice.event_date,
+                Json(notice.metadata), _naive_utc(notice.created_at), notice.read,
+                notice.dismissed, notice.recipient_user_id, notice.scenario_id,
+                scenario_eval,
+            ))
 
-        for notification in pending:
-            try:
-                scenario_eval = (notification.metadata.get("scenario_evaluation_id")
-                                 if notification.scenario_id is not None else None)
-                row = execute_query(
-                    "INSERT INTO alerts (type, priority, title, message, file_id, event_date,"
-                    " metadata, created_at, read, dismissed,"
-                    " recipient_user_id, scenario_id, scenario_evaluation_id)"
-                    " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                    " RETURNING id",
-                    (notification.type.value, notification.priority.value,
-                     notification.title, notification.message, notification.file_id,
-                     notification.event_date, Json(notification.metadata),
-                     notification.created_at, notification.read, notification.dismissed,
-                     notification.recipient_user_id, notification.scenario_id,
-                     scenario_eval),
-                    fetch="one")
-                if row:
-                    real_id = row[0] if not isinstance(row, dict) else row["id"]
-                    # Update the notification object itself (referenced by created_items)
-                    notification.id = real_id
-                    with self._lock:
-                        for n in self._notifications:
-                            if n.id == notification.id:
-                                n.id = real_id
-                                break
-            except Exception as e:
-                self.logger.error(f"Error flushing notification: {e}")
+        columns = ", ".join(self._FLUSH_COLUMNS)
+        placeholders = ", ".join(
+            "(" + ", ".join(["%s"] * len(self._FLUSH_COLUMNS)) + ")" for _ in rows
+        )
+        params = [value for row in rows for value in row]
+        try:
+            returned = execute_query(
+                f"INSERT INTO alerts ({columns}) VALUES {placeholders}"
+                " RETURNING id, created_at",
+                tuple(params),
+                fetch="all",
+            ) or []
+        except Exception as exc:
+            logger.error("Error flushing notifications: %s", exc)
+            with self._lock:
+                for notice in pending:
+                    if notice not in self._pending_notifications:
+                        self._pending_notifications.append(notice)
+            return 0
+
+        by_created = {}
+        for row in returned:
+            if isinstance(row, dict):
+                by_created[row["created_at"]] = row["id"]
+            else:
+                by_created[row[1]] = row[0]
+
+        written = 0
+        with self._lock:
+            for notice in pending:
+                real_id = by_created.get(notice.created_at)
+                if real_id is None:
+                    continue
+                notice.id = real_id
+                for known in self._notifications:
+                    if known is notice or known.id == notice.id:
+                        known.id = real_id
+                written += 1
+            # Only rows the database confirmed leave the queue.
+            self._pending_notifications = [
+                n for n in self._pending_notifications if n.id is None or n.id < 0
+            ]
+        return written
 
     def _set_flag(self, notification_id: int, column: str,
                   for_user_id: Optional[int] = None) -> bool:

@@ -143,8 +143,6 @@ def test_flush_stats_and_pages_agree_with_the_database(admin_client, pg_db):
                 title=f"{_ACC_TITLE} #{i}",
                 message=f"accuracy probe {i}",
                 file_id=None,
-                file_name=None,
-                file_path=None,
                 event_date=None,
                 metadata={"probe": _UNIQUE},
                 created_at=datetime.now(),

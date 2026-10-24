@@ -144,19 +144,19 @@ def test_info_notifications_pass_through_stored_text_verbatim():
         metadata={"message": "14 of 15 files stored"},
     )
     title, message = format_title_message(n, gettext_stub)
-    # INFO type uses "Information" as title and message from metadata
-    assert title == "Information"
+    # The stored text is what the UI shows; the label is only a fallback.
+    assert title == "Ingest finished"
     assert message == "14 of 15 files stored"
 
 
 def test_warning_title_normalised_only_when_missing():
     n = make_notification(type=NotificationType.WARNING, title="Watch out", message="details", metadata={"message": "details"})
     title, message = format_title_message(n, gettext_stub)
-    # WARNING type always uses "Warning" as title
-    assert title == "Warning"
+    # A stored title is shown as written; the label only fills a blank one.
+    assert title == "Watch out"
     assert message == "details"
 
-    blank = make_notification(type=NotificationType.WARNING, title="same", message="same")
+    blank = make_notification(type=NotificationType.WARNING, title="", message="")
     title, _ = format_title_message(blank, gettext_stub)
     assert title == "Warning"
 
