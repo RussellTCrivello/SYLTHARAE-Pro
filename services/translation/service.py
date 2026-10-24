@@ -163,8 +163,21 @@ class TranslationService:
                     [engine_registry.describe_engine(entry)
                      for entry in engine_registry.builtin_engines()])
             engine_calls = 1
-            translated = used_engine.translate([results[index]["source"] for index in pending],
-                                               source, target_lang)
+            try:
+                translated = used_engine.translate(
+                    [results[index]["source"] for index in pending], source, target_lang)
+            except engine_registry.EngineUnavailable:
+                raise
+            except Exception as exc:
+                # A model that cannot be fetched, a backend that is not there, a
+                # pair the engine does not carry: the analyst is told which
+                # engine failed and in whose words, not handed a correlation id.
+                logger.exception("translation engine %s failed for %s->%s",
+                                 used_engine.id, source, target_lang)
+                raise engine_registry.EngineUnavailable(
+                    f"{used_engine.id} could not translate {source}->{target_lang}: {exc}",
+                    [engine_registry.describe_engine(used_engine)],
+                    code="engine_failed") from exc
             for index, output in zip(pending, translated):
                 results[index]["target"] = output
                 results[index]["origin"] = "engine"

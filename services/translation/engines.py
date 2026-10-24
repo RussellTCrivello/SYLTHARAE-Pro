@@ -60,9 +60,14 @@ class EngineUnavailable(RuntimeError):
     instead of a traceback.
     """
 
-    def __init__(self, message: str, engines: Optional[List[Dict]] = None):
+    #: ``engine_not_installed`` - the package is absent or no model is installed;
+    #: ``engine_failed`` - the engine is there but could not produce a
+    #: translation (a model that cannot be fetched, a backend error).
+    def __init__(self, message: str, engines: Optional[List[Dict]] = None,
+                 code: str = "engine_not_installed"):
         super().__init__(message)
         self.engines = engines or []
+        self.code = code
 
 
 class Engine:

@@ -93,7 +93,7 @@ class TestAuthorisation:
         refused the engine, not just the correction."""
         viewer = client_factory("viewer")
         response = viewer.post("/api/translation/text", json={
-            "text": "The gate is open.", "target_lang": "he", "source_lang": "en"})
+            "text": "The gate is open.", "target_lang": "he", "source_lang": "en", "engine": "stub"})
         assert response.status_code == 403, response.get_data(as_text=True)
 
     def test_an_analyst_may_correct_and_set_a_term(
@@ -127,12 +127,12 @@ class TestSharedMemory:
         analyst = client_factory("analyst")
 
         first = admin.post("/api/translation/text", json={
-            "text": text, "target_lang": "he", "source_lang": "en"})
+            "text": text, "target_lang": "he", "source_lang": "en", "engine": "stub"})
         assert first.status_code == 200, first.get_data(as_text=True)
         assert first.get_json()["engine_calls"] == 1
 
         second = analyst.post("/api/translation/text", json={
-            "text": text, "target_lang": "he", "source_lang": "en"})
+            "text": text, "target_lang": "he", "source_lang": "en", "engine": "stub"})
         assert second.status_code == 200, second.get_data(as_text=True)
         body = second.get_json()
         # Nothing was asked of the engine: the sentence was already translated.
@@ -146,14 +146,14 @@ class TestSharedMemory:
         analyst = client_factory("analyst")
 
         admin.post("/api/translation/text", json={
-            "text": text, "target_lang": "he", "source_lang": "en"})
+            "text": text, "target_lang": "he", "source_lang": "en", "engine": "stub"})
         corrected = admin.post("/api/translation/memory/correct", json={
             "source_text": text, "target_text": "השער הצפוני פתוח.",
             "source_lang": "en", "target_lang": "he"})
         assert corrected.status_code == 200, corrected.get_data(as_text=True)
 
         after = analyst.post("/api/translation/text", json={
-            "text": text, "target_lang": "he", "source_lang": "en"})
+            "text": text, "target_lang": "he", "source_lang": "en", "engine": "stub"})
         body = after.get_json()
         assert body["segments"][0]["target"] == "השער הצפוני פתוח."
         assert body["segments"][0]["origin"] == "user"
@@ -223,13 +223,13 @@ class TestCorrectionBeatsTheEngine:
         admin = client_factory("admin")
 
         admin.post("/api/translation/text", json={
-            "text": text, "target_lang": "he", "source_lang": "en"})
+            "text": text, "target_lang": "he", "source_lang": "en", "engine": "stub"})
         admin.post("/api/translation/memory/correct", json={
             "source_text": text, "target_text": "השער פתוח.",
             "source_lang": "en", "target_lang": "he"})
 
         again = admin.post("/api/translation/text", json={
-            "text": text, "target_lang": "he", "source_lang": "en"})
+            "text": text, "target_lang": "he", "source_lang": "en", "engine": "stub"})
         body = again.get_json()
         assert body["engine_calls"] == 0, "the engine was called despite a correction"
         assert body["segments"][0]["target"] == "השער פתוח."
@@ -245,7 +245,7 @@ class TestCorrectionBeatsTheEngine:
             "source_lang": "en", "target_lang": "he"})
         for _ in range(2):
             admin.post("/api/translation/text", json={
-                "text": text, "target_lang": "he", "source_lang": "en"})
+                "text": text, "target_lang": "he", "source_lang": "en", "engine": "stub"})
 
         rows = translation_memory.lookup(source_lang="en", target_lang="he",
                                          source_text=text)
@@ -266,7 +266,7 @@ class TestProvenance:
         admin = client_factory("admin")
         text = "The bridge is closed. The road is open."
         response = admin.post("/api/translation/text", json={
-            "text": text, "target_lang": "he", "source_lang": "en"})
+            "text": text, "target_lang": "he", "source_lang": "en", "engine": "stub"})
         assert response.status_code == 200, response.get_data(as_text=True)
 
         rows = self._rows(translation_memory)

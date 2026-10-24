@@ -98,7 +98,7 @@ def documents(pg_db):
 def test_a_document_that_does_not_exist_is_a_404(
         app, admin_client, stub_engine, translation_memory):
     response = admin_client.post("/api/translation/document", json={
-        "file_id": 987654, "target_lang": "he", "source_lang": "en"})
+        "file_id": 987654, "target_lang": "he", "source_lang": "en", "engine": "stub"})
     assert response.status_code == 404, response.get_data(as_text=True)
 
 
@@ -110,7 +110,7 @@ def test_one_document_is_translated_and_nothing_is_written_back(
     before = (execute_query("SELECT count(*) FROM paths", fetch="one") or [0])[0]
 
     response = admin_client.post("/api/translation/document", json={
-        "file_id": path_id, "target_lang": "he", "source_lang": "en"})
+        "file_id": path_id, "target_lang": "he", "source_lang": "en", "engine": "stub"})
     assert response.status_code == 200, response.get_data(as_text=True)
     body = response.get_json()
     assert body["file_id"] == path_id
@@ -132,7 +132,7 @@ def test_several_documents_become_one_job(
 
     before = (execute_query("SELECT count(*) FROM paths", fetch="one") or [0])[0]
     response = admin_client.post("/api/translation/documents", json={
-        "file_ids": documents, "target_lang": "he", "source_lang": "en"})
+        "file_ids": documents, "target_lang": "he", "source_lang": "en", "engine": "stub"})
     assert response.status_code == 202, response.get_data(as_text=True)
     body = response.get_json()
     assert body["job_id"]

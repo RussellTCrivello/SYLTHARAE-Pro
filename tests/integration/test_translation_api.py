@@ -150,7 +150,7 @@ class TestTranslation:
         client = client_factory("admin")
         response = client.post("/api/translation/text", json={
             "text": "The door is open. Close it.", "target_lang": "he",
-            "source_lang": "en"})
+            "source_lang": "en", "engine": "stub"})
         assert response.status_code == 200, response.get_data(as_text=True)
         body = response.get_json()
         assert body["success"] is True
@@ -167,7 +167,7 @@ class TestTranslation:
         marker = uuid.uuid4().hex[:8]
         text = f"The door is open {marker}."
         assert client.post("/api/translation/text", json={
-            "text": text, "target_lang": "he", "source_lang": "en"}).status_code == 200
+            "text": text, "target_lang": "he", "source_lang": "en", "engine": "stub"}).status_code == 200
 
         rows = _audit_rows("translation.text.requested")
         assert rows, "no audit record was written for the translation request"
@@ -178,15 +178,15 @@ class TestTranslation:
         client = client_factory("admin")
         text = f"Open the door {uuid.uuid4().hex[:6]}."
         client.post("/api/translation/text", json={
-            "text": text, "target_lang": "he", "source_lang": "en"})
+            "text": text, "target_lang": "he", "source_lang": "en", "engine": "stub"})
 
         corrected = client.post("/api/translation/memory/correct", json={
             "source_text": text, "target_text": "פתח את הדלת.",
-            "target_lang": "he", "source_lang": "en"})
+            "target_lang": "he", "source_lang": "en", "engine": "stub"})
         assert corrected.status_code == 200, corrected.get_data(as_text=True)
 
         again = client.post("/api/translation/text", json={
-            "text": text, "target_lang": "he", "source_lang": "en"})
+            "text": text, "target_lang": "he", "source_lang": "en", "engine": "stub"})
         body = again.get_json()
         assert body["segments"][0]["target"] == "פתח את הדלת."
         assert body["segments"][0]["origin"] == "user"
@@ -197,10 +197,10 @@ class TestTranslation:
         client = client_factory("admin")
         client.post("/api/translation/text", json={
             "text": "The report was delivered yesterday.",
-            "target_lang": "he", "source_lang": "en"})
+            "target_lang": "he", "source_lang": "en", "engine": "stub"})
         response = client.post("/api/translation/memory/suggest", json={
             "text": "The report was delivered today.",
-            "target_lang": "he", "source_lang": "en"})
+            "target_lang": "he", "source_lang": "en", "engine": "stub"})
         assert response.status_code == 200, response.get_data(as_text=True)
         body = response.get_json()
         assert body["exact_match"] is None
@@ -220,11 +220,53 @@ class TestTranslation:
 
         client = client_factory("admin")
         response = client.post("/api/translation/text", json={
-            "text": "The door is open.", "target_lang": "he", "source_lang": "en"})
+            "text": "The door is open.", "target_lang": "he", "source_lang": "en", "engine": "stub"})
         assert response.status_code == 503, response.get_data(as_text=True)
         body = response.get_json()
         assert body["code"] == "engine_not_installed"
         assert body["engines"], "the answer must list the engines it looked for"
+
+
+class TestTheEngineCannotBeFetched:
+    """A model that cannot be downloaded is a 503 with the reason, not a 500.
+
+    This is the failure a real installation meets first: the package is
+    installed (``pip install argostranslate`` succeeds) but the *model* cannot
+    be fetched - no network, a blocked host, or a language pair Argos does not
+    carry. The analyst must be told which engine and which pair failed, in the
+    words of the failure, instead of being handed a correlation id.
+    """
+
+    def test_a_model_that_cannot_be_fetched_is_a_503_with_the_reason(
+            self, app, client_factory, translation_memory):
+        from services.translation import engines as engine_registry
+
+        class Unfetchable:
+            id = "unfetchable"
+            version = "0.1"
+            license = "test"
+            document_safe = True
+
+            def availability(self):
+                return True, None
+
+            def translate(self, texts, source_lang, target_lang):
+                raise OSError("cannot reach huggingface.co: connection refused")
+
+        engine_registry.register_engine(Unfetchable())
+        try:
+            client = client_factory("admin")
+            response = client.post("/api/translation/text", json={
+                "text": "The door is open.", "target_lang": "he",
+                "source_lang": "en", "engine": "stub", "engine": "unfetchable"})
+        finally:
+            engine_registry.unregister_engine("unfetchable")
+
+        assert response.status_code == 503, response.get_data(as_text=True)
+        body = response.get_json()
+        assert body["code"] in ("engine_not_installed", "engine_failed")
+        assert "huggingface.co" in body["error"]
+        assert body["engines"], "the answer must still list the engines"
 
 
 class TestNothingIsStored:
@@ -245,7 +287,7 @@ class TestNothingIsStored:
 
         before = counts()
         response = admin_client.post("/api/translation/document", json={
-            "file_id": 999999, "target_lang": "he", "source_lang": "en"})
+            "file_id": 999999, "target_lang": "he", "source_lang": "en", "engine": "stub"})
         # A file that does not exist is a 404, and still nothing was written.
         assert response.status_code in (404, 400), response.get_data(as_text=True)
         assert counts() == before

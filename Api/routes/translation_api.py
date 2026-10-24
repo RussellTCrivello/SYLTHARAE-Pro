@@ -108,9 +108,17 @@ def _audit(action: str, detail: dict, resource: str = "translation") -> None:
 
 
 def _engine_unavailable(exc) -> tuple:
-    return _error("engine_not_installed", str(exc), 503,
-                  engines=[engine_registry.describe_engine(entry)
-                           for entry in engine_registry.builtin_engines()])
+    """503 with the reason and everything that was looked for.
+
+    Two causes, one shape: nothing installed (``engine_not_installed``) and an
+    engine that is installed but failed to produce a translation
+    (``engine_failed`` - typically a model that cannot be fetched).
+    """
+    engines = getattr(exc, "engines", None) or [
+        engine_registry.describe_engine(entry)
+        for entry in engine_registry.builtin_engines()]
+    return _error(getattr(exc, "code", "engine_not_installed"), str(exc), 503,
+                  engines=engines)
 
 
 def register_translation_routes(app):
