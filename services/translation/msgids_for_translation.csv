@@ -13,3 +13,5 @@ msgid,english,used_in,status
 "Translation failed","Translation failed","static/js/pages/translation-selection.js",NEW-UNTRANSLATED
 "The source and target language are the same","The source and target language are the same","static/js/pages/translation-selection.js",NEW-UNTRANSLATED
 "Corrected translation saved","Corrected translation saved","static/js/pages/translation-selection.js",NEW-UNTRANSLATED
+"from translation memory (corrected)","from translation memory (corrected)","static/js/pages/translation-selection.js",NEW-UNTRANSLATED
+"from translation memory","from translation memory","static/js/pages/translation-selection.js",NEW-UNTRANSLATED

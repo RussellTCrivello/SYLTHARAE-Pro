@@ -41,6 +41,7 @@ EXPECTED_MSGIDS = {
     "Correct translation",
     "Translation engine is not installed",
     "Translation failed",
+    "from translation memory (corrected)",
 }
 
 
@@ -80,6 +81,15 @@ def test_the_script_offers_accept_and_correct():
     assert "/api/translation/memory/correct" in script
     assert "accept" in script.lower()
     assert "correct" in script.lower()
+
+
+def test_a_memory_answer_is_not_labelled_with_a_model():
+    """``served_from_memory`` says so; printing the stored engine id would name
+    a model that did not run (a correction is delivered by the memory)."""
+    script = SCRIPT.read_text(encoding="utf-8")
+    assert "served_from_memory" in script, (
+        "the panel must distinguish a memory answer from an engine answer")
+    assert "from translation memory (corrected)" in script
 
 
 def _function_source(name: str) -> str:

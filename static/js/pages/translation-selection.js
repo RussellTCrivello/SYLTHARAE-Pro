@@ -78,8 +78,15 @@ function clearError() {
 function engineSummary(result) {
     const engine = result.engine || {};
     const parts = [];
-    if (engine.id) parts.push(`${engine.id}${engine.version ? ` ${engine.version}` : ''}`);
-    if (result.engine_calls === 0) parts.push('from translation memory');
+    // A memory answer names no model: nothing ran for this sentence, and the
+    // correction (if there is one) is the analyst's wording, not the engine's.
+    if (engine.served_from_memory || result.engine_calls === 0) {
+        const corrected = (result.segments || []).some((s) => s.origin === 'user');
+        parts.push(corrected ? 'from translation memory (corrected)'
+                             : 'from translation memory');
+    } else if (engine.id) {
+        parts.push(`${engine.id}${engine.version ? ` ${engine.version}` : ''}`);
+    }
     if (result.detected_language && result.source_language_override) {
         parts.push(`looks like ${result.detected_language}, you said ${result.source_lang}`);
     } else if (result.source_lang) {
@@ -102,6 +109,9 @@ function renderRow(segment, index) {
     target.textContent = segment.target || '';
 
     if (segment.origin === 'user') {
+        row.dataset.accepted = 'true';
+        accept.disabled = true;             // it is already the analyst's wording
+        accept.textContent = 'Accept translation';
         const badge = document.createElement('span');
         badge.className = 'badge bg-success ms-2';
         badge.textContent = 'Corrected translation saved';
@@ -219,6 +229,7 @@ async function acceptTranslation(row) {
     const cell = row.querySelector('[data-translation-target]');
     const text = (cell ? cell.textContent : '').trim();
     if (!segment || !text) return;
+    if (row.dataset.accepted === 'true') return;   // already the analyst's wording
 
     const result = state.lastResult;
     const { ok, payload } = await postJson('/api/translation/memory/correct', {
@@ -232,14 +243,12 @@ async function acceptTranslation(row) {
         return;
     }
     clearError();
-    if (row.dataset.accepted !== 'true') {
-        row.dataset.accepted = 'true';
-        const badge = document.createElement('span');
-        badge.className = 'badge bg-success ms-2';
-        badge.textContent = 'Corrected translation saved';
-        if (cell) cell.appendChild(badge);
-        if (segment) segment.origin = 'user';
-    }
+    row.dataset.accepted = 'true';
+    const badge = document.createElement('span');
+    badge.className = 'badge bg-success ms-2';
+    badge.textContent = 'Corrected translation saved';
+    if (cell) cell.appendChild(badge);
+    if (segment) segment.origin = 'user';
 }
 
 function wirePanel() {
@@ -277,6 +286,11 @@ function showRunButton(near) {
     const root = panel();
     if (!root) return;
     root.classList.remove('d-none');
+    // The panel is below the content on the viewer and below the results on
+    // search: bring it into view, or the reader clicks a button that appears to
+    // do nothing.
+    // Instant, not smooth: a moving target is a button that misses the click.
+    root.scrollIntoView({ block: 'nearest' });
     const button = root.querySelector('[data-translation-run]');
     if (button) button.focus({ preventScroll: true });
     const owner = near?.closest('[data-file-id]');

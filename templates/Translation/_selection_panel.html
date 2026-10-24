@@ -12,7 +12,7 @@
     The panel is inert until something is selected: it renders no translation,
     makes no request, and holds no state on the server.
 -#}
-<section id="translation-panel" class="card mt-3 d-none"
+<section id="translation-panel" class="card mt-3 d-none shadow-sm"
          data-translation-panel
          aria-live="polite">
     <div class="card-header d-flex flex-wrap gap-2 align-items-center">
@@ -24,7 +24,7 @@
             <label class="visually-hidden" for="translation-target-lang">
                 {{ _('Translation') }}
             </label>
-            <select id="translation-target-lang" class="form-select form-select-sm"
+            <select id="translation-target-lang" class="form-select form-select-sm w-auto"
                     data-translation-target>
                 {% for code, name in translation_languages.items() %}
                 <option value="{{ code }}"{% if code == 'he' %} selected{% endif %}>{{ name }}</option>
@@ -33,7 +33,7 @@
             <label class="visually-hidden" for="translation-source-lang">
                 {{ _('Original') }}
             </label>
-            <select id="translation-source-lang" class="form-select form-select-sm"
+            <select id="translation-source-lang" class="form-select form-select-sm w-auto"
                     data-translation-source>
                 <option value="">{{ _('Detect language') }}</option>
                 {% for code, name in translation_languages.items() %}

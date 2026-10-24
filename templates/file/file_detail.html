@@ -313,6 +313,11 @@
         </section>
     </div>
 
+    {#- Manual translation of a selection: below the two panes, full width. It
+        cannot live inside the content pane - that pane is a fixed-height
+        scroll box, and the panel would be clipped. -#}
+    {% include 'Translation/_selection_panel.html' %}
+
     {{ file_nav_dock(nav) }}
 </div>
 {% endblock %}
@@ -420,9 +425,6 @@
         "similarTitles": _('Similar Titles')
     }
 }|tojson|safe }}</script>
-{#- Manual translation of a selection: original and translation side by side,
-    labelled as machine translation, with accept/correct. -#}
-{% include 'Translation/_selection_panel.html' %}
 {#- file-detail-page.js is loaded by universal-initializer.js (full load + soft-nav). -#}
 {% from 'components/analyst_classify_page_data.html' import analyst_classify_page_data %}
 {{ analyst_classify_page_data(current_user.is_authenticated and current_user.has_role('admin', 'analyst')) }}
