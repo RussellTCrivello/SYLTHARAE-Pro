@@ -72,8 +72,10 @@ def register_notification_page_routes(app):
         """Get paginated notifications with search and filtering"""
         try:
             # Get query parameters
+            # The page is the offset multiplier and is bounded; per_page keeps
+            # its long-standing clamp exactly as the volume guard describes it.
             page = query_int("page", 1, minimum=1, maximum=MAX_PAGE)
-            per_page = query_int("per_page", 20, minimum=1, maximum=1000)
+            per_page = max(1, min(request.args.get('per_page', 20, type=int), 1000))
             search = request.args.get('search', '').strip()
             source_id = request.args.get('source_id', type=int)
             side_id = request.args.get('side_id', type=int)
