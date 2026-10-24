@@ -307,3 +307,32 @@ def test_the_monitoring_page_renders_the_contract_for_each_role(app, admin_clien
     assert data["is_admin"] is True
     assert "scenarios-page.js" in html
     assert app.test_client().get("/monitoring").status_code in (302, 401)
+
+
+def test_invalid_scenario_payloads_are_refused_not_collapsed(app, tenant):
+    """An empty or incomplete body is a 400, never a 500.
+
+    ``create_scenario`` validates the name through ``validate_name`` and the
+    definition through ``parse_definition``; both raise ``RuleDefinitionError``
+    (a ``ValueError``), which is *not* the ``RuleError`` the handlers caught.
+    ``POST /api/scenarios`` with ``{}`` therefore answered 500 with a stack
+    trace instead of naming what was missing, and the same held for an
+    invalid definition on create and update.
+    """
+    owner = _login_new(app, "analyst")
+
+    empty = _post(owner, "/api/scenarios", {})
+    assert empty.status_code == 400, empty.get_data(as_text=True)
+    assert empty.get_json()["success"] is False
+
+    no_name = _post(owner, "/api/scenarios", {"definition": _definition(tenant)})
+    assert no_name.status_code == 400, no_name.get_data(as_text=True)
+
+    bad_definition = _post(owner, "/api/scenarios",
+                           {"name": "audit probe", "definition": {"criteria": {}}})
+    assert bad_definition.status_code == 400, bad_definition.get_data(as_text=True)
+
+    sid = _create(owner, tenant)["id"]
+    bad_put = _put(owner, f"/api/scenarios/{sid}", {"name": "renamed",
+                                                    "definition": {"criteria": {}}})
+    assert bad_put.status_code == 400, bad_put.get_data(as_text=True)
