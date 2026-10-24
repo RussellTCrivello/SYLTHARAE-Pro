@@ -23,6 +23,7 @@ import uuid
 from pathlib import Path
 
 from flask import Blueprint, current_app, jsonify, request
+from core.validation import query_int, query_text
 
 from core.path_safety import configured_ingestion_roots
 from core.security.flask_ext import admin_required, current_user
@@ -324,14 +325,14 @@ def api_input_options_info():
 
 @operations_bp.route("/api/input/sources", methods=["GET"])
 def api_input_sources():
-    q = (request.args.get("q") or "").strip()
+    q = query_text("q", max_length=255)
     rows = search_sources_svc(q) if q else list_sources_svc()
     return jsonify({"success": True, "sources": rows})
 
 
 @operations_bp.route("/api/input/sides", methods=["GET"])
 def api_input_sides():
-    q = (request.args.get("q") or "").strip()
+    q = query_text("q", max_length=255)
     rows = search_sides_svc(q) if q else list_sides_svc()
     return jsonify({"success": True, "sides": rows})
 
@@ -825,7 +826,7 @@ def api_create_input_job():
 @operations_bp.route("/api/input/jobs", methods=["GET"])
 def api_list_input_jobs():
     jobs = _manager().list(job_type="ingestion",
-                           limit=min(int(request.args.get("limit", 50)), 200))
+                           limit=query_int("limit", 50, minimum=1, maximum=200))
     return jsonify({"success": True, "jobs": [job_to_api(j) for j in jobs]})
 
 
@@ -958,7 +959,7 @@ def api_create_import_job():
 def api_list_import_jobs():
     jobs = _manager().list(
         job_type=request.args.get("type") or None,
-        limit=min(int(request.args.get("limit", 50)), 200),
+        limit=query_int("limit", 50, minimum=1, maximum=200),
     )
     return jsonify({"success": True, "jobs": [job_to_api(j) for j in jobs]})
 
@@ -978,8 +979,8 @@ def api_list_import_jobs():
 @limiter.limit(INTERACTIVE_READ_LIMIT)
 def api_list_jobs():
     try:
-        limit = min(max(int(request.args.get("limit", 50)), 1), 200)
-        offset = max(int(request.args.get("offset", 0)), 0)
+        limit = query_int("limit", 50, minimum=1, maximum=200)
+        offset = query_int("offset", 0, minimum=0)
     except (TypeError, ValueError):
         return _error("VALIDATION_FAILED", "limit/offset must be integers", 400)
     jobs = _manager().list(
@@ -1008,8 +1009,8 @@ def api_job_events(job_id):
     if err:
         return err
     try:
-        after = int(request.args.get("after_id", 0))
-        limit = min(max(int(request.args.get("limit", 200)), 1), 1000)
+        after = query_int("after_id", 0, minimum=0)
+        limit = query_int("limit", 200, minimum=1, maximum=1000)
     except (TypeError, ValueError):
         return _error("VALIDATION_FAILED", "after_id/limit must be integers", 400)
     events = _manager().events(job_id, limit=limit, after_id=after)
