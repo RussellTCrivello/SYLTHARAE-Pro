@@ -114,7 +114,16 @@ def init_auth(app) -> None:
     #: Individual endpoints outside those blueprints that expose configuration.
     app.config.setdefault(
         "AUTH_ADMIN_READ_ENDPOINTS",
-        frozenset({"settings_page_direct"}),
+        frozenset({
+            "settings_page_direct",
+            # AUTHZ-02: the legacy import-export surface returns the same
+            # three configuration blocks as /api/settings/export, which is
+            # admin-read. It lives on the import_export blueprint, so the
+            # admin-*read* set (settings, settings_api, concurrency,
+            # error_dashboard) did not cover it and a viewer downloaded
+            # system configuration the settings page refuses them.
+            "import_export.export_settings",
+        }),
     )
     #: Settings paths every authenticated user may *read*.
     #: ``/api/settings/theme`` is rendered inline into base.html for every

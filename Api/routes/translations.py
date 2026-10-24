@@ -73,6 +73,14 @@ def get_all_translations(locale: str = None) -> dict:
                 # Extract all message IDs and their translations
                 catalog = translations_obj._catalog
                 for message_id, message_string in catalog.items():
+                    # Babel stores plural entries under tuple keys
+                    # (``('%(n)s file', 0)``). A tuple key cannot be a JSON
+                    # object key - ``jsonify`` fails while sorting the keys -
+                    # and a plural form is not a flat UI string anyway.
+                    if isinstance(message_id, tuple):
+                        message_id = message_id[0] if message_id else None
+                    if not isinstance(message_id, str):
+                        continue
                     if message_id and message_id != '':
                         # Use the translated string, or fallback to message_id
                         if message_string:

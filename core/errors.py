@@ -146,10 +146,27 @@ def client_error(
 
     ``success_key`` adds ``{"success": False}`` (or any key) for endpoints
     whose clients expect that shape.
+
+    An ``HTTPException`` keeps its own status: routes wrap their body in
+    ``except Exception`` and call this with ``status=500``, which turned a
+    request the client can fix (no JSON content type, a bad parameter) into a
+    reported server fault. The exception's code is the truth; ``status`` is
+    only the default for genuine failures. Its description is a fixed,
+    framework-authored sentence, so it is safe to return.
     """
+    if isinstance(exc, HTTPException) and exc.code and exc.code < 500:
+        body: Dict[str, Any] = {}
+        if success_key:
+            body[success_key] = False
+        body["error"] = exc.description or public_message
+        body["code"] = (exc.name or "error").lower().replace(" ", "_")
+        response = jsonify(body)
+        response.status_code = exc.code
+        return response, exc.code
+
     correlation_id = new_correlation_id()
     log_server_error(exc, correlation_id, subsystem=subsystem, extra=extra)
-    body: Dict[str, Any] = {}
+    body = {}
     if success_key:
         body[success_key] = False
     body["error"] = public_message

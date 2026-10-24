@@ -66,3 +66,26 @@ class TestImportExportAuthz:
         }, content_type="multipart/form-data")
         assert resp.status_code == 200, resp.get_data(as_text=True)
         assert resp.get_json()["success"] is True
+
+
+class TestSettingsExportIsConfiguration:
+    """``/api/import-export/settings/export`` is the settings page's export.
+
+    The settings surface is admin-read for everyone (``/api/settings/export``
+    answers 403 to a viewer). The legacy import-export route returns the same
+    three configuration blocks - and it answered 200 to a viewer and an
+    analyst, so a non-admin could download system configuration that the
+    settings blueprint refuses them.
+    """
+
+    def test_viewer_cannot_export_settings(self, app, client_factory):
+        resp = client_factory("viewer").get("/api/import-export/settings/export")
+        assert resp.status_code == 403, resp.status_code
+
+    def test_analyst_cannot_export_settings(self, app, client_factory):
+        resp = client_factory("analyst").get("/api/import-export/settings/export")
+        assert resp.status_code == 403, resp.status_code
+
+    def test_admin_can_export_settings(self, app, client_factory):
+        resp = client_factory("admin").get("/api/import-export/settings/export")
+        assert resp.status_code == 200, resp.get_data(as_text=True)[:200]
