@@ -1,5 +1,7 @@
 /** Scenarios page - list, create, edit, dry-run, evaluate, archive */
 
+import { escapeHtml } from '../modules/core/utils.js';
+
 (() => {
     const API = '/api/scenarios';
     const tableBody = document.getElementById('scenariosTableBody');
@@ -26,10 +28,10 @@
                 <td>${s.last_evaluated_at ? new Date(s.last_evaluated_at).toLocaleString() : 'Never'}</td>
                 <td class="text-end">
                     <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-primary" onclick="viewScenario(${s.id})" title="View"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-outline-secondary" onclick="dryRunScenario(${s.id})" title="Dry-run" ${s.status === 'archived' ? 'disabled' : ''}><i class="bi bi-play"></i></button>
-                        <button class="btn btn-outline-success" onclick="evaluateScenario(${s.id})" title="Evaluate" ${s.status !== 'active' ? 'disabled' : ''}><i class="bi bi-check-circle"></i></button>
-                        <button class="btn btn-outline-danger" onclick="archiveScenario(${s.id})" title="Archive" ${s.status === 'archived' ? 'disabled' : ''}><i class="bi bi-archive"></i></button>
+                        <button class="btn btn-outline-primary" data-on-click="viewScenario(${s.id})" title="View"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-outline-secondary" data-on-click="dryRunScenario(${s.id})" title="Dry-run" ${s.status === 'archived' ? 'disabled' : ''}><i class="bi bi-play"></i></button>
+                        <button class="btn btn-outline-success" data-on-click="evaluateScenario(${s.id})" title="Evaluate" ${s.status !== 'active' ? 'disabled' : ''}><i class="bi bi-check-circle"></i></button>
+                        <button class="btn btn-outline-danger" data-on-click="archiveScenario(${s.id})" title="Archive" ${s.status === 'archived' ? 'disabled' : ''}><i class="bi bi-archive"></i></button>
                     </div>
                 </td>
             </tr>
@@ -39,12 +41,6 @@
     function statusColor(status) {
         const colors = { draft: 'secondary', active: 'success', paused: 'warning', disabled: 'danger', archived: 'dark' };
         return colors[status] || 'secondary';
-    }
-
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
     }
 
     function viewScenario(id) {
@@ -125,6 +121,13 @@
             }
         });
     }
+
+    // The declarative event dispatcher resolves names in the global scope,
+    // so the actions referenced by data-on-click must be published there.
+    window.viewScenario = viewScenario;
+    window.dryRunScenario = dryRunScenario;
+    window.evaluateScenario = evaluateScenario;
+    window.archiveScenario = archiveScenario;
 
     // Initialize
     document.addEventListener('DOMContentLoaded', loadScenarios);
