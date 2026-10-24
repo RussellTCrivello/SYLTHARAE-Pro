@@ -26,41 +26,119 @@ def _connect(pg_db):
     )
 
 
-def test_startup_applies_pending_migrations_to_existing_install(pg_db, app):
-    """Simulate the field condition exactly: a database at version 0008
-    (pre-PR#11) that just received the new code. The startup upgrade hook
-    must bring the schema current, and a second startup must be a no-op."""
+class _DbConfig:
+    """Duck-typed stand-in for ``settings.config.get_database_config()``."""
+
+    def __init__(self, cfg):
+        self.host, self.port = cfg["host"], int(cfg["port"])
+        self.user, self.password = cfg["user"], cfg["password"]
+        self.database = cfg["database"]
+
+
+def _point_settings(monkeypatch, cfg):
+    """Make the production startup hook talk to ``cfg`` and nothing else."""
+    import settings.config as settings_config
+
+    monkeypatch.setattr(
+        settings_config, "get_database_config", lambda: _DbConfig(cfg)
+    )
+
+
+@pytest.fixture(scope="module")
+def private_db(pg_db):
+    """A database of this module's own, cloned from the migrated test database.
+
+    These tests rewind the schema and let the startup hook repair it. Doing
+    that in the shared database deletes tables that later tests need: the
+    startup hook can only re-create what a migration creates, so under the
+    frozen chain (m0001-m0003) the damaged database stayed damaged and every
+    later search test failed with ``relation "analyst_file_categories" does
+    not exist``. A private database makes the rewind invisible to everyone
+    else - a test-isolation fix, not a schema change.
+    """
+    name = f"{pg_db['database']}_startup_upgrade"
+    admin = psycopg2.connect(
+        host=pg_db["host"], port=pg_db["port"], user=pg_db["user"],
+        password=pg_db["password"], dbname="postgres",
+    )
+    admin.autocommit = True
+    try:
+        with admin.cursor() as cur:
+            cur.execute(f'DROP DATABASE IF EXISTS "{name}"')
+            # Created empty and migrated here, NOT cloned with TEMPLATE.
+            # ``CREATE DATABASE ... TEMPLATE`` is refused while any other
+            # session is attached to the source database - and in a full run
+            # the connection pool of the test module before this one still is:
+            # ``psycopg2.errors.ObjectInUse: source database ... is being
+            # accessed by other users``, which made these two tests error
+            # depending on test order. A database this module builds itself
+            # has no such dependency, and it is the same frozen chain either
+            # way (this is test isolation, not a schema change).
+            cur.execute(f'CREATE DATABASE "{name}"')
+    finally:
+        admin.close()
+
+    cfg = dict(pg_db, database=name)
+    from database.bootstrap import bootstrap_database
+
+    report = bootstrap_database({k: cfg[k] for k in
+                                 ("host", "port", "user", "password", "database")})
+    assert report["current_version"] == "0003", report
+    yield cfg
+
+    admin = psycopg2.connect(
+        host=pg_db["host"], port=pg_db["port"], user=pg_db["user"],
+        password=pg_db["password"], dbname="postgres",
+    )
+    admin.autocommit = True
+    try:
+        with admin.cursor() as cur:
+            cur.execute(
+                "SELECT pg_terminate_backend(pid) FROM pg_stat_activity"
+                " WHERE datname = %s AND pid <> pg_backend_pid()", (name,))
+            cur.execute(f'DROP DATABASE IF EXISTS "{name}"')
+    finally:
+        admin.close()
+
+
+def test_startup_applies_pending_migrations_to_existing_install(private_db, monkeypatch):
+    """The field condition: a database one migration behind that just received
+    the new code. The startup upgrade hook must bring it current, and a second
+    startup must be a no-op.
+
+    The rewind uses the frozen chain (m0002 adds ``categorys.parent_id``): the
+    column is dropped and the version unrecorded, which is exactly the state an
+    installation that predates the migration is in.
+    """
     from core.initialization import upgrade_database_schema
 
-    # Rewind the disposable database to the pre-0009 state.
-    conn = _connect(pg_db)
+    _point_settings(monkeypatch, private_db)
+
+    conn = _connect(private_db)
     try:
         with conn.cursor() as cur:
-            cur.execute(
-                "DROP TABLE IF EXISTS analyst_categorization_log,"
-                " analyst_file_categories CASCADE"
-            )
-            cur.execute("DROP TABLE IF EXISTS analyst_categories CASCADE")
-            cur.execute("DELETE FROM schema_migrations WHERE version = '0009'")
+            cur.execute("ALTER TABLE categorys DROP COLUMN IF EXISTS parent_id")
+            cur.execute("DELETE FROM schema_migrations WHERE version = '0002'")
         conn.commit()
         with conn.cursor() as cur:
-            cur.execute("SELECT to_regclass('analyst_categories')")
-            assert cur.fetchone()[0] is None, "rewind failed"
+            cur.execute(
+                "SELECT 1 FROM information_schema.columns WHERE table_name ="
+                " 'categorys' AND column_name = 'parent_id'")
+            assert cur.fetchone() is None, "rewind failed"
     finally:
         conn.close()
 
     applied = upgrade_database_schema()
-    assert "0009" in applied, f"upgrade did not apply m0009: {applied}"
+    assert "0002" in applied, f"upgrade did not apply m0002: {applied}"
 
-    conn = _connect(pg_db)
+    conn = _connect(private_db)
     try:
         with conn.cursor() as cur:
-            for table in ("analyst_categories", "analyst_file_categories",
-                          "analyst_categorization_log"):
-                cur.execute("SELECT to_regclass(%s)", (table,))
-                assert cur.fetchone()[0] is not None, f"{table} missing after upgrade"
-            # The migration is recorded so it will never re-run.
-            cur.execute("SELECT 1 FROM schema_migrations WHERE version = '0009'")
+            cur.execute(
+                "SELECT 1 FROM information_schema.columns WHERE table_name ="
+                " 'categorys' AND column_name = 'parent_id'")
+            assert cur.fetchone() is not None, "categorys.parent_id missing after upgrade"
+            cur.execute("SELECT 1 FROM schema_migrations WHERE version = '0002'")
             assert cur.fetchone() is not None
     finally:
         conn.close()
@@ -109,14 +187,19 @@ def _no_marker_no_config(monkeypatch, tmp_path):
 
 
 def test_startup_without_marker_or_config_upgrades_an_installed_database(
-        pg_db, app, monkeypatch, tmp_path):
-    from database.migrations import m0021_scenarios
+        private_db, monkeypatch, tmp_path):
+    """Configured through .env, never marked: every start is a "first start".
 
-    conn = _connect(pg_db)
+    Such an installation must still have its schema upgraded. Rewound on the
+    frozen chain (m0003 adds ``sources.attachments``).
+    """
+    _point_settings(monkeypatch, private_db)
+
+    conn = _connect(private_db)
     try:
-        m0021_scenarios.downgrade(conn)
         with conn.cursor() as cur:
-            cur.execute("DELETE FROM schema_migrations WHERE version = '0021'")
+            cur.execute("ALTER TABLE sources DROP COLUMN IF EXISTS attachments")
+            cur.execute("DELETE FROM schema_migrations WHERE version = '0003'")
         conn.commit()
     finally:
         conn.close()
@@ -124,12 +207,14 @@ def test_startup_without_marker_or_config_upgrades_an_installed_database(
     init = _no_marker_no_config(monkeypatch, tmp_path)
     init.ensure_system_initialized()
 
-    conn = _connect(pg_db)
+    conn = _connect(private_db)
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT to_regclass('scenario_outcomes')")
-            assert cur.fetchone()[0] is not None, "startup did not apply m0021"
-            cur.execute("SELECT 1 FROM schema_migrations WHERE version = '0021'")
+            cur.execute(
+                "SELECT 1 FROM information_schema.columns WHERE table_name ="
+                " 'sources' AND column_name = 'attachments'")
+            assert cur.fetchone() is not None, "startup did not apply m0003"
+            cur.execute("SELECT 1 FROM schema_migrations WHERE version = '0003'")
             assert cur.fetchone() is not None
     finally:
         conn.close()

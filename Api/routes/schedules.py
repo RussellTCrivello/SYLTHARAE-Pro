@@ -246,12 +246,30 @@ def register_schedule_routes(app):
     @app.route("/api/schedules/<int:schedule_id>/run_now", methods=["POST"])
     @write_access_required
     def api_schedules_run_now(schedule_id):
-        from services.scheduling.scheduler import Scheduler
-
         row, failure = _load(schedule_id)
         if failure:
             return failure
-        outcome = Scheduler.get_instance().fire_now(row)
+        # The fire-now path needs the APScheduler-backed runner. In this tree
+        # services.scheduling.scheduler declares ``ScheduleRunner`` only - there
+        # is no ``Scheduler`` singleton, and the module's APScheduler import is
+        # an undeclared dependency - so the call raised ImportError /
+        # AttributeError inside the route's net and answered 500 for a feature
+        # that is simply not wired. Say that instead: 503, with the reason, and
+        # leave the schedule untouched (nothing is recorded as having fired).
+        try:
+            from services.scheduling import scheduler as scheduler_module
+        except Exception as exc:  # pragma: no cover - deployment dependent
+            logging.getLogger(__name__).warning(
+                "run_now unavailable: the scheduler module cannot be imported (%s)", exc)
+            return _error("SCHEDULER_UNAVAILABLE",
+                          "the job scheduler is not available in this deployment", 503)
+        runner = getattr(scheduler_module, "Scheduler", None)
+        if runner is None:
+            logging.getLogger(__name__).warning(
+                "run_now unavailable: services.scheduling.scheduler has no Scheduler")
+            return _error("SCHEDULER_UNAVAILABLE",
+                          "the job scheduler is not available in this deployment", 503)
+        outcome = runner.get_instance().fire_now(row)
         if outcome["status"] == "disabled":
             return _error("FORBIDDEN",
                           f"this schedule can no longer run: {outcome.get('reason')}",

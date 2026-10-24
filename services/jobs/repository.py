@@ -21,6 +21,55 @@ def _dump(value) -> str:
     return json.dumps(value or {}, default=str)
 
 
+#: The values ``job_events.event_type`` actually admits (the frozen baseline's
+#: CHECK). The job system speaks a richer vocabulary - per-file, per-phase and
+#: warning/error events (``services/jobs/job_state.EVENT_TYPES``) - so a write
+#: is translated here, in the one place that touches the table:
+#:
+#: * the lifecycle events and ``PROGRESS``/``STATUS_CHANGE`` are stored as-is;
+#: * the per-file / per-phase kinds are progress detail of a running job and
+#:   are stored as ``PROGRESS``;
+#: * ``WARNING``/``ERROR`` are stored as ``STATUS_CHANGE``;
+#: * the terminal ``FAILED`` is stored as ``JOB_FAILED``.
+#:
+#: In every translated case the original name is kept as ``event_kind`` in the
+#: payload, so a reader (and the SSE stream, which publishes before persisting)
+#: loses nothing. Without this translation PostgreSQL rejects the row outright
+#: - the cancellation request's WARNING event and the crash-recovery FAILED
+#: event were both being dropped with a CheckViolation.
+STORED_EVENT_TYPES = frozenset({
+    "JOB_CREATED", "JOB_STARTED", "JOB_PROGRESS", "JOB_PAUSED", "JOB_RESUMED",
+    "JOB_COMPLETED", "JOB_COMPLETED_WITH_WARNINGS", "JOB_FAILED",
+    "JOB_CANCELLED", "PROGRESS", "STATUS_CHANGE",
+})
+
+_KIND_TO_STORED = {
+    "JOB_CREATED": "JOB_CREATED", "JOB_STARTED": "JOB_STARTED",
+    "JOB_PAUSED": "JOB_PAUSED", "JOB_RESUMED": "JOB_RESUMED",
+    "JOB_COMPLETED": "JOB_COMPLETED",
+    "JOB_COMPLETED_WITH_WARNINGS": "JOB_COMPLETED_WITH_WARNINGS",
+    "JOB_CANCELLED": "JOB_CANCELLED", "JOB_FAILED": "JOB_FAILED",
+    "PROGRESS": "PROGRESS", "STATUS_CHANGE": "STATUS_CHANGE",
+    "WARNING": "STATUS_CHANGE", "ERROR": "STATUS_CHANGE",
+    "FAILED": "JOB_FAILED",
+    "PHASE_STARTED": "PROGRESS", "PHASE_COMPLETED": "PROGRESS",
+    "FILE_DISCOVERED": "PROGRESS", "FILE_PROCESSING": "PROGRESS",
+    "FILE_COMPLETED": "PROGRESS", "FILE_SKIPPED": "PROGRESS",
+    "FILE_FAILED": "PROGRESS", "ARCHIVE_EXTRACTED": "PROGRESS",
+    "TEXT_EXTRACTED": "PROGRESS", "OCR_COMPLETED": "PROGRESS",
+    "DUPLICATE_DETECTED": "PROGRESS", "DATABASE_WRITE": "PROGRESS",
+}
+
+
+def stored_event(event_type: str, payload: Optional[Dict[str, Any]] = None):
+    """``(stored_event_type, payload)`` for one event the job system emits."""
+    stored = _KIND_TO_STORED.get(event_type, "STATUS_CHANGE")
+    body = dict(payload or {})
+    if stored != event_type:
+        body.setdefault("event_kind", event_type)
+    return stored, body
+
+
 class JobRepository:
     """CRUD + queries for jobs and job events."""
 
@@ -137,7 +186,7 @@ class JobRepository:
     def stale_running(self, older_than_seconds: int) -> List[Dict[str, Any]]:
         """Jobs marked RUNNING but not updated recently (crash candidates)."""
         sql = (
-            f"SELECT {self.COLUMNS} FROM jobs WHERE status IN ('RUNNING','CANCELLING')"
+            f"SELECT {self.COLUMNS} FROM jobs WHERE status = 'RUNNING'"
             " AND updated_at < now() - (%s || ' seconds')::interval"
             " ORDER BY created_at"
         )
@@ -146,6 +195,7 @@ class JobRepository:
 
     # -- events ------------------------------------------------------------
     def add_event(self, job_id: str, event_type: str, payload: Dict[str, Any]) -> None:
+        event_type, payload = stored_event(event_type, payload)
         sql = ("INSERT INTO job_events (job_id, event_type, payload)"
                " VALUES (%s, %s, %s)")
         conn = self._conn()
@@ -165,8 +215,9 @@ class JobRepository:
     def add_events(self, job_id: str, events: List[Dict[str, Any]]) -> None:
         if not events:
             return
-        rows = [(job_id, e["event_type"], _dump(e.get("payload", {})))
-                for e in events]
+        rows = [(job_id, stored, _dump(body))
+                for stored, body in (stored_event(e["event_type"], e.get("payload"))
+                                     for e in events)]
         sql = ("INSERT INTO job_events (job_id, event_type, payload)"
                " VALUES (%s, %s, %s)")
         conn = self._conn()
