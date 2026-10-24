@@ -32,3 +32,26 @@ Consequences, all measured in round 4
 Persisting import jobs so they survive a restart is a schema change and is
 therefore not implemented; it is listed as a proposal in
 `audit_report/R4_decisions.md` (M-2).
+
+## Licence
+
+SYLTHARAE is released under the **GNU Affero General Public License**,
+version 3 or (at your option) any later version: `AGPL-3.0-or-later`. The full
+text is in [`LICENSE`](LICENSE), the same expression the package metadata
+declares (`license` in `pyproject.toml`).
+
+The third-party components this software bundles and depends on are
+enumerated by `tools/licenses/check_licenses.py` against the installed
+environment; the bundled static assets and fonts carry their own licence
+files next to them (for example `static/fonts/OFL-*.txt`).
+
+Section 13 of the licence requires that users interacting with the software
+over a network be offered its source. The interface shows a source link on
+every page; its target is `SOURCE_CODE_URL` (see `.env.example`), defaulting to
+`apps/web/app.py:DEFAULT_SOURCE_CODE_URL`.
+
+**Open, not decided here:** a consolidated `THIRD_PARTY_NOTICES.md` (the file
+`pyproject.toml` lists in `license-files`) has not been written, and the
+licence metadata of the two optional PDF packages `pymupdf-layout` /
+`pymupdf4llm` declares nothing usable. Both are recorded in
+`audit_report/R4_decisions.md` under D-6 rather than guessed at.
