@@ -277,13 +277,13 @@ against 61 s).
 
 | id | finding | evidence | status |
 | --- | --- | --- | --- |
-| M-1 | `POST /api/import-export/batch-import` accepts 30 files, queues 5 and returns `accepted: 30, queued: 5, rejected: 0` while 25 entries carry `status: error, error: "Failed to queue processing task"`. The 25 are dropped with no retry and no queue; only the per-entry list reveals it, the counters read as if all 30 were accepted. | live request in this session against the running server (`RuntimeError: Maximum concurrent tasks (5) reached` in `Api/task_manager.create_task`) | DEFECT-OPEN |
+| M-1 | **fixed (`7548fc6`)** - `POST /api/import-export/batch-import` accepted 30 files, queued 5 and returned `accepted: 30, queued: 5, rejected: 0` while 25 entries carry `status: error, error: "Failed to queue processing task"`. The 25 are dropped with no retry and no queue; only the per-entry list reveals it, the counters read as if all 30 were accepted. | live request in this session against the running server (`RuntimeError: Maximum concurrent tasks (5) reached` in `Api/task_manager.create_task`); now `accepted/queued/rejected/deferred` sum to the number submitted | FIXED+TEST (`tests/unit/test_batch_import_accounting.py`) |
 | M-2 | Ingestion progress is not persisted: `jobs`/`job_events` stay empty for imports, so an interrupted or dropped import leaves no record, `GET /api/jobs` shows nothing, and nothing is resumed after a restart. | `restart_mid_job.json` (§6) | DEFECT-OPEN (design; needs a decision) |
-| M-3 | Ingestion cost turns superlinear above ~512 KB: each doubling of the document costs 3–4× the time (128 KB 2.0 s … 4 MB 321 s), with 35 signals stored per KB of input. An 8 MB document did not finish within 300 s and, on this curve, would exceed the 1200 s processing timeout. | `ingest_scaling.json` (§7) | DEFECT-OPEN (performance) |
+| M-3 | **profiled and fixed (`eb2a64c`, `4b5e901`)** - ingestion cost turned superlinear above ~512 KB: each doubling of the document costs 3–4× the time (128 KB 2.0 s … 4 MB 321 s), with 35 signals stored per KB of input. An 8 MB document did not finish within 300 s and, on this curve, would exceed the 1200 s processing timeout. | `ingest_scaling.json` (§7), `ingest_profile_before.json` / `ingest_profile_after2.json` (§10) | FIXED+TEST - 2 MB 414.2 s -> 25.0 s, now linear (§10) |
 | M-4 | Every list/dashboard query is a full sequential scan of `paths` + `hash_contexts`; three of the ten heaviest spill sorts to disk. Fine at 100 000 rows, linear beyond it. | §1 | MEASURED — no change made (schema frozen; index proposals belong in the deferred design) |
 | M-5 | `/api/signals` facet aggregate scans all signals on every request, so latency is flat ~200–330 ms and independent of `limit`/`offset`. | §4 | MEASURED — no change made |
-| M-6 | During a database outage `/health` hangs for the pool timeout (~30 s) instead of failing fast, while `/api/*` answers 401 in ~2 ms; the body exposes the driver class name `OperationalError`. | §5 | DEFECT-OPEN (minor) |
-| M-7 | A database outage signs every user out (session store is in the database) and the client is told `401 unauthenticated` with no indication that the cause was an outage. | §5 | DEFECT-OPEN (minor, product decision) |
+| M-6 | **fixed (`159b470`)** - during a database outage `/health` hung for the pool timeout (~30 s) instead of failing fast, while `/api/*` answered 401 in ~2 ms; the body exposed the driver class name `OperationalError`. Now bounded by a 2 s deadline (clamped 0.2-10 s), body says `unavailable`. | §5, `tests/unit/test_health_probe.py` | FIXED+TEST |
+| M-7 | **fixed (`5027035`)** - a database outage signed every user out (session store is in the database) and the client is told `401 unauthenticated` with no indication that the cause was an outage. | §5, `tests/security/test_outage_auth_reason.py` | FIXED+TEST (401 kept, `code: authentication_unavailable`, `retry_after_seconds: 5`, cookie retained) |
 | M-8 | The `evidence->>'kind'` JSONB filter (identifier kinds) performs a Parallel Seq Scan: ~26 ms at 75 000 signals, linear in signal count, not indexable without a schema change. | §2 | MEASURED — usable at this size |
 
 ## 9. What was **not** measured
@@ -291,15 +291,77 @@ against 61 s).
 * Concurrency: every request above was issued one at a time from one client.
   Nothing here says how these plans behave with 10 or 50 parallel clients.
 * Rows beyond 100 000: the linear scans are measured at 100 000 only.
-* Per-analyser timings: the phase boundaries above come from log timestamps,
-  not from instrumenting each detector, so which *specific* detector dominates
-  is still unmeasured.
+* Per-analyser timings were unmeasured in round 4 (the phase boundaries above
+  come from log timestamps, not from instrumenting each detector). Round 5
+  profiled the pipeline instead: see §10.
 * Ingestion above 4 MB: the 8 MB document was observed only as "still running
   at 300 s" before it was killed; it was not run to completion or to its
   timeout.
-* Which analyser dominates ingestion time (no per-phase timings were taken).
 * The 1200 s processing timeout was not waited for, so the abort path for an
   oversized document is unverified.
 * Write throughput and WAL behaviour under bulk ingest.
 * Network latency: the client and the server share the machine, so all client
   timings exclude network delay.
+
+## 10. Round 5 — per-analyser profile of ingestion, and what it found
+
+`tools/audit/profile_ingest.py` runs the same pipeline the task manager runs
+(`IntegratedFileReader.process_single_file`) under `cProfile`, one fresh
+database per run, for 512 KB, 1 MB and 2 MB plain-text documents
+(`/tmp/profile_corpus`, rebuilt by the script). Raw output:
+`evidence_scale/ingest_profile_before.json` (pre-fix),
+`ingest_profile_after.json` (first fix) and `ingest_profile_after2.json`
+(both fixes).
+
+### 10.1 The hot spot before any change
+
+| document | total | top cumulative entry | own time of the entry |
+| --- | --- | --- | --- |
+| 512 KB | 33.6 s | `identifiers_intel._merge_overlaps` 19.9 s | 0.05 s |
+| 1 MB | 106.3 s | `identifiers_intel._merge_overlaps` 73.8 s | 0.14 s |
+| 2 MB | 414.2 s | `identifiers_intel._merge_overlaps` 307.0 s (74%) | 0.35 s |
+
+The own time is negligible; the cost is inside it, in `builtins.any`
+(82 649 calls, 113.6 s own at 2 MB): every identifier candidate was compared
+against every interval already kept. With the first fix applied the profile
+named the next one: `temporal_intel.detect` 98.0 s of 116.3 s at 2 MB, 87.2 s
+of it in `builtins.any` over a generator — 106 739 892 generator steps — the
+same pairwise overlap test for date spans and orientation cues.
+
+### 10.2 Both are the same algorithmic defect, fixed the same way
+
+Kept spans never overlap one another, so a candidate can only clash with the
+one starting before it and the one starting after it. Both sites now keep the
+accepted spans sorted and bisect (`_merge_overlaps` in
+`core/detection/identifiers_intel.py`, `_Spans` in
+`core/detection/temporal_intel.py`).
+
+Output identity, not just "tests pass":
+
+* `temporal_intel.detect` over the 512 KB and 1 MB documents produces
+  byte-identical signal lists before and after (5 166 and 10 332 signals,
+  sha256 `d52ecbf5…` both runs) —
+  `evidence_scale/temporal_output_equivalence.json`.
+* `tests/unit/test_identifiers_overlap_merge.py` and
+  `tests/unit/test_temporal_overlap_spans.py` compare the new structures with
+  a reference implementation of the old quadratic rule on random input
+  (25 and 50 trials) plus tie/touching-span cases.
+* `tests/integration/test_signal_explorer_pg.py` 3 failed before / 3 failed
+  after (same three, pre-existing); `tests/unit/test_identifiers_intel.py`
+  2 failed before / 2 failed after (same two: they expect per-kind
+  `signal_type`, the frozen schema stores `signal_type='identifier'`).
+
+### 10.3 Ingestion after the fixes, same harness, same machine
+
+| document | before | after both fixes | factor | per doubling after |
+| --- | --- | --- | --- | --- |
+| 512 KB | 33.6 s | 6.1 s | 5.5× | — |
+| 1 MB | 106.3 s | 11.9 s | 8.9× | 1.95× |
+| 2 MB | 414.2 s | 25.0 s | 16.6× | 2.10× |
+
+Ingestion is now linear in document size (each doubling doubles the time) on
+this harness. The remaining time is spread across word counting, signal
+storage and the detectors; no single function exceeds ~20 s at 2 MB and none
+dominates the way `_merge_overlaps` did. The unprofiled round-4 curve
+(§7: 2 MB 80 s, 4 MB 321 s) should improve by the same factor for the
+detector share; that re-run was not made.
