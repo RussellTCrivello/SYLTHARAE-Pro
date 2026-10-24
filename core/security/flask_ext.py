@@ -160,19 +160,27 @@ def init_auth(app) -> None:
     @app.before_request
     def _load_current_user():  # pragma: no cover - exercised via tests
         g.user = AnonymousUser()
+        #: True when the session could not be *checked* (the store raised), as
+        #: opposed to the store answering "no such session". The difference is
+        #: visible to the client: one means "sign in", the other means "retry".
+        g.session_store_unavailable = False
         token = session.get(_SESSION_TOKEN_KEY)
         if token:
             try:
                 result = get_auth_service().validate_session(token)
             except Exception:
                 logger.exception("Session validation failed")
+                g.session_store_unavailable = True
                 result = None
             if result is not None:
                 user, _record = result
                 g.user = user
                 g.session_record = _record
                 session[_SESSION_USER_KEY] = user.id
-            else:
+            elif not g.session_store_unavailable:
+                # Only drop the cookie when the store positively said the
+                # session is gone. Discarding it on a store failure signed the
+                # user out for good because of a database that came back later.
                 session.pop(_SESSION_TOKEN_KEY, None)
                 session.pop(_SESSION_USER_KEY, None)
 
@@ -192,6 +200,21 @@ def init_auth(app) -> None:
             or request.is_json
             or request.accept_mimetypes.best == "application/json"
         ):
+            if g.session_store_unavailable:
+                # Fail closed, but say which failure it is: signing in cannot
+                # work while the session store is unreachable, so a bare
+                # "unauthenticated" sent the user to a password prompt that
+                # could not succeed.
+                return (
+                    jsonify({
+                        "error": "Authentication is temporarily unavailable: "
+                                 "the session store could not be reached",
+                        "code": "authentication_unavailable",
+                        "reason": "session store unavailable; retry this request shortly",
+                        "retry_after_seconds": 5,
+                    }),
+                    401,
+                )
             return (
                 jsonify({"error": "Authentication required", "code": "unauthenticated"}),
                 401,
@@ -389,6 +412,14 @@ def is_authenticated() -> bool:
 
 def _unauthorized():
     if request.path.startswith("/api/") or request.is_json:
+        if g.get("session_store_unavailable"):
+            return jsonify({
+                "error": "Authentication is temporarily unavailable: "
+                         "the session store could not be reached",
+                "code": "authentication_unavailable",
+                "reason": "session store unavailable; retry this request shortly",
+                "retry_after_seconds": 5,
+            }), 401
         return jsonify({"error": "Authentication required", "code": "unauthenticated"}), 401
     return redirect("/auth/login?next=" + request.path)
 
