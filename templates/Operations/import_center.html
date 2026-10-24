@@ -4,6 +4,13 @@
 {% block page_type %}default{% endblock %}
 {% block content %}
 <div class="container-fluid py-4">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+    <h1 class="h3 mb-0">
+      <i class="bi bi-box-arrow-in-down me-2" aria-hidden="true"></i>{{ _('Import Center') }}
+    </h1>
+    <a href="/operations/jobs" class="btn btn-outline-primary btn-sm"><i class="bi bi-list-task"></i> {{ _('Jobs') }}</a>
+  </div>
+
   <div class="alert alert-info">
     {{ _('Importing existing data is a distinct operation from file ingestion. Validate and preview before you commit - large imports run as jobs you can monitor and cancel.') }}
   </div>
