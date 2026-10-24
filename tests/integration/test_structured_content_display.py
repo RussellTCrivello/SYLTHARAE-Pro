@@ -4,7 +4,8 @@ The word-ID content store lowercases and space-joins words on
 reconstruction, destroying the structure the extractors produced
 (worksheet names and boundaries, slide numbers, page headers,
 tab-delimited rows, original casing, line breaks). This phase adds the
-``contents_raw`` store (migration m0010): the extractor's combined text is
+``contents_raw`` store (baseline migration m0001): the extractor's combined
+text is
 kept verbatim at ingest and preferred on read, so every content interface
 can render each file type with the presentation best suited to it -
 spreadsheet sheets with navigation, slide decks, paginated PDFs, rendered
@@ -12,7 +13,7 @@ Markdown, line-numbered logs.
 
 Proven here end to end on the real pipeline + database:
 
-1. Migration m0010 creates ``contents_raw``.
+1. The baseline migration (m0001) creates ``contents_raw``.
 2. Real .xlsx/.pptx/.docx/.md/.log/.csv files ingest, and
    ``load_text_content`` returns the STRUCTURED text (original case,
    newlines, tabs, sheet/slide markers) instead of the word soup.
@@ -20,7 +21,7 @@ Proven here end to end on the real pipeline + database:
    element format emitted none before).
 4. Markdown and log sources are preserved verbatim (rendering is
    client-side; fidelity of the source is the server's contract).
-5. Files stored before m0010 (word IDs only) still display via the
+5. Files stored with word IDs only (no ``contents_raw`` row) still display via the
    word-join fallback.
 6. The in-document search endpoint reports offsets against the SAME
    structured text the pages display.
@@ -195,7 +196,18 @@ def ingested(pg_db, corpus):
 # 1. Migration
 # ---------------------------------------------------------------------------
 
-def test_migration_m0010_created_contents_raw(pg_db):
+def test_baseline_migration_created_contents_raw(pg_db):
+    """contents_raw comes from the frozen chain, not from a later migration.
+
+    The chain in this checkout is m0001..m0003 (database/migrations); there is
+    no m0010, so asserting a recorded version >= "0010" asserted a migration
+    history the repository never had. The table is created by the baseline
+    migration, which is what this checks - against the versions the runner
+    discovers, not against a number written here.
+    """
+    from database.migration_runner import discover_migrations
+
+    chain = {m.version for m in discover_migrations()}
     conn = psycopg2.connect(
         host=pg_db["host"], port=pg_db["port"], user=pg_db["user"],
         password=pg_db["password"], dbname=pg_db["database"],
@@ -206,8 +218,11 @@ def test_migration_m0010_created_contents_raw(pg_db):
                 "SELECT 1 FROM information_schema.tables"
                 " WHERE table_name = 'contents_raw'")
             assert cur.fetchone(), "contents_raw table missing"
-            cur.execute("SELECT version FROM schema_migrations ORDER BY version DESC LIMIT 1")
-            assert cur.fetchone()[0] >= "0010"
+            cur.execute("SELECT version FROM schema_migrations")
+            applied = {row[0] for row in cur.fetchall()}
+        assert chain <= applied, f"not every migration was applied: {sorted(chain - applied)}"
+        assert min(chain) == "0001"
+        assert "0010" not in chain
     finally:
         conn.close()
 
@@ -347,7 +362,8 @@ def test_word_join_fallback_when_no_raw(pg_db):
     finally:
         conn.close()
 
-    # Store word-ID content ONLY (no raw) - exactly the pre-m0010 shape.
+    # Store word-ID content ONLY (no raw) - the shape a file ingested before
+    # contents_raw existed would have.
     words = ["Legacy", "storage", "without", "raw", "text"]
     svc = ContentDBService()
     svc.words_repo.bulk_insert_words(words)
