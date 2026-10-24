@@ -2047,7 +2047,7 @@ export async function saveWordsCategorys() {
     try {
         showToastForModal('Adding relationship...', 'info');
         const csrfToken = getCSRFTokenForModal() || await getCSRFTokenAsyncForModal();
-        const response = await fetch('/api/words-categorys', {
+        const response = await fetch('/api/words-categorys/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
