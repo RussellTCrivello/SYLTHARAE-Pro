@@ -257,8 +257,21 @@ Two measured side-effects of the size:
   The stored-signal volume is two orders of magnitude larger than the input.
 * The document is not slow because of the database: the `paths` row appears
   only at the end, and the task stays `running` with no row at all while the
-  analysers work. This measurement cannot separate which analyser dominates —
-  that would need per-phase timings, which were not taken.
+  analysers work.
+
+Where the time goes, from the server log of the same runs (timestamps of the
+pipeline's own log lines, one run per size — an observation, not a profile):
+
+| document | read | content extracted | storage starts → places detector | → "document processed" | total |
+| --- | --- | --- | --- | --- | --- |
+| 2 MB | 11 ms | 1 s | 18 s | 61 s | 80 s |
+| 4 MB | 26 ms | 3 s | 70 s | 247 s | 321 s |
+
+Reading and extraction are negligible. The signal/word analysis inside
+`contents_db_service` — the steps between "storing to database" and "document
+processed" — accounts for essentially all of it, and it grows faster than the
+words per document (496 292 words at 4 MB against 248 148 at 2 MB, but 247 s
+against 61 s).
 
 ## 8. Findings raised by these measurements
 
@@ -278,8 +291,9 @@ Two measured side-effects of the size:
 * Concurrency: every request above was issued one at a time from one client.
   Nothing here says how these plans behave with 10 or 50 parallel clients.
 * Rows beyond 100 000: the linear scans are measured at 100 000 only.
-* Where the ingestion time actually goes between 512 KB and 4 MB (the phase
-  samples only show `running`; no per-analyser timings were taken).
+* Per-analyser timings: the phase boundaries above come from log timestamps,
+  not from instrumenting each detector, so which *specific* detector dominates
+  is still unmeasured.
 * Ingestion above 4 MB: the 8 MB document was observed only as "still running
   at 300 s" before it was killed; it was not run to completion or to its
   timeout.
