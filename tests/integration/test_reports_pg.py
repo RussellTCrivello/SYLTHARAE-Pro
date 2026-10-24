@@ -235,3 +235,17 @@ def test_the_report_needs_no_table_of_its_own(pg_db):
     finally:
         conn.close()
     assert not {t for t in tables if t.startswith("report_")}
+
+
+def test_the_batch_report_page_does_not_depend_on_a_missing_module(app, viewer_client):
+    """``/operations/input/reports/<job_id>`` imported a package that did not exist.
+
+    The route is the printable per-batch report. Its handler imports
+    ``services.reporting.ingestion_batch``; before that package existed the
+    import ran inside the route and every request - valid id, missing id,
+    even a non-numeric one - answered 500. An id that names no job is a 404.
+    """
+    resp = viewer_client.get("/operations/input/reports/no-such-job")
+    assert resp.status_code == 404, (resp.status_code, resp.get_data(as_text=True)[:200])
+    resp = viewer_client.get("/operations/input/reports/999999999")
+    assert resp.status_code == 404, (resp.status_code, resp.get_data(as_text=True)[:200])
