@@ -1,0 +1,1 @@
+.LEFT OVER: geo_places=1 geo_place_names=2 rows=[(1, 'New Metropolis 83f1014d')] current_fingerprint=0a35c0d3a874e508c388c50f3541093f1582cb9d610894c08e414880a3925c89

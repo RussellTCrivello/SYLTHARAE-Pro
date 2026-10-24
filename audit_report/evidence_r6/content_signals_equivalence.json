@@ -1,0 +1,31 @@
+{
+  "what": "content_signals rows, pre-M-3 algorithm vs HEAD algorithm, same tree otherwise",
+  "harness": "/tmp/m3_rows.py: real pipeline (IntegratedFileReader.process_single_file), fresh database per run, gazetteer seeded (223 places)",
+  "columns": "detector, detector_ver, signal_type, value, surface, char_start, char_end, language, resolution, date_from, date_to, anchor_date, evidence, dedup_key (detected_at excluded)",
+  "runs": [
+    {
+      "size": "512kb",
+      "before_rows": 20664,
+      "after_rows": 20664,
+      "before_sha256": "fa1290d7ef11b8de51b198734cb94ddeb33b180010171bf6b69d520072a4038b",
+      "after_sha256": "fa1290d7ef11b8de51b198734cb94ddeb33b180010171bf6b69d520072a4038b",
+      "identical": true
+    },
+    {
+      "size": "1mb",
+      "before_rows": 41328,
+      "after_rows": 41328,
+      "before_sha256": "ea0b88ddf26ad1482956137e8522f7d556122e88c88f26dbada54e63e8460b10",
+      "after_sha256": "ea0b88ddf26ad1482956137e8522f7d556122e88c88f26dbada54e63e8460b10",
+      "identical": true
+    },
+    {
+      "size": "2mb",
+      "before_rows": 82648,
+      "after_rows": 82648,
+      "before_sha256": "d315b67312fd49b5aa377e4dc9675dc71aa32ae56298b48ff1ca1fb6fd5023a0",
+      "after_sha256": "d315b67312fd49b5aa377e4dc9675dc71aa32ae56298b48ff1ca1fb6fd5023a0",
+      "identical": true
+    }
+  ]
+}

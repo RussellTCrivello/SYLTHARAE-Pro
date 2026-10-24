@@ -1,0 +1,272 @@
+{
+  "database": {
+    "applied_migrations": [
+      "0001",
+      "0002",
+      "0003"
+    ]
+  },
+  "runs": [
+    {
+      "size": "512kb",
+      "bytes": 524373,
+      "seconds": 11.8,
+      "top10_cumulative": [
+        {
+          "function": "process_single_file (integrated_reader.py:522)",
+          "module": "pipeline",
+          "calls": 1,
+          "total_s": 0.003,
+          "cumulative_s": 11.776
+        },
+        {
+          "function": "_store_file_sync (storage_pipeline.py:371)",
+          "module": "pipeline",
+          "calls": 1,
+          "total_s": 0.001,
+          "cumulative_s": 11.749
+        },
+        {
+          "function": "process_full_document (contents_db_service.py:1222)",
+          "module": "database",
+          "calls": 1,
+          "total_s": 0.001,
+          "cumulative_s": 10.64
+        },
+        {
+          "function": "_detect_signals (contents_db_service.py:1488)",
+          "module": "database",
+          "calls": 1,
+          "total_s": 0.0,
+          "cumulative_s": 10.158
+        },
+        {
+          "function": "_detect_one (contents_db_service.py:1497)",
+          "module": "database",
+          "calls": 3,
+          "total_s": 0.007,
+          "cumulative_s": 10.085
+        },
+        {
+          "function": "detect_and_store (signal_store.py:149)",
+          "module": "services",
+          "calls": 3,
+          "total_s": 0.005,
+          "cumulative_s": 10.069
+        },
+        {
+          "function": "detect (detectors.py:31)",
+          "module": "services",
+          "calls": 1,
+          "total_s": 0.011,
+          "cumulative_s": 7.602
+        },
+        {
+          "function": "detect (temporal_intel.py:835)",
+          "module": "core",
+          "calls": 1,
+          "total_s": 0.066,
+          "cumulative_s": 7.591
+        },
+        {
+          "function": "<built-in method builtins.any> (~:0)",
+          "module": "stdlib/site-packages",
+          "calls": 7777,
+          "total_s": 1.058,
+          "cumulative_s": 5.232
+        },
+        {
+          "function": "<genexpr> (temporal_intel.py:890)",
+          "module": "core",
+          "calls": 6674472,
+          "total_s": 2.378,
+          "cumulative_s": 3.021
+        }
+      ],
+      "by_module": {
+        "core": 5.801,
+        "stdlib/site-packages": 4.693,
+        "database": 1.117,
+        "services": 0.071,
+        "pipeline": 0.013,
+        "reader_file": 0.001,
+        "Hdg_Err_Ex_Log": 0.0
+      },
+      "stored": true
+    },
+    {
+      "size": "1mb",
+      "bytes": 1048720,
+      "seconds": 34.3,
+      "top10_cumulative": [
+        {
+          "function": "process_single_file (integrated_reader.py:522)",
+          "module": "pipeline",
+          "calls": 1,
+          "total_s": 0.006,
+          "cumulative_s": 34.289
+        },
+        {
+          "function": "_store_file_sync (storage_pipeline.py:371)",
+          "module": "pipeline",
+          "calls": 1,
+          "total_s": 0.001,
+          "cumulative_s": 34.262
+        },
+        {
+          "function": "process_full_document (contents_db_service.py:1222)",
+          "module": "database",
+          "calls": 1,
+          "total_s": 0.002,
+          "cumulative_s": 32.079
+        },
+        {
+          "function": "_detect_one (contents_db_service.py:1497)",
+          "module": "database",
+          "calls": 3,
+          "total_s": 0.013,
+          "cumulative_s": 31.123
+        },
+        {
+          "function": "_detect_signals (contents_db_service.py:1488)",
+          "module": "database",
+          "calls": 1,
+          "total_s": 0.0,
+          "cumulative_s": 31.123
+        },
+        {
+          "function": "detect_and_store (signal_store.py:149)",
+          "module": "services",
+          "calls": 3,
+          "total_s": 0.011,
+          "cumulative_s": 31.107
+        },
+        {
+          "function": "detect (detectors.py:31)",
+          "module": "services",
+          "calls": 1,
+          "total_s": 0.026,
+          "cumulative_s": 26.245
+        },
+        {
+          "function": "detect (temporal_intel.py:835)",
+          "module": "core",
+          "calls": 1,
+          "total_s": 0.15,
+          "cumulative_s": 26.219
+        },
+        {
+          "function": "<built-in method builtins.any> (~:0)",
+          "module": "stdlib/site-packages",
+          "calls": 15499,
+          "total_s": 4.283,
+          "cumulative_s": 21.368
+        },
+        {
+          "function": "<genexpr> (temporal_intel.py:890)",
+          "module": "core",
+          "calls": 26692722,
+          "total_s": 9.686,
+          "cumulative_s": 12.363
+        }
+      ],
+      "by_module": {
+        "core": 19.001,
+        "stdlib/site-packages": 12.691,
+        "database": 2.267,
+        "services": 0.148,
+        "pipeline": 0.028,
+        "reader_file": 0.002,
+        "Hdg_Err_Ex_Log": 0.0
+      },
+      "stored": true
+    },
+    {
+      "size": "2mb",
+      "bytes": 2097215,
+      "seconds": 116.3,
+      "top10_cumulative": [
+        {
+          "function": "process_single_file (integrated_reader.py:522)",
+          "module": "pipeline",
+          "calls": 1,
+          "total_s": 0.012,
+          "cumulative_s": 116.32
+        },
+        {
+          "function": "_store_file_sync (storage_pipeline.py:371)",
+          "module": "pipeline",
+          "calls": 1,
+          "total_s": 0.002,
+          "cumulative_s": 116.268
+        },
+        {
+          "function": "process_full_document (contents_db_service.py:1222)",
+          "module": "database",
+          "calls": 1,
+          "total_s": 0.005,
+          "cumulative_s": 111.635
+        },
+        {
+          "function": "_detect_one (contents_db_service.py:1497)",
+          "module": "database",
+          "calls": 3,
+          "total_s": 0.029,
+          "cumulative_s": 108.427
+        },
+        {
+          "function": "_detect_signals (contents_db_service.py:1488)",
+          "module": "database",
+          "calls": 1,
+          "total_s": 0.0,
+          "cumulative_s": 108.427
+        },
+        {
+          "function": "detect_and_store (signal_store.py:149)",
+          "module": "services",
+          "calls": 3,
+          "total_s": 0.02,
+          "cumulative_s": 108.396
+        },
+        {
+          "function": "detect (detectors.py:31)",
+          "module": "services",
+          "calls": 1,
+          "total_s": 0.054,
+          "cumulative_s": 98.074
+        },
+        {
+          "function": "detect (temporal_intel.py:835)",
+          "module": "core",
+          "calls": 1,
+          "total_s": 0.431,
+          "cumulative_s": 98.021
+        },
+        {
+          "function": "<built-in method builtins.any> (~:0)",
+          "module": "stdlib/site-packages",
+          "calls": 30994,
+          "total_s": 17.478,
+          "cumulative_s": 87.229
+        },
+        {
+          "function": "<genexpr> (temporal_intel.py:890)",
+          "module": "core",
+          "calls": 106739892,
+          "total_s": 39.736,
+          "cumulative_s": 50.525
+        }
+      ],
+      "by_module": {
+        "core": 69.172,
+        "stdlib/site-packages": 41.55,
+        "database": 4.899,
+        "services": 0.3,
+        "pipeline": 0.057,
+        "reader_file": 0.004,
+        "Hdg_Err_Ex_Log": 0.0
+      },
+      "stored": true
+    }
+  ]
+}
