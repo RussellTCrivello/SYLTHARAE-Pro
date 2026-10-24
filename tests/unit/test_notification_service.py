@@ -69,10 +69,11 @@ def make_notification(**overrides) -> Notification:
         title="Duplicate Files Detected: a.docx",
         message="Found 2 duplicate file(s) with the same hash. Files: a.docx, b.docx",
         file_id=1,
-        file_name="a.docx",
-        file_path="/x/a.docx",
         event_date=None,
-        metadata={"hash": "h", "duplicate_count": 2, "file_names": ["a.docx", "b.docx"]},
+        # The file is referenced by file_id; the display name lives in the
+        # metadata of rows written before the reader joined ``paths``.
+        metadata={"hash": "h", "duplicate_count": 2, "file_names": ["a.docx", "b.docx"],
+                  "file_name": "a.docx", "file_path": "/x/a.docx"},
         created_at=datetime(2026, 1, 1, 12, 0, 0),
         read=False,
         dismissed=False,
@@ -139,10 +140,10 @@ def test_flush_uses_one_multi_row_insert_and_maps_real_ids(api_utils):
     def insert_handler(query, params, fetch):
         assert "INSERT INTO alerts" in query
         assert params is not None
-        assert len(params) % 12 == 0
-        count = len(params) // 12
+        assert len(params) % 13 == 0
+        count = len(params) // 13
         # Echo created_at exactly as sent (TIMESTAMP round-trip).
-        return [(1000 + i, params[12 * i + 9]) for i in range(count)]
+        return [(1000 + i, params[13 * i + 7]) for i in range(count)]
 
     api_utils.handler["fn"] = insert_handler
 
@@ -155,7 +156,7 @@ def test_flush_uses_one_multi_row_insert_and_maps_real_ids(api_utils):
     assert written == 5
     inserts = [c for c in api_utils.calls if "INSERT INTO alerts" in c["query"]]
     assert len(inserts) == 1, "flush must use a single multi-row statement, not per-row inserts"
-    assert len(inserts[0]["params"]) == 5 * 12
+    assert len(inserts[0]["params"]) == 5 * 13
     assert service.get_pending_count() == 0
     assert [n.id for n in created] == [1000, 1001, 1002, 1003, 1004]
     # The in-memory list sees the same objects with real ids.
@@ -168,8 +169,8 @@ def test_flush_maps_ids_even_when_created_at_collides(api_utils):
     service = make_service(api_utils)
 
     def insert_handler(query, params, fetch):
-        count = len(params) // 12
-        return [(500 + i, params[12 * i + 9]) for i in range(count)]
+        count = len(params) // 13
+        return [(500 + i, params[13 * i + 7]) for i in range(count)]
 
     api_utils.handler["fn"] = insert_handler
 
@@ -204,7 +205,7 @@ def test_flush_failure_requeues_the_whole_batch(api_utils):
 
     # Retry succeeds and writes everything.
     api_utils.handler["fn"] = lambda q, p, f: [
-        (900 + i, p[12 * i + 9]) for i in range(len(p) // 12)
+        (900 + i, p[13 * i + 7]) for i in range(len(p) // 13)
     ]
     written = service.flush_pending_notifications()
     assert written == 4
@@ -287,10 +288,13 @@ def test_get_upcoming_events_merges_pending_and_sorts(api_utils):
     service = make_service(api_utils)
 
     def upcoming_row(event_offset, row_id):
+        # ALERT_COLUMNS order: alerts has no file_name/file_path columns (the
+        # display values live in metadata), and the reader is positional.
         return (
             row_id, "future_date", "high", "Future Date Detected", "m",
-            1, "f.docx", "/f.docx", date.today() + timedelta(days=event_offset),
-            "{}", datetime(2026, 1, 1), False, False,
+            1, date.today() + timedelta(days=event_offset),
+            {"file_name": "f.docx", "file_path": "/f.docx"},
+            datetime(2026, 1, 1), False, False, None, None, None,
         )
 
     api_utils.handler["fn"] = lambda q, p, f: [upcoming_row(10, 31), upcoming_row(5, 32)]

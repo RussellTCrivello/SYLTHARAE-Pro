@@ -15,7 +15,8 @@ from core.monitoring.notification_service import (
     visibility_clause,
     utc_today,
 )
-from core.monitoring.notification_display import format_title_message, display_payload
+from core.monitoring.notification_display import (
+    display_payload, format_title_message, path_names)
 from Api.utils import execute_query
 import logging
 from core.errors import client_error, client_safe_message
@@ -138,7 +139,8 @@ def register_notification_routes(app):
             # Single shared formatter keeps displayed titles/messages
             # accurate and identical across every endpoint (see
             # core/monitoring/notification_display.py).
-            notifications_data = [display_payload(n, _) for n in notifications]
+            names = path_names([n.file_id for n in notifications])
+            notifications_data = [display_payload(n, _, names) for n in notifications]
 
             return jsonify({
                 'success': True,
@@ -160,6 +162,7 @@ def register_notification_routes(app):
             upcoming = notification_service.get_upcoming_events(days_ahead=days_ahead,
                                                                 for_user_id=_viewer_id())
             today = utc_today()
+            names = path_names([n.file_id for n in upcoming])
             
             events_data = []
             for n in upcoming:
@@ -169,8 +172,10 @@ def register_notification_routes(app):
                     'title': title,
                     'message': message,
                     'file_id': n.file_id,
-                    'file_name': n.metadata.get('file_name'),
-                    'file_path': n.metadata.get('file_path'),
+                    'file_name': names.get(n.file_id, (None, None))[0]
+                                  or n.metadata.get('file_name'),
+                    'file_path': names.get(n.file_id, (None, None))[1]
+                                  or n.metadata.get('file_path'),
                     'event_date': n.event_date.isoformat() if n.event_date else None,
                     'days_until': (n.event_date - today).days if n.event_date else None,
                     'metadata': n.metadata,
@@ -220,7 +225,8 @@ def register_notification_routes(app):
                     'error': 'Notification not found'
                 }), 404
 
-            payload = display_payload(notification, _)
+            payload = display_payload(notification, _,
+                                      path_names([notification.file_id]))
 
             return jsonify({
                 'success': True,

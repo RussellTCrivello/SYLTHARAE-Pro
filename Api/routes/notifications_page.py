@@ -15,7 +15,7 @@ one query per notification (the previous N+1 pattern).
 from flask import render_template, request, jsonify
 from flask_babel import gettext as _
 from core.monitoring.notification_service import get_notification_service, notification_from_row
-from core.monitoring.notification_display import display_payload
+from core.monitoring.notification_display import display_payload, path_names
 from Api.utils import select_info_sources, select_info_sides, execute_query
 import logging
 from core.errors import client_error
@@ -88,7 +88,10 @@ def register_notification_page_routes(app):
             from Api.routes.notifications import _viewer_id
             from core.monitoring.notification_service import ALERT_COLUMNS, visibility_clause
 
-            joins = ""
+            # ``alerts`` holds the path id only; the name shown by the page
+            # comes from ``paths``. Joined unconditionally so search and the
+            # payload resolve it the same way.
+            joins = " LEFT JOIN paths p ON p.id = a.file_id"
             # Only what this user may see: system-wide alerts and their own.
             where = ["a.dismissed = FALSE", visibility_clause("a")]
             params = [_viewer_id()]
@@ -120,7 +123,8 @@ def register_notification_page_routes(app):
                 where.append(
                     "(a.title ILIKE %s ESCAPE '\\' OR "
                     "a.message ILIKE %s ESCAPE '\\' OR "
-                    "COALESCE(a.file_name, '') ILIKE %s ESCAPE '\\')"
+                    "COALESCE(p.file_name, a.metadata->>'file_name', '')"
+                    " ILIKE %s ESCAPE '\\')"
                 )
                 params.extend([pattern, pattern, pattern])
 
@@ -208,8 +212,10 @@ def register_notification_page_routes(app):
             else:
                 total = summary['total']
 
-            # Format for JSON with translation (shared formatter)
-            notifications_data = [display_payload(n, _) for n in notifications]
+            # Format for JSON with translation (shared formatter). File names
+            # are resolved from ``paths`` in one query for the whole page.
+            names = path_names([n.file_id for n in notifications])
+            notifications_data = [display_payload(n, _, names) for n in notifications]
 
             logger.debug(
                 f"Returning {len(notifications_data)} notifications "
