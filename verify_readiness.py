@@ -194,20 +194,35 @@ REQUIRED_TABLES = {
     "jobs", "job_events",
 }
 
-REQUIRED_INDEXES = {
-    "idx_words_hashs_word_id", "idx_words_hashs_hash_id",
-    "idx_keywords_hashs_keyword_id", "idx_paths_context_id",
-    "idx_paths_file_name", "idx_paths_file_path",
-    "idx_titles_content_hash_id",
-    # The uniqueness behind hashs(hash) and hash_contexts(hash_id, source_id,
-    # side_id). m0038 removed the second name of each pair
-    # (`idx_hashs_hash`, `uq_hash_contexts_hash_source_side`): they were exact
-    # duplicates of these two and every duplicate was maintained on every
-    # write. If a check fails here, the surviving constraint is gone and the
-    # invariant is unenforced - which is exactly what this check is for.
-    "hashs_hash_key",
-    "uq_hash_contexts_identity",
+#: Index name -> (table, columns), in order. Names are labels here: the check
+#: below looks the index up **by definition** in ``pg_index``, so a database
+#: that enforces the same columns under a PostgreSQL-derived name passes just
+#: as one that carries the name does. That is also why this set stays limited
+#: to names the frozen migrations actually create - inventing a name to make a
+#: check green would be exactly the kind of assertion this file exists to
+#: disprove.
+REQUIRED_INDEX_DEFINITIONS = {
+    "idx_words_hashs_word_id": ("words_hashs", ("word_id",)),
+    "idx_words_hashs_hash_id": ("words_hashs", ("hash_id",)),
+    "idx_keywords_hashs_keyword_id": ("keywords_hashs", ("keyword_id",)),
+    "idx_paths_context_id": ("paths", ("context_id",)),
+    "idx_paths_file_name": ("paths", ("file_name",)),
+    "idx_paths_file_path": ("paths", ("file_path",)),
+    "idx_titles_content_hash_id": ("titles_content", ("hash_id",)),
 }
+
+#: Uniqueness the application relies on, stated as (table, columns) because
+#: the constraint name is whatever the migration (or PostgreSQL) gave it.
+#: ``hash_contexts`` is unique on (hash_id, source_id, side_id) - the identity
+#: of one document in one source and side; ``hashs`` on its digest.
+REQUIRED_UNIQUE_DEFINITIONS = (
+    ("hashs", ("hash",)),
+    ("hash_contexts", ("hash_id", "source_id", "side_id")),
+)
+
+#: Kept for callers that want the names; the readiness check uses the
+#: definitions above.
+REQUIRED_INDEXES = set(REQUIRED_INDEX_DEFINITIONS)
 
 
 @check("database", "Required tables exist")
@@ -229,20 +244,50 @@ def _():
     return f"{len(required)} tables present (incl. job infrastructure)"
 
 
+def _index_definitions(cur):
+    """{((table, columns), unique) ...} read from ``pg_index``, not names."""
+    cur.execute(
+        """
+        SELECT c.relname AS table_name,
+               i.indisunique,
+               array_agg(a.attname ORDER BY k.ord) AS columns
+        FROM pg_index i
+        JOIN pg_class c ON c.oid = i.indrelid
+        JOIN LATERAL unnest(i.indkey) WITH ORDINALITY AS k(attnum, ord) ON TRUE
+        JOIN pg_attribute a ON a.attrelid = c.oid AND a.attnum = k.attnum
+        WHERE c.relnamespace = 'public'::regnamespace
+        GROUP BY c.relname, i.indexrelid, i.indisunique
+        """
+    )
+    return {(r[0], tuple(r[2]), bool(r[1])) for r in cur.fetchall()}
+
+
 @check("database", "Required performance indexes exist (DB-06)")
 def _():
-    required = REQUIRED_INDEXES
     conn = _db_connect()
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT indexname FROM pg_indexes WHERE schemaname='public'")
-            actual = {r[0] for r in cur.fetchall()}
+            definitions = _index_definitions(cur)
     finally:
         conn.close()
-    missing = required - actual
+    plain = {(table, cols) for table, cols, unique in definitions if not unique}
+    unique_sets = {(table, cols) for table, cols, unique in definitions if unique}
+
+    missing = [label for label, (table, cols)
+               in REQUIRED_INDEX_DEFINITIONS.items()
+               if (table, cols) not in plain]
     if missing:
-        raise AssertionError(f"missing indexes: {', '.join(sorted(missing))}")
-    return f"{len(required)} key indexes present"
+        raise AssertionError(
+            "missing index definitions (table, columns): "
+            + ", ".join(f"{REQUIRED_INDEX_DEFINITIONS[m]}" for m in missing))
+    missing_unique = [t for t in REQUIRED_UNIQUE_DEFINITIONS
+                      if t not in unique_sets]
+    if missing_unique:
+        raise AssertionError(
+            "missing unique definitions: "
+            + ", ".join(f"{table}{cols}" for table, cols in missing_unique))
+    return (f"{len(REQUIRED_INDEX_DEFINITIONS)} index and "
+            f"{len(REQUIRED_UNIQUE_DEFINITIONS)} uniqueness definitions present")
 
 
 # ---------------------------------------------------------------------------
