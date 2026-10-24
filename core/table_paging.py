@@ -46,14 +46,24 @@ def clamp_size(value: Any, default: int = DEFAULT_PAGE_SIZE) -> int:
     return max(1, min(size, MAX_PAGE_SIZE))
 
 
+#: The farthest page the pager will look at. The page is normally clamped to
+#: the real page count, but the first query still computes ``(page - 1) * size``
+#: as an OFFSET, and ``?page=99999999999999999999`` made PostgreSQL raise
+#: "bigint out of range" - a 500 for a page that simply does not exist. A
+#: million pages of a thousand rows is a billion rows, far past any real list,
+#: and keeps the arithmetic inside the type.
+MAX_PAGE = 1_000_000
+
+
 def clamp_page(value: Any) -> int:
-    """A usable page number: at least 1. Upper bounds need the total, see
-    :func:`fetch_page`."""
+    """A usable page number: between 1 and :data:`MAX_PAGE`. Anything past the
+    end of the list itself is handled by :func:`fetch_page`, which needs the
+    total to know what the end is."""
     try:
         page = int(value)
     except (TypeError, ValueError):
         return 1
-    return max(1, page)
+    return min(max(1, page), MAX_PAGE)
 
 
 def total_pages_for(total: int, size: int) -> int:

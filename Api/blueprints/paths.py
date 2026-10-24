@@ -1,6 +1,7 @@
 import logging
 
 from core.errors import client_error
+from core.validation import query_int
 from flask import Blueprint, request, jsonify
 
 from Api.models.paths import PathCreate
@@ -83,10 +84,9 @@ def api_list_paths():
     Returns:
         JSON response with list of path records
     """
-    offset = request.args.get("offset", type=int, default=0)
-    limit = request.args.get("limit", type=int, default=50)
-    # Basic safety cap
-    limit = min(max(limit, 1), 500)
+    # A negative offset is a database error, not a page: clamp both.
+    offset = query_int("offset", 0, minimum=0, maximum=10_000_000)
+    limit = query_int("limit", 50, minimum=1, maximum=500)
     file_type = request.args.get("file_type")
     status = request.args.get("status")
     rows = PathsRepository.list(offset=offset, limit=limit, file_type=file_type, status=status)

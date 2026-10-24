@@ -27,6 +27,7 @@ files_bp = Blueprint("files", __name__)
 # the page's, and they are translated here rather than assembled in JavaScript.
 from flask_babel import gettext as _
 
+from core.table_paging import clamp_page
 from core.serialization import pack_int_list, unpack_int_list
 from core.errors import client_error, client_safe_message
 from core.security.rate_limit import INTERACTIVE_READ_LIMIT, limiter
@@ -489,7 +490,12 @@ def _library_page(args, page=1, limit=10, scope_where=None, scope_params=()):
     panel is about (a keyword, a category). It is not a filter the reader
     toggles; it is what the panel IS, and it composes with every filter.
     """
-    offset = (max(1, page) - 1) * limit
+    # ``page`` arrives from the query string; past ~10**19 the OFFSET is no
+    # longer a bigint and PostgreSQL refuses the statement, so a page that
+    # cannot exist answered 500. clamp_page keeps the arithmetic inside the
+    # type (and any page past the end of the list is handled below by the
+    # clamp to ``total_pages``).
+    offset = (clamp_page(page) - 1) * limit
 
     filters = build_library_filters(args)
     where_parts = list(filters.where_parts)
