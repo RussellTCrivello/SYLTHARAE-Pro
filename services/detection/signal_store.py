@@ -186,10 +186,18 @@ def signal_rows_to_dicts(cur, rows: Sequence[tuple], reference_date: datetime.da
     candidates: Dict[int, List[Dict[str, Any]]] = {}
     place_ids = [r[0] for r in rows if r[1] == "places"]
     if place_ids:
-        cur.execute("SELECT csp.signal_id, g.place_key, g.label, g.feature_type, g.country_codes,"
+        # ``feature_type`` is the curated category word (city/country/region),
+        # joined in because geo_places stores a category, not a type name.
+        # The public place key is derived from the row id: geo_places has no
+        # external-identifier column, and the id is stable across seed syncs
+        # (the upsert matches on label + category + country_codes).
+        cur.execute("SELECT csp.signal_id, 'place:' || g.id, g.label, c.word, g.country_codes,"
                     " g.latitude, g.longitude, g.retired FROM content_signal_places csp"
-                    " JOIN geo_places g ON g.id = csp.place_id WHERE csp.signal_id = ANY(%s)"
-                    " ORDER BY csp.signal_id, g.place_key", (place_ids,))
+                    " JOIN geo_places g ON g.id = csp.place_id"
+                    " JOIN categorys cat ON cat.id = g.category_id"
+                    " JOIN words c ON c.id = cat.word_id"
+                    " WHERE csp.signal_id = ANY(%s)"
+                    " ORDER BY csp.signal_id, g.id", (place_ids,))
         for c in cur.fetchall():
             candidates.setdefault(c[0], []).append({
                 "place_key": c[1], "label": c[2], "feature_type": c[3],

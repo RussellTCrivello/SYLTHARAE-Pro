@@ -264,24 +264,49 @@ def _insert_signal(cur, hash_id, **over):
         " %(anchor_date)s, '{}', %(dedup_key)s)", values)
 
 
-@pytest.mark.parametrize("over, constraint", [
-    ({"resolution": "ambiguous"}, "ck_content_signals_resolved_has_range"),
-    ({"date_from": None, "date_to": None}, "ck_content_signals_resolved_has_range"),
-    ({"date_to": None}, "ck_content_signals_range_pair"),
-    ({"date_from": date(2026, 2, 1)}, "ck_content_signals_range_order"),
-    ({"resolution": "document_relative"}, "ck_content_signals_relative_anchor"),
-    ({"char_end": 0}, "ck_content_signals_offsets"),
-    ({"dedup_key": "Z" * 64}, "ck_content_signals_dedup_hex"),
-    ({"signal_type": "Bad Type"}, "ck_content_signals_type"),
+def _constraint_definitions(conn, table):
+    """Name -> normalised CHECK/FOREIGN KEY definition for ``table``.
+
+    The frozen baseline writes its own constraint names and no application
+    code reads them, so these tests assert the rule (the definition), not the
+    name a migration happened to choose.
+    """
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT conname, pg_get_constraintdef(oid) FROM pg_constraint"
+            " WHERE conrelid = %s::regclass AND contype IN ('c', 'f')", (table,))
+        return {name: " ".join(definition.split()) for name, definition in cur.fetchall()}
+
+
+def _assert_rejected_by_rule(conn, table, rule, insert):
+    definitions = _constraint_definitions(conn, table)
+    with conn.cursor() as cur:
+        with pytest.raises(psycopg2.Error) as info:
+            insert(cur)
+    violated = info.value.diag.constraint_name
+    matching = {name for name, definition in definitions.items() if rule in definition}
+    assert matching, f"no constraint on {table} enforces {rule!r}"
+    assert violated in matching, (
+        f"the row was rejected by {violated!r}, whose definition is"
+        f" {definitions.get(violated)!r}; the rule asked for {rule!r}")
+
+
+@pytest.mark.parametrize("over, rule", [
+    ({"resolution": "ambiguous"}, "= (date_from IS NOT NULL)"),
+    ({"date_from": None, "date_to": None}, "= (date_from IS NOT NULL)"),
+    ({"date_to": None}, "(date_from IS NULL) = (date_to IS NULL)"),
+    ({"date_from": date(2026, 2, 1)}, "date_from <= date_to"),
+    ({"resolution": "document_relative"}, "anchor_date IS NOT NULL"),
+    ({"char_end": 0}, "char_end > char_start"),
+    ({"dedup_key": "Z" * 64}, "dedup_key ~ '^[0-9a-f]{64}$'"),
+    ({"signal_type": "Bad Type"}, "'date_reference'::character varying"),
 ])
-def test_signal_constraints(pg_db, tenant, over, constraint):
+def test_signal_constraints(pg_db, tenant, over, rule):
     hash_id = _store(tenant)["hash_id"]
     conn = connect(pg_db)
     try:
-        with conn.cursor() as cur:
-            with pytest.raises(psycopg2.Error) as info:
-                _insert_signal(cur, hash_id, **over)
-        assert info.value.diag.constraint_name == constraint
+        _assert_rejected_by_rule(conn, "content_signals", rule,
+                                 lambda cur: _insert_signal(cur, hash_id, **over))
     finally:
         conn.rollback()
         conn.close()
@@ -313,11 +338,10 @@ def test_failed_run_requires_error_and_deleting_content_cascades(pg_db, tenant):
     hash_id = _store(tenant)["hash_id"]
     conn = connect(pg_db)
     try:
-        with conn.cursor() as cur:
-            with pytest.raises(psycopg2.Error) as info:
-                cur.execute("UPDATE content_signal_runs SET status = 'failed', error = NULL"
-                            " WHERE hash_id = %s", (hash_id,))
-            assert info.value.diag.constraint_name == "ck_signal_runs_error"
+        _assert_rejected_by_rule(
+            conn, "content_signal_runs", "= (error IS NOT NULL)",
+            lambda cur: cur.execute("UPDATE content_signal_runs SET status = 'failed',"
+                                    " error = NULL WHERE hash_id = %s", (hash_id,)))
         conn.rollback()
         with conn.cursor() as cur:
             cur.execute("SELECT count(*) FROM content_signals WHERE hash_id = %s", (hash_id,))

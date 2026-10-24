@@ -673,6 +673,8 @@ function setCheckboxGroup(name, values) {
 
 function clearKindFilters() {
     ['detector', 'signal_type'].forEach((name) => setCheckboxGroup(name, []));
+    const kindInput = document.getElementById('fIdentifierKind');
+    if (kindInput) kindInput.value = '';
     document.querySelectorAll('#signalsKindPresets [data-preset-id]').forEach((btn) => {
         btn.classList.remove('active');
         btn.setAttribute('aria-pressed', 'false');
@@ -684,6 +686,10 @@ function applyKindPreset(presetId) {
     if (!preset) return;
     setCheckboxGroup('detector', preset.detectors || []);
     setCheckboxGroup('signal_type', preset.signal_types || []);
+    // Identifier kinds live in the signal's evidence, not its signal_type;
+    // the hidden input is part of the filter form, so it is submitted with it.
+    const kindInput = document.getElementById('fIdentifierKind');
+    if (kindInput) kindInput.value = (preset.identifier_kinds || []).join(',');
     document.querySelectorAll('#signalsKindPresets [data-preset-id]').forEach((btn) => {
         const on = btn.dataset.presetId === presetId;
         btn.classList.toggle('active', on);

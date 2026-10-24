@@ -52,7 +52,7 @@ _SIGNAL_ARGS = {
     "detectors": "detector", "signal_types": "signal_type", "resolutions": "resolution",
     "confidence": "confidence", "languages": "language", "calendars": "calendar",
     "methods": "method", "orientations": "orientation", "place_keys": "place_key",
-    "hash_ids": "hash_id",
+    "identifier_kinds": "identifier_kind", "hash_ids": "hash_id",
 }
 _SIGNAL_SCALARS = {"evidence_text": "evidence_text", "surface_text": "surface_text",
                    "value_text": "value_text", "event_from": "event_from",
