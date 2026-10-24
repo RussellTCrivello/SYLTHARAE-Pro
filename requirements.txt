@@ -123,6 +123,7 @@ pytest-cov>=4.1                       # [WIN-NATIVE] coverage plugin
 ruff>=0.4                             # [WIN-NATIVE] linting/formatting
 bandit>=1.7                           # [WIN-NATIVE] security linting
 pgserver>=0.1                         # [WIN-NATIVE*] disposable PostgreSQL test helper
+pyzipper>=0.3.6,<0.5                   # [WIN-NATIVE] builds the AES-encrypted ZIP fixture (test-only)
 
 # -----------------------------------------------------------------------------
 # Windows native-runtime requirements that pip cannot supply
