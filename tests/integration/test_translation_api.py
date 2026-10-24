@@ -269,6 +269,68 @@ class TestTheEngineCannotBeFetched:
         assert body["engines"], "the answer must still list the engines"
 
 
+class TestTheMemoryCanDisappear:
+    """A missing memory file must be a clear 503, not a 500 with a traceback.
+
+    The memory lives in a file under APP_DATA_DIR. If that directory is gone -
+    an unmounted volume, a deleted runtime directory, permissions changed under
+    a running server - every translation would otherwise answer 500 and the
+    analyst would see a correlation id. The answer must name the condition, and
+    must not pretend the memory is empty: a lost file means lost corrections.
+    """
+
+    def test_a_missing_schema_in_an_existing_file_is_a_503(
+            self, app, client_factory, stub_engine, translation_memory):
+        """A file that is there but has lost its tables is reported, not
+        silently re-initialised and presented as an empty memory."""
+        import sqlite3
+
+        with sqlite3.connect(translation_memory.path) as conn:
+            conn.execute("DROP TABLE tm_entries")
+            conn.execute("DROP TABLE tm_glossary")
+
+        client = client_factory("admin")
+        response = client.post("/api/translation/text", json={
+            "text": "The door is open.", "target_lang": "he",
+            "source_lang": "en", "engine": "stub"})
+        assert response.status_code == 503, response.get_data(as_text=True)
+        assert (response.get_json() or {}).get("code") == "memory_unavailable"
+
+    def test_a_fresh_memory_creates_its_directory(
+            self, app, client_factory, stub_engine, translation_memory, tmp_path):
+        """The directory under APP_DATA_DIR is ours to create on first use."""
+        from services.translation import service as service_module
+        from services.translation.memory import TranslationMemory
+
+        nested = tmp_path / "made" / "by" / "us" / "translation_memory.db"
+        service_module.configure(memory=TranslationMemory(nested))
+
+        client = client_factory("admin")
+        response = client.post("/api/translation/text", json={
+            "text": "The door is open.", "target_lang": "he",
+            "source_lang": "en", "engine": "stub"})
+        assert response.status_code == 200, response.get_data(as_text=True)
+        assert nested.exists(), "the memory file was not created on first use"
+
+    def test_a_missing_memory_directory_is_a_503_with_the_reason(
+            self, app, client_factory, stub_engine, translation_memory, tmp_path):
+        gone = tmp_path / "gone"
+        gone.mkdir()
+        translation_memory.path = gone / "translation_memory.db"
+        gone.rmdir()                       # the directory disappeared under us
+
+        client = client_factory("admin")
+        response = client.post("/api/translation/text", json={
+            "text": "The door is open.", "target_lang": "he",
+            "source_lang": "en", "engine": "stub"})
+
+        assert response.status_code == 503, response.get_data(as_text=True)
+        body = response.get_json()
+        assert body["code"] == "memory_unavailable"
+        assert "memory" in body["error"].lower()
+        assert "Traceback" not in response.get_data(as_text=True)
+
+
 class TestNothingIsStored:
     def test_translating_a_document_does_not_change_the_stored_corpus(
             self, app, admin_client, stub_engine, translation_memory):

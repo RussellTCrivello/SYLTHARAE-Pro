@@ -41,7 +41,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 
-__all__ = ["TranslationMemory", "default_memory_path"]
+__all__ = ["TranslationMemory", "MemoryUnavailable", "default_memory_path"]
 
 _DB_NAME = "translation_memory.db"
 
@@ -77,6 +77,15 @@ CREATE TABLE IF NOT EXISTS tm_glossary (
 """
 
 
+class MemoryUnavailable(RuntimeError):
+    """The memory file cannot be opened.
+
+    Deliberately not silent: the file holds the analyst's corrections, so a
+    memory that has gone missing is reported, not recreated empty behind the
+    caller's back.
+    """
+
+
 def default_memory_path() -> Path:
     """``APP_DATA_DIR/translation/translation_memory.db`` (created on demand)."""
     from core.app_paths import get_data_root
@@ -98,13 +107,46 @@ class TranslationMemory:
     def __init__(self, path: Optional[Path] = None):
         self.path = Path(path) if path is not None else default_memory_path()
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        with self._connect() as conn:
+        with self._connect(initialising=True) as conn:
             conn.executescript(_SCHEMA)
+        # From here on the file is expected to exist: if it does not, it was
+        # lost, and saying so is the only honest answer - silently starting an
+        # empty memory would throw the analyst's corrections away without a word.
+        self._initialised = True
 
     # -- plumbing ----------------------------------------------------------
-    def _connect(self) -> sqlite3.Connection:
-        conn = sqlite3.connect(self.path)
+    def _connect(self, *, initialising: bool = False) -> sqlite3.Connection:
+        """Open the memory file, or raise :class:`MemoryUnavailable`.
+
+        Three cases, three answers:
+
+        * the directory is missing - it is ours (``APP_DATA_DIR/translation``),
+          so create it and carry on;
+        * the file is missing after this object was constructed - the memory was
+          lost; refuse, and do not quietly start an empty one;
+        * the file is there but cannot be opened, or its tables are gone - refuse
+          with the reason.
+        """
+        if not initialising and getattr(self, "_initialised", False) \
+                and not self.path.exists():
+            raise MemoryUnavailable(
+                f"the translation memory file has disappeared ({self.path}); "
+                "the stored corrections are not available")
+        try:
+            if not self.path.parent.exists():
+                self.path.parent.mkdir(parents=True, exist_ok=True)
+            conn = sqlite3.connect(self.path)
+        except (OSError, sqlite3.Error) as exc:
+            raise MemoryUnavailable(
+                f"the translation memory is unavailable ({self.path}): {exc}") from exc
         conn.row_factory = sqlite3.Row
+        if not initialising:
+            try:
+                conn.execute("SELECT 1 FROM tm_entries LIMIT 1")
+            except sqlite3.Error as exc:
+                conn.close()
+                raise MemoryUnavailable(
+                    f"the translation memory at {self.path} cannot be used: {exc}") from exc
         return conn
 
     # -- translations ------------------------------------------------------

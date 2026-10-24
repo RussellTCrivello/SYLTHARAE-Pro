@@ -45,6 +45,7 @@ from services.translation.language import TRANSLATION_LANGUAGES
 from services.translation.service import (
     MAX_DOCUMENTS_PER_JOB,
     DocumentNotFound,
+    MemoryUnavailable,
     get_service,
 )
 from services.translation.text import MAX_REQUEST_CHARS
@@ -161,6 +162,8 @@ def register_translation_routes(app):
             result = get_service().translate_text(
                 text, target_lang=target_lang, source_lang=source_lang,
                 engine=engine, actor=username)
+        except MemoryUnavailable as exc:
+            return _error("memory_unavailable", str(exc), 503)
         except engine_registry.EngineUnavailable as exc:
             _audit("translation.text.requested",
                    {"target_lang": target_lang, "source_lang": source_lang,
@@ -206,6 +209,8 @@ def register_translation_routes(app):
                 engine=engine, actor=username)
         except DocumentNotFound as exc:
             return _error("NOT_FOUND", str(exc), 404)
+        except MemoryUnavailable as exc:
+            return _error("memory_unavailable", str(exc), 503)
         except engine_registry.EngineUnavailable as exc:
             _audit("translation.document.requested",
                    {"file_id": file_id, "target_lang": target_lang,

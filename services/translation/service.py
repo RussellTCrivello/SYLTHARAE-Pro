@@ -35,7 +35,7 @@ from typing import Any, Dict, List, Optional
 
 from . import engines as engine_registry
 from .language import TRANSLATION_LANGUAGES, resolve_languages
-from .memory import TranslationMemory
+from .memory import MemoryUnavailable, TranslationMemory
 from .text import MAX_CHARS, MAX_REQUEST_CHARS, MAX_TOKENS, estimate_tokens, split_segments
 
 logger = logging.getLogger(__name__)
@@ -43,6 +43,7 @@ logger = logging.getLogger(__name__)
 __all__ = [
     "DISCLAIMER",
     "DocumentNotFound",
+    "MemoryUnavailable",
     "MAX_DOCUMENTS_PER_JOB",
     "TranslationJobResult",
     "TranslationService",
