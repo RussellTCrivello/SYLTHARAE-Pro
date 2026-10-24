@@ -58,8 +58,20 @@ class SideQueries(BaseQueries):
     
     @staticmethod
     def check_side_usage() -> str:
-        """Check if side is used by any files"""
-        return "SELECT COUNT(*) FROM hashs WHERE side_id = %s"
+        """Files stored under this side.
+
+        Sides are not a column of ``hashs``: a document belongs to one source
+        *and* one side through ``hash_contexts``, and ``paths.context_id``
+        points at that row. The old statement selected ``hashs.side_id``, which
+        does not exist, so deleting any side raised UndefinedColumn and the
+        route answered 500 instead of refusing a side that is in use.
+        """
+        return """
+            SELECT COUNT(DISTINCT p.id)
+            FROM paths p
+            JOIN hash_contexts hc ON hc.id = p.context_id
+            WHERE hc.side_id = %s
+        """
     
     @staticmethod
     def get_or_create_side() -> str:

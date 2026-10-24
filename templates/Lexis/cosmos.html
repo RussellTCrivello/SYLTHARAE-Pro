@@ -16,6 +16,9 @@
    what the CSP allows and what keeps the labels translatable (a handler in an
    attribute would be neither).
 --------------------------------------------------------------------------- #}
+{# The workspace keeps its own header chrome, so the page heading is present
+   for assistive technology and document structure but not repeated visually. #}
+<h1 class="visually-hidden sr-only">{{ _('LEXIS Cosmos') }}</h1>
 <div id="lexisApp" class="lexis-app" dir="{{ 'rtl' if current_language in ['ar', 'fa', 'he', 'ur'] else 'ltr' }}">
 
   <header class="lexis-top">

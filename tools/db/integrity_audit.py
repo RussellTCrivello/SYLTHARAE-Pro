@@ -131,7 +131,9 @@ def duplicate_key_checks(cur, tables: set) -> List[Dict[str, object]]:
         ("words", "word"),
         ("keywords", "keyword"),
         ("hashs", "hash"),
-        ("geo_places", "place_key"),
+        # geo_places has no external-key column; its business key is the
+        # natural one the unique constraint declares.
+        ("geo_places", "label, category_id, country_codes"),
         ("content_signals", "dedup_key"),
     ]
     findings = []
