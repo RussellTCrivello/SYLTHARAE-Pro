@@ -8,9 +8,9 @@
   "routes.csv": {
     "rows": 485,
     "verdicts": {
-      "ENV-BLOCKED": 156,
-      "FIXED+TEST": 1,
-      "VERIFIED-OK": 328
+      "ENV-BLOCKED": 14,
+      "FIXED+TEST": 3,
+      "VERIFIED-OK": 468
     }
   },
   "interfaces.csv": {
@@ -34,9 +34,9 @@
     }
   },
   "sql.csv": {
-    "rows": 2324,
+    "rows": 2377,
     "verdicts": {
-      "VERIFIED-OK": 2324
+      "VERIFIED-OK": 2377
     }
   },
   "i18n_msgids.csv": {
@@ -68,10 +68,10 @@
     }
   },
   "modules.csv": {
-    "rows": 422,
+    "rows": 425,
     "verdicts": {
       "DEAD-CODE": 2,
-      "VERIFIED-OK": 420
+      "VERIFIED-OK": 423
     }
   },
   "jobs.csv": {

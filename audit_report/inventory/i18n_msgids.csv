@@ -1525,7 +1525,7 @@ Job / role,1,templates/Operations/input.html,"en,ar,he,fa,hr",complete,VERIFIED-
 Job cancelled.,1,templates/Operations/jobs.html,"en,ar,he,fa,hr",complete,VERIFIED-OK
 Job or role,1,templates/Operations/input.html,"en,ar,he,fa,hr",complete,VERIFIED-OK
 Job/Type,3,"templates/Sources/source_detail.html,templates/Sources/sources_list.html,templates/file/File_Management_Analysis_System.html","en,ar,he,fa,hr",complete,VERIFIED-OK
-Jobs,3,"core/i18n/ui_catalog.py,templates/Operations/input.html,templates/Operations/jobs.html","en,ar,he,fa,hr",complete,VERIFIED-OK
+Jobs,4,"core/i18n/ui_catalog.py,templates/Operations/import_center.html,templates/Operations/input.html","en,ar,he,fa,hr",complete,VERIFIED-OK
 Jobs / Operations,1,templates/Operations/jobs.html,"en,ar,he,fa,hr",complete,VERIFIED-OK
 Jobs of,1,templates/Scheduling/schedules.html,"en,ar,he,fa,hr",complete,VERIFIED-OK
 Jump to page,1,templates/components/unified_pagination.html,"en,ar,he,fa,hr",complete,VERIFIED-OK

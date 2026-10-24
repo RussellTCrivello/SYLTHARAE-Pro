@@ -467,9 +467,9 @@ Api/routes/file_operations.py,193,?,-,") SELECT %s,",VERIFIED-OK
 Api/routes/health.py,1,HEALTH,-,"Health check endpoint (public, unauthenticated). Provides a simple liveness/readiness probe for load balancers, monitoring, and the installer's verification phase. GET /health → 200 if the app can sta",VERIFIED-OK
 Api/routes/health.py,44,RETURN,-,"Return a thread-local psycopg2 connection for health probes. Each thread gets its own connection. Stale connections (closed by the server, idle timeout, network reset) are detected by a ``SELECT 1`` p",VERIFIED-OK
 Api/routes/health.py,107,LIVENESS,-,Liveness + lightweight readiness probe. Returns 200 with component status when the app is operational. Returns 503 when a critical component is down.,VERIFIED-OK
-Api/routes/import_export.py,75,IMPORT,csv,Import file list from CSV and process files. Form Data: - file: CSV file with 'file_path' or 'path' column - source_id: Source ID (required) - side_id: Side ID (required),VERIFIED-OK
-Api/routes/import_export.py,252,IMPORT,"json,settings",Import settings from JSON file. Form Data: - file: Settings JSON file Note: This validates the settings but does not automatically apply them. Use the settings API to actually update settings.,VERIFIED-OK
-Api/routes/import_export.py,284,REGISTER,-,Register import/export routes with the Flask app,VERIFIED-OK
+Api/routes/import_export.py,85,IMPORT,csv,Import file list from CSV and process files. Form Data: - file: CSV file with 'file_path' or 'path' column - source_id: Source ID (required) - side_id: Side ID (required),VERIFIED-OK
+Api/routes/import_export.py,262,IMPORT,"json,settings",Import settings from JSON file. Form Data: - file: Settings JSON file Note: This validates the settings but does not automatically apply them. Use the settings API to actually update settings.,VERIFIED-OK
+Api/routes/import_export.py,294,REGISTER,-,Register import/export routes with the Flask app,VERIFIED-OK
 Api/routes/interfaces_api.py,1,THE,the,The registry as an administrative surface. Answers one question in three shapes: *what does SYLTHARAE currently consider part of its own product?* * ``/api/interfaces`` - every interface with its doma,VERIFIED-OK
 Api/routes/interfaces_api.py,37,THE,-,"The product model, with the state of this installation applied.",VERIFIED-OK
 Api/routes/interfaces_api.py,84,EVERY,-,"Every endpoint, classified, with the interface that owns it.",VERIFIED-OK
@@ -599,7 +599,7 @@ Api/routes/reports.py,127,SELECT,sources,"SELECT id, name FROM sources ORDER BY 
 Api/routes/reports.py,129,SELECT,sides,"SELECT id, name FROM sides ORDER BY name",VERIFIED-OK
 Api/routes/retention.py,93,A,-,a JSON object with 'days' is required,VERIFIED-OK
 Api/routes/schedules.py,1,SCHEDULES,now,Schedules API (step 20). ======================================== ====================================== ``GET /schedules`` the Schedules page ``GET /api/schedules`` your schedules (``?all=1``: every ,VERIFIED-OK
-Api/routes/schedules.py,282,SELECT,jobs,"SELECT job_id, job_type, status, progress, source, created_by, created_at, options FROM jobs WHERE options->>'schedule_id' = %s ORDER BY created_at DESC, job_id DESC LIMIT %s",VERIFIED-OK
+Api/routes/schedules.py,300,SELECT,jobs,"SELECT job_id, job_type, status, progress, source, created_by, created_at, options FROM jobs WHERE options->>'schedule_id' = %s ORDER BY created_at DESC, job_id DESC LIMIT %s",VERIFIED-OK
 Api/routes/search.py,1,SEARCH,-,"Search routes with enhanced full-text search, sorting, history, and saved searches. This module provides: - Full-text search using PostgreSQL tsvector/tsquery - Sortable search results - Search histor",VERIFIED-OK
 Api/routes/search.py,73,AUDIT,-,"AUDIT (API-04): the auth middleware stores the user id under ``session['auth_user_id']`` (core/security/flask_ext.py::_SESSION_USER_KEY); ``session['user_id']`` is never set, so search history and sav",VERIFIED-OK
 Api/routes/search.py,92,BUILD,-,"Build a /search/advanced URL that restores a full search definition. The Advanced Search page persists its complete state (query, analyst scope, filters, match options, sort, page) in the URL and re-r",VERIFIED-OK
@@ -635,7 +635,7 @@ Api/routes/sources.py,57,SELECT,sources,"SELECT s.id, s.name, s.job, s.importanc
 Api/routes/sources.py,74,SELECT,sources,SELECT COUNT(DISTINCT s.id) FROM sources s,VERIFIED-OK
 Api/routes/sources.py,57,SELECT,sources,"SELECT s.id, s.name, s.job, s.importance, s.country, s.city, s.description, s.accounts, s.note, s.attachments, s.date_creation, s.ownership, s.access_status, s.entry_date, s.category_id, w.word AS cat",VERIFIED-OK
 Api/routes/sources.py,74,SELECT,sources,SELECT COUNT(DISTINCT s.id) FROM sources s,VERIFIED-OK
-Api/routes/translations.py,404,REGISTER,-,Register translation routes with the Flask app,VERIFIED-OK
+Api/routes/translations.py,412,REGISTER,-,Register translation routes with the Flask app,VERIFIED-OK
 Api/routes/words.py,21,REGISTER,-,Register words routes with the Flask app,VERIFIED-OK
 Api/routes/words.py,25,WORDS,-,Words Management with server-side pagination and sorting,VERIFIED-OK
 Api/routes/words.py,131,API,-,"API endpoint for words with pagination, search, and sorting",VERIFIED-OK
@@ -1226,6 +1226,7 @@ core/detection/textspan.py,47,SENTENCE,-,Sentence spans with O(log n) lookup of 
 core/detection/textspan.py,68,THE,-,"The sentence containing ``[char_start, char_end)``, quoted verbatim. ``span`` maps a normalised range to original offsets; ``norm_pos`` is the signal's start in normalised coordinates (``None`` when u",VERIFIED-OK
 core/errors.py,1,SECURE,-,Secure error handling (SEC-08). Raw exception text must never reach clients. This module provides: * ``client_error(...)`` -> builds a client-safe error payload with a correlation ID (``ERR-YYYYMMDD-N,VERIFIED-OK
 core/errors.py,29,AN,user,"An error whose ``str(exc)`` is written for the end user. Raise it (or a subclass) for *rejections* - invalid input, a missing file, a policy refusal - never for internal faults. Code that turns except",VERIFIED-OK
+core/errors.py,145,LOG,a,"Log server-side and produce a client-safe JSON error response. ``success_key`` adds ``{""success"": False}`` (or any key) for endpoints whose clients expect that shape. An ``HTTPException`` keeps its ow",VERIFIED-OK
 core/experience/action_audit.py,1,THE,"it,opinion","The action surface audit: what a person can do, and where it is done today. Read-only and generated, like the rest of ``core/experience``. It answers the question the Action Registry has to answer bef",VERIFIED-OK
 core/experience/action_audit.py,333,EVERY,-,"Every registered action, with what the product does about it today.",VERIFIED-OK
 core/experience/action_audit.py,129,REGISTERED,-,"Registered with no operation: the controls exist, the registry says so by leaving `execution` empty, and the audit counts them. What the model lacks is a way to say 'shown, not built' that the interfa",VERIFIED-OK
@@ -1394,21 +1395,23 @@ core/monitoring/notification_display.py,37,FOUND,-,Found duplicate file(s) with 
 core/monitoring/notification_display.py,122,SELECT,paths,"SELECT p.id, p.file_name, p.file_path FROM paths p WHERE p.id = ANY(%s)",VERIFIED-OK
 core/monitoring/notification_display.py,35,DUPLICATE,-,duplicate file(s) with the same hash. Files:,VERIFIED-OK
 core/monitoring/notification_display.py,37,DUPLICATE,-,duplicate file(s) with the same hash,VERIFIED-OK
-core/monitoring/notification_service.py,127,INSERT,-,"Insert notifications through the caller's cursor, in the caller's transaction, and return their ids in order. Used where a notification must commit or roll back together with other writes (a scenario ",VERIFIED-OK
-core/monitoring/notification_service.py,453,RELOAD,database,Reload notifications from database (useful after external changes). Returns: Number of notifications now held in memory. The swap is atomic: the fresh list is built OUTSIDE the lock and swapped in as ,VERIFIED-OK
-core/monitoring/notification_service.py,144,INSERT,alerts,"INSERT INTO alerts (type, priority, title, message, file_id, event_date, metadata, created_at, read, dismissed, recipient_user_id, scenario_id, scenario_evaluation_id) VALUES (%s, %s, %s, %s, %s, %s, ",VERIFIED-OK
-core/monitoring/notification_service.py,220,SELECT,alerts,SELECT FROM alerts WHERE dismissed = FALSE AND recipient_user_id IS NULL ORDER BY created_at DESC LIMIT %s,VERIFIED-OK
-core/monitoring/notification_service.py,258,SELECT,alerts,"SELECT FROM alerts WHERE ORDER BY created_at DESC, id DESC LIMIT %s",VERIFIED-OK
-core/monitoring/notification_service.py,428,UPDATE,alerts,UPDATE alerts SET = TRUE WHERE id = %s AND RETURNING id,VERIFIED-OK
-core/monitoring/notification_service.py,220,SELECT,-,SELECT,VERIFIED-OK
-core/monitoring/notification_service.py,593,SELECT,alerts,"SELECT FROM alerts WHERE type = %s AND dismissed = FALSE AND event_date BETWEEN %s AND %s AND ORDER BY event_date ASC, id ASC LIMIT 1000",VERIFIED-OK
-core/monitoring/notification_service.py,370,INSERT,alerts,"INSERT INTO alerts () VALUES RETURNING id, created_at",VERIFIED-OK
-core/monitoring/notification_service.py,504,SELECT,alerts,"SELECT COUNT(*) AS total, COUNT(*) FILTER (WHERE NOT read) AS unread FROM alerts WHERE dismissed = FALSE AND",VERIFIED-OK
-core/monitoring/notification_service.py,537,SELECT,alerts,SELECT COUNT(*) FROM alerts WHERE type = %s AND dismissed = FALSE AND event_date BETWEEN %s AND %s AND,VERIFIED-OK
-core/monitoring/notification_service.py,593,SELECT,-,SELECT,VERIFIED-OK
-core/monitoring/notification_service.py,370,INSERT,alerts,INSERT INTO alerts (,VERIFIED-OK
-core/monitoring/notification_service.py,517,SELECT,alerts,"SELECT type, COUNT(*) FROM alerts WHERE dismissed = FALSE AND",VERIFIED-OK
-core/monitoring/notification_service.py,527,SELECT,alerts,"SELECT priority, COUNT(*) FROM alerts WHERE dismissed = FALSE AND",VERIFIED-OK
+core/monitoring/notification_service.py,46,NOTIFICATION,the,"Notification priority levels. Notification priority is derived, never chosen (core/monitoring/priority.py). ``critical`` is produced by the signal rule for a high-confidence, imminent date and is stor",VERIFIED-OK
+core/monitoring/notification_service.py,136,INSERT,-,"Insert notifications through the caller's cursor, in the caller's transaction, and return their ids in order. Used where a notification must commit or roll back together with other writes (a scenario ",VERIFIED-OK
+core/monitoring/notification_service.py,462,RELOAD,database,Reload notifications from database (useful after external changes). Returns: Number of notifications now held in memory. The swap is atomic: the fresh list is built OUTSIDE the lock and swapped in as ,VERIFIED-OK
+core/monitoring/notification_service.py,153,INSERT,alerts,"INSERT INTO alerts (type, priority, title, message, file_id, event_date, metadata, created_at, read, dismissed, recipient_user_id, scenario_id, scenario_evaluation_id) VALUES (%s, %s, %s, %s, %s, %s, ",VERIFIED-OK
+core/monitoring/notification_service.py,229,SELECT,alerts,SELECT FROM alerts WHERE dismissed = FALSE AND recipient_user_id IS NULL ORDER BY created_at DESC LIMIT %s,VERIFIED-OK
+core/monitoring/notification_service.py,267,SELECT,alerts,"SELECT FROM alerts WHERE ORDER BY created_at DESC, id DESC LIMIT %s",VERIFIED-OK
+core/monitoring/notification_service.py,437,UPDATE,alerts,UPDATE alerts SET = TRUE WHERE id = %s AND RETURNING id,VERIFIED-OK
+core/monitoring/notification_service.py,229,SELECT,-,SELECT,VERIFIED-OK
+core/monitoring/notification_service.py,602,SELECT,alerts,"SELECT FROM alerts WHERE type = %s AND dismissed = FALSE AND event_date BETWEEN %s AND %s AND ORDER BY event_date ASC, id ASC LIMIT 1000",VERIFIED-OK
+core/monitoring/notification_service.py,379,INSERT,alerts,"INSERT INTO alerts () VALUES RETURNING id, created_at",VERIFIED-OK
+core/monitoring/notification_service.py,513,SELECT,alerts,"SELECT COUNT(*) AS total, COUNT(*) FILTER (WHERE NOT read) AS unread FROM alerts WHERE dismissed = FALSE AND",VERIFIED-OK
+core/monitoring/notification_service.py,546,SELECT,alerts,SELECT COUNT(*) FROM alerts WHERE type = %s AND dismissed = FALSE AND event_date BETWEEN %s AND %s AND,VERIFIED-OK
+core/monitoring/notification_service.py,602,SELECT,-,SELECT,VERIFIED-OK
+core/monitoring/notification_service.py,379,INSERT,alerts,INSERT INTO alerts (,VERIFIED-OK
+core/monitoring/notification_service.py,526,SELECT,alerts,"SELECT type, COUNT(*) FROM alerts WHERE dismissed = FALSE AND",VERIFIED-OK
+core/monitoring/notification_service.py,536,SELECT,alerts,"SELECT priority, COUNT(*) FROM alerts WHERE dismissed = FALSE AND",VERIFIED-OK
+core/monitoring/priority.py,72,THE,-,"The ``priority_basis`` record stored with an outcome. Same keys, same values, same types as the JSONB object ``services.monitoring.scenario_engine.decision_sql`` builds while it decides - the two must",VERIFIED-OK
 core/ocr/engines.py,60,ENGINE,-,Engine-agnostic OCR outcome with provenance.,VERIFIED-OK
 core/ocr/engines.py,140,A,-,A reading good enough that no orientation or size retry is needed. High mean confidence is not enough on its own: a turned line read with Hebrew and Arabic models loaded came back as one-glyph fragmen,VERIFIED-OK
 core/ocr/engines.py,167,HOW,outweighing,"How much text a reading recognised confidently, to compare readings of the same image (turned, enlarged, or with another language model). The sum, over words of at least ``SUBSTANTIVE_WORD_LENGTH`` le",VERIFIED-OK
@@ -1453,7 +1456,7 @@ core/security/audit_query.py,176,WITH,"audit_log,names",WITH RECURSIVE names(act
 core/security/audit_query.py,150,SELECT,audit_log,"SELECT id, user_id, username, action, resource, detail, ip_address, created_at FROM audit_log",VERIFIED-OK
 core/security/bootstrap_admin.py,1,FIRST,-,"First-run administrator bootstrap (SEC-01). On startup, when the ``users`` table exists and contains no accounts, an initial administrator is created: * Username from ``APP_ADMIN_USERNAME`` (default `",VERIFIED-OK
 core/security/disclosure.py,1,THE,"memory,the,whichever",The disclosure register: every file that leaves the system is recorded. ``DATA_EXPORTED`` is written to ``audit_log`` for **every** response that hands the client a file (``Content-Disposition: attach,VERIFIED-OK
-core/security/flask_ext.py,287,REQUIRE,-,Require an authenticated user with one of *roles* (server-side).,VERIFIED-OK
+core/security/flask_ext.py,296,REQUIRE,-,Require an authenticated user with one of *roles* (server-side).,VERIFIED-OK
 core/security/passwords.py,1,PASSWORD,-,"Password hashing for user accounts (SEC-01). Uses Werkzeug's ``generate_password_hash`` (scrypt by default, which is memory-hard) with a salt, and ``check_password_hash`` for verification. Never store",VERIFIED-OK
 core/security/rate_limit.py,1,API,environment,API-01: Shared Flask-Limiter instance. Created here (not in the app factory) so blueprints can decorate routes with ``@limiter.limit`` at import time without circular imports; the app factory calls ``,VERIFIED-OK
 core/security/service.py,308,PERMANENTLY,-,"Permanently remove a user account. Referential integrity: ``sessions.user_id`` cascades (m0003_auth_tables), and ``audit_log.user_id`` is deliberately FK-free so the audit trail survives the delete wi",VERIFIED-OK
@@ -1647,8 +1650,8 @@ database/database/queries/side_queries.py,32,SELECT,sides,"SELECT id, name, impo
 database/database/queries/side_queries.py,43,INSERT,sides,"INSERT INTO sides (name, importance, date_creation) VALUES (%s, %s, %s) RETURNING id",VERIFIED-OK
 database/database/queries/side_queries.py,52,UPDATE,sides,"UPDATE sides SET name = %s, importance = %s WHERE id = %s",VERIFIED-OK
 database/database/queries/side_queries.py,57,DELETE,sides,DELETE FROM sides WHERE id = %s,VERIFIED-OK
-database/database/queries/side_queries.py,62,SELECT,hashs,SELECT COUNT(*) FROM hashs WHERE side_id = %s,VERIFIED-OK
-database/database/queries/side_queries.py,67,INSERT,sides,"INSERT INTO sides (name, importance, date_creation) VALUES (%s, %s, %s) ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name RETURNING id",VERIFIED-OK
+database/database/queries/side_queries.py,69,SELECT,"hash_contexts,paths",SELECT COUNT(DISTINCT p.id) FROM paths p JOIN hash_contexts hc ON hc.id = p.context_id WHERE hc.side_id = %s,VERIFIED-OK
+database/database/queries/side_queries.py,79,INSERT,sides,"INSERT INTO sides (name, importance, date_creation) VALUES (%s, %s, %s) ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name RETURNING id",VERIFIED-OK
 database/database/queries/source_queries.py,10,SELECT,sources,"SELECT id, name, job, importance, country, city, description, accounts, note, attachments, date_creation, ownership, access_status, entry_date, category_id FROM sources WHERE id = %s",VERIFIED-OK
 database/database/queries/source_queries.py,19,SELECT,sources,"SELECT id, name FROM sources",VERIFIED-OK
 database/database/queries/source_queries.py,24,SELECT,sources,"SELECT id, name, job, importance, country, city, description, accounts, note, attachments, date_creation, ownership, access_status, entry_date, category_id FROM sources WHERE name = %s",VERIFIED-OK
@@ -2154,13 +2157,63 @@ settings/settings_manager.py,631,DATABASE,-,"Database configuration cannot be ch
 settings/settings_models.py,1,SETTINGS,-,Settings Data Models - Core dataclasses and validation File: settings/settings_models.py Complete rebuild - no legacy dependencies Enhanced with all existing system features,VERIFIED-OK
 settings/settings_models.py,456,INTERFACE,-,Interface visibility settings with category support,VERIFIED-OK
 settings/settings_models.py,495,RESTORE,-,"Restore missing interfaces with default values. Args: default_interfaces: Dictionary mapping interface_id to default config Format: { ""interface_id"": { ""enabled"": bool, ""category"": str, ""name"": str (o",VERIFIED-OK
+tools/audit/apply_verdicts.py,2,GIVE,"a,an,evidence,the","Give every inventory row a verdict, from evidence, with no row left UNTOUCHED. The inventories are generated (``build_inventories.py``) with ``status = UNTOUCHED``: generation knows what exists, not w",VERIFIED-OK
+tools/audit/apply_verdicts.py,74,THE,-,The contract token: the allowed word a free-text verdict starts with.,VERIFIED-OK
+tools/audit/apply_verdicts.py,102,PARAMETERISED,-,"Parameterised-route evidence, grouped by (rule, method). ``findings/param_routes.csv`` is written by ``probe_param_routes.py``: every rule with a path parameter requested with a valid, a missing, a ma",VERIFIED-OK
+tools/audit/apply_verdicts.py,254,DEFECT,-,DEFECT-OPEN: statement disagrees with the frozen schema,VERIFIED-OK
+tools/audit/apply_verdicts.py,268,NEEDS,-,"NEEDS-DECISION: catalog entry with no static use - prune, or keep for a dynamic key",VERIFIED-OK
+tools/audit/browser_xss.py,2,STORED,npm,Stored-XSS probe in a real browser. The API returning ``application/json`` proves nothing about the pages that draw the value: a name that reaches ``innerHTML`` runs. This probe stores a payload throu,VERIFIED-OK
+tools/audit/browser_xss.py,28,IMPORT,the,import chrom from '@sparticuz/chromium'; import { chromium } from 'playwright-core'; const cfg = JSON.parse(process.env.XSS_CONFIG); const browser = await chromium.launch({ executablePath: await chrom,VERIFIED-OK
 tools/audit/build_inventories.py,2,BUILD,"memory,the","Build the audit inventories from the code, not from memory (audit Phase A). Every row is produced by reading ``app.url_map``, the filesystem, the AST of the source tree or ``pg_catalog`` - never typed",VERIFIED-OK
-tools/audit/build_inventories.py,383,?,-,\b(SELECT|INSERT\s+INTO|UPDATE|DELETE\s+FROM|WITH)\b,VERIFIED-OK
-tools/audit/build_inventories.py,384,?,-,\b(?:FROM|JOIN|INTO|UPDATE)\s+([a-z_][a-z0-9_]*),VERIFIED-OK
-tools/audit/build_inventories.py,391,EVERY,-,"Every string literal that looks like SQL, with its line number.",VERIFIED-OK
-tools/audit/build_inventories.py,292,SELECT,"pg_attribute,pg_class,pg_namespace","SELECT c.relname, a.attname, format_type(a.atttypid, a.atttypmod) FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace JOIN pg_attribute a ON a.attrelid = c.oid AND a.attnum > 0 AND NOT a.att",VERIFIED-OK
-tools/audit/build_inventories.py,300,SELECT,"pg_class,pg_constraint,pg_namespace","SELECT c.relname, con.conname, con.contype, pg_get_constraintdef(con.oid) FROM pg_constraint con JOIN pg_class c ON c.oid = con.conrelid JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname =",VERIFIED-OK
-tools/audit/build_inventories.py,307,SELECT,pg_indexes,"SELECT tablename, indexname FROM pg_indexes WHERE schemaname = 'public' ORDER BY 1, 2",VERIFIED-OK
+tools/audit/build_inventories.py,470,?,-,\b(SELECT|INSERT\s+INTO|UPDATE|DELETE\s+FROM|WITH)\b,VERIFIED-OK
+tools/audit/build_inventories.py,471,?,-,\b(?:FROM|JOIN|INTO|UPDATE)\s+([a-z_][a-z0-9_]*),VERIFIED-OK
+tools/audit/build_inventories.py,478,EVERY,-,"Every string literal that looks like SQL, with its line number.",VERIFIED-OK
+tools/audit/build_inventories.py,377,SELECT,"pg_attribute,pg_class,pg_namespace","SELECT c.relname, a.attname, format_type(a.atttypid, a.atttypmod) FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace JOIN pg_attribute a ON a.attrelid = c.oid AND a.attnum > 0 AND NOT a.att",VERIFIED-OK
+tools/audit/build_inventories.py,385,SELECT,"pg_class,pg_constraint,pg_namespace","SELECT c.relname, con.conname, con.contype, pg_get_constraintdef(con.oid) FROM pg_constraint con JOIN pg_class c ON c.oid = con.conrelid JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname =",VERIFIED-OK
+tools/audit/build_inventories.py,392,SELECT,pg_indexes,"SELECT tablename, indexname FROM pg_indexes WHERE schemaname = 'public' ORDER BY 1, 2",VERIFIED-OK
+tools/audit/check_frontend_wiring.py,2,FRONTEND,the,"Frontend ↔ backend wiring: every reference must resolve. Four checks, each read from the application object and the filesystem: * **JS → routes** — every URL a JS module fetches (``fetch('...')``, ``a",VERIFIED-OK
+tools/audit/check_frontend_wiring.py,54,?,-,``{normalized_rule: set(methods)}`` with converters turned into ``:x``.,VERIFIED-OK
+tools/audit/check_sql_schema.py,2,CHECK,aliases,"Check every SQL statement in the tree against the live schema. Two passes, because the code builds SQL by concatenation and half of it is not a complete statement: 1. **sqlglot** - statements that par",VERIFIED-OK
+tools/audit/check_sql_schema.py,34,?,-,\b(SELECT|INSERT\s+INTO|UPDATE|DELETE\s+FROM|WITH)\b,VERIFIED-OK
+tools/audit/check_sql_schema.py,39,?,-,^\s*(?:--[^\n]*\n\s*)*(SELECT|INSERT\s+INTO|INSERT|UPDATE|DELETE|WITH|ALTER\s+TABLE|CREATE\s+(?:TABLE|INDEX|UNIQUE|OR\s+REPLACE|FUNCTION|TRIGGER|VIEW)|DROP\s+(?:TABLE|INDEX|VIEW)|TRUNCATE|GRANT|PREPAR,VERIFIED-OK
+tools/audit/check_sql_schema.py,45,?,-,\b(SELECT|INSERT|UPDATE|DELETE|FROM|WHERE|JOIN|WITH)\b,VERIFIED-OK
+tools/audit/check_sql_schema.py,53,?,-,\bON\s+(?:DELETE|UPDATE)\s+(?:CASCADE|RESTRICT|SET\s+NULL|SET\s+DEFAULT|NO\s+ACTION)\b,VERIFIED-OK
+tools/audit/check_sql_schema.py,58,?,-,\b(?:FROM|JOIN|INTO|UPDATE)\s+([a-z_][a-z0-9_]*),VERIFIED-OK
+tools/audit/check_sql_schema.py,60,?,-,\b(?:FROM|JOIN|UPDATE|INTO)\s+([a-z_][a-z0-9_]*)\s+(?:AS\s+)?([a-z_][a-z0-9_]*)?,VERIFIED-OK
+tools/audit/check_sql_schema.py,281,SQL,-,sql statements parsed with schema validation:,VERIFIED-OK
+tools/audit/check_sql_schema.py,281,SQL,-,sql statements parsed with schema validation:,VERIFIED-OK
+tools/audit/check_sql_schema.py,89,SELECT,"pg_attribute,pg_class,pg_namespace","SELECT c.relname, a.attname FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace JOIN pg_attribute a ON a.attrelid = c.oid AND a.attnum > 0 AND NOT a.attisdropped WHERE n.nspname = 'public' A",VERIFIED-OK
+tools/audit/check_structure.py,2,STRUCTURAL,-,"Structural checks: dead code, registry reality, i18n coverage, RTL. Three questions the failing-test list cannot answer: * Is there code nobody reaches? A module with no importer that is not an entry ",VERIFIED-OK
+tools/audit/check_structure.py,211,MSGIDS,-,msgids with an incomplete catalogue:,VERIFIED-OK
+tools/audit/check_structure.py,211,MSGIDS,-,msgids with an incomplete catalogue:,VERIFIED-OK
+tools/audit/check_vocabularies.py,2,EVERY,t,"Every value the code writes to a CHECK-constrained column must be admitted. The vocabulary is read from ``pg_get_constraintdef`` on the migrated database, so the answer is what PostgreSQL will actuall",VERIFIED-OK
+tools/audit/check_vocabularies.py,86,CHECK,statements,Check literal values in INSERT/UPDATE statements against the vocabulary.,VERIFIED-OK
+tools/audit/check_vocabularies.py,135,CHECK,-,"Check ``{""column"": ""value""}`` literals for constrained columns. Only modules that mention the table are examined: a dict with a ``status`` key in an unrelated file says nothing about ``jobs.status``.",VERIFIED-OK
+tools/audit/check_vocabularies.py,288,DEF,job_events,"def _publish(self, job_id, event_type, payload): sql = 'INSERT INTO job_events (job_id, event_type, payload) VALUES (%s, %s, %s)' return sql def caller(): _publish('j1', 'FAILED', {})",VERIFIED-OK
+tools/audit/check_vocabularies.py,50,SELECT,"pg_class,pg_constraint,pg_namespace","SELECT c.relname, con.conname, pg_get_constraintdef(con.oid) FROM pg_constraint con JOIN pg_class c ON c.oid = con.conrelid JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'public' AND",VERIFIED-OK
+tools/audit/check_vocabularies.py,122,UPDATE,-,"UPDATE\s+([a-z_][a-z0-9_]*)\s+SET\s+(.*?)(?:\bWHERE\b|\""|$)",VERIFIED-OK
+tools/audit/e2e_runtime.py,2,END,the,"End-to-end workflow and security probes against a live server. Executes, against ``--base``: 1. **Ingestion** - creates a source and a side, imports a file, waits for the job, then compares the UI/API",VERIFIED-OK
+tools/audit/e2e_runtime.py,263,SELECT,sources,SELECT name FROM sources WHERE name = %s,VERIFIED-OK
+tools/audit/e2e_runtime.py,287,SELECT,paths,"SELECT p.id, p.processing_status, p.context_id FROM paths p WHERE p.file_name = %s",VERIFIED-OK
+tools/audit/e2e_runtime.py,290,SELECT,paths,"SELECT p.id, p.processing_status, p.context_id FROM paths p WHERE p.file_name = %s",VERIFIED-OK
+tools/audit/e2e_runtime.py,297,SELECT,"contents,hash_contexts",SELECT count(*) FROM contents c JOIN hash_contexts hc ON hc.hash_id = c.hash_id WHERE hc.id = ANY(%s),VERIFIED-OK
+tools/audit/e2e_runtime.py,188,SELECT,"hash_contexts,paths","SELECT p.id, p.file_name, p.processing_status, hc.hash_id FROM paths p LEFT JOIN hash_contexts hc ON hc.id = p.context_id WHERE p.file_name = %s",VERIFIED-OK
+tools/audit/e2e_runtime.py,221,SELECT,"words,words_hashs",SELECT count(*) FROM words_hashs wh JOIN words w ON w.id = wh.word_id WHERE wh.hash_id = %s,VERIFIED-OK
+tools/audit/e2e_runtime.py,209,SELECT,contents,SELECT count(*) FROM contents WHERE hash_id = %s,VERIFIED-OK
+tools/audit/e2e_runtime.py,238,SELECT,paths,SELECT count(*) FROM paths,VERIFIED-OK
+tools/audit/probe_mutations.py,2,EXERCISE,-,"Exercise every parameterless mutating route and record the real answer. ``probe_routes.py`` answers ""who may read this?""; every route it cannot reach with at least one role is still unproven. This pro",VERIFIED-OK
+tools/audit/probe_param_routes.py,2,REQUEST,-,Request every parameterised route with four kinds of id and record the truth. The role matrix (``probe_routes.py``) covers the routes without path parameters. This covers the other half: the 155 rules,VERIFIED-OK
+tools/audit/probe_param_routes.py,380,CLASSIFY,-,"Classify one response. ``owned`` says whether the parameter names an object with an owner (see OWNED_PARAMS); a 2xx for another user's owned object is the finding, a 2xx for a shared object is the des",VERIFIED-OK
+tools/audit/probe_param_routes.py,82,SELECT,pg_database,SELECT 1 FROM pg_database WHERE datname = %s,VERIFIED-OK
+tools/audit/probe_param_routes.py,342,SELECT,-,SELECT max(id) FROM,VERIFIED-OK
+tools/audit/probe_param_routes.py,342,SELECT,-,SELECT max(id) FROM,VERIFIED-OK
+tools/audit/probe_param_routes.py,372,SELECT,-,SELECT count(*) FROM,VERIFIED-OK
+tools/audit/probe_param_routes.py,372,SELECT,-,SELECT count(*) FROM,VERIFIED-OK
+tools/audit/probe_routes.py,2,CALL,anything,"Call every route as anonymous, viewer, analyst and admin; record the truth. This is the auth matrix of the audit, executed rather than declared. Each route without path parameters is requested with ea",VERIFIED-OK
+tools/audit/probe_routes.py,57,SELECT,pg_database,SELECT 1 FROM pg_database WHERE datname = %s,VERIFIED-OK
+tools/audit/triage_failures.py,68,UPDATE,the,update the expected names (behaviour asserts pass),VERIFIED-OK
+tools/audit/triage_failures.py,71,UPDATE,the,update the expected names,VERIFIED-OK
+tools/audit/triage_failures.py,74,UPDATE,to,update to the live index names,VERIFIED-OK
 tools/build_briefing.py,260,BROWSE,-,"Browse indexed records, filter, select and open file actions.",VERIFIED-OK
 tools/build_briefing.py,260,MANAGE,-,Manage source entities associated with ingested records.,VERIFIED-OK
 tools/build_briefing.py,260,MANAGE,-,Manage side/collection context paired with sources.,VERIFIED-OK

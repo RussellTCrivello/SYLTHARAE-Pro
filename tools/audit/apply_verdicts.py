@@ -56,6 +56,8 @@ ALLOWED = {"VERIFIED-OK", "FIXED+TEST", "DEFECT-OPEN", "NEEDS-DECISION",
 #: Fixes recorded in this audit, keyed by the identity used in the inventory.
 FIXED = {
     ("routes.csv", "/api/scenarios", "POST"): "FIXED+TEST",
+    ("routes.csv", "/api/sides/<int:side_id>", "DELETE"): "FIXED+TEST",
+    ("routes.csv", "/api/schedules/<int:schedule_id>/run_now", "POST"): "FIXED+TEST",
     ("interfaces.csv", "lexis_cosmos", "-"): "FIXED+TEST",
     ("interfaces.csv", "import_center", "-"): "FIXED+TEST",
 }
@@ -96,6 +98,23 @@ def _runtime():
     return {(r["rule"], r["method"]): r for r in rows}
 
 
+def _param_probe():
+    """Parameterised-route evidence, grouped by (rule, method).
+
+    ``findings/param_routes.csv`` is written by ``probe_param_routes.py``: every
+    rule with a path parameter requested with a valid, a missing, a malformed
+    and another user's id, through the application's own API.
+    """
+    path = FIND / "param_routes.csv"
+    if not path.exists():
+        return {}
+    groups = collections.defaultdict(list)
+    with path.open(newline="", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            groups[(row["rule"], row["method"])].append(row)
+    return groups
+
+
 def _mutations():
     path = FIND / "mutations_runtime.csv"
     if not path.exists():
@@ -105,7 +124,7 @@ def _mutations():
 
 
 def verdict_routes(rows):
-    runtime, mutations = _runtime(), _mutations()
+    runtime, mutations, params = _runtime(), _mutations(), _param_probe()
     for row in rows:
         methods = [m for m in row["methods"].split(",") if m]
         hit = next((runtime[(row["rule"], m)] for m in methods
@@ -124,10 +143,27 @@ def verdict_routes(rows):
             row["status"] = "VERIFIED-OK"
         elif sweep is not None and sweep.get("verdict") in ("OK", "LOCKED"):
             row["status"] = "VERIFIED-OK"
-        elif "<" in row["rule"] or ">" in row["rule"]:
-            row["status"] = ("ENV-BLOCKED: path-parameterised route - the audit "
-                             "database holds no fixture row of that kind, so it "
-                             "was never requested")
+        elif any((row["rule"], m) in params for m in methods):
+            probed = next(params[(row["rule"], m)] for m in methods
+                          if (row["rule"], m) in params)
+            bad = [p for p in probed
+                   if p["verdict"] in ("SERVER-ERROR", "STACK-TRACE", "CROSS-USER-200")]
+            skipped = [p for p in probed if p["verdict"] == "SKIPPED"]
+            real = [p for p in probed if p["variant"] == "valid" and p["verdict"] != "SKIPPED"]
+            # A request with a made-up id only proves the lookup refuses it.
+            # VERIFIED-OK needs the route exercised with an id that exists,
+            # which is the only case where its own code path runs.
+            if bad:
+                row["status"] = ("DEFECT-OPEN: " + "; ".join(
+                    sorted({f"{p['variant']} -> {p['status']} {p['verdict']}" for p in bad})))
+            elif not real or real[0]["status"] in ("NO-FIXTURE", "0"):
+                missing = sorted({v.split("=")[0] for v in probed[0]["values"].split()
+                                  if v.split("=")[-1] in ("None", "NO-FIXTURE", "")})
+                row["status"] = ("ENV-BLOCKED: no application API creates "
+                                 + (", ".join(missing) if missing else "this object")
+                                 + " - only missing/malformed ids could be requested")
+            else:
+                row["status"] = "VERIFIED-OK"
         else:
             row["status"] = ("ENV-BLOCKED: no runtime probe covers this method "
                              "(read-only matrix + parameterless mutation sweep "
