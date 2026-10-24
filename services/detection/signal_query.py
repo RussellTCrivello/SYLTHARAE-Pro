@@ -91,10 +91,14 @@ MAX_VALUE_TEXT = 200
 EXPLORER_KIND_PRESETS = (
     {"id": "dates", "detectors": ("temporal",), "signal_types": ("date_reference", "relative_reference")},
     {"id": "places", "detectors": ("places",), "signal_types": ("place_mention",)},
-    {"id": "email", "detectors": ("identifiers",), "signal_types": ("email",)},
-    {"id": "phone", "detectors": ("identifiers",), "signal_types": ("phone",)},
-    {"id": "ip", "detectors": ("identifiers",), "signal_types": ("ipv4", "ipv6")},
-    {"id": "url", "detectors": ("identifiers",), "signal_types": ("url",)},
+    {"id": "email", "detectors": ("identifiers",), "signal_types": ("identifier",),
+     "identifier_kinds": ("email",)},
+    {"id": "phone", "detectors": ("identifiers",), "signal_types": ("identifier",),
+     "identifier_kinds": ("phone",)},
+    {"id": "ip", "detectors": ("identifiers",), "signal_types": ("identifier",),
+     "identifier_kinds": ("ipv4", "ipv6")},
+    {"id": "url", "detectors": ("identifiers",), "signal_types": ("identifier",),
+     "identifier_kinds": ("url",)},
     {"id": "identifiers", "detectors": ("identifiers",), "signal_types": identifiers_intel.SIGNAL_TYPES},
 )
 
@@ -145,6 +149,9 @@ class SignalFilter:
     methods: Tuple[str, ...] = ()
     orientations: Tuple[str, ...] = ()
     place_keys: Tuple[str, ...] = ()
+    #: Evidence ``kind`` values (email, phone, ipv4, ipv6, url) for the
+    #: identifier detector; its signal_type is uniformly ``identifier``.
+    identifier_kinds: Tuple[str, ...] = ()
     hash_ids: Tuple[int, ...] = ()
     evidence_text: Optional[str] = None
     evidence_mode: str = "contains"
@@ -255,6 +262,8 @@ def parse_filter(args) -> SignalFilter:
         methods=_values(get_list, "method", pattern=_METHOD_RE),
         orientations=_values(get_list, "orientation", ORIENTATION_FILTER),
         place_keys=_values(get_list, "place_key", pattern=_PLACE_KEY_RE),
+        identifier_kinds=_values(get_list, "identifier_kind",
+                                 allowed=identifiers_intel.KINDS),
         hash_ids=tuple(sorted(set(hash_ids))),
         evidence_text=evidence_text,
         evidence_mode=_match_mode(args, "evidence_mode") if evidence_text else "contains",
@@ -354,10 +363,14 @@ def _where(f: SignalFilter, compiled: Optional[CompiledQuery], *,
     if f.hash_ids:
         conds.append("s.hash_id = ANY(%s)")
         params.append(list(f.hash_ids))
+    if f.identifier_kinds:
+        conds.append("s.evidence->>'kind' = ANY(%s)")
+        params.append(list(f.identifier_kinds))
     if f.place_keys:
         conds.append("EXISTS (SELECT 1 FROM content_signal_places _csp"
                      " JOIN geo_places _g ON _g.id = _csp.place_id"
-                     " WHERE _csp.signal_id = s.id AND _g.place_key = ANY(%s))")
+                     " WHERE _csp.signal_id = s.id"
+                     "   AND ('place:' || _g.id) = ANY(%s))")
         params.append(list(f.place_keys))
     if f.evidence_text:
         conds.append(_text_match_sql(

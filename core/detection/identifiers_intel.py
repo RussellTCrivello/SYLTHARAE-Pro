@@ -20,12 +20,19 @@ from core.detection.signal_model import ContentSignal
 DETECTOR_NAME = "identifiers"
 DETECTOR_VERSION = "identifiers-1.0.0"
 
+#: The kind of identifier a match is. These are *evidence kinds*, not signal
+#: types: ``content_signals.signal_type`` has one value for identifiers
+#: (``identifier``), and the kind travels in the evidence JSON, which is what
+#: the explorer's identifier presets filter on.
 SIGNAL_EMAIL = "email"
 SIGNAL_PHONE = "phone"
 SIGNAL_IPV4 = "ipv4"
 SIGNAL_IPV6 = "ipv6"
 SIGNAL_URL = "url"
-SIGNAL_TYPES = (SIGNAL_EMAIL, SIGNAL_PHONE, SIGNAL_IPV4, SIGNAL_IPV6, SIGNAL_URL)
+KINDS = (SIGNAL_EMAIL, SIGNAL_PHONE, SIGNAL_IPV4, SIGNAL_IPV6, SIGNAL_URL)
+#: The single ``signal_type`` every signal from this detector carries.
+SIGNAL_IDENTIFIER = "identifier"
+SIGNAL_TYPES = (SIGNAL_IDENTIFIER,)
 RESOLUTIONS = ("literal",)
 CONFIDENCE_LEVELS = ("high", "medium", "low")
 MAX_SCAN_CHARS = 20_000_000
@@ -208,11 +215,11 @@ def detect(text: Optional[str], *, anchor_date: Optional[object] = None) -> Dete
         sentence, s_start, s_end, cut = textspan.quote_sentence(
             scanned, lambda a, b: (a, b), sentence_index, start, start, end,
         )
-        evidence = {"pattern": method, "normalised": value}
+        evidence = {"kind": signal_type, "pattern": method, "normalised": value}
         if cut:
             evidence["sentence_truncated"] = True
         signals.append(IdentifierSignal(
-            signal_type=signal_type,
+            signal_type=SIGNAL_IDENTIFIER,
             value=value,
             surface=surface,
             char_start=start,
@@ -222,7 +229,7 @@ def detect(text: Optional[str], *, anchor_date: Optional[object] = None) -> Dete
             detector_ver=DETECTOR_VERSION,
             method=method,
             confidence=confidence,
-            confidence_basis=f"{signal_type}_pattern",
+            confidence_basis=f"{signal_type}_pattern",  # kind, for the analyst
             sentence=sentence,
             sentence_start=s_start,
             sentence_end=s_end,

@@ -358,8 +358,9 @@ def detector_gazetteer(cur):
         return cached
 
     cur.execute("""
-        SELECT g.id, c.word, g.label, g.country_codes, g.latitude, g.longitude,
-               n.name, n.language, n.script, n.name_type
+        SELECT g.id, 'place:' || g.id, g.label, c.word,
+               g.country_codes, n.name, n.language, n.script, n.name_type,
+               FALSE, NULL
         FROM geo_place_names n
         JOIN geo_places g ON g.id = n.place_id
         JOIN categorys cat ON cat.id = g.category_id

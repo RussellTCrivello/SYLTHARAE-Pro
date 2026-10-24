@@ -345,7 +345,9 @@ def register_signal_routes(app):
                 "resolutions": list(signal_query.RESOLUTIONS),
                 "max_page_size": signal_query.MAX_PAGE_SIZE,
                 "kind_presets": [
-                    {"id": p["id"], "detectors": list(p["detectors"]), "signal_types": list(p["signal_types"])}
+                    {"id": p["id"], "detectors": list(p["detectors"]),
+                     "signal_types": list(p["signal_types"]),
+                     "identifier_kinds": list(p.get("identifier_kinds", ()))}
                     for p in signal_query.EXPLORER_KIND_PRESETS
                 ],
             })
