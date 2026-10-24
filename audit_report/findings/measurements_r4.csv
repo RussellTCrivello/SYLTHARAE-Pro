@@ -1,0 +1,12 @@
+id,area,measurement,value,evidence,verdict
+M-1,ingest,batch-import of 30 files: accepted/queued/rejected in the response,"accepted=30 queued=5 rejected=0 while 25 entries are status=error ('Failed to queue processing task')",audit_report/findings/performance_measurements.md#8,DEFECT-OPEN
+M-2,ingest,jobs and job_events rows written by a batch import,0 rows; GET /api/jobs returns {"jobs": []}; nothing resumed after restart,audit_report/evidence_scale/restart_mid_job.json,DEFECT-OPEN
+M-3,ingest,seconds until a paths row by document size,"128KB/2.0s 256KB/4.1s 512KB/8.3s 1MB/25.1s 2MB/80.1s 4MB/321.2s",audit_report/evidence_scale/ingest_scaling.json,DEFECT-OPEN
+M-3b,ingest,signals written per KB of input,35 signals per KB (144 635 for 4 MB, 72 318 for 2 MB),audit_report/evidence_scale/ingest_scaling.json,MEASURED
+M-4,queries,plan shape of the ten heaviest statements,all ten scan full paths/hash_contexts; three spill sorts to disk (2.3-5.8 MB),audit_report/evidence_scale/measurements.json,MEASURED
+M-5,queries,/api/signals facet aggregate latency vs offset,"247 ms at offset 0, 328 ms at offset 49 950 (flat)",audit_report/evidence_scale/measurements.json,MEASURED
+M-6,failure,/health during a database outage,"503 in 4.6 ms then >15 s hang (pool timeout 30 s); body exposes driver class name OperationalError",audit_report/evidence_scale/failure_injection.json,DEFECT-OPEN
+M-7,failure,API answers during a database outage,"401 unauthenticated in ~2 ms for all 15 poll rounds",audit_report/evidence_scale/failure_injection.json,DEFECT-OPEN
+M-8,queries,evidence->>'kind' identifier filter,"Parallel Seq Scan on content_signals, 26 ms at 75 000 signals",audit_report/evidence_scale/measurements.json,MEASURED
+M-9,queries,pagination at 100 000 paths,"offset 0: 9.4 ms; offset 99 500: 25.9 ms (limit 50)",audit_report/evidence_scale/measurements.json,MEASURED
+M-10,queries,N+1 across 16 list/dashboard routes,no route issues one statement per row,audit_report/evidence_scale/measurements.json,MEASURED

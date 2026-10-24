@@ -1,0 +1,18 @@
+{
+  "loggedIn": true,
+  "created": {
+    "status": 201,
+    "id": 13
+  },
+  "deleted": {
+    "status": 200
+  },
+  "executed": false,
+  "markup": {
+    "injectedNodes": [],
+    "payloadVisibleAsText": true,
+    "scripts": 55
+  },
+  "renderedText": true,
+  "consoleErrors": []
+}
