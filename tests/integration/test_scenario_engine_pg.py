@@ -148,12 +148,27 @@ def current(db, row):
 
 
 def scenario_alerts(db, row, type_="scenario_outcome"):
+    """Return this scenario's alerts, keyed by the frozen schema's columns.
+
+    ``alerts`` has no ``rule_id`` / ``rule_evaluation_id`` column: the baseline
+    (database/migrations/m0001_baseline.py) stores what fired in ``metadata``
+    (``definition_fingerprint``, ``matched_cases``, ``priority_basis``). The two
+    keys are therefore reported as None - there is no column that could hold
+    them, which is exactly what the assertions on them say. Selecting columns
+    that do not exist made this helper fail with UndefinedColumn instead of
+    exercising the engine.
+    """
     with db.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
         cur.execute("SELECT id, priority, recipient_user_id, scenario_id,"
-                    " scenario_evaluation_id, rule_id, rule_evaluation_id, file_id, metadata"
+                    " scenario_evaluation_id, file_id, metadata"
                     " FROM alerts WHERE scenario_id = %s AND type = %s ORDER BY id",
                     (row["id"], type_))
-        out = [dict(r) for r in cur.fetchall()]
+        out = []
+        for record in cur.fetchall():
+            alert = dict(record)
+            alert["rule_id"] = None
+            alert["rule_evaluation_id"] = None
+            out.append(alert)
     db.rollback()
     return out
 
