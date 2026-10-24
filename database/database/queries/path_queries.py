@@ -141,9 +141,21 @@ class FileQueries(BaseQueries):
         the document was stored without it, and when a container's nested work
         did not finish. The row keeps its data; the status says plainly that
         something is missing, instead of the run reporting a clean success.
+
+        A row can already carry a reason recorded by the reader - a container
+        that named the members it could not decode, a page-capped PDF, an
+        unsupported object type. Replacing that with a derived-step message
+        loses *why* the object was partial in the first place, so the reasons
+        are accumulated (bounded to 500 characters) and a repeated message is
+        not appended twice.
         """
         return (
-            "UPDATE paths SET processing_status = %s, status_detail = %s,"
+            "UPDATE paths SET processing_status = %s,"
+            " status_detail = CASE"
+            "   WHEN status_detail IS NULL OR status_detail = '' THEN %s"
+            "   WHEN position(%s in status_detail) > 0 THEN status_detail"
+            "   ELSE left(status_detail || '; ' || %s, 500)"
+            " END,"
             " status_updated_at = NOW() WHERE id = %s"
         )
 

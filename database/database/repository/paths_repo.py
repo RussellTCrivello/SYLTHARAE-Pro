@@ -66,9 +66,10 @@ class PathsRepository(BaseRepository):
         this condition - no migration is needed to use it. Returns True when a
         row was updated.
         """
+        reason = (detail or "")[:500]
         return bool(self.execute(
             FileQueries.mark_partial(),
-            (status, (detail or "")[:500], path_id)
+            (status, reason, reason, reason, path_id)
         ))
 
     def update_lineage(self, path_id, parent_path_id, hierarchy_path):

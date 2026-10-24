@@ -15,7 +15,7 @@ class TitlesContentRepository(BaseRepository):
     numbers (word IDs) from the words table.
     """
 
-    def insert_titles_content(self, ids, hash_id, title_status = "Main", title_content_id = None):
+    def insert_titles_content(self, ids, hash_id, title_status = "Main"):
         """
         Insert title content as a list of word IDs from the words table.
         
@@ -23,7 +23,6 @@ class TitlesContentRepository(BaseRepository):
             ids: List of word IDs (integers) from the words table
             hash_id: Path ID to associate title with
             title_status: Title status (default: "Main")
-            title_content_id: Optional parent title ID
         
         Returns:
             Title content record ID
@@ -34,13 +33,12 @@ class TitlesContentRepository(BaseRepository):
         packed = pack_int_list(ids)
         compressed = zlib.compress(packed)
         try:
-            # PARENT-02: title_content_id was accepted and documented here but
-            # never reached the SQL, so every caller that supplied a parent had
-            # it silently discarded. The column and its self-referencing FK
-            # already exist in m0001, so this needs no schema change.
+            # The frozen schema has no parent column on titles_content, so a
+            # parent cannot be stored: the parameter is gone rather than
+            # silently ignored (it used to be accepted and discarded).
             last_id = self.execute(
                 TitleQueries.insert_title(),
-                (compressed, title_status, title_content_id, hash_id),
+                (compressed, title_status, hash_id),
                 True)
             return last_id
         except Exception as e:

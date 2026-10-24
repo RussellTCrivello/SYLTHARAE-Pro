@@ -11,6 +11,12 @@ from database.exceptions import QueryError, TransactionAbortedError
 
 from core.word_limits import MAX_WORD_BYTES, word_exceeds_db_limit
 
+try:  # imported for the "reference data not installed" branch only
+    from services.geo.gazetteer import GazetteerUnavailable as _GazetteerUnavailable
+except Exception:  # pragma: no cover - keeps this module importable alone
+    class _GazetteerUnavailable(Exception):
+        """Fallback when the geo package cannot be imported."""
+
 logger = logging.getLogger(__name__)
 
 #: Processing states that are recorded findings rather than problems: the
@@ -1180,7 +1186,6 @@ class ContentDBService:
         title_words: List[str],
         hash_id: int,
         title_status: str = "Main",
-        parent_title_id: Optional[int] = None
         ) -> List[int]:
         
         # PRODUCTION: Skip path_id validation to avoid false negatives in aborted transactions
@@ -1198,7 +1203,7 @@ class ContentDBService:
 
         # Insert title content
         self.titles_content_repo.insert_titles_content(
-            word_ids, hash_id, title_status, parent_title_id
+            word_ids, hash_id, title_status
         )
 
         return word_ids
@@ -1515,23 +1520,43 @@ class ContentDBService:
                         cur, hash_id, text, anchor, trigger=trigger, detector=detector)
         except TransactionAbortedError:
             raise
+        except _GazetteerUnavailable as unavailable:
+            # Reference data that was never installed is a property of the
+            # deployment, not of this document. Record the run as failed (so
+            # re-detection retries it once the gazetteer is loaded) and carry
+            # the reason, but do not mark a fully stored document partial for
+            # an optional detector that could not run at all.
+            result[key] = {"status": "unavailable", "reason": str(unavailable)}
+            result.setdefault('warnings', []).append(
+                f"{detector} detector unavailable: {unavailable}")
+            logger.warning(
+                "Detector %s could not run for '%s' (path_id=%s): %s",
+                detector, file_name, path_id, unavailable,
+            )
+            self._record_failed_signal_run(detector, hash_id, unavailable, trigger,
+                                           signal_store)
         except Exception as sig_err:
             self._note_optional_failure(result, key, sig_err, file_name, path_id)
             result[key] = {"status": "failed"}
-            try:
-                with self.savepoint():
-                    with self.contents_repo.get_cursor(commit=False) as cur:
-                        root = sig_err
-                        while root.__cause__ is not None:  # name the driver error,
-                            root = root.__cause__         # not its wrappers
-                        signal_store.record_run(
-                            cur, hash_id, status="failed", trigger=trigger, detector=detector,
-                            error=f"{type(root).__name__}: {str(root).strip()}")
-            except TransactionAbortedError:
-                raise
-            except Exception:
-                logger.exception("Could not record the failed %s run for hash_id=%s",
-                                 detector, hash_id)
+            self._record_failed_signal_run(detector, hash_id, sig_err, trigger,
+                                           signal_store)
+
+    def _record_failed_signal_run(self, detector, hash_id, error, trigger, signal_store):
+        """Record the failed run row for ``detector`` (never raises)."""
+        try:
+            with self.savepoint():
+                with self.contents_repo.get_cursor(commit=False) as cur:
+                    root = error
+                    while root.__cause__ is not None:  # name the driver error,
+                        root = root.__cause__         # not its wrappers
+                    signal_store.record_run(
+                        cur, hash_id, status="failed", trigger=trigger, detector=detector,
+                        error=f"{type(root).__name__}: {str(root).strip()}")
+        except TransactionAbortedError:
+            raise
+        except Exception:
+            logger.exception("Could not record the failed %s run for hash_id=%s",
+                             detector, hash_id)
 
     def _note_optional_failure(self, result, step, error, file_name, path_id):
         """Record a contained failure of a derived-data step.
