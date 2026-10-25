@@ -13,6 +13,7 @@ Security model (server-side enforced):
                     IngestionValidationError/... -> HTTP 400 structured error);
 * rate limiting   - strict per-route limits on job creation.
 """
+import errno
 import hashlib
 import json
 import logging
@@ -66,6 +67,36 @@ def _error(code: str, message: str, status: int, details=None):
     if details is not None:
         body["error"]["details"] = details
     return jsonify(body), status
+
+
+#: Errnos that mean "the disk cannot take this right now", not "we have a bug".
+_STORAGE_ERRNOS = frozenset({
+    errno.ENOSPC,    # no space left on device
+    errno.EDQUOT,    # quota exceeded
+    errno.EROFS,     # read-only filesystem
+    errno.EACCES,    # permission denied on the staging tree
+    errno.EPERM,     # ditto, on some filesystems
+    errno.EIO,       # I/O error on the device
+})
+
+
+def _storage_failure(exc: BaseException):
+    """507 for a storage problem, ``None`` when it is anything else.
+
+    Staging is plain filesystem work. A full volume or an unwritable upload
+    directory is an expected condition with a plain answer; letting it become an
+    unhandled 500 (measured in the round-10 disk-full drill) hides the one thing
+    the operator needs to know.
+    """
+    if isinstance(exc, OSError) and exc.errno in _STORAGE_ERRNOS:
+        return _error(
+            "STORAGE_UNAVAILABLE",
+            "The upload storage cannot be written right now "
+            f"(ERRNO {exc.errno}: {exc.strerror or exc}). Free space on the "
+            "data volume or check its permissions, then retry.",
+            507,
+        )
+    return None
 
 
 def _validation_error(exc: Exception):
@@ -541,7 +572,6 @@ def api_chunked_start():
     chunk_size = CHUNK_SIZE_BYTES
     upload_id = uuid.uuid4().hex
     directory = _chunked_session_dir(upload_id)
-    directory.mkdir(parents=True, exist_ok=False)
     total_chunks = max((size + chunk_size - 1) // chunk_size, 1)
     session = {
         "filename": filename,
@@ -551,7 +581,15 @@ def api_chunked_start():
         "total_chunks": total_chunks,
         "created_at": _utc_now(),
     }
-    (directory / "session.json").write_text(json.dumps(session), encoding="utf-8")
+    try:
+        directory.mkdir(parents=True, exist_ok=False)
+        (directory / "session.json").write_text(json.dumps(session), encoding="utf-8")
+    except OSError as exc:
+        shutil.rmtree(directory, ignore_errors=True)
+        answer = _storage_failure(exc)
+        if answer is not None:
+            return answer
+        raise
     return jsonify({
         "success": True,
         "upload_id": upload_id,
@@ -592,8 +630,11 @@ def api_chunked_chunk(upload_id: str, index: int):
     except ValueError:
         incoming.unlink(missing_ok=True)
         return _error("CHUNK_TOO_LARGE", "Chunk is larger than the plan allows", 413)
-    except Exception:
+    except Exception as exc:
         incoming.unlink(missing_ok=True)
+        answer = _storage_failure(exc)
+        if answer is not None:
+            return answer
         logger.exception("chunk write failed")
         return _error("CHUNK_FAILED", "Chunk could not be stored", 500)
     if digest is not None and digest.hexdigest() != declared:
