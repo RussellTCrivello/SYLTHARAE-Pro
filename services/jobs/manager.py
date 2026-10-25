@@ -805,7 +805,11 @@ class JobManager:
         transaction); checkpointed ingestions resume without duplicating
         work; deduplication protects everything else.
         """
-        stale = self.repo.stale_running(stale_seconds or JobsConfig.stale_seconds())
+        # ``stale_seconds=0`` is a real request ("reclaim everything"), not an
+        # absent argument: the startup hook uses it, and ``0 or default`` would
+        # have silently waited for the six-hour window instead.
+        window = JobsConfig.stale_seconds() if stale_seconds is None else int(stale_seconds)
+        stale = self.repo.stale_running(window)
         recovered = []
         for job in stale:
             message = (
