@@ -93,3 +93,30 @@ def test_the_tree_page_is_owned_by_the_categories_interface():
     # Categories off hides both pages and switching it on brings both back.
     assert get_interface_for_endpoint("categories_list").interface_id == "categories"
     assert any(entry.interface_id == "categories" for entry in REGISTRY)
+
+
+def test_the_parent_cell_names_a_parent_that_is_not_on_the_page(admin_client):
+    """A parent outside the page still gets a name, not an empty search.
+
+    The cell used to resolve the parent only among the rows on the page, so a
+    subcategory shown by a search - its parent filtered out - rendered
+    ``href="/categories?search="``: a link to the whole list wearing the
+    parent's badge. Found in the browser pass on the populated database, where
+    one of four parent cells had an empty search term.
+    """
+    parent = _create(admin_client, _name("offpage-root"))
+    child = _create(admin_client, _name("offpage-child"), mode="child",
+                    parent_id=parent["id"])
+
+    html = admin_client.get(
+        "/categories", query_string={"search": child["name"], "per_page": 200}
+    ).get_data(as_text=True)
+
+    assert child["name"] in html
+    # one row only: the search matched the child, so the parent is not on this
+    # page and the name cannot come from a rendered parent row.
+    assert html.count('class="category-item') == 1, (
+        "the parent row is on this page - the test is not testing the lookup")
+    assert f"?search={parent['name']}" in html, (
+        "the parent cell did not resolve a parent that is not on the page")
+    assert '?search=""' not in html and '?search="' not in html
