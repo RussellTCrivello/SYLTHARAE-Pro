@@ -1,0 +1,12 @@
+........................................................................ [ 38%]
+............................................FF.......................... [ 76%]
+............................................                             [100%]
+=============================== warnings summary ===============================
+tests/integration/test_ocr_searchable.py::test_scanned_pdf_really_has_no_text_layer
+  /tmp/sylth-venv/lib/python3.11/site-packages/platformdirs/api.py:459: RuntimeDirWarning: XDG_RUNTIME_DIR is not set, falling back to /tmp/runtime-1001
+    return Path(self.user_runtime_dir)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/unit/test_ocr_provenance_docs.py::test_every_stored_ocr_field_is_documented
+FAILED tests/unit/test_ocr_provenance_docs.py::test_every_documented_ocr_field_is_stored

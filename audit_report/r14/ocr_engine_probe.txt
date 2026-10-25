@@ -1,0 +1,14 @@
+OCR engine availability on this host (2026-10-25T15:43Z)
+
+TesseractEngine.available() -> False
+  reason: tesseract binary not usable: TesseractNotFoundError: tesseract is not installed or it's not in your PATH
+
+RapidOcrEngine.available() -> False  (before)
+  reason: rapidocr_onnxruntime not usable: ImportError: libGL.so.1: cannot open shared object file
+  cause: rapidocr-onnxruntime declares opencv-python (the GUI build), which
+         overwrote opencv-python-headless in cv2/ - the trap documented in
+         requirements.txt:73 and docs/CONFIGURATION.md ("The cv2 packaging trap")
+
+  after: pip install --force-reinstall --no-deps 'opencv-python-headless>=4.9'
+         import cv2 -> 5.0.0 (headless)
+         RapidOcrEngine.available() -> True

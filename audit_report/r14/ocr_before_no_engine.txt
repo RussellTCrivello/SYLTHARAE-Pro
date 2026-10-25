@@ -1,0 +1,165 @@
+.................................FFF.................................... [ 47%]
+..................FsFFsssssssF.F.ssF.s.............................F.F.F [ 95%]
+Fssssss                                                                  [100%]
+=================================== FAILURES ===================================
+______ TestImageReaderOcr.test_printed_text_is_extracted_with_provenance _______
+tests/unit/test_ocr_engines.py:392: in test_printed_text_is_extracted_with_provenance
+    assert out["ocr_attempted"] is True
+E   assert False is True
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:954 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: scan.png
+___________ TestImageReaderOcr.test_blocks_carry_confidence_and_bbox ___________
+tests/unit/test_ocr_engines.py:406: in test_blocks_carry_confidence_and_bbox
+    assert blocks, "expected per-block results"
+E   AssertionError: expected per-block results
+E   assert []
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:954 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: scan.png
+___ TestImageReaderOcr.test_blank_image_yields_no_text_and_no_hallucination ____
+tests/unit/test_ocr_engines.py:416: in test_blank_image_yields_no_text_and_no_hallucination
+    assert out["ocr_attempted"] is True
+E   assert False is True
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:954 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: blank.png
+_____________ TestOrdinaryText.test_extracted_with_full_provenance _____________
+tests/unit/test_ocr_matrix.py:153: in test_extracted_with_full_provenance
+    assert "ORDINARY PRINTED TEXT 1043" in out["text"]
+E   AssertionError: assert 'ORDINARY PRINTED TEXT 1043' in ''
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:954 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: case.png
+_____________________ TestResolution.test_high_resolution ______________________
+tests/unit/test_ocr_matrix.py:179: in test_high_resolution
+    assert out["ocr_successful"] is True
+E   assert False is True
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:954 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: hi.png
+_____________ TestResolution.test_very_large_image_is_not_refused ______________
+tests/unit/test_ocr_matrix.py:187: in test_very_large_image_is_not_refused
+    assert out["ocr_successful"] is True
+E   assert False is True
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:954 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: big.png
+______________ TestMultiPagePdf.test_every_page_is_ocrd_in_order _______________
+tests/unit/test_ocr_matrix.py:283: in test_every_page_is_ocrd_in_order
+    assert page["ocr_derived"] is True
+           ^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'ocr_derived'
+------------------------------ Captured log call -------------------------------
+WARNING  reader_file.readers.read_img_fast:read_img_fast.py:682 Tesseract OCR not installed or not in PATH. Image OCR will be skipped.
+ERROR    core.ocr.engines:engines.py:954 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_pdf:read_pdf.py:544 OCR required but no engine is available for doc.pdf; native text layers will be preserved
+____________________ TestMixedPdf.test_both_layers_survive _____________________
+tests/unit/test_ocr_matrix.py:325: in test_both_layers_survive
+    assert "SCANNEDPAGEMARKER" in out["pages"][1]["text"].replace(" ", "")
+E   AssertionError: assert 'SCANNEDPAGEMARKER' in ''
+E    +  where '' = <built-in method replace of str object at 0xa618e0>(' ', '')
+E    +    where <built-in method replace of str object at 0xa618e0> = ''.replace
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:954 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_pdf:read_pdf.py:544 OCR required but no engine is available for mixed.pdf; native text layers will be preserved
+__________________ TestNoText.test_blank_image_yields_nothing __________________
+tests/unit/test_ocr_matrix.py:391: in test_blank_image_yields_nothing
+    assert out["ocr_attempted"] is True
+E   assert False is True
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:954 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: blank.png
+___ TestRequire.test_the_fallback_engine_passes_when_it_is_the_one_required ____
+tests/unit/test_ocr_selfcheck.py:98: in test_the_fallback_engine_passes_when_it_is_the_one_required
+    assert ocr_selfcheck.main(["--require", "rapidocr", "--json", str(report_path)]) == 0
+E   AssertionError: assert 1 == 0
+E    +  where 1 = <function main at 0x7faf90fa47c0>(['--require', 'rapidocr', '--json', '/tmp/pytest-of-user/pytest-0/test_the_fallback_engine_passe0/report.json'])
+E    +    where <function main at 0x7faf90fa47c0> = ocr_selfcheck.main
+----------------------------- Captured stdout call -----------------------------
+[engines] tesseract: unavailable (tesseract binary not usable: forced by the test)
+[engines] rapidocr: unavailable (rapidocr_onnxruntime not usable: ImportError: libGL.so.1: cannot open shared object file: No such file or directory)
+[engines] selected for ingestion: none
+[languages] requested heb,eng,ara; missing: n/a (tesseract unavailable)
+[samples] upright: unavailable engine=none text='' confidence=none rotation=0 scale=None input=None (No OCR engine available)
+          remediation: Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+[samples] turned 90: unavailable engine=none text='' confidence=none rotation=0 scale=None input=None (No OCR engine available)
+          remediation: Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+[samples] turned 180: unavailable engine=none text='' confidence=none rotation=0 scale=None input=None (No OCR engine available)
+          remediation: Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+[samples] turned 270: unavailable engine=none text='' confidence=none rotation=0 scale=None input=None (No OCR engine available)
+          remediation: Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+[samples] small text (12px): unavailable engine=none text='' confidence=none rotation=0 scale=None input=None (No OCR engine available)
+          remediation: Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+[FAIL] engines: unavailable: rapidocr: rapidocr_onnxruntime not usable: ImportError: libGL.so.1: cannot open shared object file: No such file or directory. Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+[FAIL] samples: unavailable: upright: No OCR engine available. Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:954 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: upright.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: turned_90.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: turned_180.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: turned_270.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: small_text_12px_.png
+___________________ test_the_host_engine_reads_every_sample ____________________
+tests/unit/test_ocr_selfcheck.py:128: in test_the_host_engine_reads_every_sample
+    assert sample["status"] == "success", (name, sample)
+E   AssertionError: ('upright', {'sample': 'upright', 'status': 'unavailable', 'detail': 'No OCR engine available', 'engine': 'none', ...})
+E   assert 'unavailable' == 'success'
+E     
+E     - success
+E     + unavailable
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:954 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: upright.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: turned_90.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: turned_180.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: turned_270.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: small_text_12px_.png
+__________________ test_every_stored_ocr_field_is_documented ___________________
+tests/unit/test_ocr_provenance_docs.py:44: in test_every_stored_ocr_field_is_documented
+    missing = _stored_fields() - _documented_fields()
+                                 ^^^^^^^^^^^^^^^^^^^^
+tests/unit/test_ocr_provenance_docs.py:19: in _documented_fields
+    text = DOC.read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1045: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: '/home/user/SYLTHARAE-Pro/docs/DOMAIN_MODEL.md'
+__________________ test_every_documented_ocr_field_is_stored ___________________
+tests/unit/test_ocr_provenance_docs.py:49: in test_every_documented_ocr_field_is_stored
+    invented = _documented_fields() - _stored_fields()
+               ^^^^^^^^^^^^^^^^^^^^
+tests/unit/test_ocr_provenance_docs.py:19: in _documented_fields
+    text = DOC.read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1045: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: '/home/user/SYLTHARAE-Pro/docs/DOMAIN_MODEL.md'
+=============================== warnings summary ===============================
+tests/integration/test_ocr_searchable.py::test_scanned_pdf_really_has_no_text_layer
+  /tmp/sylth-venv/lib/python3.11/site-packages/platformdirs/api.py:459: RuntimeDirWarning: XDG_RUNTIME_DIR is not set, falling back to /tmp/runtime-1001
+    return Path(self.user_runtime_dir)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/unit/test_ocr_engines.py::TestImageReaderOcr::test_printed_text_is_extracted_with_provenance
+FAILED tests/unit/test_ocr_engines.py::TestImageReaderOcr::test_blocks_carry_confidence_and_bbox
+FAILED tests/unit/test_ocr_engines.py::TestImageReaderOcr::test_blank_image_yields_no_text_and_no_hallucination
+FAILED tests/unit/test_ocr_matrix.py::TestOrdinaryText::test_extracted_with_full_provenance
+FAILED tests/unit/test_ocr_matrix.py::TestResolution::test_high_resolution - ...
+FAILED tests/unit/test_ocr_matrix.py::TestResolution::test_very_large_image_is_not_refused
+FAILED tests/unit/test_ocr_matrix.py::TestMultiPagePdf::test_every_page_is_ocrd_in_order
+FAILED tests/unit/test_ocr_matrix.py::TestMixedPdf::test_both_layers_survive
+FAILED tests/unit/test_ocr_matrix.py::TestNoText::test_blank_image_yields_nothing
+FAILED tests/unit/test_ocr_selfcheck.py::TestRequire::test_the_fallback_engine_passes_when_it_is_the_one_required
+FAILED tests/unit/test_ocr_selfcheck.py::test_the_host_engine_reads_every_sample
+FAILED tests/unit/test_ocr_provenance_docs.py::test_every_stored_ocr_field_is_documented
+FAILED tests/unit/test_ocr_provenance_docs.py::test_every_documented_ocr_field_is_stored

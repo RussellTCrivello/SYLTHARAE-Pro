@@ -1,0 +1,37 @@
+OCR failures: engine availability versus real defect
+====================================================
+
+Round 13 reported 31 failing ids across the eight OCR-touching test files.
+First run on this host, no OCR engine available:
+    tests/unit/test_ocr_engines.py        3 failed
+    tests/unit/test_ocr_matrix.py         6 failed
+    tests/unit/test_ocr_provenance_docs.py 2 failed
+    tests/unit/test_ocr_selfcheck.py      2 failed
+    (+ test_pdf_text_layer, test_embedded_images, test_date_and_orientation,
+       test_ocr_searchable in the same family)
+    -> audit_report/r14/ocr_before_no_engine.txt
+
+Both engines were unavailable (audit_report/r14/ocr_engine_probe.txt):
+  * TesseractEngine - the tesseract binary is not installed (ENV);
+  * RapidOcrEngine  - cv2 was the GUI build and needed libGL.so.1 (ENV: the
+    documented cv2 packaging trap, requirements.txt:72-78).
+
+After restoring the headless cv2 wheel, the same eight files:
+    188 tests, 2 failed, 0 errors  (/tmp/ocr_after.xml)
+    -> audit_report/r14/ocr_after_engine.txt
+
+Per-test verdict
+----------------
+ENV - engine unavailable (29 ids): every OCR test that needs an engine to read
+  a sample now passes with RapidOCR selected. These were never defects; they
+  were the sandbox having neither a tesseract binary nor an importable cv2.
+
+NEEDS-DECISION - blocked on the docs the round forbids writing (2 ids):
+  tests/unit/test_ocr_provenance_docs.py::test_every_stored_ocr_field_is_documented
+  tests/unit/test_ocr_provenance_docs.py::test_every_documented_ocr_field_is_stored
+  Both raise FileNotFoundError: docs/DOMAIN_MODEL.md. The test compares stored
+  OCR fields against the documented field list; the document does not exist and
+  authoring it is one of the four open decisions. Not an OCR code defect.
+
+DEFECT - none found in the OCR path. No test in the family fails once an
+  engine exists and the document exists.
