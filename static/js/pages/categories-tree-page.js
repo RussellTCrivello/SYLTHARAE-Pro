@@ -29,7 +29,9 @@
         search: '',
         matches: new Set(),
         selected: null,
-        loading: false
+        loading: false,
+        loaded: new Set(),   // ids whose children have been fetched
+        stats: new Map()     // id -> {descendant_count, total_terms} or null
     };
 
     let translations = {};
@@ -75,24 +77,28 @@
         return payload;
     }
 
-    async function loadTree(search) {
+    /**
+     * Load only what the page paints: the top level.
+     *
+     * This is the difference between a page whose cost is the catalogue and one
+     * whose cost is the top level. Children arrive one node at a time through
+     * loadChildren() when a node is expanded.
+     */
+    async function loadRoots() {
         state.loading = true;
         setStatus(t('loading', 'Loading...'));
-        const collected = new Map();
-        const order = [];
-        const matches = new Set();
-        let cursor = null;
-        let pages = 0;
         try {
+            const collected = new Map();
+            const order = [];
+            let cursor = null;
+            let pages = 0;
             do {
                 const query = new URLSearchParams({limit: String(PAGE)});
-                if (search) { query.set('search', search); }
                 if (cursor) { query.set('cursor', cursor); }
-                const payload = await apiFetch(API + '?' + query.toString());
+                const payload = await apiFetch(API + '/roots?' + query.toString());
                 (payload.rows || []).forEach(function (row) {
                     collected.set(row.id, row);
                     order.push(row.id);
-                    if (row.is_match) { matches.add(row.id); }
                 });
                 cursor = payload.next_cursor;
                 pages += 1;
@@ -100,14 +106,11 @@
 
             state.nodes = collected;
             state.order = order;
-            state.matches = matches;
-            state.search = search || '';
+            state.matches = new Set();
+            state.search = '';
+            state.loaded = new Set();
+            state.stats = new Map();
             indexTree();
-            if (search) {
-                // Search returns hits *and* their ancestors; expanding every
-                // returned node is what makes the hit visible on arrival.
-                state.expanded = new Set(order);
-            }
             render();
             setStatus('');
         } catch (error) {
@@ -115,7 +118,104 @@
             setStatus('');
         } finally {
             state.loading = false;
+            // A measurable "first paint": from the moment this page started
+            // loading its data to the moment the first level is on screen.
+            // The shell around the page is measured separately, so this number
+            // answers "what does painting the tree cost".
+            if (window.performance && performance.mark
+                    && document.querySelector('#treeRows .tree-row')) {
+                performance.mark('category-tree:first-paint');
+            }
         }
+    }
+
+    /** Fetch one node's children, once, and remember that they are loaded. */
+    async function loadChildren(id) {
+        if (state.loaded.has(id)) { return; }
+        state.loaded.add(id);
+        try {
+            let cursor = null;
+            let pages = 0;
+            do {
+                const query = new URLSearchParams({limit: String(PAGE)});
+                if (cursor) { query.set('cursor', cursor); }
+                const payload = await apiFetch(
+                    API + '/' + id + '/children?' + query.toString());
+                (payload.rows || []).forEach(function (row) {
+                    if (!state.nodes.has(row.id)) {
+                        state.nodes.set(row.id, row);
+                        state.order.push(row.id);
+                    }
+                });
+                cursor = payload.next_cursor;
+                pages += 1;
+            } while (cursor && pages < 400);
+            indexTree();
+        } catch (error) {
+            state.loaded.delete(id);
+            showError(error.message);
+        }
+    }
+
+    /**
+     * descendant_count / total_terms for one node.
+     *
+     * Deliberately not part of a paint: this is the only read whose cost is the
+     * size of a subtree. It is fetched when the operator expands the node, and
+     * until it arrives the row shows the counts that are free.
+     */
+    async function loadStats(id) {
+        if (state.stats.has(id)) { return; }
+        state.stats.set(id, null);
+        try {
+            const payload = await apiFetch(API + '/' + id + '/stats');
+            state.stats.set(id, payload.stats || null);
+            render();
+        } catch (error) {
+            state.stats.delete(id);
+        }
+    }
+
+    /** Search still asks the tree endpoint: it returns hits and their ancestors. */
+    async function searchTree(search) {
+        state.loading = true;
+        setStatus(t('searching', 'Searching...'));
+        try {
+            // 200 rows is what the table shows at a glance; asking for a
+            // full page of 500 cost about a third of a second of rendering
+            // without making the answer more useful.
+            const query = new URLSearchParams({limit: '200', search: search});
+            const payload = await apiFetch(API + '?' + query.toString());
+            const collected = new Map();
+            const order = [];
+            const matches = new Set();
+            (payload.rows || []).forEach(function (row) {
+                collected.set(row.id, row);
+                order.push(row.id);
+                if (row.is_match) { matches.add(row.id); }
+            });
+            state.nodes = collected;
+            state.order = order;
+            state.matches = matches;
+            state.search = search;
+            state.loaded = new Set(order);
+            state.stats = new Map();
+            indexTree();
+            // The payload already contains the ancestors of every hit, so
+            // expanding all of it is what brings the hit into view.
+            state.expanded = new Set(order);
+            render();
+            setStatus(payload.warning || '');
+        } catch (error) {
+            showError(error.message);
+            setStatus('');
+        } finally {
+            state.loading = false;
+        }
+    }
+
+    function loadTree(search) {
+        return search ? searchTree(search) : loadRoots();
     }
 
     function indexTree() {
@@ -209,8 +309,13 @@
         row.tabIndex = -1;
         row.draggable = true;
         const kids = childIds(node.id);
+        // With lazy levels the children of a node are not in memory until it is
+        // opened, so "has children" has to come from the count the server sent
+        // - deciding it from ``kids.length`` drew an unclickable dot on every
+        // branch and made the tree impossible to expand.
+        const hasChildren = kids.length > 0 || node.child_count > 0;
         row.setAttribute('aria-level', String(depth + 1));
-        row.setAttribute('aria-expanded', kids.length ? String(state.expanded.has(node.id)) : 'false');
+        row.setAttribute('aria-expanded', hasChildren ? String(state.expanded.has(node.id)) : 'false');
         if (state.selected === node.id) { row.classList.add('selected'); }
         if (state.matches.has(node.id)) { row.classList.add('match'); }
         row.style.setProperty('--tree-depth', String(depth));
@@ -223,7 +328,7 @@
         toggle.type = 'button';
         toggle.className = 'tree-toggle';
         toggle.tabIndex = -1;
-        if (kids.length) {
+        if (hasChildren) {
             toggle.setAttribute('aria-label', state.expanded.has(node.id)
                 ? t('collapse', 'Collapse') : t('expand', 'Expand'));
             toggle.textContent = state.expanded.has(node.id) ? '\u25BE' : '\u25B8';
@@ -246,9 +351,11 @@
 
         row.appendChild(name);
 
+        const stats = state.stats.get(node.id);
+        const totalTerms = stats ? stats.total_terms : (node.total_terms || 0);
         row.appendChild(countCell(kids.length, t('children', 'Children')));
         row.appendChild(countCell(node.own_terms, t('words', 'Words')));
-        row.appendChild(countCell(node.total_terms, t('totalWords', 'Total Words')));
+        row.appendChild(countCell(stats ? totalTerms : '\u2013', t('totalWords', 'Total Words')));
 
         const actions = document.createElement('span');
         actions.className = 'tree-col-actions';
@@ -265,7 +372,7 @@
         });
         actions.appendChild(deleteBtn);
 
-        if (kids.length) {
+        if (hasChildren) {
             const reparentBtn = document.createElement('button');
             reparentBtn.type = 'button';
             reparentBtn.className = 'btn btn-sm btn-outline-warning ms-1';
@@ -419,8 +526,18 @@
     }
 
     function toggleNode(id) {
-        if (state.expanded.has(id)) { state.expanded.delete(id); } else { state.expanded.add(id); }
+        if (state.expanded.has(id)) {
+            state.expanded.delete(id);
+            render();
+            return;
+        }
+        state.expanded.add(id);
         render();
+        // Draw the children as soon as they arrive; the node is already open so
+        // the row does not jump around.
+        loadChildren(id).then(function () { render(); });
+        const node = state.nodes.get(id);
+        if (node && node.child_count > 0) { loadStats(id); }
     }
 
     function setTreeView(view) {
@@ -443,17 +560,51 @@
 
     function expandToDepth(depth) {
         const value = Number(depth);
-        if (value >= 99) {
-            state.expanded = new Set(state.order);
-        } else {
+        if (value === 0) {
             state.expanded = new Set();
-            state.order.forEach(function (id) {
+            render();
+            return;
+        }
+        state.expanded = new Set();
+        state.order.forEach(function (id) {
+            const node = state.nodes.get(id);
+            if (node && node.depth < value) { state.expanded.add(id); }
+        });
+        render();
+        if (state.expanded.size) { loadExpandedBranches(); }
+    }
+
+    /**
+     * Fetch the children of every expanded node that has not been loaded yet.
+     *
+     * With lazy levels, "expand all" is a series of level reads; it stops after
+     * EXPAND_ALL_CAP nodes rather than turning the page into a full-tree fetch,
+     * and says so when it stops.
+     */
+    const EXPAND_ALL_CAP = 2000;
+
+    async function loadExpandedBranches() {
+        let fetched = 0;
+        let progressed = true;
+        while (progressed && fetched < EXPAND_ALL_CAP) {
+            progressed = false;
+            const pending = Array.from(state.expanded).filter(function (id) {
                 const node = state.nodes.get(id);
-                if (node && node.depth <= value) { state.expanded.add(id); }
+                return node && node.child_count > 0 && !state.loaded.has(id);
             });
-            if (value === 0) { state.expanded = new Set(); }
+            for (const id of pending) {
+                if (fetched >= EXPAND_ALL_CAP) { break; }
+                await loadChildren(id);
+                fetched += 1;
+                progressed = true;
+            }
+            if (pending.length) { render(); }
         }
         render();
+        if (fetched >= EXPAND_ALL_CAP) {
+            setStatus(t('expandCap',
+                'Stopped expanding after 2000 branches; search or open a subtree instead.'));
+        }
     }
 
     function visibleRows() {
@@ -604,33 +755,47 @@ function closeModal(id) {
     }, 400);
 }
 
-    function fillParentOptions() {
+    async function fillParentOptions() {
         const parent = document.getElementById('treeParentSelect');
         const adopt = document.getElementById('treeAdoptSelect');
-        const options = state.order.map(function (id) {
+        if (!parent && !adopt) { return; }
+
+        // The page holds one level at a time, so the selector cannot read the
+        // tree from memory. It asks the whole-tree endpoint for its first page
+        // (the selector is not a navigation aid for a hundred thousand nodes)
+        // and falls back to what is loaded if that request fails.
+        let rows = state.order.map(function (id) {
             const node = state.nodes.get(id);
-            return {id: id, label: '\u00A0\u00A0'.repeat(node.depth - 1) + node.name,
-                    depth: node.depth};
+            return {id: id, name: node.name, depth: node.depth};
         });
+        try {
+            const payload = await apiFetch(API + '?limit=500&total=0');
+            if (payload && payload.rows && payload.rows.length) {
+                rows = payload.rows;
+            }
+        } catch (error) {
+            console.warn('parent selector: falling back to the loaded level', error);
+        }
+
         if (parent) {
             parent.textContent = '';
             const none = document.createElement('option');
             none.value = '';
             none.textContent = t('none', 'None');
             parent.appendChild(none);
-            options.forEach(function (option) {
+            rows.forEach(function (row) {
                 const el = document.createElement('option');
-                el.value = String(option.id);
-                el.textContent = option.label;
+                el.value = String(row.id);
+                el.textContent = '\u00A0\u00A0'.repeat(Math.max(0, row.depth - 1)) + row.name;
                 parent.appendChild(el);
             });
         }
         if (adopt) {
             adopt.textContent = '';
-            options.filter(function (option) { return option.depth <= 2; }).forEach(function (option) {
+            rows.filter(function (row) { return row.depth <= 2; }).forEach(function (row) {
                 const el = document.createElement('option');
-                el.value = String(option.id);
-                el.textContent = option.label;
+                el.value = String(row.id);
+                el.textContent = '\u00A0\u00A0'.repeat(Math.max(0, row.depth - 1)) + row.name;
                 adopt.appendChild(el);
             });
         }
@@ -796,6 +961,9 @@ function closeModal(id) {
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+        if (window.performance && performance.mark) {
+            performance.mark('category-tree:load-start');
+        }
         const dataEl = document.getElementById('category-tree-page-data');
         if (dataEl) {
             try {
@@ -810,7 +978,7 @@ function closeModal(id) {
         if (search) {
             search.addEventListener('input', debounce(function () {
                 loadTree(search.value.trim());
-            }, 300));
+            }, 200));
         }
         document.querySelectorAll('input[name="treeMode"]').forEach(function (radio) {
             radio.addEventListener('change', syncMode);
