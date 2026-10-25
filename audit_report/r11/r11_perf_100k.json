@@ -1,0 +1,13 @@
+{
+  "first_paint_ms": 1588,
+  "roots_request_ms": 95,
+  "roots_rows": 30,
+  "page_first_paint_ms": 100,
+  "expand_ms": 467,
+  "children_request_ms": 60,
+  "search_ms": 804,
+  "search_rows": 200,
+  "full_tree_warning": "this tree has 101150 categories; the whole-tree endpoint is not meant for painting a page - use /api/categories/tree/children",
+  "console_errors": 0,
+  "console_samples": []
+}

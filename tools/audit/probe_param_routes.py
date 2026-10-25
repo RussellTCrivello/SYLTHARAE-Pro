@@ -213,6 +213,21 @@ class Fixtures:
         resp = self.a.post("/api/words", json={"word": f"paramword{uuid.uuid4().hex[:6]}"})
         self.valid["word_id"] = _id(resp)
 
+        # The hierarchy routes (<node_id>) are new: give them a real category so
+        # the "valid" variant is a real request rather than a placeholder id.
+        # Categories are shared objects (no owner column), so the other-user
+        # variant uses a second category created by B, not an isolation claim.
+        resp = self.a.post("/api/categories/tree",
+                           json={"name": f"param node {uuid.uuid4().hex[:6]}", "mode": "root"})
+        self.valid["node_id"] = _id(resp, "node")
+        resp = self.b.post("/api/categories/tree",
+                           json={"name": f"param node b {uuid.uuid4().hex[:6]}", "mode": "root"})
+        self.other["node_id"] = _id(resp, "node")
+        self.notes["node_id"] = (
+            f"a={self.valid.get('node_id')} b={self.other.get('node_id')}; both created through "
+            f"POST /api/categories/tree; categorys has no owner column, so a cross-read is "
+            f"the designed behaviour")
+
         # a real document, imported by the app's own import endpoint. Import is
         # an administrator action and only accepts paths under an approved
         # root, so the probe sets INGESTION_ROOTS (in make_app) to a temp dir
@@ -372,6 +387,27 @@ class Fixtures:
         self.other["source_id"] = _id(resp, "source") or _id(resp)
         return self.other["source_id"]
 
+    def ensure_node(self, other=False):
+        """A live category id, recreated if a previous row deleted it.
+
+        ``POST /api/categories/tree/<node_id>/delete`` is probed with the valid
+        fixture and really deletes it, so every later row that addresses a node
+        must start from one that exists or its status says nothing.
+        """
+        key = "other" if other else "valid"
+        client = self.b if other else self.a
+        node_id = self.other.get("node_id") if other else self.valid.get("node_id")
+        if node_id and client.get(f"/api/categories/tree/{node_id}").status_code == 200:
+            return node_id
+        resp = client.post("/api/categories/tree",
+                           json={"name": f"param node {uuid.uuid4().hex[:6]}", "mode": "root"})
+        node_id = _id(resp, "node")
+        if other:
+            self.other["node_id"] = node_id
+        else:
+            self.valid["node_id"] = node_id
+        return node_id
+
     def _user_id(self, username):
         from core.security.service import get_auth_service
 
@@ -499,6 +535,9 @@ def main() -> int:
                     source.append(f"{name}={values[name]}")
                 if variant == "other-user" and "source_id" in rule.arguments:
                     values["source_id"] = fixtures.ensure_other_source()
+                    source = [f"{n}={v}" for n, v in values.items()]
+                if "node_id" in rule.arguments and variant in ("valid", "other-user"):
+                    values["node_id"] = fixtures.ensure_node(other=variant == "other-user")
                     source = [f"{n}={v}" for n, v in values.items()]
                 if any(v in (None, "None") for v in values.values()):
                     rows.append((rule.rule, method, rule.endpoint, variant, " ".join(source),
