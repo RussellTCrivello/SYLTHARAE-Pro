@@ -49,6 +49,9 @@ def test_the_admin_password_can_come_from_the_environment(no_env_file, monkeypat
 def test_the_environment_wins_over_the_env_file(no_env_file, monkeypatch):
     no_env_file.write_text("DB_NAME=from_file\nDB_HOST=/tmp/from_file\n", encoding="utf-8")
     monkeypatch.setenv("DB_NAME", "from_environment")
+    # DB_HOST is set by other tests' fixtures when the whole suite runs; this
+    # test is about the precedence rule, so start from a clean pair.
+    monkeypatch.delenv("DB_HOST", raising=False)
 
     config = installer.gather_config(ni=True)
 
