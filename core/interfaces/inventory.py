@@ -182,6 +182,13 @@ def build_inventory(app, include_api: bool = True) -> List[EndpointRecord]:
         classification = classify_endpoint(endpoint, path, methods)
         if endpoint in REDIRECT_ENDPOINTS:
             classification = EndpointClass.REDIRECT
+        if classification == EndpointClass.TEST_ENDPOINT:
+            # Scaffolding the suite registers on the shared app (see
+            # TEST_ENDPOINT_PREFIXES). It is classified so the coverage rule can
+            # tell it apart, but it is not shipped surface: listing it made the
+            # committed inventory depend on which test modules had run, which is
+            # exactly the drift the generated file exists to prevent.
+            continue
         if classification == EndpointClass.API_ENDPOINT and not include_api:
             continue
 
