@@ -188,8 +188,13 @@
         </td>
         <td data-ut-value="{{ category.parent_id or '' }}">
             {% if category.parent_id %}
-                <a href="{{ url_for('categories_list') }}?search={{ categories|selectattr('id', 'equalto', category.parent_id)|first.name if categories|selectattr('id', 'equalto', category.parent_id)|first else '' }}" class="text-muted small">
-                    <i class="bi bi-tag"></i> Parent
+                {#- ``selectattr(...)|first.name`` is not a filter chain Jinja
+                    understands: it looks for a filter called ``first.name`` and
+                    raised TemplateRuntimeError, which the route turned into an
+                    empty table. A ``set`` names the row first. -#}
+                {% set parent_row = categories|selectattr('id', 'equalto', category.parent_id)|first %}
+                <a href="{{ url_for('categories_list') }}?search={{ parent_row.name if parent_row else '' }}" class="text-muted small">
+                    <i class="bi bi-tag"></i> {{ _('Parent') }}
                 </a>
             {% else %}
                 <span class="text-muted small">{{ _('Main Category') }}</span>
