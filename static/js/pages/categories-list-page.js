@@ -234,12 +234,151 @@ function openCategoryModal(categoryId = null) {
         categoryIdInput.value = '';
         categoryNameInput.value = '';
     }
-    
+
     form.reset();
+    // The parent and adopt selectors are filled from the hierarchy API, so the
+    // modal offers the same tree the hierarchy page shows instead of a flat
+    // list of names that would let an operator pick a level that does not exist.
+    loadCategoryChoices();
+    syncCategoryMode();
+    categoryModalGeneration += 1;
     modal.show();
 }
 
+/**
+ * Fill the parent and adopt selectors from the tree, indented by level.
+ *
+ * The endpoint pages at 500 rows; the selector is meant for the ordinary
+ * catalogue, and a deeper catalogue is served by the hierarchy page. If the
+ * fetch fails the modal still works in "top level" mode, which is why the
+ * failure only logs.
+ */
+function loadCategoryChoices() {
+    const parent = document.getElementById('categoryParentSelect');
+    const adopt = document.getElementById('categoryAdoptSelect');
+    if (!parent && !adopt) { return; }
+
+    fetch('/api/categories/tree?limit=500&total=0', {headers: {'Accept': 'application/json'}})
+        .then(function (response) {
+            if (!response.ok) { throw new Error('HTTP ' + response.status); }
+            return response.json();
+        })
+        .then(function (payload) {
+            const rows = payload.rows || [];
+            if (parent) {
+                parent.textContent = '';
+                const none = document.createElement('option');
+                none.value = '';
+                none.textContent = translations.none || 'None';
+                parent.appendChild(none);
+                rows.forEach(function (row) {
+                    const option = document.createElement('option');
+                    option.value = String(row.id);
+                    option.textContent = '\u00A0\u00A0'.repeat(Math.max(0, row.depth - 1)) + row.name;
+                    parent.appendChild(option);
+                });
+            }
+            if (adopt) {
+                adopt.textContent = '';
+                // Only the rows drawn on this page can be adopted from here:
+                // the table is server-paged and the operator can see those.
+                // The rows carry data-category-id wherever the table macro puts
+                // them; the fallback keeps this working if the table is
+                // re-rendered without a tbody wrapper.
+                const rows = document.querySelectorAll('#categoriesTable tr[data-category-id]');
+                (rows.length ? rows : document.querySelectorAll('tr[data-category-id]'))
+                    .forEach(function (tr) {
+                        const option = document.createElement('option');
+                        option.value = tr.dataset.categoryId;
+                        option.textContent = tr.dataset.name;
+                        adopt.appendChild(option);
+                    });
+            }
+        })
+        .catch(function (error) {
+            console.warn('Could not load category choices:', error);
+        });
+}
+
+function currentCategoryMode() {
+    const checked = document.querySelector('input[name="categoryMode"]:checked');
+    return checked ? checked.value : 'root';
+}
+
+function syncCategoryMode() {
+    const mode = currentCategoryMode();
+    const parentGroup = document.getElementById('categoryParentGroup');
+    const adoptGroup = document.getElementById('categoryAdoptGroup');
+    const childrenGroup = document.getElementById('categoryChildrenGroup');
+    const editing = (document.getElementById('categoryId') || {}).value;
+    if (parentGroup) { parentGroup.style.display = (mode === 'child' && !editing) ? '' : 'none'; }
+    if (adoptGroup) { adoptGroup.style.display = (mode === 'parent-above' && !editing) ? '' : 'none'; }
+    if (childrenGroup) {
+        childrenGroup.style.display = (mode === 'parent-above' || editing) ? 'none' : '';
+    }
+}
+
+document.addEventListener('change', function (event) {
+    if (event.target && event.target.name === 'categoryMode') { syncCategoryMode(); }
+});
+
 // Save category
+/**
+ * Close the add-category dialog, forcing the presentation state if needed.
+ *
+ * The bundled Bootstrap reports "not shown" while the dialog and its backdrop
+ * are still in the DOM, so ``hide()`` alone leaves the dialog covering the
+ * list. See the same helper in categories-tree-page.js.
+ */
+let categoryModalGeneration = 0;
+
+function closeCategoryModal() {
+    const element = document.getElementById('categoryModal');
+    if (!element || typeof bootstrap === 'undefined') { return; }
+    const generation = categoryModalGeneration;
+    try {
+        bootstrap.Modal.getOrCreateInstance(element).hide();
+    } catch (error) {
+        console.warn('modal hide failed:', error);
+    }
+    window.setTimeout(function () {
+        if (generation !== categoryModalGeneration) { return; }
+        if (!element.classList.contains('show')) { return; }
+        element.classList.remove('show');
+        element.setAttribute('aria-hidden', 'true');
+        element.style.display = 'none';
+        document.querySelectorAll('.modal-backdrop').forEach(function (backdrop) {
+            backdrop.remove();
+        });
+        document.body.classList.remove('modal-open');
+        document.body.style.removeProperty('padding-right');
+    }, 400);
+}
+
+/**
+ * POST JSON and turn the server's refusal into the message shown to the user.
+ *
+ * The hierarchy API answers a refused operation with ``{error, code}`` (409 for
+ * a sibling-name clash or a cycle, 400 for a malformed body); surfacing the
+ * server's text keeps the rule where it is enforced.
+ */
+async function postJson(url, body, csrfToken) {
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify(body)
+    });
+    let payload = null;
+    try { payload = await response.json(); } catch (error) { payload = null; }
+    if (!response.ok) {
+        throw new Error((payload && payload.error) || ('HTTP ' + response.status));
+    }
+    return payload;
+}
+
 async function saveCategory() {
     const form = document.getElementById('categoryForm');
     const formData = new FormData(form);
@@ -289,7 +428,51 @@ async function saveCategory() {
         showToast('Unable to obtain CSRF token. Please refresh the page.', 'error');
         return;
     }
-    
+
+    // Renaming keeps the historic form endpoint; creating a category now says
+    // where it goes, which is the hierarchy API's job.
+    if (!categoryId) {
+        const mode = currentCategoryMode();
+        const body = {name: categoryName, mode: mode === 'parent-above' ? 'root' : mode};
+        try {
+            if (mode === 'parent-above') {
+                const adopt = document.getElementById('categoryAdoptSelect');
+                const ids = adopt ? Array.from(adopt.selectedOptions).map(function (o) {
+                    return Number(o.value);
+                }) : [];
+                if (!ids.length) {
+                    showToast(translations.adoptRequired || 'Choose at least one category to move', 'error');
+                    return;
+                }
+                await postJson('/api/categories/tree/parent-above',
+                    {name: categoryName, child_ids: ids}, csrfToken);
+            } else {
+                if (mode === 'child') {
+                    const parent = document.getElementById('categoryParentSelect');
+                    if (!parent || !parent.value) {
+                        showToast(translations.parentRequired || 'Choose a parent category', 'error');
+                        return;
+                    }
+                    body.parent_id = Number(parent.value);
+                }
+                const childrenField = document.getElementById('categoryChildren');
+                const lines = childrenField ? childrenField.value.split('\n')
+                    .map(function (line) { return line.trim(); })
+                    .filter(Boolean) : [];
+                if (lines.length) { body.children = lines; }
+                await postJson('/api/categories/tree', body, csrfToken);
+            }
+            showToast(translations.categoryAdded || 'Category added successfully', 'success');
+            closeCategoryModal();
+            setTimeout(function () {
+                if (window.swapNavigate) { window.swapNavigate(window.location.href); } else { window.location.reload(); }
+            }, 400);
+        } catch (error) {
+            showToast(error.message, 'error');
+        }
+        return;
+    }
+
     const url = '/category/add';
     const method = 'POST';
     
@@ -301,6 +484,7 @@ async function saveCategory() {
         },
         body: JSON.stringify({
             category_name: categoryName,
+            category_id: categoryId,
             csrf_token: csrfToken
         })
     })

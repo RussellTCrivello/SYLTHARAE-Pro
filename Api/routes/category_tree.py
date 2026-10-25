@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import logging
 
-from flask import jsonify, request
+from flask import jsonify, render_template, request
 
 from Api.utils.utils import get_connection
 from core.security.flask_ext import current_user
@@ -105,7 +105,18 @@ def _write(fn):
 
 
 def register_category_tree_routes(app):
-    """Register the hierarchy endpoints."""
+    """Register the hierarchy endpoints and the tree page."""
+
+    @app.route("/categories/tree", methods=["GET"])
+    def categories_tree_page():
+        """The hierarchy view: indented list and hierarchy map.
+
+        The page loads the tree from ``/api/categories/tree`` rather than
+        rendering it server-side: expand/collapse, re-parenting and search all
+        change the shape of what is on screen, and none of them should cost a
+        round trip through a template.
+        """
+        return render_template("Category/categories_tree.html")
 
     @app.route("/api/categories/tree", methods=["GET"])
     def category_tree_list():
