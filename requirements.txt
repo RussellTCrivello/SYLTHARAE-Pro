@@ -38,6 +38,7 @@ psycopg2-binary>=2.9                 # [WIN-BINARY] PostgreSQL client with Windo
 python-dateutil>=2.8                 # [WIN-NATIVE] date parsing and timezone utilities
 python-dotenv>=1.0                   # [WIN-NATIVE] .env configuration loading
 psutil>=5.9                           # [WIN-BINARY] Windows process/system metrics
+apscheduler>=3.10,<4                 # [WIN-NATIVE] due-schedule runs (services/scheduling/scheduler.py)
 PyYAML>=6.0                           # [WIN-BINARY] YAML configuration parsing
 chardet>=5.0                          # [WIN-NATIVE] character-set detection
 numpy>=1.26                           # [WIN-BINARY] numerical arrays used by OCR/image code
