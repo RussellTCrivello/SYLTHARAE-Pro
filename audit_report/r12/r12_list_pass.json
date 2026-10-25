@@ -1,0 +1,47 @@
+{
+  "base": "http://127.0.0.1:5077",
+  "list": {
+    "rows": 10,
+    "subcategoryRows": 3,
+    "parentCells": 0,
+    "parentLinks": [
+      "/categories?search=DBG604611",
+      "/categories?search=DBG615180",
+      "/categories?search=DBG624716"
+    ],
+    "firstNames": [
+      "dbg259994-l1",
+      "dbg563044-l1",
+      "dbg604611",
+      "dbg604611-c",
+      "dbg615180"
+    ]
+  },
+  "dialog": {
+    "root": {
+      "parentOptions": 501,
+      "parentFirst": "R11566448-L1",
+      "adoptOptions": 10,
+      "adoptFirst": "dbg259994-l1"
+    },
+    "parentAbove": {
+      "parentOptions": 501,
+      "parentFirst": "R11566448-L1",
+      "adoptOptions": 10,
+      "adoptFirst": "dbg259994-l1",
+      "groupVisible": true
+    }
+  },
+  "tree": {
+    "rows": 33,
+    "marks": [
+      "category-tree:load-start",
+      "category-tree:first-paint"
+    ]
+  },
+  "problems": {
+    "console": [],
+    "pageerror": [],
+    "badResponses": []
+  }
+}

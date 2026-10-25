@@ -768,6 +768,11 @@ function closeModal(id) {
             const node = state.nodes.get(id);
             return {id: id, name: node.name, depth: node.depth};
         });
+        // Paint what the page already has before the request: on a large
+        // catalogue the whole-tree first page takes about a second, and an
+        // operator who opens the dialog and immediately picks a parent was
+        // looking at an empty selector.
+        paintParentOptions(rows);
         try {
             const payload = await apiFetch(API + '?limit=500&total=0');
             if (payload && payload.rows && payload.rows.length) {
@@ -776,7 +781,12 @@ function closeModal(id) {
         } catch (error) {
             console.warn('parent selector: falling back to the loaded level', error);
         }
+        paintParentOptions(rows);
+    }
 
+    function paintParentOptions(rows) {
+        const parent = document.getElementById('treeParentSelect');
+        const adopt = document.getElementById('treeAdoptSelect');
         if (parent) {
             parent.textContent = '';
             const none = document.createElement('option');
