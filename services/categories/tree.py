@@ -239,22 +239,28 @@ def _row_to_dict(row) -> Dict[str, Any]:
 
 def fetch_tree(cur, *, search: Optional[str] = None, cursor: Optional[str] = None,
                limit: int = DEFAULT_PAGE, with_total: bool = True) -> Dict[str, Any]:
-    """One page of the tree, ordered by path.
+    """One page of the whole tree, ordered by path.
 
     ``search`` returns matching nodes *and their ancestors*, each row flagged
     ``is_match``. That is what lets the tree auto-expand to a hit: the ancestors
     are already in the payload, so the client does not have to fetch them.
+
+    The search path does **not** build the closure or the whole recursive tree:
+    it finds the matches by name, then walks upwards from each one to collect
+    the ancestor rows. At a hundred thousand nodes the closure version took
+    3.9 s; the walk takes the size of the answer, not the size of the tree.
     """
     limit = max(1, min(int(limit), MAX_PAGE))
     needle = f"%{search.strip()}%" if search and search.strip() else None
 
-    base = _SEARCH_CTES if needle else _ROW_SQL
+    if needle:
+        return _search_rows(cur, needle, limit=limit, search=search)
+
+    base = _ROW_SQL
     where, params = "", []
     if cursor:
         where = " WHERE x.sort_key > %s"
         params.append(cursor)
-    if needle:
-        params = [needle] + params  # the ILIKE placeholder comes first
 
     sql = f"SELECT * FROM ({base}) x{where} ORDER BY x.sort_key LIMIT %s"
     cur.execute(sql, tuple(params) + (limit + 1,))
@@ -267,13 +273,68 @@ def fetch_tree(cur, *, search: Optional[str] = None, cursor: Optional[str] = Non
 
     total = None
     if with_total:
-        count_base = _SEARCH_CTES if needle else _ROW_SQL
-        count_params = (needle,) if needle else ()
-        cur.execute(f"SELECT count(*) FROM ({count_base}) x", count_params)
+        cur.execute(f"SELECT count(*) FROM ({_ROW_SQL}) x")
         total = int(cur.fetchone()[0])
 
-    return {"rows": items, "next_cursor": next_cursor, "total": total,
-            "limit": limit, "search": search or None}
+    payload = {"rows": items, "next_cursor": next_cursor, "total": total,
+               "limit": limit, "search": None}
+    if total is not None and total > FULL_TREE_WARN:
+        payload["warning"] = (
+            f"this tree has {total} categories; the whole-tree endpoint is not "
+            f"meant for painting a page - use /api/categories/tree/children")
+    return payload
+
+
+#: How many matches a search may expand into ancestors. Beyond this the answer
+#: stops being a "find a node" answer; the caller should narrow the search.
+SEARCH_MATCH_CAP = 500
+
+
+def _search_rows(cur, needle: str, *, limit: int, search: str) -> Dict[str, Any]:
+    """Matches plus their ancestors, without the closure or the full recursion."""
+    cur.execute(
+        "SELECT c.id FROM categorys c JOIN words w ON w.id = c.word_id"
+        " WHERE w.word ILIKE %s ORDER BY lower(w.word), c.id LIMIT %s",
+        (needle, SEARCH_MATCH_CAP + 1))
+    match_ids = [row[0] for row in cur.fetchall()]
+    truncated = len(match_ids) > SEARCH_MATCH_CAP
+    match_ids = match_ids[:SEARCH_MATCH_CAP]
+    matches = set(match_ids)
+
+    chain = _chain(cur, match_ids)
+    children, terms = _counts_for(cur, list(chain))
+
+    def depth_and_path(node_id):
+        names, current, depth = [], node_id, 1
+        while current is not None:
+            parent, name = chain[current]
+            names.append(name)
+            if parent is None:
+                break
+            current = parent
+            depth += 1
+        return depth, list(reversed(names))
+
+    items = []
+    for node_id, (parent, name) in chain.items():
+        depth, names = depth_and_path(node_id)
+        items.append({
+            "id": node_id, "parent_id": parent, "name": name, "depth": depth,
+            "path": " / ".join(names), "path_ids": [],
+            "child_count": children.get(node_id, 0),
+            "own_terms": terms.get(node_id, 0),
+            "descendant_count": 0, "total_terms": 0,
+            "sort_key": "", "is_match": node_id in matches,
+        })
+    items.sort(key=lambda row: (row["path"].lower(), row["id"]))
+
+    payload = {"rows": items[:limit], "next_cursor": None, "total": len(items),
+               "limit": limit, "search": search, "matches": len(matches)}
+    if truncated:
+        payload["warning"] = (
+            f"more than {SEARCH_MATCH_CAP} categories match; only the first "
+            f"{SEARCH_MATCH_CAP} are expanded into their ancestors")
+    return payload
 
 
 def parse_node_id(value: Any, field: str = "id") -> int:
@@ -540,3 +601,151 @@ def delete_node(cur, *, node_id: Any, mode: str = "block",
         raise
     return {"deleted": node_id, "children_moved_to": destination if child_count else None,
             "children_moved": child_count if mode == "reparent" else 0}
+
+
+# ---------------------------------------------------------------------------
+# Lazy loading: one level at a time
+# ---------------------------------------------------------------------------
+#
+# The whole-tree query above is linear in the size of the tree and is built for
+# the CSV export and for search. Painting a page does not need it: the browser
+# only has to draw the roots, then the children of whatever is expanded. These
+# helpers answer exactly that and nothing else, so the cost of the first paint
+# is the cost of one level, not of the catalogue.
+#
+# Each row carries the two counts that are cheap for a node - how many children
+# it has and how many words are assigned to it directly - and nothing that needs
+# a subtree walk. ``descendant_count`` and ``total_terms`` are deliberately
+# absent: computing them for the root of a hundred-thousand-node tree costs the
+# whole tree, which is the thing being avoided. ``node_stats`` answers those for
+# one node when the operator asks for them.
+
+#: Above this many nodes the whole-tree endpoint says so in its payload; the
+#: page shows the warning instead of pretending the export is free.
+FULL_TREE_WARN = 5_000
+
+_LEVEL_ROW_SQL = """
+SELECT c.id, c.parent_id, w.word AS name
+  FROM categorys c
+  JOIN words w ON w.id = c.word_id
+ WHERE {predicate}
+ ORDER BY lower(w.word), c.id
+"""
+
+
+def _encode_cursor(word: str, node_id: int) -> str:
+    return f"{word.lower()}|{node_id}"
+
+
+def _decode_cursor(cursor: str):
+    word, _, raw = cursor.rpartition("|")
+    if not word or not raw.isdigit():
+        raise CategoryTreeError("invalid_cursor", "cursor is not a cursor this endpoint issued", 400)
+    return f"{word}|{int(raw)}", int(raw)
+
+
+def _counts_for(cur, ids):
+    """child_count and own_terms for a set of ids, in two grouped lookups."""
+    if not ids:
+        return {}, {}
+    cur.execute("SELECT parent_id, count(*) FROM categorys"
+                " WHERE parent_id = ANY(%s) GROUP BY parent_id", (list(ids),))
+    children = {row[0]: int(row[1]) for row in cur.fetchall()}
+    cur.execute("SELECT category_id, count(*) FROM words_categorys"
+                " WHERE category_id = ANY(%s) GROUP BY category_id", (list(ids),))
+    terms = {row[0]: int(row[1]) for row in cur.fetchall()}
+    return children, terms
+
+
+def _chain(cur, ids):
+    """Every ancestor of *ids* as ``{id: (parent_id, name)}``.
+
+    One recursive walk upwards; the depth of a category tree is small, so this
+    costs a handful of rows instead of the closure the whole-tree query builds.
+    """
+    if not ids:
+        return {}
+    cur.execute(
+        "WITH RECURSIVE up AS ("
+        "  SELECT c.id, c.parent_id FROM categorys c WHERE c.id = ANY(%s)"
+        "  UNION"
+        "  SELECT c.id, c.parent_id FROM categorys c JOIN up ON c.id = up.parent_id)"
+        " SELECT u.id, u.parent_id, w.word FROM up u"
+        "   JOIN categorys c ON c.id = u.id"
+        "   JOIN words w ON w.id = c.word_id", (list(ids),))
+    return {row[0]: (row[1], row[2]) for row in cur.fetchall()}
+
+
+def fetch_level(cur, *, parent_id: Optional[int], limit: int = 200,
+                cursor: Optional[str] = None) -> Dict[str, Any]:
+    """One level of the tree: the roots, or the children of one node."""
+    limit = max(1, min(int(limit), MAX_PAGE))
+    if parent_id is not None:
+        _require_node(cur, parent_id, field="parent_id")
+
+    predicate = "c.parent_id IS NULL"
+    params: list = []
+    if parent_id is not None:
+        predicate = "c.parent_id = %s"
+        params.append(parent_id)
+    if cursor:
+        bound_key, bound_id = _decode_cursor(cursor)
+        predicate += " AND (lower(w.word), c.id) > (%s, %s)"
+        params.extend([bound_key.split("|")[0], bound_id])
+
+    cur.execute(_LEVEL_ROW_SQL.format(predicate=predicate) + " LIMIT %s",
+                tuple(params) + (limit + 1,))
+    rows = cur.fetchall()
+    has_more = len(rows) > limit
+    rows = rows[:limit]
+
+    ids = [row[0] for row in rows]
+    children, terms = _counts_for(cur, ids)
+    chain = _chain(cur, ids)
+
+    built = []
+    for node_id, _parent, name in rows:
+        names = [name]
+        current = chain[node_id][0]
+        depth = 1
+        while current is not None:
+            parent_of_parent, parent_name = chain[current]
+            names.append(parent_name)
+            depth += 1
+            current = parent_of_parent
+        names.reverse()
+        built.append({
+            "id": node_id,
+            "parent_id": chain[node_id][0],
+            "name": name,
+            "depth": depth,
+            "path": " / ".join(names),
+            "child_count": children.get(node_id, 0),
+            "own_terms": terms.get(node_id, 0),
+        })
+
+    next_cursor = None
+    if has_more and built:
+        next_cursor = _encode_cursor(built[-1]["name"], built[-1]["id"])
+    return {"rows": built, "next_cursor": next_cursor, "level_of": parent_id,
+            "limit": limit}
+
+
+def node_stats(cur, node_id: int) -> Dict[str, Any]:
+    """descendant_count and total_terms for one node (one subtree walk)."""
+    node = _require_node(cur, node_id)
+    cur.execute(
+        "WITH RECURSIVE down AS ("
+        "  SELECT id FROM categorys WHERE id = %s"
+        "  UNION ALL"
+        "  SELECT c.id FROM categorys c JOIN down d ON c.parent_id = d.id)"
+        " SELECT count(*) - 1,"
+        "        (SELECT count(*) FROM words_categorys wc"
+        "          WHERE wc.category_id IN (SELECT id FROM down))"
+        "   FROM down", (node_id,))
+    descendants, total_terms = cur.fetchone()
+    children, terms = _counts_for(cur, [node_id])
+    return {"id": node_id, "parent_id": node["parent_id"],
+            "descendant_count": int(descendants), "total_terms": int(total_terms),
+            "child_count": children.get(node_id, 0),
+            "own_terms": terms.get(node_id, 0)}

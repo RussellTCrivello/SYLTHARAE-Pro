@@ -35,9 +35,11 @@ from services.categories.tree import (
     create_node,
     create_parent_above,
     delete_node,
+    fetch_level,
     fetch_node,
     fetch_tree,
     move_node,
+    node_stats,
     parse_node_id,
 )
 
@@ -139,6 +141,50 @@ def register_category_tree_routes(app):
             payload = _read(lambda cur: fetch_tree(
                 cur, search=search, cursor=cursor, limit=limit, with_total=with_total))
             return jsonify(payload)
+        except CategoryTreeError as exc:
+            return _fail(exc)
+
+    def _level(parent_id, endpoint_name):
+        try:
+            limit = request.args.get("limit", 200)
+            try:
+                limit = int(limit)
+            except (TypeError, ValueError):
+                raise CategoryTreeError("invalid_limit", "limit must be an integer", 400)
+            cursor = request.args.get("cursor") or None
+            payload = _read(lambda cur: fetch_level(
+                cur, parent_id=parent_id, limit=limit, cursor=cursor))
+            return jsonify(payload)
+        except CategoryTreeError as exc:
+            return _fail(exc)
+
+    @app.route("/api/categories/tree/roots", methods=["GET"])
+    def category_tree_roots():
+        """The top level only: what the page paints before anything is opened."""
+        return _level(None, "category_tree_roots")
+
+    @app.route("/api/categories/tree/<node_id>/children", methods=["GET"])
+    def category_tree_children(node_id):
+        """One node's direct children, fetched when the node is expanded."""
+        try:
+            parent_id = parse_node_id(node_id, "parent_id")
+        except CategoryTreeError as exc:
+            return _fail(exc)
+        return _level(parent_id, "category_tree_children")
+
+    @app.route("/api/categories/tree/<node_id>/stats", methods=["GET"])
+    def category_tree_stats(node_id):
+        """descendant_count and total_terms for one node, on request.
+
+        Deliberately separate from the level endpoints: this is the only read
+        whose cost is the size of a subtree, so the page asks for it when the
+        operator asks to see it rather than on every paint.
+        """
+        try:
+            node_id = parse_node_id(node_id)
+            if _read(lambda cur: fetch_node(cur, node_id)) is None:
+                raise CategoryTreeError("not_found", f"no category with id {node_id}", 404)
+            return jsonify({"stats": _read(lambda cur: node_stats(cur, node_id))})
         except CategoryTreeError as exc:
             return _fail(exc)
 
