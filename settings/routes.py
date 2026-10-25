@@ -27,6 +27,13 @@ logger = logging.getLogger(__name__)
 settings_bp = Blueprint('settings_api', __name__, url_prefix='/api/settings')
 
 
+def _is_admin() -> bool:
+    """True when the signed-in user is an administrator (anonymous: no)."""
+    user = getattr(g, "user", None)
+    return bool(getattr(user, "is_authenticated", False)
+                and getattr(user, "role", None) == "admin")
+
+
 def _settings_failure(exc):
     """Turn any settings failure into a response, in one place.
 
@@ -112,6 +119,21 @@ def get_all_settings():
     })
 
 
+#: Keys of the ``system`` category that are an operator's business: how the
+#: process logs, and the diagnostics an administrator switches on. The shell
+#: reads none of them, so a reader is not given them. This is what lets
+#: ``/api/settings/system`` be readable by every signed-in role
+#: (core/security/flask_ext.py) without publishing configuration.
+_SYSTEM_OPERATOR_KEYS = frozenset({
+    "log_level", "log_file", "debug_mode", "screen_inspector",
+    "action_logging_enabled",
+})
+
+
+# Every page reads its shell settings from here on load (system-settings.js),
+# so it is an interactive read exactly like /theme: under the 60/minute default
+# an ordinary browse - or an office behind one NAT address - was refused.
+@limiter.limit(INTERACTIVE_READ_LIMIT)
 @settings_bp.route('/<category>', methods=['GET'])
 @handle_errors
 def get_category_settings(category):
@@ -132,7 +154,12 @@ def get_category_settings(category):
         data = category_obj.to_dict()
     else:
         data = vars(category_obj)
-    
+
+    if category == 'system' and not _is_admin():
+        # A reader gets what renders the page, not how the process is run.
+        data = {key: value for key, value in data.items()
+                if key not in _SYSTEM_OPERATOR_KEYS}
+
     return jsonify({
         'success': True,
         'category': category,

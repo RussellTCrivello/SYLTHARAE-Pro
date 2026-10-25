@@ -230,3 +230,17 @@ def test_login_rate_limit_default_and_override(monkeypatch):
     assert _login_rate_limit() == "10 per minute"
     monkeypatch.setenv("RATE_LIMIT_LOGIN_PER_MINUTE", "0")
     assert _login_rate_limit() == "1 per minute"
+
+
+@pytest.mark.usefixtures("rate_limited_app")
+def test_the_system_settings_every_page_loads_is_not_throttled(admin_client):
+    """Each page load reads /api/settings/system (system-settings.js).
+
+    Same reasoning as the theme: it is an interactive read, so browsing must not
+    be refused. This is the route that 403'd for analysts in the browser smoke;
+    once it answers, it is read on every page, and the 60/minute default would
+    have replaced a permissions error with a 429.
+    """
+    codes = {admin_client.get("/api/settings/system").status_code for _ in range(75)}
+    assert 429 not in codes, codes
+    assert 200 in codes, codes

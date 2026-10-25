@@ -133,9 +133,18 @@ def init_auth(app) -> None:
     #: user already, so gating it buys no confidentiality - but static/js/
     #: modules/ui/theme-manager.js fetches it on every page, so gating it
     #: does break theming for non-admins.
+    #:
+    #: ``/api/settings/system`` is the same case and was missed: the shell
+    #: (static/js/modules/core/system-settings.js) reads it on every page to
+    #: apply the app name, date format and page size, so an analyst was handed
+    #: a 403 and a console error on every page and silently got compiled
+    #: defaults instead of the configured values. The route answers a non-admin
+    #: with the *presentation* block only - the operator keys (log path, debug
+    #: flag, log level, screen inspector) stay administrator-only, which
+    #: tests/integration/test_settings_shell_read.py asserts in both directions.
     app.config.setdefault(
         "AUTH_SETTINGS_ANY_USER_READ_PATHS",
-        frozenset({"/api/settings/theme"}),
+        frozenset({"/api/settings/theme", "/api/settings/system"}),
     )
     #: Settings mutations every authenticated user may perform. Only paths
     #: whose *identical* effect is already reachable through a non-settings
