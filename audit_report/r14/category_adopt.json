@@ -1,0 +1,232 @@
+{
+  "base": "http://127.0.0.1:5000",
+  "stamp": "R14-458746",
+  "dialog": {
+    "adoptGroupVisible": false,
+    "modes": [
+      "root",
+      "child",
+      "parent-above"
+    ]
+  },
+  "adoptOptions": 10,
+  "adoptedIds": [
+    "14",
+    "15"
+  ],
+  "wantName": "R14-458746-parent",
+  "parentId": {
+    "id": 16,
+    "children": null
+  },
+  "tree": {
+    "status": 200,
+    "body": {
+      "id": 16,
+      "name": "R14-458746-parent",
+      "success": true
+    }
+  },
+  "children": {
+    "status": 200,
+    "parent": {
+      "child_count": 2,
+      "depth": 1,
+      "descendant_count": 2,
+      "id": 16,
+      "name": "R14-458746-parent",
+      "own_terms": 0,
+      "parent_id": null,
+      "path": "R14-458746-parent",
+      "path_ids": [
+        16
+      ],
+      "sort_key": "000000000016",
+      "total_terms": 0
+    },
+    "rows": [
+      {
+        "id": 14,
+        "parent_id": 16,
+        "name": "R14-458746-a"
+      },
+      {
+        "id": 15,
+        "parent_id": 16,
+        "name": "R14-458746-b"
+      }
+    ]
+  },
+  "rows": [
+    {
+      "id": "16",
+      "parentId": "",
+      "cls": "category-item",
+      "text": "#16 R14-458746-parent Main Category 0 0 View Add Word"
+    }
+  ],
+  "posted": [
+    "GET http://127.0.0.1:5000/api/categories/tree?limit=500&total=0",
+    "POST http://127.0.0.1:5000/api/categories/tree/parent-above"
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:5000/api/categories/tree?limit=500&total=0",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5000/api/categories/tree",
+      "status": 201
+    },
+    {
+      "url": "http://127.0.0.1:5000/api/categories/tree?limit=500&total=0",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5000/api/categories/tree?limit=500&total=0",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5000/api/categories/tree",
+      "status": 201
+    },
+    {
+      "url": "http://127.0.0.1:5000/api/categories/tree?limit=500&total=0",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5000/api/categories/tree?limit=500&total=0",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5000/api/categories/tree/parent-above",
+      "status": 201
+    },
+    {
+      "url": "http://127.0.0.1:5000/api/categories/tree?limit=500&total=0",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5000/api/categories/16",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5000/api/categories/tree?limit=500&total=0",
+      "status": 200
+    }
+  ],
+  "checks": [
+    {
+      "ok": true,
+      "label": "sign in",
+      "detail": 0
+    },
+    {
+      "ok": true,
+      "label": "two categories exist to adopt",
+      "detail": {
+        "first": {
+          "id": "14",
+          "parentId": null
+        },
+        "second": {
+          "id": "15",
+          "parentId": null
+        }
+      }
+    },
+    {
+      "ok": true,
+      "label": "the dialog offers the parent-above mode",
+      "detail": [
+        "root",
+        "child",
+        "parent-above"
+      ]
+    },
+    {
+      "ok": true,
+      "label": "choosing parent-above reveals the adopt list",
+      "detail": true
+    },
+    {
+      "ok": true,
+      "label": "the adopt list is populated",
+      "detail": 10
+    },
+    {
+      "ok": true,
+      "label": "two categories are selected for adoption",
+      "detail": [
+        "14",
+        "15"
+      ]
+    },
+    {
+      "ok": true,
+      "label": "the page posts the adopt request",
+      "detail": [
+        "GET http://127.0.0.1:5000/api/categories/tree?limit=500&total=0",
+        "POST http://127.0.0.1:5000/api/categories/tree/parent-above"
+      ]
+    },
+    {
+      "ok": true,
+      "label": "the response is a success",
+      "detail": [
+        {
+          "url": "http://127.0.0.1:5000/api/categories/tree/parent-above",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "label": "the new parent is listed",
+      "detail": [
+        {
+          "id": "16",
+          "parentId": "",
+          "cls": "category-item",
+          "text": "#16 R14-458746-parent Main Category 0 0 View Add Word"
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "label": "the adopted categories now sit under the new parent",
+      "detail": {
+        "status": 200,
+        "parent": {
+          "child_count": 2,
+          "depth": 1,
+          "descendant_count": 2,
+          "id": 16,
+          "name": "R14-458746-parent",
+          "own_terms": 0,
+          "parent_id": null,
+          "path": "R14-458746-parent",
+          "path_ids": [
+            16
+          ],
+          "sort_key": "000000000016",
+          "total_terms": 0
+        },
+        "rows": [
+          {
+            "id": 14,
+            "parent_id": 16,
+            "name": "R14-458746-a"
+          },
+          {
+            "id": 15,
+            "parent_id": 16,
+            "name": "R14-458746-b"
+          }
+        ]
+      }
+    }
+  ],
+  "consoleErrors": [],
+  "failed": 0
+}
