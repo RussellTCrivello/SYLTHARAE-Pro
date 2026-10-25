@@ -5,6 +5,24 @@ path (signals detected once, at ingestion), read through the HTTP API and
 the service. The database is shared with other test modules, so every query
 here is restricted to this module's own source through *document criteria* -
 which is itself the path under test.
+
+Rewritten for the frozen schema. BEFORE, the three explorer tests assumed a
+gazetteer that shipped with external ids and a ``places`` array on every place
+signal: the module fixture stored documents without loading any gazetteer (so
+place detection matched nothing), filtered with
+``place_key="wikidata:Q3579"``, and the detail test indexed
+``listing["items"][0]`` - which raised IndexError once the list was empty.
+
+Now:  the fixture applies ``data/gazetteer/places_seed.json`` through
+``sync_seed`` before storing (geo_places/geo_place_names are how the frozen
+schema holds a gazetteer - there is no geo_gazetteer_loads table and no
+external-key column), and every place filter uses the derived key form
+``place:<id>`` that the API publishes for that schema. The assertions kept
+are the same ones: the detector facet count, one unambiguous Zagreb match, an
+ambiguous Tripoli match with two candidates, per-place filtering, totals and
+facets agreeing, deterministic pagination, and a detail view carrying run
+versions and occurrences. The public-key form is additionally asserted, so a
+change of key scheme fails here instead of at a call site.
 """
 
 from __future__ import annotations
@@ -64,8 +82,30 @@ def world(pg_db):
             file_status="Read", file_date=date(2026, 1, 1), content_words=["hz", marker],
             raw_text=text, attempts=1)["hash_id"]
 
+    # Place detection matches against the database gazetteer, which the frozen
+    # schema keeps in geo_places/geo_place_names (there is no geo_gazetteer_loads
+    # and no external key column), so the seed must be applied first.
+    from services.geo.gazetteer import load_seed_file, sync_seed
+
+    conn = connect(pg_db)
+    with conn, conn.cursor() as cur:
+        sync_seed(cur, load_seed_file(), loaded_by="signal-explorer-test")
+    conn.close()
+
     ids["hash_a"] = store(TEXT, "a")
     ids["hash_b"] = store(OTHER_TEXT, "b")
+
+    # The public place key is derived from the row id ("place:<id>"): geo_places
+    # has no external-identifier column, and the id is stable across seed syncs.
+    conn = connect(pg_db)
+    with conn, conn.cursor() as cur:
+        for label, key in (("Zagreb", "zagreb"), ("Tripoli", "tripoli")):
+            cur.execute("SELECT id FROM geo_places WHERE label = %s ORDER BY id", (label,))
+            found = [row[0] for row in cur.fetchall()]
+            if key == "zagreb":
+                ids["zagreb_key"] = f"place:{found[0]}"
+            ids[f"tripoli_keys"] = [f"place:{i}" for i in found]
+    conn.close()
     return ids
 
 
@@ -222,14 +262,24 @@ def test_explorer_lists_both_detectors_with_exact_totals_and_facets(viewer_clien
     places = [i for i in body["items"] if i["detector"] == "places"]
     assert {p["places"][0]["label"] for p in places if len(p["places"]) == 1} == {"Zagreb"}
     assert any(len(p["places"]) == 2 for p in places)      # Tripoli stays ambiguous
+    # The candidate keys are the frozen schema's derived form, not wikidata ids.
+    candidate_keys = [c["place_key"] for item in places for c in item["places"]]
+    assert candidate_keys and all(key.startswith("place:") for key in candidate_keys)
+    assert set(candidate_keys) >= {world["zagreb_key"], *world["tripoli_keys"]}
 
 
 def test_explorer_filters_and_paginates_deterministically(viewer_client, world):
     base = {"source_id": world["source_a"], "reference_date": REF}
     _, places = _get(viewer_client, "/api/signals", detector="places", **base)
     assert {i["surface"] for i in places["items"]} == {"Zagreb", "Tripoli"}
-    _, tripoli = _get(viewer_client, "/api/signals", place_key="wikidata:Q3579", **base)
+    # place_key is "place:<id>" in the frozen schema; both Tripolis are addressed
+    # individually and the ambiguous mention carries both candidates.
+    _, tripoli = _get(viewer_client, "/api/signals", place_key=world["tripoli_keys"][0], **base)
     assert [i["surface"] for i in tripoli["items"]] == ["Tripoli"]
+    _, both = _get(viewer_client, "/api/signals", place_key=world["tripoli_keys"], **base)
+    assert both["total"] == tripoli["total"]
+    _, zagreb = _get(viewer_client, "/api/signals", place_key=world["zagreb_key"], **base)
+    assert [i["surface"] for i in zagreb["items"]] == ["Zagreb"]
     _, ambiguous = _get(viewer_client, "/api/signals", resolution="ambiguous", **base)
     assert {i["surface"] for i in ambiguous["items"]} == {"Tripoli", "03/04/2026"}
     _, evidence = _get(viewer_client, "/api/signals", evidence_text="SUMMIT", **base)
@@ -290,7 +340,7 @@ def test_explorer_validation(viewer_client, world):
 
 def test_signal_detail_carries_run_versions_and_occurrences(viewer_client, world):
     _, listing = _get(viewer_client, "/api/signals", source_id=world["source_a"],
-                      detector="places", place_key="wikidata:Q3579")
+                      detector="places", place_key=world["tripoli_keys"][0])
     signal_id = listing["items"][0]["signal_id"]
     status, item = _get(viewer_client, f"/api/signals/{signal_id}", reference_date=REF)
     assert status == 200, item
