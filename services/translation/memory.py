@@ -86,6 +86,56 @@ class MemoryUnavailable(RuntimeError):
     """
 
 
+class _MemoryConnection(sqlite3.Connection):
+    """A connection that reports I/O failures as :class:`MemoryUnavailable`.
+
+    Opening the file is not the only way a memory can fail: a full disk, a
+    read-only file or a bad block all surface later, while writing. Those used
+    to escape as raw ``sqlite3.OperationalError`` and reached the analyst as
+    "An internal error occurred" (HTTP 500) - measured in the round-10 disk-full
+    drill. The API already knows how to report an unavailable memory (503
+    ``memory_unavailable``); it just needs to be told.
+    """
+
+    def _guard(self, call, *args, **kwargs):
+        try:
+            return call(*args, **kwargs)
+        except sqlite3.OperationalError as exc:
+            raise MemoryUnavailable(
+                f"the translation memory cannot be written: {exc}") from exc
+        except sqlite3.DatabaseError as exc:
+            raise MemoryUnavailable(
+                f"the translation memory cannot be used: {exc}") from exc
+
+    def execute(self, *args, **kwargs):
+        return self._guard(super().execute, *args, **kwargs)
+
+    def executemany(self, *args, **kwargs):
+        return self._guard(super().executemany, *args, **kwargs)
+
+    def executescript(self, *args, **kwargs):
+        return self._guard(super().executescript, *args, **kwargs)
+
+    def commit(self):
+        return self._guard(super().commit)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        # Match sqlite3.Connection's behaviour (commit on success, roll back on
+        # error), but translate a failing commit instead of leaking it.
+        if exc_type is None:
+            self.commit()
+        else:
+            try:
+                super().rollback()
+            except sqlite3.Error:
+                pass
+            return False
+        return False
+
+
 def default_memory_path() -> Path:
     """``APP_DATA_DIR/translation/translation_memory.db`` (created on demand)."""
     from core.app_paths import get_data_root
@@ -135,7 +185,7 @@ class TranslationMemory:
         try:
             if not self.path.parent.exists():
                 self.path.parent.mkdir(parents=True, exist_ok=True)
-            conn = sqlite3.connect(self.path)
+            conn = sqlite3.connect(self.path, factory=_MemoryConnection)
         except (OSError, sqlite3.Error) as exc:
             raise MemoryUnavailable(
                 f"the translation memory is unavailable ({self.path}): {exc}") from exc
