@@ -104,10 +104,10 @@ export async function updateKeywordAssociations() {
     }
 }
 
-// Backward compatibility
-if (typeof window !== 'undefined') {
-    window.updateKeywordAssociations = updateKeywordAssociations;
-}
+// No window export here: the registry publishes this implementation as
+// window.updateKeywordAssociationsShared, and the keywords list page publishes
+// its own window.updateKeywordAssociations. A third publication from this
+// module made the name's owner depend on import order.
 
 export default {
     updateKeywordAssociations

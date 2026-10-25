@@ -130,8 +130,8 @@ export const DocumentActions = {
             if (!ids) return;
             return exp.exportSelectedFiles(ids, 'originals');
         }
-        if (typeof window.exportSelectedFiles === 'function') {
-            return window.exportSelectedFiles();
+        if (typeof window.exportSelectedFilesShared === 'function') {
+            return window.exportSelectedFilesShared();
         }
         const exp = await fileExport();
         const ids = selectionOrWarn();

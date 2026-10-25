@@ -51,6 +51,13 @@ function bindFilesListWindowExports() {
             FileManagement.bulkExport(mode);
         }
     };
+    // bulkDelete() is this page's: the registry publishes the file-management
+    // one for no page, and the keywords/word lists publish their own.
+    window.bulkDelete = function () {
+        if (FileManagement && typeof FileManagement.bulkDelete === 'function') {
+            FileManagement.bulkDelete();
+        }
+    };
     window.exportSelectionToFolder = exportSelectionToFolder;
     window.exportFileNames = exportFileNames;
     window.openDetailsExportDialog = openDetailsExportDialog;

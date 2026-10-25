@@ -1,0 +1,63 @@
+FFFFF.                                                                   [100%]
+=================================== FAILURES ===================================
+E   AssertionError: these action names are published both by the always-loaded registry and by a page module, so the winner depends on load order:
+        applyFilters: registry ['static/js/managers/function-manager.js', 'static/js/modules/core/shell-page-bridge.js'] vs page ['static/js/pages/charts-dashboard-page.js', 'static/js/pages/comprehensive-dashboard-page.js', 'static/js/pages/files-list-page.js', 'static/js/pages/keywords-list-page.js', 'static/js/pages/words-list-page.js']
+        bulkDelete: registry ['static/js/managers/function-manager.js', 'static/js/modules/file-operations/file-management.js'] vs page ['static/js/pages/keywords-list-page.js', 'static/js/pages/words-list-page.js']
+        exportSelectedFiles: registry ['static/js/managers/function-manager.js'] vs page ['static/js/pages/search-advanced-page.js']
+        removeAnalystCategoriesFromSelection: registry ['static/js/managers/function-manager.js'] vs page ['static/js/pages/search-advanced-page.js']
+        resetFilters: registry ['static/js/managers/function-manager.js'] vs page ['static/js/pages/analyst-categorization-page.js', 'static/js/pages/charts-dashboard-page.js', 'static/js/pages/comprehensive-dashboard-page.js']
+        submitSourceForm: registry ['static/js/managers/function-manager.js'] vs page ['static/js/pages/sources-list-page.js']
+        toggleAllFilesSelection: registry ['static/js/managers/function-manager.js'] vs page ['static/js/pages/files-list-page.js']
+        updateKeywordAssociations: registry ['static/js/managers/function-manager.js'] vs page ['static/js/pages/keywords-list-page.js']
+    assert not ["applyFilters: registry ['static/js/managers/function-manager.js', 'static/js/modules/core/shell-page-bridge.js'] vs ...SourceForm: registry ['static/js/managers/function-manager.js'] vs page ['static/js/pages/sources-list-page.js']", ...]
+/home/user/SYLTHARAE-Pro/tests/unit/test_js_action_ownership.py:166: AssertionError: these action names are published both by the always-loaded registry and by a page module, so the winner depends on load order:
+E   AssertionError: a data-on-click name must resolve to one implementation on the page that uses it:
+        applyFilters on templates/Analysis/charts_dashboard.html: 3 publishers ['static/js/managers/function-manager.js', 'static/js/modules/core/shell-page-bridge.js', 'static/js/pages/charts-dashboard-page.js']
+        applyFilters on templates/Analysis/comprehensive_dashboard.html: 3 publishers ['static/js/managers/function-manager.js', 'static/js/modules/core/shell-page-bridge.js', 'static/js/pages/comprehensive-dashboard-page.js']
+        applyFilters on templates/file/File_Management_Analysis_System.html: 2 publishers ['static/js/managers/function-manager.js', 'static/js/modules/core/shell-page-bridge.js']
+        bulkDelete on templates/Keyword/keywords_list.html: 3 publishers ['static/js/managers/function-manager.js', 'static/js/modules/file-operations/file-management.js', 'static/js/pages/keywords-list-page.js']
+        bulkDelete on templates/Word/Word_list.html: 3 publishers ['static/js/managers/function-manager.js', 'static/js/modules/file-operations/file-management.js', 'static/js/pages/words-list-page.js']
+        bulkDelete on templates/file/files_list.html: 2 publishers ['static/js/managers/function-manager.js', 'static/js/modules/file-operations/file-management.js']
+        exportSelectedFiles on templates/Search/search_advanced.html: 2 publishers ['static/js/managers/function-manager.js', 'static/js/pages/search-advanced-page.js']
+        removeAnalystCategoriesFromSelection on templates/Search/search_advanced.html: 2 publishers ['static/js/managers/function-manager.js', 'static/js/pages/search-advanced-page.js']
+        resetFilters on templates/Analysis/charts_dashboard.html: 2 publishers ['static/js/managers/function-manager.js', 'static/js/pages/charts-dashboard-page.js']
+        resetFilters on templates/Analysis/comprehensive_dashboard.html: 2 publishers ['static/js/managers/function-manager.js', 'static/js/pages/comprehensive-dashboard-page.js']
+        resetFilters on templates/Analyst/analyst_categorization.html: 2 publishers ['static/js/managers/function-manager.js', 'static/js/pages/analyst-categorization-page.js']
+        submitSourceForm on templates/Sources/sources_list.html: 2 publishers ['static/js/managers/function-manager.js', 'static/js/pages/sources-list-page.js']
+        toggleAllFilesSelection on templates/file/files_list.html: 2 publishers ['static/js/managers/function-manager.js', 'static/js/pages/files-list-page.js']
+        updateKeywordAssociations on templates/Keyword/keywords_list.html: 2 publishers ['static/js/managers/function-manager.js', 'static/js/pages/keywords-list-page.js']
+    assert not ["applyFilters on templates/Analysis/charts_dashboard.html: 3 publishers ['static/js/managers/function-manager.js', 's... 2 publishers ['static/js/managers/function-manager.js', 'static/js/modules/file-operations/file-management.js']", ...]
+/home/user/SYLTHARAE-Pro/tests/unit/test_js_action_ownership.py:185: AssertionError: a data-on-click name must resolve to one implementation on the page that uses it:
+E   AssertionError: the page's own implementation must be the one the page's markup resolves:
+        applyFilters on templates/Analysis/charts_dashboard.html: page module ['static/js/pages/charts-dashboard-page.js'] loses to ['static/js/managers/function-manager.js', 'static/js/modules/core/shell-page-bridge.js']
+        applyFilters on templates/Analysis/comprehensive_dashboard.html: page module ['static/js/pages/comprehensive-dashboard-page.js'] loses to ['static/js/managers/function-manager.js', 'static/js/modules/core/shell-page-bridge.js']
+        bulkDelete on templates/Keyword/keywords_list.html: page module ['static/js/pages/keywords-list-page.js'] loses to ['static/js/managers/function-manager.js', 'static/js/modules/file-operations/file-management.js']
+        bulkDelete on templates/Word/Word_list.html: page module ['static/js/pages/words-list-page.js'] loses to ['static/js/managers/function-manager.js', 'static/js/modules/file-operations/file-management.js']
+        exportSelectedFiles on templates/Search/search_advanced.html: page module ['static/js/pages/search-advanced-page.js'] loses to ['static/js/managers/function-manager.js']
+        removeAnalystCategoriesFromSelection on templates/Search/search_advanced.html: page module ['static/js/pages/search-advanced-page.js'] loses to ['static/js/managers/function-manager.js']
+        resetFilters on templates/Analysis/charts_dashboard.html: page module ['static/js/pages/charts-dashboard-page.js'] loses to ['static/js/managers/function-manager.js']
+        resetFilters on templates/Analysis/comprehensive_dashboard.html: page module ['static/js/pages/comprehensive-dashboard-page.js'] loses to ['static/js/managers/function-manager.js']
+        resetFilters on templates/Analyst/analyst_categorization.html: page module ['static/js/pages/analyst-categorization-page.js'] loses to ['static/js/managers/function-manager.js']
+        submitSourceForm on templates/Sources/sources_list.html: page module ['static/js/pages/sources-list-page.js'] loses to ['static/js/managers/function-manager.js']
+        toggleAllFilesSelection on templates/file/files_list.html: page module ['static/js/pages/files-list-page.js'] loses to ['static/js/managers/function-manager.js']
+        updateKeywordAssociations on templates/Keyword/keywords_list.html: page module ['static/js/pages/keywords-list-page.js'] loses to ['static/js/managers/function-manager.js']
+    assert not ["applyFilters on templates/Analysis/charts_dashboard.html: page module ['static/js/pages/charts-dashboard-page.js'] l...tml: page module ['static/js/pages/search-advanced-page.js'] loses to ['static/js/managers/function-manager.js']", ...]
+/home/user/SYLTHARAE-Pro/tests/unit/test_js_action_ownership.py:205: AssertionError: the page's own implementation must be the one the page's markup resolves:
+E   AssertionError: applyFiltersShared is not published by anything
+    assert 'applyFiltersShared' in {'Chart': {'static/js/chart.umd.js', 'static/js/modules/charts/chart-responsive.js'}, 'FunctionManager': {'static/js/f...n/locales/ar.js', 'static/js/i18n/locales/en.js', 'static/js/i18n/locales/fa.js', 'static/js/i18n/locales/he.js'}, ...}
+/home/user/SYLTHARAE-Pro/tests/unit/test_js_action_ownership.py:216: AssertionError: applyFiltersShared is not published by anything
+E   AssertionError: references to the moved shared capability were not updated:
+        templates/file/File_Management_Analysis_System.html: applyFiltersShared()
+        templates/file/File_Management_Analysis_System.html: resetFiltersShared()
+        static/js/modules/views/file-view.js: toggleAllFilesSelectionShared?.()
+        static/js/modules/views/file-view.js: removeAnalystCategoriesFromSelectionShared?.()
+        static/js/modules/rendering/grid-renderer.js: updateKeywordAssociationsShared?.()
+        static/js/modules/documents/document-actions.js: window.exportSelectedFilesShared
+    assert not ['templates/file/File_Management_Analysis_System.html: applyFiltersShared()', 'templates/file/File_Management_Analysis...ateKeywordAssociationsShared?.()', 'static/js/modules/documents/document-actions.js: window.exportSelectedFilesShared']
+/home/user/SYLTHARAE-Pro/tests/unit/test_js_action_ownership.py:235: AssertionError: references to the moved shared capability were not updated:
+=========================== short test summary info ============================
+FAILED tests/unit/test_js_action_ownership.py::test_no_shared_file_publishes_a_name_a_page_module_publishes
+FAILED tests/unit/test_js_action_ownership.py::test_each_page_has_exactly_one_publisher_for_the_names_it_uses
+FAILED tests/unit/test_js_action_ownership.py::test_the_page_module_owns_a_name_it_implements
+FAILED tests/unit/test_js_action_ownership.py::test_the_shared_capability_survives_under_its_new_name
+FAILED tests/unit/test_js_action_ownership.py::test_the_pages_that_used_the_shared_copy_now_name_it
