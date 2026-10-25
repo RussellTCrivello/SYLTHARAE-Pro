@@ -1,0 +1,5 @@
+FAILED tests/integration/test_interface_coverage.py::TestTheEvidenceReport::test_the_evidence_report_matches_the_application
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[ar]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[fa]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[he]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[hr]
