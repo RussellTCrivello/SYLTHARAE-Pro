@@ -145,4 +145,14 @@ def test_alert_index_migration_has_a_unique_version():
             f"(already used by {versions.get(match.group(1))})"
         )
         versions[match.group(1)] = path.name
-    assert "m0014_alerts_notification_indexes.py" in versions.values()
+    # BEFORE this also required "m0014_alerts_notification_indexes.py" among the
+    # migration files. The frozen baseline squashed that migration into
+    # m0001_baseline.py, so the file cannot exist without breaking the freeze.
+    # The alert indexes it used to add are asserted against the real database in
+    # tests/integration/test_notification_accuracy.py::test_alert_indexes_exist;
+    # what is asserted here is what this test is actually about - that the
+    # version numbers are unique and the set of migrations is exactly the
+    # frozen one.
+    assert versions == {"0001": "m0001_baseline.py",
+                        "0002": "m0002_category_parent_id.py",
+                        "0003": "m0003_sources_attachments.py"}, versions
