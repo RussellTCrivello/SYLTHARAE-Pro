@@ -314,10 +314,13 @@ def register_translation_routes(app):
                           "source_lang and target_lang are the same language", 400)
 
         username, _user_id = _actor()
-        result = get_service().correct(source_text=source_text,
-                                       target_text=target_text,
-                                       source_lang=source_lang,
-                                       target_lang=target_lang, actor=username)
+        try:
+            result = get_service().correct(source_text=source_text,
+                                           target_text=target_text,
+                                           source_lang=source_lang,
+                                           target_lang=target_lang, actor=username)
+        except MemoryUnavailable as exc:
+            return _error("memory_unavailable", str(exc), 503)
         _audit("translation.memory.corrected", {
             "source_lang": source_lang, "target_lang": target_lang,
             "chars": len(source_text), "outcome": "corrected"})
@@ -336,8 +339,11 @@ def register_translation_routes(app):
         except PayloadError as exc:
             return _error("VALIDATION_FAILED", exc.message, 400, field=exc.field)
 
-        result = get_service().suggestions(text=text, target_lang=target_lang,
-                                           source_lang=source_lang, limit=limit)
+        try:
+            result = get_service().suggestions(text=text, target_lang=target_lang,
+                                               source_lang=source_lang, limit=limit)
+        except MemoryUnavailable as exc:
+            return _error("memory_unavailable", str(exc), 503)
         _audit("translation.memory.suggested", {
             "target_lang": result["target_lang"],
             "source_lang": result["source_lang"],
@@ -364,9 +370,12 @@ def register_translation_routes(app):
                           "term must contain at least one letter or digit", 400,
                           field="term")
         username, _user_id = _actor()
-        result = get_service().set_glossary_term(
-            term=term, translation=translation, source_lang=source_lang,
-            target_lang=target_lang, actor=username)
+        try:
+            result = get_service().set_glossary_term(
+                term=term, translation=translation, source_lang=source_lang,
+                target_lang=target_lang, actor=username)
+        except MemoryUnavailable as exc:
+            return _error("memory_unavailable", str(exc), 503)
         _audit("translation.glossary.term_set", {
             "source_lang": source_lang, "target_lang": target_lang,
             "term": term[:80]})
