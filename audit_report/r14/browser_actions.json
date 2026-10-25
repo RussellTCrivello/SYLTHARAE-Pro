@@ -1,0 +1,2517 @@
+{
+  "base": "http://127.0.0.1:5000",
+  "raw": {
+    "base": "http://127.0.0.1:5000",
+    "loginStatus": 0,
+    "pages": [
+      {
+        "route": "/files",
+        "template": "file/files_list.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "toggleAllFilesSelection",
+            "expect": {
+              "effect": "checkedBoxes"
+            },
+            "found": true,
+            "requests": [],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 17,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at bindFilesListWindowExports (http://127.0.0.1:5000/static/js/pages/files-list-page.js?v=20261015e:34:36) | at Module.init (http://127.0.0.1:5000/static/js/pages/files-list-page.js?v=20261015e:187:5)",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function () {\n        if (FileManagement && typeof FileManagement.toggleAllFilesSelection === 'function') {\n            FileManagement.toggleAllFilesSelection();\n        }\n    }"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Select All\n                    0",
+              "onclick": "toggleAllFilesSelection()",
+              "disabled": false
+            }
+          },
+          {
+            "name": "bulkDelete",
+            "expect": {
+              "request": "/files/bulk-delete",
+              "preselect": [
+                ".file-checkbox"
+              ],
+              "known": "FIXTURE-LIMIT: the files toolbar stays disabled after a synthetic row selection (the page's selection model, not the checkbox, drives it), so the click reaches no handler"
+            },
+            "found": true,
+            "requests": [],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 17,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at bindFilesListWindowExports (http://127.0.0.1:5000/static/js/pages/files-list-page.js?v=20261015e:56:23) | at Module.init (http://127.0.0.1:5000/static/js/pages/files-list-page.js?v=20261015e:187:5)",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function () {\n        if (FileManagement && typeof FileManagement.bulkDelete === 'function') {\n            FileManagement.bulkDelete();\n        }\n    }"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Delete",
+              "onclick": "bulkDelete()",
+              "disabled": true
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "toggleAllFilesSelection": [
+            "at set (<anonymous>:14:26) | at bindFilesListWindowExports (http://127.0.0.1:5000/static/js/pages/files-list-page.js?v=20261015e:34:36) | at Module.init (http://127.0.0.1:5000/static/js/pages/files-list-page.js?v=20261015e:187:5)"
+          ],
+          "bulkDelete": [
+            "at set (<anonymous>:14:26) | at bindFilesListWindowExports (http://127.0.0.1:5000/static/js/pages/files-list-page.js?v=20261015e:56:23) | at Module.init (http://127.0.0.1:5000/static/js/pages/files-list-page.js?v=20261015e:187:5)"
+          ],
+          "applyFilters": [
+            "at set (<anonymous>:14:26) | at bindFilesListWindowExports (http://127.0.0.1:5000/static/js/pages/files-list-page.js?v=20261015e:81:29) | at Module.init (http://127.0.0.1:5000/static/js/pages/files-list-page.js?v=20261015e:187:5)"
+          ]
+        }
+      },
+      {
+        "route": "/keywords",
+        "template": "Keyword/keywords_list.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "updateKeywordAssociations",
+            "expect": {
+              "request": "/api/keywords/update-associations",
+              "wait": 6000
+            },
+            "found": true,
+            "requests": [
+              "POST http://127.0.0.1:5000/api/keywords/update-associations"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 9,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:1302:38 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2282:3",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function() {\n        const btn = document.getElementById('updateKeywordsBtn');\n        if (!btn) return;\n        \n        // Confirm action\n        if (!confirm(translations.updateKeywordAssociationsConfirm || \n                    'This will scan all files in the database and update keyword associations. This may take a while. Continue?')) {\n            return;\n        }\n        \n        // Disabl"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Update Keywords",
+              "onclick": "updateKeywordAssociations()",
+              "disabled": false
+            }
+          },
+          {
+            "name": "bulkDelete",
+            "expect": {
+              "request": "/api/keywords/bulk-delete",
+              "preselect": [
+                ".keyword-checkbox"
+              ],
+              "known": "DEFECT-OPEN: action_button omits data-on-click while the control is disabled and ActionToolbar.sync only clears disabled, so after selecting rows the button has no handler"
+            },
+            "found": false,
+            "requests": [],
+            "effect": null,
+            "error": "no element",
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2251:23 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2282:3",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function bulkDelete() {\n        if (selectedKeywords.size === 0) return;\n        \n        if (!confirm(`${selectedKeywords.size} ${translations.deleteSelectedKeywords || 'Delete selected keywords?'}`)) return;\n        \n        // \u2705 FIXED: Add loading state\n        const btn = document.getElementById('bulkDeleteBtn');\n        const originalHTML = btn ? btn.innerHTML : '';\n        if (btn) {\n       "
+            },
+            "absentReason": "no control carries data-on-click for this name"
+          },
+          {
+            "name": "toggleAllSelection",
+            "expect": {
+              "effect": "checkedBoxes"
+            },
+            "found": true,
+            "requests": [],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 9,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2247:31 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2282:3",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function toggleAllSelection() {\n        const anySelected = document.querySelectorAll('.keyword-checkbox:checked').length > 0;\n        if (anySelected) {\n            selectNone();\n        } else {\n            selectAll();\n        }\n    }"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Select All\n    0",
+              "onclick": "toggleAllSelection()",
+              "disabled": false
+            }
+          },
+          {
+            "name": "clearSearch",
+            "expect": {
+              "effect": "requestOrNavigation"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/api/keywords?page=1&per_page=50&sort=usage_count&order=desc&_t=1792942402782"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 9,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2250:24 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2282:3",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function clearSearch() {\n        searchInput.value = '';\n        currentPage = 1;\n        fetchPage(1);\n    }"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "",
+              "onclick": "clearSearch()",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "deleteKeyword": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js:1280:26 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js:2282:3",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:1280:26 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2282:3"
+          ],
+          "updateKeywordAssociations": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js:1302:38 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js:2282:3",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:1302:38 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2282:3"
+          ],
+          "toggleAllSelection": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js:2247:31 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js:2282:3",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2247:31 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2282:3"
+          ],
+          "applyFilters": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js:2248:25 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js:2282:3",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2248:25 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2282:3"
+          ],
+          "clearSearch": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js:2250:24 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js:2282:3",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2250:24 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2282:3"
+          ],
+          "bulkDelete": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js:2251:23 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js:2282:3",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2251:23 | at http://127.0.0.1:5000/static/js/pages/keywords-list-page.js?v=20261015e:2282:3"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/words",
+        "template": "Word/Word_list.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "bulkDelete",
+            "expect": {
+              "request": "/api/words/bulk-delete",
+              "preselect": [
+                ".word-checkbox"
+              ],
+              "known": "DEFECT-OPEN: action_button omits data-on-click while the control is disabled and ActionToolbar.sync only clears disabled, so after selecting rows the button has no handler"
+            },
+            "found": false,
+            "requests": [],
+            "effect": null,
+            "error": "no element",
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js?v=20261015e:741:23",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function bulkDelete() {\n        if (selectedWords.size === 0) return;\n        \n        if (!confirm(`${selectedWords.size} ${translations.deleteSelectedWords}`)) return;\n        \n        const csrfToken = document.querySelector('meta[name=\"csrf-token\"]')?.getAttribute('content') || '';\n        fetch('/api/words/bulk-delete', {\n            method: 'POST',\n            headers: {\n                'Con"
+            },
+            "absentReason": "no control carries data-on-click for this name"
+          },
+          {
+            "name": "openAddWordModal",
+            "expect": {
+              "effect": "modalsShown"
+            },
+            "found": true,
+            "requests": [
+              "GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 1,
+              "ariaPressed": true,
+              "checkedBoxes": 8,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout modal-open",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js?v=20261015e:743:29",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function openAddWordModal() {\n        // Get modal element - try both possible IDs\n        let modalElement = document.getElementById('wordModal');\n        if (!modalElement) {\n            modalElement = document.getElementById('addWordToCategoryModal');\n        }\n        if (!modalElement) {\n            // Modal doesn't exist on this page, silently return\n            return;\n        }\n        \n  "
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Add Word",
+              "onclick": "openAddWordModal()",
+              "disabled": false
+            }
+          },
+          {
+            "name": "toggleAllSelection",
+            "expect": {
+              "effect": "checkedBoxes"
+            },
+            "found": true,
+            "requests": [],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 7,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js?v=20261015e:737:31",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function toggleAllSelection() {\n        const anySelected = document.querySelectorAll('.word-checkbox:checked').length > 0;\n        if (anySelected) {\n            selectNone();\n        } else {\n            selectAll();\n        }\n    }"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Select None\n    1",
+              "onclick": "toggleAllSelection()",
+              "disabled": false
+            }
+          },
+          {
+            "name": "clearSearch",
+            "expect": {
+              "effect": "requestOrNavigation"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/api/words?page=1&per_page=10&sort=usage_count&order=desc&_t=1792942413772"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 7,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js?v=20261015e:740:24",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function clearSearch() {\n        searchInput.value = '';\n        currentPage = 1;\n        fetchPage(1);\n    }"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "",
+              "onclick": "clearSearch()",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "deleteWord": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js:708:23",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js?v=20261015e:708:23"
+          ],
+          "toggleAllSelection": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js:737:31",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js?v=20261015e:737:31"
+          ],
+          "applyFilters": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js:738:25",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js?v=20261015e:738:25"
+          ],
+          "clearSearch": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js:740:24",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js?v=20261015e:740:24"
+          ],
+          "bulkDelete": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js:741:23",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js?v=20261015e:741:23"
+          ],
+          "openAddWordModal": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js:743:29",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/words-list-page.js?v=20261015e:743:29"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/sources",
+        "template": "Sources/sources_list.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "submitSourceForm",
+            "expect": {
+              "request": "/api/sources",
+              "prefill": [
+                [
+                  "#sourceForm input[name=\"name\"]",
+                  "R14 source"
+                ],
+                [
+                  "#sourceForm input[name=\"job\"]",
+                  "R14 analyst"
+                ],
+                [
+                  "#sourceForm input[name=\"country\"]",
+                  "NL"
+                ]
+              ]
+            },
+            "found": true,
+            "requests": [
+              "POST http://127.0.0.1:5000/api/sources",
+              "GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 24,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": [
+                "Create ErrorError creating R14 source"
+              ]
+            },
+            "error": "dispatched: Error: Node is either not clickable or not an Element",
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sources-list-page.js?v=20261015e:742:29 | at http://127.0.0.1:5000/static/js/pages/sources-list-page.js?v=20261015e:751:3",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function submitSourceForm() {\n    const form = document.getElementById('sourceForm');\n    const sourceId = document.getElementById('sourceId').value;\n    const formData = new FormData(form);\n    \n    // Validate required fields\n    if (!formData.get('name') || !formData.get('job') || !formData.get('country')) {\n        showToast(translations.pleaseFillInAllRequiredFields || 'Please fill in all req"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Create Source",
+              "onclick": "submitSourceForm()",
+              "disabled": false
+            }
+          },
+          {
+            "name": "toggleAllSelection",
+            "expect": {
+              "effect": "checkedBoxes"
+            },
+            "found": true,
+            "requests": [
+              "GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": true,
+              "checkedBoxes": 26,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": [
+                "Create ErrorError creating R14 source"
+              ]
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sources-list-page.js?v=20261015e:234:27",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function toggleAllSelection() {\n    const anySelected = document.querySelectorAll('.source-checkbox:checked').length > 0;\n    if (anySelected) {\n        selectNone();\n    } else {\n        selectAll();\n    }\n}"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Select All\n    0",
+              "onclick": "toggleAllSelection()",
+              "disabled": false
+            }
+          },
+          {
+            "name": "clearSearch",
+            "expect": {
+              "effect": "requestOrNavigation"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/sources?page=1",
+              "GET http://127.0.0.1:5000/api/notifications/stats"
+            ],
+            "effect": {
+              "urlChanged": true,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 24,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sources-list-page.js?v=20261015e:240:20",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function clearSearch() {\n    const searchInput = document.getElementById('sourceSearch');\n    if (searchInput) searchInput.value = '';\n    navigateSources({ search: '', page: '1' });\n}"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "",
+              "onclick": "clearSearch()",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "toggleAllSelection": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sources-list-page.js:234:27",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sources-list-page.js?v=20261015e:234:27"
+          ],
+          "clearSearch": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sources-list-page.js:240:20",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sources-list-page.js?v=20261015e:240:20"
+          ],
+          "submitSourceForm": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sources-list-page.js:742:29 | at http://127.0.0.1:5000/static/js/pages/sources-list-page.js:751:3",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sources-list-page.js?v=20261015e:742:29 | at http://127.0.0.1:5000/static/js/pages/sources-list-page.js?v=20261015e:751:3"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/sides",
+        "template": "Side/sides_list.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "toggleAllSelection",
+            "expect": {
+              "effect": "checkedBoxes"
+            },
+            "found": true,
+            "requests": [
+              "GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": true,
+              "checkedBoxes": 12,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sides-list-page.js?v=20261015e:227:27",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function toggleAllSelection() {\n    const anySelected = document.querySelectorAll('.side-checkbox:checked').length > 0;\n    if (anySelected) {\n        selectNone();\n    } else {\n        selectAll();\n    }\n}"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Select All\n    0",
+              "onclick": "toggleAllSelection()",
+              "disabled": false
+            }
+          },
+          {
+            "name": "clearSearch",
+            "expect": {
+              "effect": "requestOrNavigation"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/sides?page=1",
+              "GET http://127.0.0.1:5000/api/notifications/stats"
+            ],
+            "effect": {
+              "urlChanged": true,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 11,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sides-list-page.js?v=20261015e:233:20",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function clearSearch() {\n    const searchInput = document.getElementById('sideSearch');\n    if (searchInput) searchInput.value = '';\n    navigateSides({ search: '', page: '1' });\n}"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "",
+              "onclick": "clearSearch()",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "toggleAllSelection": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sides-list-page.js:227:27",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sides-list-page.js?v=20261015e:227:27"
+          ],
+          "clearSearch": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sides-list-page.js:233:20",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/sides-list-page.js?v=20261015e:233:20"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/categories",
+        "template": "Category/categories_list.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "saveWordToCategory",
+            "expect": {
+              "request": "/api/words-categorys/add",
+              "preClick": [
+                "[data-on-click^=\"addWordToCategory\"]"
+              ],
+              "prefill": [
+                [
+                  "#targetCategoryId",
+                  "1"
+                ]
+              ],
+              "jquerySelect": [
+                [
+                  "#wordSelect",
+                  "1"
+                ]
+              ],
+              "known": "FIXTURE-LIMIT: the modal's Select2 keeps its own value; the handler answers 'Please select or enter a word' (toast captured) instead of posting"
+            },
+            "found": true,
+            "requests": [
+              "GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 7,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": [
+                "Please select or enter a word"
+              ]
+            },
+            "error": "dispatched: Error: Node is either not clickable or not an Element",
+            "ownerBefore": null,
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "async function saveWordToCategory() {\n    const categoryIdInput = document.getElementById('targetCategoryId');\n    const wordSelect = document.getElementById('wordSelect');\n    \n    if (!categoryIdInput || !wordSelect) {\n        showToast('Form elements not found', 'error');\n        return;\n    }\n    \n    const categoryId = categoryIdInput.value;\n    \n    // Get word ID or new word text - handle b"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Add Word",
+              "onclick": "saveWordToCategory()",
+              "disabled": false
+            }
+          },
+          {
+            "name": "clearSearch",
+            "expect": {
+              "effect": "requestOrNavigation"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/categories?page=1",
+              "GET http://127.0.0.1:5000/api/notifications/stats"
+            ],
+            "effect": {
+              "urlChanged": true,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 7,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": null,
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function clearSearch() {\n    const searchInput = document.getElementById('categorySearch');\n    if (searchInput) searchInput.value = '';\n    navigateCategories({ search: '', page: '1' });\n}"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "",
+              "onclick": "clearSearch()",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/search/advanced",
+        "template": "Search/search_advanced.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "exportSelectedFiles",
+            "expect": {
+              "known": "FIXTURE-LIMIT: the fixture's search returns no result rows, so there is nothing to select and the handler answers 'Select one or more documents first.'",
+              "request": "/files/export|/api/files/names/export",
+              "preClick": [
+                "[data-on-click=\"executeAdvancedSearch()\"]"
+              ],
+              "preSelectWait": 4000,
+              "preselect": [
+                ".result-checkbox"
+              ]
+            },
+            "found": true,
+            "requests": [
+              "GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 11,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": [
+                "Select one or more documents first."
+              ]
+            },
+            "error": "dispatched: Error: Node is either not clickable or not an Element",
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/search-advanced-page.js?v=20261015e:3682:32",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "async function exportSelectedFiles(mode = 'text') {\n    const fileIds = selectedIdsForExport();\n    if (!fileIds) return;\n    const filename = await selectedExportName();\n    if (filename === null) return;\n    downloadSelectedExport('/files/export', {\n        file_ids: fileIds,\n        mode: mode === 'originals' ? 'originals' : 'text',\n        filename: filename.trim(),\n    }, `selected_${mode}.zi"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Text ZIP",
+              "onclick": "exportSelectedFiles('text')",
+              "disabled": false
+            }
+          },
+          {
+            "name": "removeAnalystCategoriesFromSelection",
+            "expect": {
+              "known": "FIXTURE-LIMIT: same empty result set; the handler needs selected ids",
+              "request": "/api/analyst/remove",
+              "preClick": [
+                "[data-on-click=\"executeAdvancedSearch()\"]"
+              ],
+              "preSelectWait": 4000,
+              "preselect": [
+                ".result-checkbox"
+              ]
+            },
+            "found": true,
+            "requests": [],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 11,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": "dispatched: Error: Node is either not clickable or not an Element",
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/search-advanced-page.js?v=20261015e:3664:49",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "async function removeAnalystCategoriesFromSelection() {\n    if (!searchState.canCategorize) return;\n    const selected = Array.from(searchState.selectedIds);\n    if (selected.length === 0) {\n        alert(tPage('selectFilesFirst', 'Select one or more files first'));\n        return;\n    }\n\n    const confirmed = confirm(\n        tPage('removeAllConfirm', 'Remove all analyst categories from {count} s"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Remove",
+              "onclick": "removeAnalystCategoriesFromSelection()",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "removeAnalystCategoriesFromSelection": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/search-advanced-page.js?v=20261015e:3664:49"
+          ],
+          "exportSelectedFiles": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/search-advanced-page.js?v=20261015e:3682:32"
+          ]
+        }
+      },
+      {
+        "route": "/dashboard/charts",
+        "template": "Analysis/charts_dashboard.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "applyFilters",
+            "expect": {
+              "request": "/api/dashboard/"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/api/dashboard/files-filtered?"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 3,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/charts-dashboard-page.js?v=20261015e:1240:21",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function applyFilters(section, mode) {\n    console.log(`Applying filters for section: ${section}, mode: ${mode}`);\n    loadDataForSection(section, mode);\n}"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Apply Filters",
+              "onclick": "applyFilters('files', 'charts')",
+              "disabled": false
+            }
+          },
+          {
+            "name": "resetFilters",
+            "expect": {
+              "request": "/api/dashboard/"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/api/dashboard/files-filtered?"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 3,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/charts-dashboard-page.js?v=20261015e:1241:21",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function resetFilters(section, mode) {\n    console.log(`Resetting filters for section: ${section}, mode: ${mode}`);\n    \n    const filterIds = CONFIG.filterMappings[section]?.[mode];\n    if (filterIds) {\n        Object.values(filterIds).forEach(id => {\n            const element = document.getElementById(id);\n            if (!element) return;\n            if (element.multiple) {\n                Arra"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Reset",
+              "onclick": "resetFilters('files', 'charts')",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "applyFilters": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/charts-dashboard-page.js:1240:21",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/charts-dashboard-page.js?v=20261015e:1240:21"
+          ],
+          "resetFilters": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/charts-dashboard-page.js:1241:21",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/charts-dashboard-page.js?v=20261015e:1241:21"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/dashboard/comprehensive",
+        "template": "Analysis/comprehensive_dashboard.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "applyFilters",
+            "expect": {
+              "request": "/api/dashboard/"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/api/dashboard/files-filtered?",
+              "GET http://127.0.0.1:5000/api/jobs/summary",
+              "GET http://127.0.0.1:5000/api/jobs?limit=5"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 0,
+              "activeTabs": [
+                "tab-button active"
+              ],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/comprehensive-dashboard-page.js?v=20261015e:1606:25",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function applyFilters(section, mode) {\n    loadDataForSection(section, mode);\n}"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Apply Filters",
+              "onclick": "applyFilters('files', 'combined')",
+              "disabled": false
+            }
+          },
+          {
+            "name": "resetFilters",
+            "expect": {
+              "request": "/api/dashboard/"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/api/dashboard/files-filtered?",
+              "GET http://127.0.0.1:5000/api/jobs/summary",
+              "GET http://127.0.0.1:5000/api/jobs?limit=5"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 0,
+              "activeTabs": [
+                "tab-button active"
+              ],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/comprehensive-dashboard-page.js?v=20261015e:1607:25",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function resetFilters(section, mode) {\n    const filterIds = CONFIG.filterMappings[section][mode];\n    Object.values(filterIds).forEach(id => {\n        const element = document.getElementById(id);\n        if (!element) return;\n        if (element.multiple) {\n            Array.from(element.options).forEach((opt) => { opt.selected = false; });\n            refreshMultiSelect(element);\n        } else "
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Reset",
+              "onclick": "resetFilters('files', 'combined')",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "applyFilters": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/comprehensive-dashboard-page.js:1606:25",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/comprehensive-dashboard-page.js?v=20261015e:1606:25"
+          ],
+          "resetFilters": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/comprehensive-dashboard-page.js:1607:25",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/comprehensive-dashboard-page.js?v=20261015e:1607:25"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/analyst/categorization",
+        "template": "Analyst/analyst_categorization.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "resetFilters",
+            "expect": {
+              "request": "/api/analyst/"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/api/analyst/assignments?page=1&per_page=25"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 0,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/analyst-categorization-page.js:469:25",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function resetFilters() {\n    ['filterCategory', 'filterAnalyst', 'filterDateFrom', 'filterDateTo', 'filterQuery', 'filterFile']\n        .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });\n    loadAssignments(1);\n}"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Reset",
+              "onclick": "resetFilters()",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "resetFilters": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/analyst-categorization-page.js:469:25"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/analysis/batch",
+        "template": "Analysis/analysis_batch.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "toggleAllSelection",
+            "expect": {
+              "effect": "checkedBoxes"
+            },
+            "found": true,
+            "requests": [],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 1,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/analysis-batch-page.js?v=20261015e:461:31",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function toggleAllSelection() {\n    const anySelected = document.querySelectorAll('.file-checkbox:checked').length > 0;\n    if (anySelected) {\n        deselectAll();\n    } else {\n        selectAll();\n    }\n}"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Select All\n                0",
+              "onclick": "toggleAllSelection()",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "toggleAllSelection": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/analysis-batch-page.js:461:31",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/analysis-batch-page.js?v=20261015e:461:31"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/",
+        "template": "Analysis/dashboard.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "performSearch",
+            "expect": {
+              "effect": "requestOrNavigation"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/api/analytics/search-files?limit=50",
+              "GET http://127.0.0.1:5000/api/jobs/summary",
+              "GET http://127.0.0.1:5000/upload/active-tasks",
+              "GET http://127.0.0.1:5000/api/jobs?limit=5"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 3,
+              "activeTabs": [
+                "tab-button active"
+              ],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": "dispatched: Error: Node is either not clickable or not an Element",
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/dashboard-page.js?v=20261015e:1719:26",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "async function performSearch() {\n    const query = document.getElementById('searchQuery').value;\n    const type = document.getElementById('searchType').value;\n    const resultsGrid = document.getElementById('searchResults');\n    \n    resultsGrid.innerHTML = `<div class=\"loading-state\"><div class=\"spinner\"></div><p>${translations.searching}</p></div>`;\n    \n    try {\n        const params = new URLS"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Search",
+              "onclick": "performSearch()",
+              "disabled": false
+            }
+          },
+          {
+            "name": "switchTab",
+            "expect": {
+              "effect": "switchTab"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/upload/active-tasks",
+              "GET http://127.0.0.1:5000/api/jobs/summary",
+              "GET http://127.0.0.1:5000/upload/active-tasks",
+              "GET http://127.0.0.1:5000/api/jobs?limit=5"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 3,
+              "activeTabs": [
+                "tab-button active"
+              ],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/dashboard-page.js?v=20261015e:1714:22",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function switchTab(tabName, event) {\n    console.log('switchTab called with:', tabName);\n    // Update buttons\n    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));\n    // Find and activate the button that matches this tab\n    document.querySelectorAll('.tab-button').forEach(btn => {\n        const onclick = btn.getAttribute('data-on-click');\n        if (oncli"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Overview",
+              "onclick": "switchTab('overview')",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "switchTab": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/dashboard-page.js:1714:22",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/dashboard-page.js?v=20261015e:1714:22"
+          ],
+          "performSearch": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/dashboard-page.js:1719:26",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/dashboard-page.js?v=20261015e:1719:26"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/notifications",
+        "template": "Notifications/notifications.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "switchTab",
+            "expect": {
+              "effect": "requestOrNavigation"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/api/notifications/paginated?page=1&per_page=100&search=&read_status=all&sort_by=created_at&sort_order=desc"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 0,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/notifications-page.js?v=20261015e:61:18",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function (tab) {\n    notificationsPage.switchTab(tab);\n}"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "All",
+              "onclick": "switchTab('all')",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "switchTab": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/notifications-page.js:61:18",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/notifications-page.js?v=20261015e:61:18"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/reports/dashboard",
+        "template": "Reports/dashboard.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "refresh",
+            "expect": {
+              "request": "/api/reports/"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/api/reports/dashboard"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 5,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/reports-dashboard-page.js?v=20261023a:100:16",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "async function refresh() {\n    showError('');\n    try {\n        const body = await fetchSummary();\n        renderSummary(body);\n        renderRows(body.by_file_type);\n    } catch (error) {\n        showError(error.message || LABELS.load_failed);\n    }\n}"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Refresh",
+              "onclick": "refresh()",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "refresh": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/reports-dashboard-page.js?v=20261023a:100:16"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/retention",
+        "template": "Retention/retention.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "refresh",
+            "expect": {
+              "request": "/api/retention"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/api/retention"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 6,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at Function.assign (<anonymous>) | at http://127.0.0.1:5000/static/js/pages/retention-page.js:198:8",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "async function refresh(clearStatus) {\n    clearError();\n    if (clearStatus) document.getElementById('retentionStatus').classList.add('d-none');\n    const list = window.UnifiedTable;\n    if (list) {\n        list.renderRows(BODY, [list.states.loading(COLUMN_COUNT, '...')]);\n    }\n    try {\n        const body = await api('GET', '/api/retention');\n        rows = body.items || [];\n        render();\n  "
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Refresh",
+              "onclick": "refresh()",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "refresh": [
+            "at set (<anonymous>:14:26) | at Function.assign (<anonymous>) | at http://127.0.0.1:5000/static/js/pages/retention-page.js:198:8"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/schedules",
+        "template": "Scheduling/schedules.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "refresh",
+            "expect": {
+              "request": "/api/schedules"
+            },
+            "found": true,
+            "requests": [
+              "GET http://127.0.0.1:5000/api/schedules"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 12,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at Function.assign (<anonymous>) | at http://127.0.0.1:5000/static/js/pages/schedules-page.js:364:8",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "async function refresh() {\n    clearError();\n    const list = window.UnifiedTable;\n    if (list) {\n        list.renderRows(BODY, list.states.loading(COLUMN_COUNT, '...'));\n    }\n    try {\n        const body = await api('GET', `/api/schedules${allUsers ? '?all=1' : ''}`);\n        rows = body.items || [];\n        render();\n    } catch (error) {\n        rows = [];\n        render();\n        showError("
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Refresh",
+              "onclick": "refresh()",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "refresh": [
+            "at set (<anonymous>:14:26) | at Function.assign (<anonymous>) | at http://127.0.0.1:5000/static/js/pages/schedules-page.js:364:8"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      },
+      {
+        "route": "/email-words",
+        "template": "email_words/email_words.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "toggleAllSelection",
+            "expect": {
+              "effect": "checkedBoxes"
+            },
+            "found": true,
+            "requests": [],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 2,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/email-words-page.js?v=20261015e:733:27",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function toggleAllSelection() {\n    if (getSelectedEmailCheckboxes().length > 0) {\n        selectNone();\n    } else {\n        selectAll();\n    }\n}"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Select All\n    0",
+              "onclick": "toggleAllSelection()",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "clearSearch": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/email-words-page.js?v=20261015e:730:20"
+          ],
+          "toggleAllSelection": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/email-words-page.js?v=20261015e:733:27"
+          ]
+        }
+      },
+      {
+        "route": "/categories/3/words",
+        "template": "Category/category_words.html",
+        "status": 200,
+        "actions": [
+          {
+            "name": "openAddWordModal",
+            "expect": {
+              "effect": "modalsShown"
+            },
+            "found": true,
+            "requests": [
+              "GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 1,
+              "ariaPressed": false,
+              "checkedBoxes": 5,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout modal-open",
+              "toast": []
+            },
+            "error": null,
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/category-words-page.js?v=20261015e:779:29",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "function openAddWordModal() {\n    const modalElement = document.getElementById('addWordToCategoryModal');\n    if (!modalElement) {\n        console.error('Add word modal not found');\n        return;\n    }\n    \n    const modal = new bootstrap.Modal(modalElement);\n    const modalTitle = document.getElementById('addWordToCategoryModalLabel');\n    const categoryIdInput = document.getElementById('target"
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Add Word",
+              "onclick": "openAddWordModal()",
+              "disabled": false
+            }
+          },
+          {
+            "name": "saveWordToCategory",
+            "expect": {
+              "request": "/api/words-categorys/add",
+              "uniqueWordInto": "#wordInput"
+            },
+            "found": true,
+            "requests": [
+              "POST http://127.0.0.1:5000/api/words",
+              "POST http://127.0.0.1:5000/api/words-categorys/add",
+              "GET http://127.0.0.1:5000/categories/3/words",
+              "GET http://127.0.0.1:5000/api/notifications/stats"
+            ],
+            "effect": {
+              "urlChanged": false,
+              "modalsShown": 0,
+              "ariaPressed": false,
+              "checkedBoxes": 5,
+              "activeTabs": [],
+              "bodyClass": "ltr-layout",
+              "toast": [
+                "Creating new word...",
+                "Word created successfully",
+                "Word-category relationship added successfully"
+              ]
+            },
+            "error": "dispatched: Error: Node is either not clickable or not an Element",
+            "ownerBefore": "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/category-words-page.js?v=20261015e:780:31",
+            "handler": {
+              "type": "function",
+              "bound": false,
+              "source": "async function saveWordToCategory() {\n    const categoryIdInput = document.getElementById('targetCategoryId');\n    const wordInput = document.getElementById('wordInput');\n    const selectedWordIdInput = document.getElementById('selectedWordId');\n    \n    if (!categoryIdInput || !wordInput || !selectedWordIdInput) {\n        showToast('Form elements not found', 'error');\n        return;\n    }\n    \n "
+            },
+            "element": {
+              "tag": "BUTTON",
+              "text": "Add Word",
+              "onclick": "saveWordToCategory()",
+              "disabled": false
+            }
+          }
+        ],
+        "errors": [],
+        "owners": {
+          "openAddWordModal": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/category-words-page.js:779:29",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/category-words-page.js?v=20261015e:779:29"
+          ],
+          "saveWordToCategory": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/category-words-page.js:780:31",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/category-words-page.js?v=20261015e:780:31"
+          ],
+          "clearSearch": [
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/category-words-page.js:782:24",
+            "at set (<anonymous>:14:26) | at http://127.0.0.1:5000/static/js/pages/category-words-page.js?v=20261015e:782:24"
+          ],
+          "applyFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:332:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ],
+          "resetFiltersShared": [
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at http://127.0.0.1:5000/static/js/managers/function-manager.js:402:5",
+            "at set (<anonymous>:14:26) | at attachWindowGlobals (http://127.0.0.1:5000/static/js/managers/function-manager.js:333:31) | at preparePageShell (http://127.0.0.1:5000/static/js/modules/core/shell-page-bridge.js:13:5)"
+          ]
+        }
+      }
+    ],
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 400 (BAD REQUEST)",
+      "Error updating keyword associations: JSHandle@error",
+      "Failed to load resource: the server responded with a status of 409 (CONFLICT)",
+      "Error response: JSHandle@object",
+      "Error saving source: JSHandle@error"
+    ]
+  },
+  "checks": [
+    {
+      "route": "/files",
+      "template": "file/files_list.html",
+      "action": "toggleAllFilesSelection",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/files-list-page.js"
+    },
+    {
+      "route": "/files",
+      "template": "file/files_list.html",
+      "action": "toggleAllFilesSelection",
+      "known": null,
+      "check": "effect checkedBoxes",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 0,
+          "ariaPressed": false,
+          "checkedBoxes": 17,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": []
+      }
+    },
+    {
+      "route": "/files",
+      "template": "file/files_list.html",
+      "action": "bulkDelete",
+      "known": "FIXTURE-LIMIT: the files toolbar stays disabled after a synthetic row selection (the page's selection model, not the checkbox, drives it), so the click reaches no handler",
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/files-list-page.js"
+    },
+    {
+      "route": "/files",
+      "template": "file/files_list.html",
+      "action": "bulkDelete",
+      "known": "FIXTURE-LIMIT: the files toolbar stays disabled after a synthetic row selection (the page's selection model, not the checkbox, drives it), so the click reaches no handler",
+      "check": "issues /files/bulk-delete",
+      "ok": false,
+      "detail": []
+    },
+    {
+      "route": "/keywords",
+      "template": "Keyword/keywords_list.html",
+      "action": "updateKeywordAssociations",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/keywords-list-page.js"
+    },
+    {
+      "route": "/keywords",
+      "template": "Keyword/keywords_list.html",
+      "action": "updateKeywordAssociations",
+      "known": null,
+      "check": "issues /api/keywords/update-associations",
+      "ok": true,
+      "detail": [
+        "POST http://127.0.0.1:5000/api/keywords/update-associations"
+      ]
+    },
+    {
+      "route": "/keywords",
+      "template": "Keyword/keywords_list.html",
+      "action": "bulkDelete",
+      "known": "DEFECT-OPEN: action_button omits data-on-click while the control is disabled and ActionToolbar.sync only clears disabled, so after selecting rows the button has no handler",
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/keywords-list-page.js"
+    },
+    {
+      "route": "/keywords",
+      "template": "Keyword/keywords_list.html",
+      "action": "bulkDelete",
+      "known": "DEFECT-OPEN: action_button omits data-on-click while the control is disabled and ActionToolbar.sync only clears disabled, so after selecting rows the button has no handler",
+      "check": "issues /api/keywords/bulk-delete",
+      "ok": false,
+      "detail": []
+    },
+    {
+      "route": "/keywords",
+      "template": "Keyword/keywords_list.html",
+      "action": "bulkDelete",
+      "known": "DEFECT-OPEN: action_button omits data-on-click while the control is disabled and ActionToolbar.sync only clears disabled, so after selecting rows the button has no handler",
+      "check": "element found",
+      "ok": false,
+      "detail": "no element / no control carries data-on-click for this name"
+    },
+    {
+      "route": "/keywords",
+      "template": "Keyword/keywords_list.html",
+      "action": "toggleAllSelection",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/keywords-list-page.js"
+    },
+    {
+      "route": "/keywords",
+      "template": "Keyword/keywords_list.html",
+      "action": "toggleAllSelection",
+      "known": null,
+      "check": "effect checkedBoxes",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 0,
+          "ariaPressed": false,
+          "checkedBoxes": 9,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": []
+      }
+    },
+    {
+      "route": "/keywords",
+      "template": "Keyword/keywords_list.html",
+      "action": "clearSearch",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/keywords-list-page.js"
+    },
+    {
+      "route": "/keywords",
+      "template": "Keyword/keywords_list.html",
+      "action": "clearSearch",
+      "known": null,
+      "check": "effect requestOrNavigation",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 0,
+          "ariaPressed": false,
+          "checkedBoxes": 9,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": [
+          "GET http://127.0.0.1:5000/api/keywords?page=1&per_page=50&sort=usage_count&order=desc&_t=1792942402782"
+        ]
+      }
+    },
+    {
+      "route": "/words",
+      "template": "Word/Word_list.html",
+      "action": "bulkDelete",
+      "known": "DEFECT-OPEN: action_button omits data-on-click while the control is disabled and ActionToolbar.sync only clears disabled, so after selecting rows the button has no handler",
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/words-list-page.js"
+    },
+    {
+      "route": "/words",
+      "template": "Word/Word_list.html",
+      "action": "bulkDelete",
+      "known": "DEFECT-OPEN: action_button omits data-on-click while the control is disabled and ActionToolbar.sync only clears disabled, so after selecting rows the button has no handler",
+      "check": "issues /api/words/bulk-delete",
+      "ok": false,
+      "detail": []
+    },
+    {
+      "route": "/words",
+      "template": "Word/Word_list.html",
+      "action": "bulkDelete",
+      "known": "DEFECT-OPEN: action_button omits data-on-click while the control is disabled and ActionToolbar.sync only clears disabled, so after selecting rows the button has no handler",
+      "check": "element found",
+      "ok": false,
+      "detail": "no element / no control carries data-on-click for this name"
+    },
+    {
+      "route": "/words",
+      "template": "Word/Word_list.html",
+      "action": "openAddWordModal",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/words-list-page.js"
+    },
+    {
+      "route": "/words",
+      "template": "Word/Word_list.html",
+      "action": "openAddWordModal",
+      "known": null,
+      "check": "effect modalsShown",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 1,
+          "ariaPressed": true,
+          "checkedBoxes": 8,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout modal-open",
+          "toast": []
+        },
+        "requests": [
+          "GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e"
+        ]
+      }
+    },
+    {
+      "route": "/words",
+      "template": "Word/Word_list.html",
+      "action": "toggleAllSelection",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/words-list-page.js"
+    },
+    {
+      "route": "/words",
+      "template": "Word/Word_list.html",
+      "action": "toggleAllSelection",
+      "known": null,
+      "check": "effect checkedBoxes",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 0,
+          "ariaPressed": false,
+          "checkedBoxes": 7,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": []
+      }
+    },
+    {
+      "route": "/words",
+      "template": "Word/Word_list.html",
+      "action": "clearSearch",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/words-list-page.js"
+    },
+    {
+      "route": "/words",
+      "template": "Word/Word_list.html",
+      "action": "clearSearch",
+      "known": null,
+      "check": "effect requestOrNavigation",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 0,
+          "ariaPressed": false,
+          "checkedBoxes": 7,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": [
+          "GET http://127.0.0.1:5000/api/words?page=1&per_page=10&sort=usage_count&order=desc&_t=1792942413772"
+        ]
+      }
+    },
+    {
+      "route": "/sources",
+      "template": "Sources/sources_list.html",
+      "action": "submitSourceForm",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/sources-list-page.js"
+    },
+    {
+      "route": "/sources",
+      "template": "Sources/sources_list.html",
+      "action": "submitSourceForm",
+      "known": null,
+      "check": "issues /api/sources",
+      "ok": true,
+      "detail": [
+        "POST http://127.0.0.1:5000/api/sources"
+      ]
+    },
+    {
+      "route": "/sources",
+      "template": "Sources/sources_list.html",
+      "action": "toggleAllSelection",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/sources-list-page.js"
+    },
+    {
+      "route": "/sources",
+      "template": "Sources/sources_list.html",
+      "action": "toggleAllSelection",
+      "known": null,
+      "check": "effect checkedBoxes",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 0,
+          "ariaPressed": true,
+          "checkedBoxes": 26,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout",
+          "toast": [
+            "Create ErrorError creating R14 source"
+          ]
+        },
+        "requests": [
+          "GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e"
+        ]
+      }
+    },
+    {
+      "route": "/sources",
+      "template": "Sources/sources_list.html",
+      "action": "clearSearch",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/sources-list-page.js"
+    },
+    {
+      "route": "/sources",
+      "template": "Sources/sources_list.html",
+      "action": "clearSearch",
+      "known": null,
+      "check": "effect requestOrNavigation",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": true,
+          "modalsShown": 0,
+          "ariaPressed": false,
+          "checkedBoxes": 24,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": [
+          "GET http://127.0.0.1:5000/sources?page=1",
+          "GET http://127.0.0.1:5000/api/notifications/stats"
+        ]
+      }
+    },
+    {
+      "route": "/sides",
+      "template": "Side/sides_list.html",
+      "action": "toggleAllSelection",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/sides-list-page.js"
+    },
+    {
+      "route": "/sides",
+      "template": "Side/sides_list.html",
+      "action": "toggleAllSelection",
+      "known": null,
+      "check": "effect checkedBoxes",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 0,
+          "ariaPressed": true,
+          "checkedBoxes": 12,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": [
+          "GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e"
+        ]
+      }
+    },
+    {
+      "route": "/sides",
+      "template": "Side/sides_list.html",
+      "action": "clearSearch",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/sides-list-page.js"
+    },
+    {
+      "route": "/sides",
+      "template": "Side/sides_list.html",
+      "action": "clearSearch",
+      "known": null,
+      "check": "effect requestOrNavigation",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": true,
+          "modalsShown": 0,
+          "ariaPressed": false,
+          "checkedBoxes": 11,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": [
+          "GET http://127.0.0.1:5000/sides?page=1",
+          "GET http://127.0.0.1:5000/api/notifications/stats"
+        ]
+      }
+    },
+    {
+      "route": "/categories",
+      "template": "Category/categories_list.html",
+      "action": "saveWordToCategory",
+      "known": "FIXTURE-LIMIT: the modal's Select2 keeps its own value; the handler answers 'Please select or enter a word' (toast captured) instead of posting",
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "source matches static/js/pages/categories-list-page.js"
+    },
+    {
+      "route": "/categories",
+      "template": "Category/categories_list.html",
+      "action": "saveWordToCategory",
+      "known": "FIXTURE-LIMIT: the modal's Select2 keeps its own value; the handler answers 'Please select or enter a word' (toast captured) instead of posting",
+      "check": "issues /api/words-categorys/add",
+      "ok": false,
+      "detail": [
+        "GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e"
+      ]
+    },
+    {
+      "route": "/categories",
+      "template": "Category/categories_list.html",
+      "action": "clearSearch",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "source matches static/js/pages/categories-list-page.js"
+    },
+    {
+      "route": "/categories",
+      "template": "Category/categories_list.html",
+      "action": "clearSearch",
+      "known": null,
+      "check": "effect requestOrNavigation",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": true,
+          "modalsShown": 0,
+          "ariaPressed": false,
+          "checkedBoxes": 7,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": [
+          "GET http://127.0.0.1:5000/categories?page=1",
+          "GET http://127.0.0.1:5000/api/notifications/stats"
+        ]
+      }
+    },
+    {
+      "route": "/search/advanced",
+      "template": "Search/search_advanced.html",
+      "action": "exportSelectedFiles",
+      "known": "FIXTURE-LIMIT: the fixture's search returns no result rows, so there is nothing to select and the handler answers 'Select one or more documents first.'",
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/search-advanced-page.js"
+    },
+    {
+      "route": "/search/advanced",
+      "template": "Search/search_advanced.html",
+      "action": "exportSelectedFiles",
+      "known": "FIXTURE-LIMIT: the fixture's search returns no result rows, so there is nothing to select and the handler answers 'Select one or more documents first.'",
+      "check": "issues /files/export|/api/files/names/export",
+      "ok": false,
+      "detail": [
+        "GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e"
+      ]
+    },
+    {
+      "route": "/search/advanced",
+      "template": "Search/search_advanced.html",
+      "action": "removeAnalystCategoriesFromSelection",
+      "known": "FIXTURE-LIMIT: same empty result set; the handler needs selected ids",
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/search-advanced-page.js"
+    },
+    {
+      "route": "/search/advanced",
+      "template": "Search/search_advanced.html",
+      "action": "removeAnalystCategoriesFromSelection",
+      "known": "FIXTURE-LIMIT: same empty result set; the handler needs selected ids",
+      "check": "issues /api/analyst/remove",
+      "ok": false,
+      "detail": []
+    },
+    {
+      "route": "/dashboard/charts",
+      "template": "Analysis/charts_dashboard.html",
+      "action": "applyFilters",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/charts-dashboard-page.js"
+    },
+    {
+      "route": "/dashboard/charts",
+      "template": "Analysis/charts_dashboard.html",
+      "action": "applyFilters",
+      "known": null,
+      "check": "issues /api/dashboard/",
+      "ok": true,
+      "detail": [
+        "GET http://127.0.0.1:5000/api/dashboard/files-filtered?"
+      ]
+    },
+    {
+      "route": "/dashboard/charts",
+      "template": "Analysis/charts_dashboard.html",
+      "action": "resetFilters",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/charts-dashboard-page.js"
+    },
+    {
+      "route": "/dashboard/charts",
+      "template": "Analysis/charts_dashboard.html",
+      "action": "resetFilters",
+      "known": null,
+      "check": "issues /api/dashboard/",
+      "ok": true,
+      "detail": [
+        "GET http://127.0.0.1:5000/api/dashboard/files-filtered?"
+      ]
+    },
+    {
+      "route": "/dashboard/comprehensive",
+      "template": "Analysis/comprehensive_dashboard.html",
+      "action": "applyFilters",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/comprehensive-dashboard-page.js"
+    },
+    {
+      "route": "/dashboard/comprehensive",
+      "template": "Analysis/comprehensive_dashboard.html",
+      "action": "applyFilters",
+      "known": null,
+      "check": "issues /api/dashboard/",
+      "ok": true,
+      "detail": [
+        "GET http://127.0.0.1:5000/api/dashboard/files-filtered?"
+      ]
+    },
+    {
+      "route": "/dashboard/comprehensive",
+      "template": "Analysis/comprehensive_dashboard.html",
+      "action": "resetFilters",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/comprehensive-dashboard-page.js"
+    },
+    {
+      "route": "/dashboard/comprehensive",
+      "template": "Analysis/comprehensive_dashboard.html",
+      "action": "resetFilters",
+      "known": null,
+      "check": "issues /api/dashboard/",
+      "ok": true,
+      "detail": [
+        "GET http://127.0.0.1:5000/api/dashboard/files-filtered?"
+      ]
+    },
+    {
+      "route": "/analyst/categorization",
+      "template": "Analyst/analyst_categorization.html",
+      "action": "resetFilters",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/analyst-categorization-page.js"
+    },
+    {
+      "route": "/analyst/categorization",
+      "template": "Analyst/analyst_categorization.html",
+      "action": "resetFilters",
+      "known": null,
+      "check": "issues /api/analyst/",
+      "ok": true,
+      "detail": [
+        "GET http://127.0.0.1:5000/api/analyst/assignments?page=1&per_page=25"
+      ]
+    },
+    {
+      "route": "/analysis/batch",
+      "template": "Analysis/analysis_batch.html",
+      "action": "toggleAllSelection",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/analysis-batch-page.js"
+    },
+    {
+      "route": "/analysis/batch",
+      "template": "Analysis/analysis_batch.html",
+      "action": "toggleAllSelection",
+      "known": null,
+      "check": "effect checkedBoxes",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 0,
+          "ariaPressed": false,
+          "checkedBoxes": 1,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": []
+      }
+    },
+    {
+      "route": "/",
+      "template": "Analysis/dashboard.html",
+      "action": "performSearch",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/dashboard-page.js"
+    },
+    {
+      "route": "/",
+      "template": "Analysis/dashboard.html",
+      "action": "performSearch",
+      "known": null,
+      "check": "effect requestOrNavigation",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 0,
+          "ariaPressed": false,
+          "checkedBoxes": 3,
+          "activeTabs": [
+            "tab-button active"
+          ],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": [
+          "GET http://127.0.0.1:5000/api/analytics/search-files?limit=50",
+          "GET http://127.0.0.1:5000/api/jobs/summary",
+          "GET http://127.0.0.1:5000/upload/active-tasks",
+          "GET http://127.0.0.1:5000/api/jobs?limit=5"
+        ]
+      }
+    },
+    {
+      "route": "/",
+      "template": "Analysis/dashboard.html",
+      "action": "switchTab",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/dashboard-page.js"
+    },
+    {
+      "route": "/",
+      "template": "Analysis/dashboard.html",
+      "action": "switchTab",
+      "known": null,
+      "check": "effect switchTab",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 0,
+          "ariaPressed": false,
+          "checkedBoxes": 3,
+          "activeTabs": [
+            "tab-button active"
+          ],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": [
+          "GET http://127.0.0.1:5000/upload/active-tasks",
+          "GET http://127.0.0.1:5000/api/jobs/summary",
+          "GET http://127.0.0.1:5000/upload/active-tasks",
+          "GET http://127.0.0.1:5000/api/jobs?limit=5"
+        ]
+      }
+    },
+    {
+      "route": "/notifications",
+      "template": "Notifications/notifications.html",
+      "action": "switchTab",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/notifications-page.js"
+    },
+    {
+      "route": "/notifications",
+      "template": "Notifications/notifications.html",
+      "action": "switchTab",
+      "known": null,
+      "check": "effect requestOrNavigation",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 0,
+          "ariaPressed": false,
+          "checkedBoxes": 0,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": [
+          "GET http://127.0.0.1:5000/api/notifications/paginated?page=1&per_page=100&search=&read_status=all&sort_by=created_at&sort_order=desc"
+        ]
+      }
+    },
+    {
+      "route": "/reports/dashboard",
+      "template": "Reports/dashboard.html",
+      "action": "refresh",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/reports-dashboard-page.js"
+    },
+    {
+      "route": "/reports/dashboard",
+      "template": "Reports/dashboard.html",
+      "action": "refresh",
+      "known": null,
+      "check": "issues /api/reports/",
+      "ok": true,
+      "detail": [
+        "GET http://127.0.0.1:5000/api/reports/dashboard"
+      ]
+    },
+    {
+      "route": "/retention",
+      "template": "Retention/retention.html",
+      "action": "refresh",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/retention-page.js"
+    },
+    {
+      "route": "/retention",
+      "template": "Retention/retention.html",
+      "action": "refresh",
+      "known": null,
+      "check": "issues /api/retention",
+      "ok": true,
+      "detail": [
+        "GET http://127.0.0.1:5000/api/retention"
+      ]
+    },
+    {
+      "route": "/schedules",
+      "template": "Scheduling/schedules.html",
+      "action": "refresh",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/schedules-page.js"
+    },
+    {
+      "route": "/schedules",
+      "template": "Scheduling/schedules.html",
+      "action": "refresh",
+      "known": null,
+      "check": "issues /api/schedules",
+      "ok": true,
+      "detail": [
+        "GET http://127.0.0.1:5000/api/schedules"
+      ]
+    },
+    {
+      "route": "/email-words",
+      "template": "email_words/email_words.html",
+      "action": "toggleAllSelection",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/email-words-page.js"
+    },
+    {
+      "route": "/email-words",
+      "template": "email_words/email_words.html",
+      "action": "toggleAllSelection",
+      "known": null,
+      "check": "effect checkedBoxes",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 0,
+          "ariaPressed": false,
+          "checkedBoxes": 2,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout",
+          "toast": []
+        },
+        "requests": []
+      }
+    },
+    {
+      "route": "/categories/3/words",
+      "template": "Category/category_words.html",
+      "action": "openAddWordModal",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/category-words-page.js"
+    },
+    {
+      "route": "/categories/3/words",
+      "template": "Category/category_words.html",
+      "action": "openAddWordModal",
+      "known": null,
+      "check": "effect modalsShown",
+      "ok": true,
+      "detail": {
+        "effect": {
+          "urlChanged": false,
+          "modalsShown": 1,
+          "ariaPressed": false,
+          "checkedBoxes": 5,
+          "activeTabs": [],
+          "bodyClass": "ltr-layout modal-open",
+          "toast": []
+        },
+        "requests": [
+          "GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e"
+        ]
+      }
+    },
+    {
+      "route": "/categories/3/words",
+      "template": "Category/category_words.html",
+      "action": "saveWordToCategory",
+      "known": null,
+      "check": "owner is the page module",
+      "ok": true,
+      "detail": "assignment traced to static/js/pages/category-words-page.js"
+    },
+    {
+      "route": "/categories/3/words",
+      "template": "Category/category_words.html",
+      "action": "saveWordToCategory",
+      "known": null,
+      "check": "issues /api/words-categorys/add",
+      "ok": true,
+      "detail": [
+        "POST http://127.0.0.1:5000/api/words-categorys/add"
+      ]
+    }
+  ],
+  "summary": {
+    "checks": 70,
+    "failed": 8,
+    "unexpected_failed": 0,
+    "known_defect": 4,
+    "known_fixture_limit": 4
+  }
+}

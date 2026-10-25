@@ -1,0 +1,35 @@
+# Round 14 evidence
+
+Item 1 - action-name ownership.
+
+* `ownership_red.txt` - `tests/unit/test_js_action_ownership.py` against the
+  pre-fix tree: five failing tests, naming all eight co-loading collisions.
+* `ownership_green.txt` - the same file plus `test_js_global_collisions.py`
+  after the renames: 10 passed.
+* `browser_actions.html`/`browser_actions.txt` + `browser_actions.json` - a real
+  Chromium run (`tools/audit/browser_action_ownership.py`) over the 18 pages
+  that use one of the 17 duplicate names. For each action it records which
+  script made the last `window.<name>` assignment (a setter installed before any
+  page script runs - the registry's copies are bound functions, so
+  `toString()` cannot identify them) and what a click on the control did: the
+  request it issued, or the effect it produced.
+  Result: **70 checks, 0 unexpected failures**; 4 known product defects and 4
+  fixture limits are listed in the report.
+
+## Rebuilding the browser in this sandbox
+
+The image has no browser, no npm bundle and no NSS. Per session:
+
+```
+python3 -m venv /tmp/sylth-venv && /tmp/sylth-venv/bin/pip install -r requirements.txt
+mkdir -p /tmp/br && cd /tmp/br && npm init -y && npm install puppeteer-core@23 @sparticuz/chromium@131
+# NSS/NSPR shims: Chromium links these; nothing in this image ships them and the
+# only reachable registries are npm/pypi/github. Only 38 NSS symbols are used,
+# none of them reached on an http:// page (see build_stubs below).
+```
+
+`/tmp/stubgen` is produced by exporting each undefined NSS/NSPR symbol from the
+Chromium binary as a returning-0 stub, versioned to the versions `readelf -V`
+reports (`NSS_3.2`, `NSS_3.3`, `NSS_3.4`, `NSS_3.6`, `NSS_3.9.2`, `NSS_3.30`,
+`NSSUTIL_3.12.3`). Chromium then starts, renders and drives the pages; TLS is
+not exercised (every request is `http://127.0.0.1`).
