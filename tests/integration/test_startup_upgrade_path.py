@@ -80,10 +80,15 @@ def private_db(pg_db):
 
     cfg = dict(pg_db, database=name)
     from database.bootstrap import bootstrap_database
+    from database.migration_runner import discover_migrations
 
     report = bootstrap_database({k: cfg[k] for k in
                                  ("host", "port", "user", "password", "database")})
-    assert report["current_version"] == "0003", report
+    # The tip of the chain, not a literal: the chain grew by one authorised
+    # migration (m0004, category hierarchy) and a hard-coded "0003" turned a
+    # correct bootstrap into a failure. What this fixture needs is "bootstrap
+    # applied the whole chain", which is what the last discovered version says.
+    assert report["current_version"] == discover_migrations()[-1].version, report
     yield cfg
 
     admin = psycopg2.connect(
