@@ -153,6 +153,11 @@ def test_alert_index_migration_has_a_unique_version():
     # what is asserted here is what this test is actually about - that the
     # version numbers are unique and the set of migrations is exactly the
     # frozen one.
+    # 0004 is the one additive migration the owner authorised for the category
+    # hierarchy (it replaces the two-level trigger body with a cycle guard);
+    # m0001-m0003 are untouched. A fifth version would mean the freeze moved
+    # again, which is what this assertion is here to catch.
     assert versions == {"0001": "m0001_baseline.py",
                         "0002": "m0002_category_parent_id.py",
-                        "0003": "m0003_sources_attachments.py"}, versions
+                        "0003": "m0003_sources_attachments.py",
+                        "0004": "m0004_category_hierarchy_depth.py"}, versions
