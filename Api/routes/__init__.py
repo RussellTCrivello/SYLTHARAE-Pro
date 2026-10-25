@@ -6,6 +6,7 @@ def register_all_routes(app, babel_instance=None):
     """Register all routes with the Flask app"""
     # Import and register route modules
     from . import common, dashboard, categories, search
+    from . import category_tree
     from . import analyst_categories
     from . import analytics, analysis, archives, keywords, words, sources, sides, api, performance, notifications, notifications_page
     from . import preview, import_export, setup
@@ -38,6 +39,8 @@ def register_all_routes(app, babel_instance=None):
         common.register_common_routes(app, None)
     dashboard.register_dashboard_routes(app)
     categories.register_categories_routes(app)
+    # Depth-aware hierarchy surface: tree read, create/adopt/move/delete.
+    category_tree.register_category_tree_routes(app)
     search.register_search_routes(app)
     # Analyst-driven manual categorization (fully separate from the smart
     # classification taxonomy - see Api/routes/analyst_categories.py)
