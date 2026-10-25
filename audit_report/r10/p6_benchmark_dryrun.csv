@@ -1,0 +1,4 @@
+run_id,engine,engine_version,dry_run,source_lang,target_lang,segments,chars,wall_seconds,segments_per_second,chars_per_second,peak_rss_mb,rss_before_mb,rss_delta_mb,memory_hits,engine_calls,started_at,notes
+1792903634-1,stub,stub-1,True,en,ar,5,276,0.0099,505.06,27879.4,21.7,20.2,1.5,0,1,2026-10-25T04:47:14+00:00,cold
+1792903634-2,stub,stub-1,True,en,ar,5,276,0.0073,687.1,37928.2,21.7,21.7,0.0,5,0,2026-10-25T04:47:14+00:00,warm (memory should answer)
+1792903634-3,stub,stub-1,True,en,ar,5,276,0.0078,639.17,35282.4,22.6,21.7,0.9,5,0,2026-10-25T04:47:14+00:00,warm (memory should answer)

@@ -1,0 +1,10 @@
+Found 7 known vulnerabilities in 1 package
+Name       Version ID                  Fix Versions
+---------- ------- ------------------- ------------
+setuptools 66.1.1  PYSEC-2025-49       78.1.1
+setuptools 66.1.1  PYSEC-2025-49       78.1.1
+setuptools 66.1.1  PYSEC-2026-1918     70.0.0
+setuptools 66.1.1  PYSEC-2026-1918     70.0.0
+setuptools 66.1.1  PYSEC-2026-3447     83.0.0
+setuptools 66.1.1  PYSEC-2026-3447     83.0.0
+setuptools 66.1.1  GHSA-xmj3-9gf7-h52w 84.1.0
