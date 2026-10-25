@@ -13,20 +13,73 @@ from settings import get_settings, get_settings_manager
 
 logger = logging.getLogger(__name__)
 
-# Marker file to track if system has been initialized
-INIT_MARKER_FILE = Path('.system_initialized')
+# Marker file to track if system has been initialized.
+#
+# ``None`` means "derive it from the application data root" - see
+# :func:`marker_path`. Tests and tools may bind an absolute path here to
+# redirect the marker; the default must never be a bare relative path, because
+# this flag decides whether an operator sees the application or the setup
+# wizard, and a relative path makes that decision depend on the directory the
+# process was started from (``core/app_paths.py`` states the rule: every
+# runtime path derives from the data root, never from the CWD).
+INIT_MARKER_FILE: Optional[Path] = None
+
+#: ``None`` = the defaults below (the working directory and the checkout).
+#: Previous releases wrote ``.system_initialized`` in whichever directory the
+#: installer or the server was started from, so both places are still read -
+#: otherwise upgrading would ask a working installation to install itself.
+_LEGACY_MARKER_DIRS: Optional[tuple] = None
+
+_MARKER_NAME = ".system_initialized"
+
+
+def _legacy_marker_dirs() -> tuple:
+    if _LEGACY_MARKER_DIRS is not None:
+        return tuple(Path(d) for d in _LEGACY_MARKER_DIRS)
+    from core.app_paths import get_project_root
+
+    return (Path.cwd(), get_project_root())
+
+
+def marker_path() -> Path:
+    """The marker's location: explicit override, else the data root.
+
+    Resolved on every call rather than at import: the data root is
+    configuration (``APP_DATA_DIR``), and a module imported before the
+    configuration is applied would otherwise freeze the wrong path for the
+    lifetime of the process.
+    """
+    if INIT_MARKER_FILE is not None:
+        return Path(INIT_MARKER_FILE)
+    from core.app_paths import get_data_root
+
+    return get_data_root() / _MARKER_NAME
 
 
 def is_system_initialized() -> bool:
-    """Check if system has been initialized"""
-    return INIT_MARKER_FILE.exists()
+    """Check if system has been initialized.
+
+    True when the marker is where this release puts it, or where a previous
+    release put it. Never relative to the current working directory unless
+    that is where a previous release left the file.
+    """
+    try:
+        if marker_path().exists():
+            return True
+    except Exception as e:  # a broken data root must not claim "installed"
+        logger.warning(f"Could not resolve the initialization marker: {e}")
+        return False
+    return any((directory / _MARKER_NAME).is_file()
+               for directory in _legacy_marker_dirs())
 
 
 def mark_system_initialized():
     """Mark system as initialized"""
     try:
-        INIT_MARKER_FILE.touch()
-        logger.info("System initialization marker created")
+        marker = marker_path()
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        marker.touch()
+        logger.info("System initialization marker created at %s", marker)
     except Exception as e:
         logger.warning(f"Could not create initialization marker: {e}")
 
