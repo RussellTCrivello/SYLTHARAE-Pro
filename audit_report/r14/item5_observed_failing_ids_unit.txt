@@ -1,0 +1,54 @@
+# Round 14 item 5 - unit failing identifiers observed on a clean clone at c2ad57c
+#
+# EVIDENCE GRADE: OBSERVED-IN-SESSION, NOT COMMITTED EVIDENCE.
+# These identifiers were printed while the JUnit record existed; the sandbox
+# then deleted /tmp and the XML cannot be re-read from this commit. The list is
+# kept so the work is not lost, and it must be regenerated before anyone cites
+# it. Reproduce with:
+#   pytest tests/unit -q --junit-xml=unit.xml -p no:randomly
+# then take the sorted lines that start with FAILED or ERROR.
+#
+# Baseline it was compared against: audit_report/r13/failing_ids_unit.txt (67 ids
+# at 512ee0c), normalised so that both sides read
+# "KIND tests.package.module.Class::test".
+#
+# 39 identifiers: 11 ERROR + 28 FAILURE, against a 67-id round-13 baseline.
+ERROR tests.unit.test_interface_docs.TestCountsAreGenerated::test_the_document_states_no_endpoint_count_of_its_own
+ERROR tests.unit.test_interface_docs.TestGeneratedBlock::test_regeneration_is_idempotent
+ERROR tests.unit.test_interface_docs.TestGeneratedBlock::test_splicing_preserves_the_prose
+ERROR tests.unit.test_interface_docs.TestGeneratedBlock::test_the_block_matches_the_registry
+ERROR tests.unit.test_interface_docs.TestGeneratedBlock::test_the_document_embeds_a_generated_block
+ERROR tests.unit.test_interface_docs.TestRegistryEvidence::test_every_required_evidence_item_is_present
+ERROR tests.unit.test_interface_docs.TestRegistryEvidence::test_regeneration_is_idempotent
+ERROR tests.unit.test_interface_docs.TestRegistryEvidence::test_the_coverage_claim_is_stated_as_zero_unmanaged
+ERROR tests.unit.test_interface_docs.TestRegistryEvidence::test_the_document_embeds_both_generated_blocks
+ERROR tests.unit.test_interface_docs.TestRegistryEvidence::test_the_document_reports_what_remains_legacy
+ERROR tests.unit.test_interface_docs.TestRegistryEvidence::test_the_registry_half_matches_the_registry
+FAILURE tests.unit.test_action_lifecycle_components.TestTheyAreDeclaredComponents::test_the_documentation_is_regenerated_from_the_library[confirm_dialog]
+FAILURE tests.unit.test_action_lifecycle_components.TestTheyAreDeclaredComponents::test_the_documentation_is_regenerated_from_the_library[toast]
+FAILURE tests.unit.test_action_surface_audit.TestTheDocumentIsGenerated::test_the_document_explains_itself_without_a_count_in_prose
+FAILURE tests.unit.test_action_surface_audit.TestTheDocumentIsGenerated::test_the_document_is_what_the_product_now_says
+FAILURE tests.unit.test_architecture_diagrams::test_architecture_has_mermaid_diagrams
+FAILURE tests.unit.test_architecture_diagrams::test_job_state_diagram_matches_transitions
+FAILURE tests.unit.test_component_library.TestAdoption::test_the_audit_counts_the_hand_written_markup
+FAILURE tests.unit.test_component_library.TestTheDocumentCannotDrift::test_the_document_states_the_rules
+FAILURE tests.unit.test_component_library.TestTheDocumentCannotDrift::test_the_generated_section_matches_the_components
+FAILURE tests.unit.test_component_library.TestTheStateVocabularyIsComplete::test_the_document_calls_them_not_yet_rather_than_implying_coverage
+FAILURE tests.unit.test_experience_contract.TestTheDocumentCannotDrift::test_the_document_has_no_hand_typed_counts
+FAILURE tests.unit.test_experience_contract.TestTheDocumentCannotDrift::test_the_generated_block_matches
+FAILURE tests.unit.test_file_select_toggle.TestTheWiring::test_the_function_manager_exposes_the_module_function
+FAILURE tests.unit.test_identifiers_intel::test_detects_email_phone_ipv4_and_links_to_sentence
+FAILURE tests.unit.test_identifiers_intel::test_email_not_double_counted_as_ipv4_fragment
+FAILURE tests.unit.test_interface_docs.TestOtherDocuments::test_the_domain_model_exists
+FAILURE tests.unit.test_interface_docs.TestOtherDocuments::test_the_productization_map_points_at_the_registry
+FAILURE tests.unit.test_interface_lifecycle.TestAllFiveConsumersAgree::test_the_generated_documentation_states_the_policy
+FAILURE tests.unit.test_interface_lifecycle.TestTheRegistryIsFrozen::test_the_freeze_is_written_down
+FAILURE tests.unit.test_licensing::test_checker_cli_exits_zero_on_this_environment
+FAILURE tests.unit.test_licensing::test_installed_dependencies_are_agpl_compatible
+FAILURE tests.unit.test_no_machine_paths::test_no_machine_specific_paths_or_hosts
+FAILURE tests.unit.test_ocr_provenance_docs::test_every_documented_ocr_field_is_stored
+FAILURE tests.unit.test_ocr_provenance_docs::test_every_stored_ocr_field_is_documented
+FAILURE tests.unit.test_reference_docs::test_reference_docs_are_current
+FAILURE tests.unit.test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten::test_the_document_explains_itself_without_a_count_in_prose
+FAILURE tests.unit.test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten::test_the_document_is_what_the_product_now_says
+FAILURE tests.unit.test_windows_offline_kit.TestDependencyInventory::test_the_committed_inventory_matches_the_generator

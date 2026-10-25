@@ -33,3 +33,21 @@ Chromium binary as a returning-0 stub, versioned to the versions `readelf -V`
 reports (`NSS_3.2`, `NSS_3.3`, `NSS_3.4`, `NSS_3.6`, `NSS_3.9.2`, `NSS_3.30`,
 `NSSUTIL_3.12.3`). Chromium then starts, renders and drives the pages; TLS is
 not exercised (every request is `http://127.0.0.1`).
+
+Item 5 - the clean-clone two-part suite. **Partial, and committed that way.**
+
+* `item5_clean_clone_suite.md` - what ran, what it produced, where it stopped,
+  and the commands to finish it.
+* `item5_observed_failing_ids_unit.txt` - the 39 unit failing identifiers printed
+  during the clean-clone run (11 ERROR + 28 FAILURE), against the 67-id round-13
+  baseline.
+* `item5_cleared_ids_unit.txt` - the 29 identifiers that failed in round 13 and
+  passed on the clean clone; all of them text-recognition tests that needed an
+  engine.
+
+Both identifier lists carry an explicit evidence grade at the top: the JUnit
+record they were read from was destroyed with `/tmp` when the sandbox was
+rebuilt, so they are **observed, not committed evidence**. The unit part of the
+diff was computed; the integration part never finished and has no count. Re-running
+the two commands in `item5_clean_clone_suite.md` on a fresh clone is what turns
+these numbers into evidence.
