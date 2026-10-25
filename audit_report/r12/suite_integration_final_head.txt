@@ -1,0 +1,38 @@
+....................................................................ssss [  4%]
+sssssssssssssssssssssss................................................s [  9%]
+........................................................................ [ 13%]
+........................................................................ [ 18%]
+..........................................................s............. [ 22%]
+......................................ssssssssssssssss..........ssssssss [ 27%]
+s.s..................................................................... [ 31%]
+.............FF......................................................... [ 36%]
+........................................................................ [ 40%]
+...............ssssss................................................... [ 45%]
+s..ssssssss..................................ssssssssssssssssssssssssss. [ 49%]
+........................................................................ [ 54%]
+.....F.................................................................. [ 58%]
+........................................................................ [ 63%]
+........................................................................ [ 67%]
+......FFFF.............................................................. [ 72%]
+.sssssssssssss......ss.ss............................................... [ 76%]
+........................................................................ [ 81%]
+........................................................................ [ 85%]
+........................................................................ [ 90%]
+........................................................................ [ 94%]
+........................................................................ [ 99%]
+..............                                                           [100%]
+=============================== warnings summary ===============================
+tests/integration/test_admin_password_recovery.py::test_list_names_the_accounts_that_can_log_in
+  /tmp/sylth-venv/lib/python3.11/site-packages/platformdirs/api.py:459: RuntimeDirWarning: XDG_RUNTIME_DIR is not set, falling back to /tmp/runtime-1001
+    return Path(self.user_runtime_dir)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_interface_coverage.py::TestTheEvidenceReport::test_the_evidence_report_matches_the_application
+FAILED tests/integration/test_interface_coverage.py::TestTheEvidenceReport::test_the_endpoint_inventory_matches_the_application
+FAILED tests/integration/test_schema_reference.py::test_schema_reference_matches_the_migrated_database
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[ar]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[he]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[fa]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[hr]
+INTEGRATION EXIT=1

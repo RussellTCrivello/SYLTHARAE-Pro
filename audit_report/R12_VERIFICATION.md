@@ -48,8 +48,11 @@ categories_tree_page  GET /categories/tree  USER_INTERFACE  owned_by: categories
 `TestEndpointInventory` (parses / sorted / owner-or-exception / required fields):
 **4 passed**.
 
-**Full suite, clean clone, exit codes.** Clone of `19ec4e9` in `/tmp/r12_suite`,
-fresh databases, `REQUIRE_POSTGRES=1`, fresh `APP_DATA_DIR`:
+**Full suite, clean clone, exit codes.** Two clones, fresh databases,
+`REQUIRE_POSTGRES=1`, fresh `APP_DATA_DIR`: `/tmp/r12_suite` at `19ec4e9` and,
+because four commits landed afterwards, `/tmp/r12b_suite` at the final HEAD
+`e52e656` (`audit_report/r12/suite_unit_final_head.txt`,
+`…suite_integration_final_head.txt`). **Both runs give the same result:**
 
 | part | exit | failing ids | baseline (round 10) | new ids |
 | --- | --- | --- | --- | --- |
@@ -235,11 +238,10 @@ on the function body — red shown before green).
 
 ## 6. Not verified, or verified only in part
 
-* **The suite numbers are from `19ec4e9`.** Later commits (`44af86a`, `e52e656`)
-  touch one route, one template and one page script; they were verified by their
-  own tests (6 passed) and by the browser pass, **not** by a full two-part suite
-  run. A run at the final HEAD is in progress at the time of writing and its
-  result is not in this report.
+* ~~The suite numbers are from an earlier commit.~~ The full two-part suite was
+  re-run on a clean clone at the final HEAD `e52e656`: unit 67 failing ids and
+  integration 7, **both identical to the `19ec4e9` run and both with zero new ids
+  against round 10**. Logs committed as `audit_report/r12/suite_*_final_head.txt`.
 * **`test_interface_docs.py` (11 errors)** — four documents that have never
   existed. Writing them is a docs decision, not a code fix. **NEEDS-DECISION.**
 * **`test_interface_coverage.py` (2 failures)** — the evidence report compares
