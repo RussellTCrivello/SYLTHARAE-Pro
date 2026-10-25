@@ -2133,6 +2133,18 @@
     "internal": false
   },
   {
+    "endpoint": "category_tree_children",
+    "rule": "/api/categories/tree/<node_id>/children",
+    "methods": [
+      "GET"
+    ],
+    "blueprint": "(app)",
+    "module": "category_tree",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
     "endpoint": "category_tree_create",
     "rule": "/api/categories/tree",
     "methods": [
@@ -2197,6 +2209,30 @@
     "rule": "/api/categories/tree/parent-above",
     "methods": [
       "POST"
+    ],
+    "blueprint": "(app)",
+    "module": "category_tree",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "category_tree_roots",
+    "rule": "/api/categories/tree/roots",
+    "methods": [
+      "GET"
+    ],
+    "blueprint": "(app)",
+    "module": "category_tree",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "category_tree_stats",
+    "rule": "/api/categories/tree/<node_id>/stats",
+    "methods": [
+      "GET"
     ],
     "blueprint": "(app)",
     "module": "category_tree",
