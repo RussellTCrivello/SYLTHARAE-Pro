@@ -129,6 +129,11 @@ class StoragePipeline:
     - Proper error handling with rollback on failures
     """
     
+    #: Ceiling on the stored text of one artifact (characters). Above this the
+    #: tail is cut with an explicit marker: a 3 000 000-cell spreadsheet is a
+    #: legitimate file, a 181 MB text row is not.
+    MAX_CONTENT_TEXT_CHARS = 10_000_000
+
     # Shared DatabaseHub instance to prevent connection pool exhaustion
     _shared_db_hub = None
     _shared_db_hub_lock = None
@@ -2466,6 +2471,23 @@ class StoragePipeline:
             if forensic_text:
                 combined_text = (f"{combined_text}\n\n{forensic_text}"
                                  if combined_text.strip() else forensic_text)
+
+            # SIZE-01: there is no bound on how much text a file may contain.
+            # testRecordSizeExceeded.xlsx is 12 MB on disk and produced a 181 MB
+            # text body from 3 000 000 cells, which is both a memory hazard and a
+            # row that no search index wants. The tail is cut here, once, with a
+            # marker that says so - truncation is recorded, never silent - and
+            # the reader-side per-workbook cell caps keep most files from ever
+            # reaching this point.
+            limit = getattr(self, "MAX_CONTENT_TEXT_CHARS",
+                            StoragePipeline.MAX_CONTENT_TEXT_CHARS)
+            if len(combined_text) > limit:
+                kept = combined_text[:limit]
+                dropped = len(combined_text) - limit
+                combined_text = (
+                    f"{kept}\n\n[TRUNCATED: {dropped} characters beyond the "
+                    f"{limit} character limit were not stored]"
+                )
 
             # IDENTITY (original name, declared extension, detected
             # format/MIME/version, container features and every
