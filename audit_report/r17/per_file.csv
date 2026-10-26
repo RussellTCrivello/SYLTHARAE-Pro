@@ -657,7 +657,7 @@ Text/lucene-char-mapping.txt,Plain text,RemainingFileReader,COMPLETE,1.000,812,0
 Text/multi-language.txt,Plain text,RemainingFileReader,COMPLETE,1.000,1573,0.0s,document:1,-,,,
 Text/ner-regex.txt,Plain text,RemainingFileReader,COMPLETE,1.000,955,0.0s,document:1,-,,,
 Text/props_table.txt,Plain text,RemainingFileReader,COMPLETE,1.000,248541,0.0s,document:1,-,,,
-Text/russian.cp866.txt,Plain text,RemainingFileReader,COMPLETE,1.000,207,0.0s,document:1,-,F-23,"core/text_encoding.decode_bytes() decides the encoding (BOM,","tests/unit/test_text_encoding_decode.py (7),"
+Text/russian.cp866.txt,Plain text,RemainingFileReader,COMPLETE,1.000,207,0.0s,document:1,-,F-23,"core/text_encoding.decode_bytes() decides the encoding (BOM,","tests/unit/test_text_encoding_decode.py, tes"
 Text/s_BII-S-1.txt,Plain text,RemainingFileReader,COMPLETE,1.000,42237,0.0s,document:1,-,,,
 Text/s_BII-S-2.txt,Plain text,RemainingFileReader,COMPLETE,1.000,6042,0.0s,document:1,-,,,
 Text/sample.txt,Plain text,RemainingFileReader,COMPLETE,1.000,218,0.0s,document:1,-,,,

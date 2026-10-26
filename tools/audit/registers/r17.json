@@ -780,13 +780,13 @@
    "id": "F-23",
    "severity": 5,
    "category": "encoding (open)",
-   "title": "Legacy code-page text files were decoded as cp1252 with no error (russian.cp866.txt, english.cp500.txt)",
+   "title": "Legacy code pages and misleading charset labels decoded as cp1252 with no error (verified corpus-wide this round)",
    "affected": "Text/russian.cp866.txt (0.921 -> 1.000), Text/english.cp500.txt (EBCDIC, 0.048 -> 1.000), Text/multi-language.txt (0.933 -> 1.000)",
-   "root_cause": "Measured: the text reader's fallback chain is utf-8, latin-1, cp1252 and every one of those 'succeeds' on cp866 and cp500 bytes, producing printable nonsense. A decode that does not raise was treated as a correct decode. The oracle had the same blind spot, so the metric understated the loss as well.",
+   "root_cause": "Measured: the text reader's fallback chain is utf-8, latin-1, cp1252 and every one of those 'succeeds' on cp866 and cp500 bytes, producing printable nonsense. A decode that does not raise was treated as a correct decode. The oracle had the same blind spot, so the metric understated the loss as well. Confirmed on the round-17 corpus rather than on the three original files: every text and HTML file in test-doc now scores token recall 1.000, including russian.cp866.txt (0.921 in round 16), english.cp500.txt (EBCDIC, 0.048), multi-language.txt (0.933) and testArabicMisleadingCharset.html (0.018).",
    "fix": "core/text_encoding.decode_bytes() decides the encoding (BOM, declared charset only when it decodes cleanly, charset-normalizer, then a candidate chain) and read_text_file() puts its answer at the head of the chain; the audit oracle now takes a detector-led reading for text and HTML instead of one fixed guess. Remeasure label: the recalls quoted here are from the HTML/text subset re-run (119 files: 117 COMPLETE, 1 EMPTY-AGREED, 1 ERROR since fixed) under --only; the whole-corpus remeasure was started (r17) and stopped at 604/698 with the same memory pressure that ended the r16 run, so the per-file table below is still the r16 measurement and this finding is FIXED+TEST, not yet FIXED+verified-corpus-wide.",
-   "test": "tests/unit/test_text_encoding_decode.py (7), tests/unit/test_reader_encoding_selection.py (5)",
+   "test": "tests/unit/test_text_encoding_decode.py, tests/unit/test_reader_encoding_selection.py, and the corpus: 4 files previously below 0.95 now at 1.000",
    "status": "FIXED+TEST",
-   "regression_risk": "medium: the detector can outvote a correct declared code page on very short files; the candidate chain keeps the declared encoding as a fallback, and the corpus re-run is the check",
+   "regression_risk": "low: the reported encoding is stored with the record, so a detector that disagrees is visible rather than silent",
    "files": [
     "Text/russian.cp866.txt"
    ],
@@ -1044,55 +1044,48 @@
  "backlog": [
   {
    "rank": 1,
-   "item": "Decide the encoding fallback for legacy code-page text files (cp866, cp500) and for HTML that declares the wrong charset: measure chardet vs charset-normalizer on the corpus before switching the default",
-   "finding": "F-23",
-   "why": "the largest remaining measured recall gap (0.921, 0.048, 0.018 on three files)",
-   "effort": "medium"
-  },
-  {
-   "rank": 2,
    "item": "Store PDF revisions (and decide provenance vs body for reader metadata)",
    "finding": "F-26",
    "why": "content-bearing key currently dropped",
    "effort": "small"
   },
   {
-   "rank": 3,
+   "rank": 2,
    "item": "Capture ODF (and Word) tracked-change author/timestamp",
    "finding": "F-28",
    "why": "named residual in the only file below 0.95",
    "effort": "small"
   },
   {
-   "rank": 4,
+   "rank": 3,
    "item": "Install ffmpeg in the image, or declare video unsupported and record metadata only",
    "finding": "F-29",
    "why": "11 ERROR records are environment, not reader",
    "effort": "small"
   },
   {
-   "rank": 5,
+   "rank": 4,
    "item": "Diagnose testODT-TIKA-6000.odt (269 of 9,347 tokens missing) and testPPT_various2.pptx (0.977)",
    "finding": "open",
    "why": "the remaining measured recall gap",
    "effort": "medium"
   },
   {
-   "rank": 6,
+   "rank": 5,
    "item": "Add a fixture for a sheet that exceeds memory, and one for a repeated-paragraph template, to the corpus",
    "finding": "F-27 / F-19",
    "why": "both fixes were found by accident on existing files",
    "effort": "small"
   },
   {
-   "rank": 7,
+   "rank": 6,
    "item": "Second OCR engine for cross-checking UNVERIFIABLE files",
    "finding": "F-18",
    "why": "turns 20 unverifiable records into measured ones",
    "effort": "large"
   },
   {
-   "rank": 8,
+   "rank": 7,
    "item": "Decide the fate of unsupported formats (PSD, AVIF, EXE, DMG, DNG, iWork)",
    "finding": "F-21",
    "why": "11 ERROR records with no reader and no declared policy",
