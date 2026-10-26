@@ -51,3 +51,9 @@ rebuilt, so they are **observed, not committed evidence**. The unit part of the
 diff was computed; the integration part never finished and has no count. Re-running
 the two commands in `item5_clean_clone_suite.md` on a fresh clone is what turns
 these numbers into evidence.
+
+The one failure that run introduced (`test_file_select_toggle::TestTheWiring::
+test_the_function_manager_exposes_the_module_function`) was repaired in
+`f6cd359`; `test_file_select_toggle_after.txt` records the red and green runs.
+The identifier lists above are left as observed, because they describe the tree
+before that repair.

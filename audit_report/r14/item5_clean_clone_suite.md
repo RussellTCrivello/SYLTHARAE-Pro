@@ -69,9 +69,16 @@ pins the literal source line
 `window.toggleAllFilesSelection = fileSelection.toggleAllFilesSelection;`, which
 the one-owner-per-action-name fix replaced with `exposeSelectionToggle()`.
 Either the control must keep publishing under the old name, or the test must
-assert the behaviour instead of the text of an assignment. **Not repaired** —
-recorded as urgent open work in `deliverables/SYLTHARAE-Pro_Work_History_and_Task_Register.xlsx`
-("Repair the test broken by this round's action renaming").
+assert the behaviour instead of the text of an assignment.
+
+**Repaired after this file was first committed** (`f6cd359`): the product side
+was correct and was left alone, and the test now asserts the ownership rule
+instead of the text of one assignment — the suffixed export exists, the shared
+module does not claim the name the files page owns, and the control consuming
+the shared copy names it explicitly. Red before, green after; see
+`test_file_select_toggle_after.txt`. The counts above still describe the
+pre-repair state, because the full suite was not re-run for that change — only
+the affected file and the two action-ownership files, which need no database.
 
 The two identifier lists are committed beside this file as
 `item5_observed_failing_ids_unit.txt` and `item5_cleared_ids_unit.txt`, both

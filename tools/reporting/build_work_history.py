@@ -856,15 +856,17 @@ ROWS = [
      "there is, the newest numbers in this register are the unit half only."),
 
     ("Repair the test broken by this round's action renaming",
-     "Testing", G11, "Open", "Urgent", P11, date(2026, 10, 25), UNV,
-     "One test is newly failing because of this round's own work. It insists on a specific line of "
-     "code that published a select-all action under an old name, and that line was replaced when "
-     "action names were given single owners. One of the two must give way: either the control "
-     "keeps publishing under the old name, or the test checks the behaviour - that the name "
-     "resolves and that clicking it selects - instead of the text of an assignment. This is the "
-     "only failure the round introduced, and it is marked urgent because it belongs in the review "
-     "that is waiting for the owner, not in a later round."),
-
+     "Testing", G11, "Completed", "High", P11, date(2026, 10, 25), date(2026, 10, 25),
+     "One test was newly failing because of this round's own work. It insisted on a specific line "
+     "of code that published a select-all action under an old name, and that line had been replaced "
+     "when action names were given single owners. The product behaviour was correct and was left "
+     "alone: the files screen owns the name and the shared module exports its copy under a suffix "
+     "that the control using it names explicitly. The test was the stale side, so it now checks the "
+     "ownership rule instead of the text of one assignment - the suffixed export exists, the shared "
+     "module does not claim the name the screen owns, and the control that uses the shared copy "
+     "names it - which is stricter than what it replaced. It was shown failing before the change "
+     "and passing after it, in five passing tests with three skipped for lack of a JavaScript "
+     "runtime, alongside the ten action-ownership tests."),
     ("Write the four written references that have never existed",
      "Documentation", G11, "Open", "Medium", P11, date(2026, 10, 24), UNV,
      "Several checks expect four written references: a register of every interface the software "
@@ -1210,8 +1212,9 @@ r = block("The status values, and what each one means here", [
 ], r)
 
 r = block("The priority values", [
-    "Urgent - must be settled before the branch under review can be accepted. Used once, for the "
-    "single test this round broke.",
+    "Urgent - must be settled before the branch under review can be accepted. Not used in the "
+    "final version: the one item that earned it, the single test this round broke, has been "
+    "repaired and is recorded as completed.",
     "High - the work affects whether a person can use the software, whether data can be lost, or "
     "whether a claim can be trusted.",
     "Medium - real defects and real gaps, but with a workaround or a limited blast radius.",
@@ -1251,9 +1254,9 @@ r = block("What is covered", [
     "One hundred and five rows: eleven stage headings, one sub-stage heading, ninety-three "
     "individual tasks, covering every piece of work recorded in the project between 23 and 25 "
     "October 2026 - research, planning, building, testing, measuring, documenting and coordinating.",
-    "Seventy-four individual tasks are completed, eighty-five rows in total once the finished stage "
+    "Seventy-five individual tasks are completed, eighty-six rows in total once the finished stage "
     "headings are counted. Every completed task states the check that followed it.",
-    "Nineteen individual tasks are still open - two in progress, two awaiting review, fifteen not "
+    "Eighteen individual tasks are still open - two in progress, two awaiting review, fourteen not "
     "started - and each one states plainly what is missing and what it would take.",
     "The register distinguishes work that changed the product from work that checked it: forty-five "
     "rows are development, forty are testing, verification or measurement, ten are documentation and "
