@@ -5,6 +5,7 @@ Supports: Word, Excel, PowerPoint, OpenDocument formats
 """
 
 import os
+import re
 import tempfile
 import logging
 from typing import Dict, Any, List, Optional, Set
@@ -134,6 +135,290 @@ def _docx_iter_blocks(container, parent):
             content = child.find(qn("w:sdtContent"))
             if content is not None:
                 yield from _docx_iter_blocks(content, parent)
+
+
+def _odf_node_text(node):
+    """All text under an ODF node, in document order.
+
+    ``para.childNodes[0].data`` reads one run, and in ODF a run is usually a
+    ``text:span`` carrying a style - its own text sits one level deeper, so the
+    attribute is absent and the paragraph looks empty. Every bullet in
+    testODP_NPE.odp is shaped exactly like that, and the presentation reader
+    stored 3% of it. ``odf.teletype.extractText`` walks the whole subtree; the
+    hand-rolled walk is only for the case where odfpy cannot be imported.
+    """
+    if node is None:
+        return ''
+    try:
+        from odf.teletype import extractText
+        text = extractText(node)
+        if text:
+            return ' '.join(text.split())
+    except Exception:
+        pass
+    parts = []
+
+    def walk(current):
+        for child in getattr(current, 'childNodes', ()):
+            data = getattr(child, 'data', None)
+            if isinstance(data, str):
+                parts.append(data)
+            if hasattr(child, 'childNodes'):
+                walk(child)
+
+    walk(node)
+    return ' '.join(''.join(parts).split())
+
+
+#: Ceilings on how much of a spreadsheet is materialised in memory.
+#:
+#: There is no bound in the file format: ``testRecordSizeExceeded.xlsx`` is 12 MB
+#: on disk and 200 000 rows x 15 columns in memory, which produced a 181 MB text
+#: body from a single artifact and took the read from seconds to a minute. A
+#: cap is not a silent loss: the sheet records ``truncated``, how many cells were
+#: kept, and how many the sheet actually holds, so the shortfall is visible in
+#: the result and in storage.
+MAX_SHEET_CELLS = 250_000
+MAX_WORKBOOK_CELLS = 1_000_000
+
+#: Every part of a WordprocessingML package that can hold visible text.
+_DOCX_TEXT_PARTS = re.compile(
+    r"word/(document|header\d*|footer\d*|footnotes|endnotes|comments)\.xml$")
+_W_T_RE = re.compile(r"<w:t(?:\s[^>]*)?>(.*?)</w:t>", re.S)
+_W_P_RE = re.compile(r"<w:p[\s>].*?</w:p>", re.S)
+_MC_FALLBACK_RE = re.compile(r"<mc:Fallback>.*?</mc:Fallback>", re.S)
+
+
+def _docx_unescape(text: str) -> str:
+    """XML entities a text run can contain."""
+    return (text.replace("&lt;", "<").replace("&gt;", ">")
+                .replace("&quot;", '"').replace("&apos;", "'")
+                .replace("&amp;", "&"))
+
+
+def _docx_paragraph_texts(xml: str) -> List[str]:
+    """Every paragraph's text in one part, nested paragraphs included.
+
+    A regex over ``<w:p>...</w:p>`` stops at the first closing tag, and Word
+    nests paragraphs inside paragraphs whenever a text box, a shape or a nested
+    table sits in a run - which is exactly the content a structured walk is
+    most likely to miss. ElementTree walks the real tree, so nesting is handled
+    by construction. A part that is not well-formed is reported, not guessed at.
+    """
+    import xml.etree.ElementTree as ET
+
+    w = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    try:
+        root = ET.fromstring(xml)
+    except ET.ParseError:
+        return []
+
+    texts: List[str] = []
+
+    def walk(node, inside_paragraph: bool = False) -> None:
+        for child in list(node):
+            if child.tag == w + "p":
+                if not inside_paragraph:
+                    texts.append("".join(t.text or "" for t in child.iter(w + "t")))
+                walk(child, True)
+            else:
+                walk(child, inside_paragraph)
+
+    walk(root)
+    return texts
+
+
+def _docx_cover_remaining(elements: List[Dict[str, Any]], filepath) -> Dict[str, Any]:
+    """Add the text runs in the package that the structured walk did not reach.
+
+    The structured walk describes the document the way python-docx models it.
+    Whatever that model omits is text in the file that never reaches storage: a
+    table nested inside a nested table (``017097.docx``: 437 tables, the body is
+    nothing but tables), a shape in an ``mc:AlternateContent`` branch, or a part
+    python-docx never opens at all - ``header2.xml``, ``footnotes.xml``,
+    ``comments.xml``.
+
+    This pass is the guarantee rather than another model: it reads every
+    ``<w:t>`` run in every text-bearing part, groups by paragraph, and adds the
+    paragraphs whose text is not already present, each labelled with the part it
+    came from. It cannot invent text, so it can only make the extraction more
+    complete.
+    """
+    import zipfile
+
+    try:
+        with zipfile.ZipFile(filepath) as zf:
+            parts = {name: zf.read(name).decode("utf-8", "replace")
+                     for name in zf.namelist() if _DOCX_TEXT_PARTS.match(name)}
+    except Exception as exc:
+        return {"error": f"{type(exc).__name__}: {exc}", "added": 0}
+
+    def normalise(text: str) -> str:
+        return " ".join(text.split())
+
+    haystack = normalise("\n".join(
+        str(element.get("text") or "") for element in elements
+        if isinstance(element, dict)))
+    for element in elements:
+        if isinstance(element, dict) and element.get("rows"):
+            for row in element["rows"]:
+                haystack += "\n" + normalise(" | ".join(str(c) for c in row))
+
+    added: List[Dict[str, Any]] = []
+    per_part: Dict[str, Dict[str, int]] = {}
+    for name in sorted(parts):
+        xml = _MC_FALLBACK_RE.sub("", parts[name])  # never count a fallback twice
+        part_added = part_seen = 0
+        for paragraph in _docx_paragraph_texts(xml):
+            text = normalise(_docx_unescape(paragraph))
+            if not text:
+                continue
+            part_seen += 1
+            if text in haystack:
+                continue
+            haystack += "\n" + text
+            part_added += 1
+            added.append({
+                "type": "paragraph",
+                "position": len(elements) + len(added),
+                "index": len(elements) + len(added),
+                "text": text,
+                "style": "Recovered",
+                "source": "xml_backfill",
+                "location": name,
+            })
+        per_part[name] = {"paragraphs": part_seen, "recovered": part_added}
+
+    return {"added": len(added), "parts": per_part, "elements": added}
+
+
+#: ODF namespaces, by prefix. ElementTree reports tags as ``{uri}local``;
+#: these let a reader ask for an attribute by the prefix the spec uses.
+_ODF_NS = {
+    "text": "urn:oasis:names:tc:opendocument:xmlns:text:1.0",
+    "office": "urn:oasis:names:tc:opendocument:xmlns:office:1.0",
+    "table": "urn:oasis:names:tc:opendocument:xmlns:table:1.0",
+    "draw": "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0",
+    "dc": "http://purl.org/dc/elements/1.1/",
+}
+
+#: Inline ODF elements: they continue the word around them, so no separator is
+#: written at their boundaries. Everything else inside a paragraph is a field or
+#: a nested block, and gets one.
+_ODF_INLINE = frozenset({
+    "span", "a", "s", "tab", "line-break", "soft-page-break", "bookmark",
+    "bookmark-start", "bookmark-end", "reference-mark",
+    "reference-mark-start", "reference-mark-end", "change-start", "change-end",
+    "change", "note-citation", "note-ref", "ruby-base", "ruby-text",
+})
+
+
+def _odf_encryption_report(filepath):
+    """A structured, honest answer for an encrypted ODF package.
+
+    An ODF package hides nothing: ``META-INF/manifest.xml`` declares
+    ``manifest:encryption-data`` for every stream it encrypted, ``content.xml``
+    included. Without that check the reader tried to decode ciphertext as UTF-8
+    and surfaced ``'utf-8' codec can't decode byte 0x85 in position 3`` - a
+    message that names the symptom and hides the cause. The text of a
+    password-protected document is genuinely unavailable; saying so is the
+    correct result, and it lets the auditor mark the file EMPTY-AGREED instead
+    of counting a real file as a total extraction loss.
+    """
+    import zipfile
+
+    try:
+        with zipfile.ZipFile(filepath) as archive:
+            names = archive.namelist()
+            if 'META-INF/manifest.xml' not in names:
+                return None
+            manifest = archive.read('META-INF/manifest.xml')
+    except Exception:
+        return None
+    if b'encryption-data' not in manifest:
+        return None
+    encrypted = []
+    try:
+        import xml.etree.ElementTree as ET
+        root = ET.fromstring(manifest)
+        for entry in root.iter():
+            if any(key.endswith('encryption-data') for key in entry.attrib):
+                path = entry.get('{urn:oasis:names:tc:opendocument:xmlns:manifest:1.0}full-path')
+                encrypted.append(path) if path else None
+    except Exception:
+        pass
+    return {
+        'error': ('Encrypted ODF package: content.xml is encrypted and cannot '
+                  'be read without the password'),
+        'encrypted': True,
+        'encryption': 'ODF package encryption (manifest:encryption-data)',
+        'encrypted_parts': sorted(set(encrypted)),
+    }
+
+
+def _et_local(tag) -> str:
+    """Local name of an ElementTree tag (namespace stripped)."""
+    return tag.split("}", 1)[1] if isinstance(tag, str) and "}" in tag else str(tag)
+
+
+def _et_ancestor_map(root):
+    """``{id(child): parent}`` for every element under ``root``."""
+    cached = getattr(root, "_et_parents", None)
+    if cached is not None:
+        return cached
+    parents = {}
+    for parent in root.iter():
+        for child in parent:
+            parents[id(child)] = parent
+    try:
+        root._et_parents = parents
+    except AttributeError:  # pragma: no cover - C-accelerated elements allow it
+        pass
+    return parents
+
+
+def _collapse(text: str) -> str:
+    """Collapse all runs of whitespace to single spaces and trim."""
+    return ' '.join(str(text or '').split())
+
+
+def _odf_block_text(element) -> str:
+    """The text of an ODF block, with ODF-aware separators.
+
+    ``''.join(element.itertext())`` welds adjacent elements together: a creator
+    and a date, a paragraph and the annotation hanging off it. ``text:s``
+    carries a repeat count that itertext() also ignores. Both matter, because
+    the token stream is what gets stored and searched.
+    """
+    parts: List[str] = []
+
+    def ensure_space():
+        if parts and not parts[-1].endswith((" ", "\t", "\n")):
+            parts.append(" ")
+
+    def walk(node, top=False):
+        if node.text:
+            parts.append(node.text)
+        for child in node:
+            tag = _et_local(child.tag)
+            if tag == "s":
+                parts.append(" " * int(child.get(_ODF_NS["text"] + "c") or 1))
+            elif tag == "tab":
+                parts.append("\t")
+            elif tag == "line-break":
+                parts.append("\n")
+            elif tag in _ODF_INLINE:
+                walk(child)
+            else:
+                ensure_space()
+                walk(child)
+                ensure_space()
+            if child.tail:
+                parts.append(child.tail)
+
+    walk(element)
+    text = "".join(parts)
+    return ' '.join(text.split())
 
 
 class OfficeFileReader(BaseReader):
@@ -379,8 +664,6 @@ class OfficeFileReader(BaseReader):
             if not os.path.exists(filepath):
                 return {"error": "File not found", "filepath": filepath}
             
-            doc = Document(filepath)
-            
             result = {
                 "filepath": filepath,
                 "elements": [],  # Ordered list of all document elements (paragraphs, tables, etc.)
@@ -402,7 +685,19 @@ class OfficeFileReader(BaseReader):
             # remembered by id(); those proxies are rebuilt and freed on every
             # access, so a reused address made a different paragraph look
             # "already processed" and it was silently dropped (DOCX-DROP-01).
-            for block in _docx_iter_blocks(doc.element.body, doc):
+            # python-docx refuses a package whose main part is not
+            # "document.main+xml". Macro-enabled (.docm) and template (.dotx)
+            # documents are valid WordprocessingML with a different content
+            # type and used to fail the whole read; fall through to the XML
+            # pass below, which reads every text run whatever the content type.
+            doc = None
+            try:
+                doc = Document(filepath)
+            except Exception as exc:
+                result["python_docx_error"] = f"{type(exc).__name__}: {exc}"
+
+            for block in (_docx_iter_blocks(doc.element.body, doc)
+                          if doc is not None else ()):
                 if isinstance(block, DocxParagraph):
                     para = block
                     if para is not None:
@@ -471,6 +766,17 @@ class OfficeFileReader(BaseReader):
                         table_idx += 1
                         element_position += 1
             
+            # The completeness guarantee: every text run in the package that
+            # the structured walk above did not reach.
+            covered = _docx_cover_remaining(result["elements"], filepath)
+            if covered.get("elements"):
+                result["elements"].extend(covered["elements"])
+                result["paragraphs"].extend(
+                    {"text": element["text"], "style": element["style"]}
+                    for element in covered["elements"])
+            result["xml_backfill"] = {k: v for k, v in covered.items()
+                                      if k != "elements"}
+
             result["total_paragraphs"] = len(result["paragraphs"])
             result["total_tables"] = len(result["tables"])
             
@@ -1223,6 +1529,7 @@ class OfficeFileReader(BaseReader):
                 "extracted_images": []
             }
             
+            cells_read = 0
             for sheet_idx, sheet_name in enumerate(workbook.sheetnames):
                 # Yield periodically during sheet processing
                 self.yield_periodically(sheet_idx, interval=3, aggressive=False)
@@ -1233,14 +1540,36 @@ class OfficeFileReader(BaseReader):
                     "max_column": sheet.max_column,
                     "data": []
                 }
-                
+
+                sheet_cells = 0
                 for row_idx, row in enumerate(sheet.iter_rows(values_only=True)):
                     # Yield periodically during row processing
                     if row_idx > 0 and row_idx % 100 == 0:
                         self.yield_cpu_if_needed(aggressive=False)
-                    sheet_data["data"].append(list(row))
-                
+                    row = list(row)
+                    if (sheet_cells + len(row) > MAX_SHEET_CELLS
+                            or cells_read + len(row) > MAX_WORKBOOK_CELLS):
+                        sheet_data["truncated"] = True
+                        sheet_data["cells_read"] = sheet_cells
+                        sheet_data["rows_read"] = row_idx
+                        logger.warning(
+                            "Sheet %s in %s truncated at %d cells (cap %d per sheet, %d per workbook)",
+                            sheet_name, filepath, sheet_cells, MAX_SHEET_CELLS, MAX_WORKBOOK_CELLS)
+                        break
+                    sheet_data["data"].append(row)
+                    sheet_cells += len(row)
+                    cells_read += len(row)
+
+                if not sheet_data.get("truncated"):
+                    sheet_data["cells_read"] = sheet_cells
+                sheet_data["cells_available"] = (
+                    (sheet.max_row or 0) * (sheet.max_column or 0))
                 result["sheets"][sheet_name] = sheet_data
+
+            result["cells_read"] = cells_read
+            if any((sheet or {}).get("truncated")
+                   for sheet in result["sheets"].values()):
+                result["truncated"] = True
             
             # Extract and OCR images from the workbook
             try:
@@ -2087,7 +2416,34 @@ class OfficeFileReader(BaseReader):
 
 
     def _read_odt_from_content_xml(self, filepath: str) -> Optional[Dict[str, Any]]:
-        """Parse ODT content.xml directly when odfpy refuses external DTDs."""
+        """Read an ODT by walking ``content.xml`` directly.
+
+        Used when odfpy refuses the package - LibreOffice writes MathML
+        external DTD references into some documents and odfpy's defusedxml
+        loader refuses them. The previous version of this fallback emitted
+        every ``text:p``, ``text:h`` *and* ``text:span`` it found, joined each
+        one's descendants with ``"".join(itertext())`` and dropped the rest:
+        text was duplicated (a span and its parent paragraph both became
+        paragraphs), the order of block content was lost, and - because no
+        separator was written between sibling elements - adjacent fields were
+        welded into single tokens (``dc:creator`` "Bart" + ``dc:date``
+        "2009-10-05T19:10:26" became ``Hanssens2009-10-05T19:10:26``). The
+        completeness oracle tokenises the same XML and sees two words where the
+        reader stored one.
+
+        What is recovered here, explicitly:
+        * ``text:p`` and ``text:h`` as blocks, in document order;
+        * inline runs joined by the ODF rules (``text:s`` -> spaces,
+          ``text:tab`` -> tab, ``text:line-break`` -> newline, styled
+          ``text:span``/``text:a`` continue the surrounding word);
+        * structural boundaries get a space, because an annotation, a footnote
+          marker or a changed-region is a different field, not a syllable;
+        * comments (``office:annotation``), notes (``text:note``) and tracked
+          changes (``text:deletion`` / ``text:insertion``) as their own records
+          tagged with a location, so they are stored instead of silently
+          discarded;
+        * tables as rows.
+        """
         import zipfile
         import xml.etree.ElementTree as ET
 
@@ -2099,22 +2455,105 @@ class OfficeFileReader(BaseReader):
         except Exception:
             return None
 
-        paragraphs: List[str] = []
+        body = None
         for element in root.iter():
-            tag = element.tag.split("}")[-1] if "}" in element.tag else element.tag
-            if tag in ("p", "h", "span"):
-                text = "".join(element.itertext()).strip()
-                if text:
-                    paragraphs.append(text)
+            if _et_local(element.tag) == "body":
+                for child in element:
+                    body = child
+                    break
+                break
+        body = body if body is not None else root
+        parents = _et_ancestor_map(body)
 
-        if not paragraphs:
+        def has_ancestor(element, names) -> bool:
+            current = parents.get(id(element))
+            while current is not None:
+                if _et_local(current.tag) in names:
+                    return True
+                current = parents.get(id(current))
+            return False
+
+        paragraphs: List[Dict[str, Any]] = []
+        tables: List[Dict[str, Any]] = []
+        seen: set = set()
+
+        def record(text: str, style: str, location: str, kind: str = "paragraph"):
+            text = _collapse(text)
+            if not text or text in seen:
+                return
+            seen.add(text)
+            paragraphs.append({"text": text, "style": style, "location": location,
+                               "kind": kind})
+
+        def add_block(element, location: str, kind: str = "paragraph"):
+            style = (element.get(_ODF_NS["text"] + "style-name")
+                     or ("Heading" if _et_local(element.tag) == "h" else "Normal"))
+            record(_odf_block_text(element), style, location, kind)
+
+        for element in body.iter():
+            tag = _et_local(element.tag)
+            if tag in ("p", "h"):
+                if has_ancestor(element, ("annotation", "note", "changed-region")):
+                    continue  # stored as comment / note / tracked-change records
+                if has_ancestor(element, ("table-cell",)):
+                    continue  # stored as table rows below
+                add_block(element, "content.xml", "paragraph")
+            elif tag == "table":
+                for row_index, row in enumerate(
+                        [r for r in element.iter() if _et_local(r.tag) == "table-row"]):
+                    cells = [_collapse(_odf_block_text(cell))
+                             for cell in row if _et_local(cell.tag) == "table-cell"]
+                    if any(cells):
+                        tables.append({"table_number": len(tables) + 1,
+                                       "rows": [cells]})
+            elif tag == "annotation":
+                author = ""
+                for child in element.iter():
+                    if _et_local(child.tag) == "creator":
+                        author = _collapse(child.text or "")
+                        break
+                for para in element.iter():
+                    if _et_local(para.tag) in ("p", "h"):
+                        record(_odf_block_text(para), f"Comment ({author})" if author
+                               else "Comment", "office:annotation", "comment")
+            elif tag == "note":
+                note_class = element.get(_ODF_NS["text"] + "note-class") or "footnote"
+                for para in element.iter():
+                    if _et_local(para.tag) in ("p", "h"):
+                        record(_odf_block_text(para), note_class.capitalize(),
+                               f"text:{note_class}", note_class)
+            elif tag in ("deletion", "insertion"):
+                # Who changed what, and when, is forensic evidence, not chrome:
+                # a redline whose author and timestamp were dropped cannot be
+                # attributed. The author and date are stored with the text.
+                author, date = "", ""
+                for child in element.iter():
+                    local = _et_local(child.tag)
+                    if local == "creator":
+                        author = _collapse(child.text or "")
+                    elif local == "date":
+                        date = _collapse(child.text or "")
+                prefix = " ".join(part for part in (
+                    f"[{tag}: {author}" if author else f"[{tag}",
+                    f"on {date}]" if date else "]",
+                ) if part)
+                bodies = [_odf_block_text(para) for para in element.iter()
+                          if _et_local(para.tag) in ("p", "h")]
+                bodies = [body for body in bodies if body]
+                record(" ".join([prefix] + bodies), "Tracked change",
+                       f"text:{tag}", "tracked_change")
+                if not bodies:
+                    record(prefix, "Tracked change metadata",
+                           f"text:{tag}", "tracked_change")
+
+        if not paragraphs and not tables:
             return None
         return {
             "filepath": filepath,
-            "paragraphs": [{"text": t, "style": "Normal"} for t in paragraphs],
-            "tables": [],
+            "paragraphs": paragraphs,
+            "tables": tables,
             "total_paragraphs": len(paragraphs),
-            "total_tables": 0,
+            "total_tables": len(tables),
             "method": "odt_content_xml",
         }
 
@@ -2134,6 +2573,11 @@ class OfficeFileReader(BaseReader):
         try:
             if not os.path.exists(filepath):
                 return {"error": "File not found", "filepath": filepath}
+
+            encrypted = _odf_encryption_report(filepath)
+            if encrypted:
+                encrypted["filepath"] = filepath
+                return encrypted
 
             doc = None
             try:
@@ -2240,6 +2684,11 @@ class OfficeFileReader(BaseReader):
         try:
             if not os.path.exists(filepath):
                 return {"error": "File not found", "filepath": filepath}
+
+            encrypted = _odf_encryption_report(filepath)
+            if encrypted:
+                encrypted["filepath"] = filepath
+                return encrypted
             
             doc = load(filepath)
             
@@ -2270,7 +2719,7 @@ class OfficeFileReader(BaseReader):
                             if hasattr(para, 'data'):
                                 cell_text += para.data
                             elif hasattr(para, 'childNodes') and para.childNodes:
-                                cell_text += para.childNodes[0].data if hasattr(para.childNodes[0], 'data') else ""
+                                cell_text += _odf_node_text(para)
                         row_data.append(cell_text)
                     sheet_data["data"].append(row_data)
                 
@@ -2329,6 +2778,7 @@ class OfficeFileReader(BaseReader):
         try:
             from odf.opendocument import load
             from odf.draw import Page, TextBox
+            from odf.presentation import FooterDecl, HeaderDecl, Notes
             from odf.text import P
             from odf.table import TableRow, TableCell
         except ImportError:
@@ -2340,6 +2790,11 @@ class OfficeFileReader(BaseReader):
         try:
             if not os.path.exists(filepath):
                 return {"error": "File not found", "filepath": filepath}
+
+            encrypted = _odf_encryption_report(filepath)
+            if encrypted:
+                encrypted["filepath"] = filepath
+                return encrypted
             
             doc = load(filepath)
             
@@ -2381,14 +2836,14 @@ class OfficeFileReader(BaseReader):
                         for text_box in text_boxes:
                             for para in text_box.getElementsByType(P) if hasattr(text_box, 'getElementsByType') else []:
                                 if para.childNodes:
-                                    para_text = para.childNodes[0].data if hasattr(para.childNodes[0], 'data') else ""
+                                    para_text = _odf_node_text(para)
                                     if para_text.strip():
                                         text_content.append(para_text.strip())
                         
                         # Also check for direct paragraph children
                         for para in child.getElementsByType(P) if hasattr(child, 'getElementsByType') else []:
                             if para.childNodes:
-                                para_text = para.childNodes[0].data if hasattr(para.childNodes[0], 'data') else ""
+                                para_text = _odf_node_text(para)
                                 if para_text.strip():
                                     text_content.append(para_text.strip())
                         
@@ -2411,10 +2866,32 @@ class OfficeFileReader(BaseReader):
                                     cell_text = ""
                                     for para in cell.getElementsByType(P) if hasattr(cell, 'getElementsByType') else []:
                                         if para.childNodes:
-                                            cell_text += para.childNodes[0].data if hasattr(para.childNodes[0], 'data') else ""
+                                            cell_text += _odf_node_text(para)
                                     row_data.append(cell_text.strip())
                                 element_data["rows"].append(row_data)
                     
+                    # Auto-shapes, groups and captions carry text too. A
+                    # presentation built in Impress is mostly custom-shapes:
+                    # testODP_NPE.odp has 99 frames and dozens of
+                    # draw:custom-shape boxes, and the old branch recognised
+                    # only draw:frame and table:table, so every bullet inside a
+                    # shape was dropped. "The Medicalization of Society" - the
+                    # title of a slide - simply was not in the stored text.
+                    elif any(marker in str(child.tagName).lower()
+                             for marker in ('custom-shape', 'draw:g', 'caption',
+                                            'text-box', 'measure', 'connector')):
+                        shape_paragraphs = [
+                            _odf_node_text(para)
+                            for para in (child.getElementsByType(P)
+                                         if hasattr(child, 'getElementsByType') else [])
+                        ]
+                        shape_paragraphs = [text for text in shape_paragraphs if text]
+                        if shape_paragraphs:
+                            element_data["type"] = "text"
+                            element_data["shape"] = str(child.tagName)
+                            element_data["text"] = "\n".join(shape_paragraphs)
+                            slide_data["texts"].extend(shape_paragraphs)
+
                     # Check for images
                     elif 'image' in str(child.tagName).lower():
                         element_data["type"] = "image"
@@ -2425,18 +2902,68 @@ class OfficeFileReader(BaseReader):
                         slide_data["elements"].append(element_data)
                         element_position += 1
                 
-                # Fallback: if no elements found, extract paragraphs directly
-                if not slide_data["elements"]:
-                    for para in page.getElementsByType(P):
-                        if para.childNodes:
-                            text = para.childNodes[0].data if hasattr(para.childNodes[0], 'data') else ""
-                            if text.strip():
-                                slide_data["texts"].append(text.strip())
+                # Coverage pass. Whatever the element walk did not claim is
+                # still text on this slide - inside a shape this reader does not
+                # model, a nested group, or a frame-in-frame. Storing it last is
+                # better than not storing it, and the element records
+                # ``location: overflow`` so the provenance stays honest about
+                # where it came from.
+                stored_texts = {text for text in slide_data["texts"]}
+                for para in page.getElementsByType(P):
+                    text = _odf_node_text(para)
+                    if text and text not in stored_texts:
+                        stored_texts.add(text)
+                        slide_data["texts"].append(text)
+                        slide_data["elements"].append({
+                            "type": "text",
+                            "text": text,
+                            "location": "overflow",
+                            "position": len(slide_data["elements"]),
+                        })
                 
+                # Speaker notes live in a presentation:notes page nested inside
+                # the slide's draw:page, and they are content: citations,
+                # source lines and the speaker's own argument. The reader
+                # walked only the slide's direct children, so notes were never
+                # read at all (testODP_NPE.odp lost "McGraw-Hill", "Copyright",
+                # the author's name). The pipeline already stores ``notes`` for
+                # PPTX, so the same key is used here.
+                try:
+                    notes_pages = page.getElementsByType(Notes)
+                except Exception:
+                    notes_pages = []
+                notes_lines = []
+                for notes_page in notes_pages:
+                    for para in notes_page.getElementsByType(P):
+                        text = _odf_node_text(para)
+                        if text and text not in notes_lines:
+                            notes_lines.append(text)
+                if notes_lines:
+                    slide_data["notes"] = "\n".join(notes_lines)
+
                 result["slides"].append(slide_data)
             
             result["total_slides"] = len(result["slides"])
-            
+
+            # Footers, headers and date fields are visible page furniture, and
+            # they are the only place a presentation sometimes records its
+            # copyright line or author: testODP_NPE.odp keeps
+            # "Copyright 2009 Tme McGraw Hill Companies All Rights Reserved" and
+            # "Copyright 2009 Alan S Berger" in presentation:footer-decl, which
+            # the slide walk never touched. They are stored as forensic_text,
+            # the channel the pipeline indexes, tagged with where they came from.
+            furniture = []
+            for element in doc.getElementsByType(FooterDecl):
+                text = _odf_node_text(element)
+                if text:
+                    furniture.append(f"Footer ({element.getAttribute('name') or 'default'}): {text}")
+            for element in doc.getElementsByType(HeaderDecl):
+                text = _odf_node_text(element)
+                if text:
+                    furniture.append(f"Header ({element.getAttribute('name') or 'default'}): {text}")
+            if furniture:
+                result["forensic_text"] = "\n".join(furniture)
+
             # Extract and OCR images from the presentation
             try:
                 import zipfile
