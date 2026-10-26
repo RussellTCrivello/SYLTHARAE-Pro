@@ -1,0 +1,12 @@
+Title: Sample E2E Test Document
+H1: Hello from Tika
+
+--- Content ---
+
+
+Sample E2E Test Document
+
+Hello from Tika
+This HTML fixture is used by the tika-grpc end-to-end tests.
+
+

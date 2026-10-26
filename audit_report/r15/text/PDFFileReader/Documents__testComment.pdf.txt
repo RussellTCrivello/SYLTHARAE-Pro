@@ -1,0 +1,9 @@
+Total Pages: 1
+OCR Used: No
+Author: Michael McCandless
+Creator: Microsoft® Office Word 2007
+Producer: Microsoft® Office Word 2007
+
+Page 1 | Method: direct_extraction | Length: 54 chars
+Here is some text. 
+Comment [MM1]: Here is a comment 

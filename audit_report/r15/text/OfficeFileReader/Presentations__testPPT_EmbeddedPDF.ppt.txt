@@ -1,0 +1,215 @@
+Total Slides: 1
+
+Slide 1
+
+Acrobat Document
+
+AcroExch.Document.110
+
+Adobe Acrobat Document
+
+Calibri Light
+
+Title Placeholder 1
+
+Text Placeholder 2
+
+Date Placeholder 3
+
+Footer Placeholder 4
+
+Slide Number Placeholder 5
+
+Office Theme
+
+Title 1
+
+Subtitle 2
+
+Picture 3
+
+Object 4
+
+Object 5
+
+^k2#z
+
+tableStyles.xml
+
+_rels/.relsPK
+
+[Content_Types].xml|
+
+drs/slideMasters/slideMaster1.xml
+
+Y_m6EJ>V
+
+EVF67x
+
+RgN\aV
+
+Click to edit Master title style
+
+Edit Master text styles
+
+drs/shapexml.xml
+
+nY8YDU
+
+drs/downrev.xmlD
+
+2`dj+;
+
+H/CSetC
+
+=~JG`RV
+
+drs/downrev.xmlL
+
+theme/theme/themeManager.xml
+
+theme/theme/theme1.xml
+
+L\$'k>3q#!
+
+9'p%V&
+
+theme/theme/_rels/themeManager.xml.rels
+
+K(M&$R(.1
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<a:clrMap xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>
+
+drs/slideLayouts/slideLayout1.xml
+
+qNWYfi
+
+TD=41|Q
+
+wi@ZMEA
+
+`?9K4l
+
+"_<?|f
+
+";1`/g%
+
+LP_) x1
+
+kU~].N
+
+W9jlwT
+
++*)"xe
+
+%i)_8z
+
+u;i= H
+
+xZqU7v
+
+{vv`'Ing
+
+WY IS8
+
+F@g\APTq){
+
+{DA*OA
+
+hNyG5m
+
+h=.mb5/
+
+>5=_DL
+
+9dsVIEAXq
+
+DR::Ws
+
+hAVkvV
+
+uA?OPo
+
+bQ7KS&p
+
+&h~&!@
+
+<#c7wB
+
+_c!boc
+
+'x7=mk
+
+WR5A~"
+
+UVI^0gk
+
+>3-w_Y
+
+-?=LJ?
+
+aU`~|Tuw[&
+
+]bPBb2
+
+K)6Q_1
+
+4OU=o
+
+/Bi"Isl
+
+I_1-?5
+
+KjK2AM
+
+wF&_zfw
+
+F;}.bf
+
+`b62@U
+
+C.c^cAs^
+
+kVhXi[
+
+x1kyh+
+
+%8)Ex(
+
+G)H`W5O
+
+jphT&=
+
+UyTg4f
+
+|#Y@w{/<
+
+-o>$Pz
+
+Qb.b'6
+
+m>RNeD
+
+M1OmkT
+
+S,hC)]h)/
+
+/8NBX~
+
+(Kf/6+
+
+V6gxx{
+
+IVvayQ
+
+#4x5rK
+
+;-b-~TF
+
+3BOj$-T
+
+[ucR*V
+
+6Qr\b`2yE

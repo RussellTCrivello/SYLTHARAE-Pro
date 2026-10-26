@@ -1,0 +1,19 @@
+Sheet: Format Examples
+Rows: 16
+Columns: 5
+				
+				
+				
+	|	Number #,##0.00	1599.99	-1599.99
+	|	Currency $#,##0.00;[Red]($#,##0.00)	1599.99	-1599.99
+	|	Scientific 0.00E+00	198356388.0	-198356388.0
+	|	Percentage (0.025)	0.025	0.025
+	|	Fraction (2.5)	2.5	
+	|	Time Format: h:mm AM/PM	33966.260424618056	33966.760424803244
+	|	Time Format: h:mm	33966.260424803244	33966.760424803244
+	|	Date Format: m/d/yy	40089.84792480324	
+	|	Date Format: d-mmm-yy	39219.84792480324	
+	|	Date/Time Format	39466.190980358806	
+				
+	|	Custom Number:	19.99	
+	|	Custom Date:	39219.18056369212	

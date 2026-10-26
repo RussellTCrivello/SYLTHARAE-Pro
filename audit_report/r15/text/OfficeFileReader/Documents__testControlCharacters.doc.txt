@@ -1,0 +1,72 @@
+bjbjW UGF - Archiflow fase 2Manuale Amministratore   TOC \o "1-3" \h \z   HYPERLINK \l "_Toc220727528"  1.	Introduzione	  PAGEREF _Toc220727528 \h   HYPERLINK \l "_Toc220727529"  1.1	Schema del flusso	  PAGEREF _Toc220727529 \h   HYPERLINK \l "_Toc220727530"  1.2	Struttura dei centri di raccolta	  PAGEREF _Toc220727530 \h   HYPERLINK \l "_Toc220727531"  2.	Istruzioni per passare un CDR da off-line a on-line	  PAGEREF _Toc220727531 \h   HYPERLINK \l "_Toc220727532"  3.	Inserimento di un nuovo centro di raccolta	  PAGEREF _Toc220727532 \h   HYPERLINK \l "_Toc220727533"  4.	Promemoria creazione nuovi utenti	  PAGEREF _Toc220727533 \h  				 	 Documento generico MGEN05_rev01 - pagina   PAGE   di   NUMPAGES  N.Protocollo 1892/09 siav SpA Via Rossi, 5  - 35030  Rub no - PD -  ITALY - Tel.: +39  049  897 97 97  -  Fax:  +39  049  897 88 00C.C.I.A.A. B*	CJ B*	CJ, B*	CJ B*	CJ B*	CJ B*	CJ B*	CJ B*	CJ B*	CJ B*	CJ B*	CJ B*	CJ B*	CJ B*	CJ B*	CJ B*	CJ  utilizzato o pubblicato senza previa autorizzazione di SIAV. PNG
+ IHDR sRGB 	pHYs tEXtDataTime 2005:04:05 14:45:33q %tEXtSoftware Adobe Photoshop CS Macintosh, \IDATx^ `FlA `FlA 
+b%4 5JKK %%% 	vNJ L--X GC0 
+m'pX6  g*?t )R`AB |!h, v%[rmi8 PspE VVV&i  IM. x6s" RL
+/ ovdw 0\BK u!d( 5:v$ 2cx: pilF e?J9 Nrw< 7La/ ,	Ps _)!# 7358 W6zFA K"x/ f4ZH /[h69 8	cN 2$?i <KKK >6=lD {wDyB @C~ ;vl`K6   1qU
+/ h*+LHg 2:Qy p0R$ EM@ap  zmJ MvBJ /	%2 EJ@q 9,-Y e$^Jc( I@pb"| HON~ UW]e4 TJ^{ ,S lO 
+gVW; F~nn 'rI!0 X^4- |LyK nyr4 KtEo xR$7 +pX4  FZqF :C=XK i#F< 7:M: %t!8b 1:}iF %m\=$F~b O!U6# u4<9%# _z02 O$%| %%%B |-0X INus p]h& x>C9 5:~% l)$@ H /	 bip=B t^R`g Rdf|  /$"& o3#F 6)z- TFGg hp@j >?F{ FTMO 1ZH^T? %RvwI  \Rm7  S	M= 012{& -I ^ p/%w- 6>QFx 6<1Q ,p"4@ SG|dPA 'N!, 6	EJ~ )9#	 bcdS !=LB gsXR@ Q>ku |<g-Wn T}E8\ 3:B` x~G8{ S^-v BFil Q8#& ;{/\ '>	6 0LY" dkcy	%y d#(F `:0U R9{Q. _}]d: h,Q~ WapP QJ!m |>[Ba zI	3 o/2/]~ TB~/ HRn$&MY AcS?T 3KE% V.<nd _R(^ Cxl92	d% 
+6vK F*D"A VtTt iw|AG /d>| y_h_ Sgl	y&L B%`jp pR5 Vb'N fD{\ N-WH 
+fn| NlUL $<ta ZSdx D3S! *O$@ S'_.| 46ms #y26 _pWvl{y ]VV&4 .pUv !$is 4Ckr p.6# 4|#L qPEX0 9[~y 6uf`! q&vR /
+/b Ls%eK Cza8 |hLSq !C2z #56^ e{	M uXJ~ l|\I #8x  @FK=. $$68 #P!I J.DC@ a|
+I df#@ +t.L6a Dxcu s+nSt XH6M	 CAm'   wX Q#![c }$ej bcpPd 2u06 C "6(
+ "#0v U@mX 5*	K@ 6e*/ mD>Zz 
+UtO #]Z' /b/r >FF& *AV	) ,--m ( u] >].0p q}fJ f
+I% FgVkrV Y-^+O> {=><$ CH`9 ukSSy n`@@ CSCF, ^a*? P1{l 4uHl"> dpY <X9PH !n;By ^I2D M*BO pdT|{ `q&p ?fl
+;6 y978$ 4$HE ?i6K &ymy`% <y%r
+ 
+$rj ,S+_] #r%e{ H@B ,Xn& 0#.D9 z+9yN X'$X 4j2^ .KKK%G q$S: x"$wQ F3*p9 _y0u A&P\{ v@e7y Y`I@0 <b&%#{m BoQ7)} jP7W {}}py? rb:& 7EF1 J>8[ dSe@] "YEL h[|/ [}W(| 6(3| ^Ga) "nAal 
+g+: ]Kc3H A 5~ BEAA	'v 3\5s YRWB m
+P@y eeeyw zNy3 K08" 1(C~ ]x4d 
+SCd' @b:u E)ho : (5 3u+z |b4  bis0 Y3\\ {woi /A>  dS[N ^a$9 0"Vl t>8d  gBU@ K	}  !I+1 Yuje 7N7]z w?~[7 0uJ BiS{ Xjdt 8& t V+'o 9NFK rP,G hmP` Y6/ h>jW sE]j ai() egs PK'z a	3^ O\bHj Cxlc72 hHo
+  yD@ qhF- M	\z @Wl] Vq[< 3~^q Q|-e9 @0;  ;M6&? tx%^[ H7xx "ujk soy5a0 GNX! [P@+ 3zIBDp\VW] QT'jC $&Jn AZ*a/x W$c7 J(vF ^L+v #{R`Ky Y
+9h Cxls9 Q+Z(A y[m2 :8W! h!?v )~9m# ajU> r"ybva R(sn f,m_ `%]p vree 'E_v	$ d5oRm0 w<h? A5Fc 4uC@ f2m]J%\ \8bI jS`3 U/oz +m!}	 IPAF pR/9 A?'E =Z-y Hv4/ moSG  .o~ mzrOu Fr'x y{yK jUIII #C:IS +?*s ~(kI ;-/< euRTo wpF/] l3=. ;NRP <rR? s-+? 2&!M, ma4; .^9e) Zi6'xL 'uTz^ h5t^r =[''\H YQ_y %#8llJ u;,G# |yQ QN]8 %_zu jp;&G# !z\T a9`<	  8H2{ w/kN XVa3 g)1  Vw{C u~1' 2&]x $Ky] >K^\ -'U,0 Q_D> T61]x {>>R I<mp z\TW 	8$`Yx Z=TQs cJ!' 5r_| ~-kA` jh5~6 y[%F yFvhx 8Yy( D*HR :W%O /ozv ;:!@ 2y{]K (Nws -Zd$^Jch SsCa. 	tlP C	G@ J _)N ;-/< e>8)EimH )!%k vDHt4 LEe{ a
+Ag| 6ZEzc +*P%M u43F l>KP DOPT y't~	| b"LF1 soyu ?Ut? O]ez B|6~ +@C@}k o-R6 R1Qz zuwv$ 3Kg0 5N~z %8 ! 1%@o% O)]> m	9d YB)hd =`"dR O[f:z}  @o%7TQia ;w.r SS38E Yem	? $ $@ l-i| 'Ov2 5OW G7;{ r!	L KMk_ )KJ{K (P-o '#v9 |F@! wtO[_ 7'a|0 Z?\r Q#}U -E/v! !wv f.:n {/nrC JEGv! Nmj] Ma/U! my&T 	O;v `B<Q 'X9c{h %)V4 #Q~Og y\yL, 
+c%! F0WH ''jC q$@o% SnlO o{%& ?ThD Ow;z /_U|x _ybT= Vn	p4 H8/1 \~pG `+p6 tHWjD	j +78$ $ !@ %NEF&5 n]8/1 7|j98 ? s+JD; jTU0wu PGhtf5 -=}s{ mTwO "q?jt $ %P d30Z eees u;]a pu$@ 9'PD Hs@& $ 'P Fvhx gXD8\8b 2ZKV w+L pj6# RH`9,	 q8`HC RbGq w]5s 9$o* `JwW7 O{Ny3 ?[ Ry `i	1]8 jCByx 
+iQ#G soyUW r#k.f $`D@ U%%% @1xFI\ PspE /	?( aQ9WR j9aF@e 6lXJ 4a9x S'fE =E(6 F /5 F'PwjSK $4
+$ 2El$` +FCL M{9i G#9g! yj3H x!	, P	Ps D4v`36pK` nx;<5 ]tTK $ %P ^x. ggF; Erp74 Fktf 3,!L /?p k :u*= ^47% 0\\} SBJE v(B'l dD v 9sfn >|xIII pulF tAM7X	 	d#p j![* oujS ,		w" l*E4m ^y@l F	( >]0: 0,,_ A)32 X1lq\4 dYZT= S`:& 1n+H ,&
+? 	8	r Wq\a 9su$ C _5 
+p<U HR'e* y^hu"(" @}_u_t rfk@ ?Tv$ z?jt x6~zS uwttX6 {>>R zu!= t!lO DA`F G db ;
+Xmp FsHQ wc(U AyyyH# k~=+ 9mml nEBi "\3V7 +*r( b<ix wAPDJ @1I8 B}x88	 	DL  j>C[ V9N= pU*++ soy5 )U&^ bWF= d
+JsH ps?q ,G`w uTN8x XsH^ $k2] D`jH_  Q!pI W,jH K%8$ CkC
+ n.a/u uqQ$@ 3KKK 1laoa|Vw 9 G* 8p`yy HnaA ?flr b+j4 e[RN U3W6 ,l$l ih :?% M@1i kp~Ptd b;<| oYYY .]
+	m xNd; AW]u ecW? 'B`&% )QJ1k Tm@wt  	e  <x0L!m Hp$\U W^9} L(s;&G fr/, wjSK! 8T`j QjDB (!pX m&I5[W vInoc+H UKKK .0&H 
+y]% \n$;J {YYY C]rg9* #dW_} -Z4i R*e< :T.'+? <	ai 5}	ai 4h0v #|$wR_ p4B, u"}
+ iqcqM z+yhPN ~RD8X K0>8 	DC  O*8) 8,eKmdTg e[Va .;y( .L5j H A@ c?5G  k?I. 0@3) qPTN 3C"# $wRK [M1Z **(| hm:Hb *e+!5 cmoX j[h] pxNx; =3D8X .D-C :MySH O_uz ;Myc zJX? 5=[Y zJX?
+ ?}s{ H O	 &:9Q FSG' tj[K /05 6 ,9[(s>6 fDu=K 95$K Vq\o `F;8 $^1e vOaxy :[/\ O WG p%L| CMW% ^F#' t	lO ,u_v$  2;C WO6	 .1T6I 0MV|x 0DV A K{v)L &&!# M@W	 uEW" E.3, 6N4C Cu)] Dp@E ?UWW RG u> _t\: _{Cl VeKV Yr]q dtXl= =t<0( .h
+! 54SM x0kRf :5XK }@0@ zGBI h%!( c6 V -C/g O(8?^ vg7H #SUU% :gN[d R=9j Xp]C1% @C-I 'h`6` |MbvOE. }Pk0	 vl(d ^lW] DIDATWA Q `	 hvC5 %T5DY \lG7] RKfo RKfo VtA" 
+N2` '&^bw :4I8 =%`n mA2
+ f9,Z ]/lb6 147P %.c! H@M `mS j^jUY 8B83n g6V1*qUY rxpf ~}Q> M%mG N:!i*Q KBIGLh i9,^ ~d6- JvXUU% EC\
+ 1)	-6- u\h9 k;}7M* nF*, &	x-[ 6=9v \Qa5$6 +m[` Fu
+c kApK G1aJ dHx7 |q<U TYY) =6vg g^JVW i]d] axKk CH[
+cZ$` ;f) L
+/: @41K > u7 )!Ni 1TbE =Z]]= 92E; 0E7h Fv{U !N	^ =4ja N9?	 c<<~W 8n[ C(UY kW,? ]V"M &qhs =:z5 n_a+ C;{i %q)Ht ;j&Z 	X/x =op5 oPlJ '0x	 2Uf& 
+ uO< Vz)$ (ccp+ _SScQ Ar+i !db@ hry3 J!Z) IJpH vuP'K >9]
+ 9s&z2 rT_U 4]
+1>d :?qi C}09y
+ !]
+A t~Phun RJ 
+ 4]
+)} 4A	&5 RA ~ T<(r% Tc9  Y#>V.G ;W)h  	yb3i pTUUY! 3hk4 H@A N Tr$r {?j41` kjjP:I u\Tm (`i7[ pziX ?y]- }E*hPI r(vX he(@ $`F  X*v
+ %	XZ +	Xz{ he(@ 9\=	 Ceee ^>d
+ 6v@_9 ;W)d <i-"
+ #C2Z ][^^n007 555
+ Do-@C -k'A n2xt qDd	 i|dg :?qi ^iDD _?b4_} Cuuu, $"C:b"0 -Z4| [CF5 t-wE he(@  pI+}? QQ:` `B)X \3O+C "2I HmyV Ri98] 5S%Rc8 #-[+F h*D@[ ][[[QQ1r >Y-C 0fIo8 
+)5& $4Z	 QZe^ y8*v 9eee Ckjj qcuuu 1OZx %B ; 2OZrjBw =Z1
+ m~A= 55fx `1OZ 4mZ(%5 sBof V-"
+ OG&C ['t;h  O:z' +O:.' L-va SVVV^^ kvJO Iz2(R /_>k TiaO dp?X VON? k~VtA @D.=p YQaI" 1nzJ X!|[ MR*8a1 QAfV bL`Q <@h9H 98[Mr FdZyyy@ 3gNp _[C`* Ak38 U:a<Ww "DL  X3U9*G rx<2s P
+6R vQ[[ Cps3$ <K6< #i6H -J*** ~u{{ @OSTv o_?fIox ABYd JV0: >3`>l aKO 4j/\ <uaAU~ +QMM jE1! yAV1 /^L8 _]29 c0V; p t;( Ub<\ de\tf 93\# y/85 XIUr, v\if f6Cnr %*^
+ .ox	 A{k	 m*Z/ S'+* 	x:0 ~aIV J{nt +O9'I `j=N w;h-" T#x$@^ bZA OBNm QFMUO@ L+f  .|	G 5:lh ty{c v;m_ p586Cuu V<feee' @+[C^ }zfT %t;\w "
+HRJ>m t	^T &q?s ONpe8C )#r	 &Iy2^ Zi^i bk/v M=x+ 8w+?9C h8X,v ~4%m9 'rI. B+Zq pV1p; pd3H =I%8s YCOIyV P
+\n K;\1 AyVd 8cC+ ~/L~_ 
+b<U =!B{}U VzM> )'5N d T}:S;$ IW@^ 6CnND7	_ <,.I LzM>X d9 f "p;86 fHb0 gCi \C .oo[ An4,= Tz_` @8$  p;Dc3 vH]S E#baZ 	8?T FpKN #dqNZ w;caV 8p@(_P 7dTK 4H8' bPLN@Rz |	IyVON3 <iOv5<9 rK"f	 4%qQF ymm- "*F+ G%w2O lxZ{ ~=Oxd x4GF Y2^+ 5[s0}u AxKN !Y=J q"AB >
+)
+# w(~` K.9V ]hN9 ^yen ]
+R	 
+lJk6 8 YH! J:?H*{ CUP1O	W v~@8M zLb}i *yc mUXj U2#P !=!!MK jt;D '^P=IyVt 	7H_ XV.. 'NT4 <qe0) dc8n +Q:I eeex0 fV&( <|HaD b0PQ h9X  WCEEEf ,7z] ;(`_^G !N)7
+_74 7u~B W^{X `Kp5L r@!| b9`/ U,
+k @d5\ O{XB %hAc &;6 I'@d mD(! zjoB ,1_a 
+0h0ZI G+Y< _IeX U$Q: U@;94 6lXl 8I44 9@[[ ,%a  h9$
+ _?+
+3 ]Gf< }U}:S[o Gi<}+: b1Kx [n	>	f R\jH 3ei9Xx`p GK2s K3v9 ~(/oZ Wx4:1 UmjJ Uf'8% o__1T Tr(V !+F, q#L?H e90C II 4 j(5h "|&O /C(x 	-l} q#z5D PpG$@ "E]B +//O e90Z)Y 555
+ y$<u )fc9 :P#H $< 3 ukTd I9>T5E tmqDp !8Ck3 ~hE+ Tkmm- i9!	 gnV)q_$@ o
+>?} IEND

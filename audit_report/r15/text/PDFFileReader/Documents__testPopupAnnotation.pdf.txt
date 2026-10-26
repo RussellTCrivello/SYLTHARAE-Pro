@@ -1,0 +1,13 @@
+Total Pages: 1
+OCR Used: Yes
+OCR Languages: heb, eng, ara
+Creator: IBM Lotus Symphony Documents
+Producer: IBM Lotus Symphony 3.0
+
+Page 1 | Method: ocr_rapidocr | Length: 1 chars
+D
+
+igalsh
+Typewritten Text
+this is the note
+Sticky Note

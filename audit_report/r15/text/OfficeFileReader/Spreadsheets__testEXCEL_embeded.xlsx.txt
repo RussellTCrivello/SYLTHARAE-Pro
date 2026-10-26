@@ -1,0 +1,25 @@
+Y
+
+Sheet: Sheet1
+Rows: 10
+Columns: 9
+The quick brown fox jumps over the lazy dog								
+								
+The	quick	brown	fox	jumps	over	the	lazy	dog
+								
+Special characters: !"£$%^&*()								
+								
+1	2	2						
+A	B	AB						
+								
+	SKIP1		SKIP2					
+
+Sheet: Sheet2
+Rows: 3
+Columns: 9
+The quick brown fox jumps over the lazy dog								
+								
+The	quick	brown	fox	jumps	over	the	lazy	dog
+
+A7*B7
+CONCATENATE(A8,B8)

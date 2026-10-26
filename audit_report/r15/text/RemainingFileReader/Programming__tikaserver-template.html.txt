@@ -1,0 +1,18 @@
+Title: [[TITLE]]
+H1: [[TITLE]]
+
+--- Content ---
+
+
+
+
+[[TITLE]]
+
+
+
+[[TITLE]]
+
+    [[BODY]]
+
+
+

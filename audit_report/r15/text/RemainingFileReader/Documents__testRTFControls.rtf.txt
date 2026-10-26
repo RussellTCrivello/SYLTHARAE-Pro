@@ -1,0 +1,9 @@
+Thiswordhasanem—dash
+Thiswordhasanen–dash
+Thiswordhasanon‑breakinghyphen
+Thiswordhasanonbreaking space
+Thiswordhasanoptional­hyphen
+
+‘Single quoted text’
+“Double quoted text”
+“Double quoted text again”

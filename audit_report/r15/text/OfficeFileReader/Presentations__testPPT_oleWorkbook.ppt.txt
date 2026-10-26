@@ -1,0 +1,151 @@
+Total Slides: 1
+
+Slide 1
+
+Worksheet
+
+Excel.Sheet.120
+
+Calibri Light
+
+Title Placeholder 1
+
+Text Placeholder 2
+
+Date Placeholder 3
+
+Footer Placeholder 4
+
+Slide Number Placeholder 5
+
+Office Theme
+
+Title 1
+
+Subtitle 2
+
+Content Placeholder 2
+
+Object 3
+
+qtmS,AO
+
+^k2#z
+
+tableStyles.xml
+
+_rels/.relsPK
+
+[Content_Types].xml|
+
+drs/slideMasters/slideMaster1.xml
+
+Y_m6EJ>V
+
+EVF67x
+
+RgN\aV
+
+Click to edit Master title style
+
+Edit Master text styles
+
+drs/shapexml.xml
+
+rtdJ7R
+
+jP#+<t
+
+YpF`+_
+
+drs/downrev.xmlD
+
+|kYA:I@
+
+ruWDKr
+
+26dc b'v
+
+~wj8:2
+
+C},/9D
+
+0:0e/W/0
+
+drs/downrev.xmlL
+
+theme/theme/themeManager.xml
+
+theme/theme/theme1.xml
+
+C|a#ao
+
+>Yr]H+
+
+theme/theme/_rels/themeManager.xml.rels
+
+K(M&$R(.1
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<a:clrMap xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>
+
+drs/slideLayouts/slideLayout1.xml
+
+hg%t&.
+
+uJ[iFnD
+
+f?suk.
+
+s5 9L}
+
+`?9K4l
+
+l$}6HH
+
+:Pk (CP
+
+F'S2wj
+
+lY_?b[
+
+6Y@)JM
+
+M)NKzCK
+
+s93s8$o
+
+?HRWhdPvf
+
+_Vu'-Zw
+
+p`'G6
+
+2d&dJe
+
+nrbdR:
+
+9LRsKf
+
+$XPy%O
+
+4xB.6*
+
+_2ToWZ
+
+5EuR3<
+
+^7iIe<
+
+u;oRD!#
+
+nTD[4(X
+
+7oq}SE
+
+6ea_EZ
+
+UlVWv
+
+`[d_[E

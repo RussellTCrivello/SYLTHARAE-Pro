@@ -1,0 +1,4 @@
+This text is directly in the body of the document.
+
+This text is inside of a text box in the footer of the document.This text is inside of a text box in the footer of the document.
+This text is inside of a text box in the header of the document.This text is inside of a text box in the header of the document.

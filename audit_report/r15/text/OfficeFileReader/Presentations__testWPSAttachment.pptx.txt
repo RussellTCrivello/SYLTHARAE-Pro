@@ -1,0 +1,16 @@
+Total Slides: 1
+
+Slide 1
+
+ppt/media/
+ppt/media/image1.wmf
+ppt/media/image2.wmf
+ppt/media/image3.wmf
+ppt/media/image4.wmf
+ppt/media/image5.wmf
+ppt/media/image6.wmf
+ppt/media/image7.wmf
+ppt/media/image8.wmf
+ppt/media/image9.wmf
+4798FBFA0FA344D19C6AB2B8D95F5A29
+2052-11.1.0.10700

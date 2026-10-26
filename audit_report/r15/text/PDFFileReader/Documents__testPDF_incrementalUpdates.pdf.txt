@@ -1,0 +1,10 @@
+Total Pages: 1
+OCR Used: Yes
+OCR Languages: heb, eng, ara
+Title: Test
+Creator: TextEdit
+Producer: macOS Version 13.2.1 (Build 22D68) Quartz PDFContext
+
+Page 1 | Method: ocr_rapidocr | Length: 27 chars
+Testing
+Testing Incremental

@@ -1,0 +1,7 @@
+Document content
+
+2010-12-30T23:00:00Z
+MyStringValue
+2010-12-29T22:00:00Z
+3
+true

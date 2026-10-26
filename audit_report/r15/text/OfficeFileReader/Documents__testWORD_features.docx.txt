@@ -1,0 +1,12 @@
+[Style: Body Text] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tincidunt pretium dapibus. Fusce quis dolor dui. Nullam eleifend nibh non dui sodales vulputate. Mauris id mollis velit. Fusce in sagittis nisl. Maecenas eget elit fringilla, est eu, volutpat urna.Maecenas ornare tortor velit, non ullamcorper turpis dapibus quis. euismod posuere rhoncus. Duis mollis faucibus tincidunt. Praesent non facilisis orci, sodales hendrerit ipsum. Class aptent taciti sociosqutorquent inceptos himenaeos.
+
+[Style: Body Text] 
+
+This is hidden text.
+
+This is another comment
+This is a comment
+Unknown Author
+Kyle Reese
+bibendum
+Donec

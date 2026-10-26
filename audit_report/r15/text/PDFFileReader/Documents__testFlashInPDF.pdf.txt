@@ -1,0 +1,9 @@
+Total Pages: 1
+OCR Used: Yes
+OCR Languages: heb, eng, ara
+Title: Flash Video Test
+Creator: TextEdit
+Producer: Mac OS X 10.6.8 Quartz PDFContext
+
+Page 1 | Method: ocr_rapidocr | Length: 7 chars
+Testing

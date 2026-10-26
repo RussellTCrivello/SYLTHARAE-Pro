@@ -1,0 +1,10 @@
+Total Pages: 1
+OCR Used: Yes
+OCR Languages: heb, eng, ara
+Title: Presentation1
+Author: grantingersoll
+Creator: PowerPoint
+Producer: Mac OS X 10.9.1 Quartz PDFContext
+
+Page 1 | Method: ocr_rapidocr | Length: 20 chars
+Happy New Year 2003!

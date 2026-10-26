@@ -1,0 +1,34 @@
+complex
+
+Apache Tika Bart Hanssens2009-10-05T19:10:26Tika is part of the Lucene project.Test Document
+
+Tika is part of the Lucene project.
+
+Tika is part of the Lucene project.
+
+This is a rather1This is of course a simple footnote difficult test document, with interesting features.
+
+This is of course a simple footnote
+
+Rectangle TitleThis is a rectangle with a blue background and dark borderA rectangle
+
+A rectangle
+
+Another interesting project is [Solr]
+
+Reference to the title: Apache Tika Test Document
+
+First item
+
+Second item
+
+Third item
+
+Lucene website
+
+Bibliography
+
+Solr: Various, Solr website, 2009, http://lucene.apache.org/solr
+
+http://lucene.apache.org/
+Lucene website

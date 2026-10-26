@@ -1,0 +1,110 @@
+Sheet: mySheet1
+Rows: 66
+Columns: 9
+String	This is a string							
+integer	13.0							
+float	13.1211231321							
+currency	3.03							
+percent	0.2							
+float 2	13.12131231							
+long int	123456789012345.0							
+longer int	1234567890123450.0							
+fraction	0.25							
+date	42803.0							
+comment	contents							
+hyperlink	tika_link							
+formula	4.0	2.0						
+formulaErr	0x1d							
+formulaFloat	0.5		March	April				
+customFormat1	   46/1963	merchant1	1.0	3.0				
+customFormat2	  3/128	merchant2	2.0	4.0				
+								
+								
+								
+		text test						
+								
+								
+								
+								
+								
+								
+								
+								
+	the							
+								
+								
+	the		quick					
+								
+	comment6							
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+
+' --- xl/vbaProject.bin :: Module1.bas
+Attribute VB_Name = "Module1"
+Sub insertsText()
+Attribute insertsText.VB_Description = "makes something bold"
+Attribute insertsText.VB_ProcData.VB_Invoke_Func = " \n14"
+'
+' insert Macro
+' inserts text
+'
+
+'
+    Range("B18").Select
+    ActiveCell.FormulaR1C1 = "text test"
+    Range("B18").Select
+    ActiveCell.FormulaR1C1 = "text test"
+    Range("B18").Select
+    Application.Goto Reference:="embolden"
+    Range("H8").Select
+    ActiveWorkbook.Save
+End Sub
+
+' --- xl/vbaProject.bin :: ThisWorkbook.cls
+Attribute VB_Name = "ThisWorkbook"
+Attribute VB_Base = "0{00020819-0000-0000-C000-000000000046}"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
+Attribute VB_TemplateDerived = False
+Attribute VB_Customizable = True
+
+' --- xl/vbaProject.bin :: Sheet1.cls
+Attribute VB_Name = "Sheet1"
+Attribute VB_Base = "0{00020820-0000-0000-C000-000000000046}"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
+Attribute VB_TemplateDerived = False
+Attribute VB_Customizable = True

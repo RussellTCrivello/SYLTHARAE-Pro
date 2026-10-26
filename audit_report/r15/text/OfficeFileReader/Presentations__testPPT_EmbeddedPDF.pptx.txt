@@ -1,0 +1,9 @@
+Total Slides: 1
+
+Slide 1
+
+[Image: slide_1_shape_3]
+
+ppt/media/image2.emf
+ppt/media/image3.jpg
+ppt/media/image1.emf

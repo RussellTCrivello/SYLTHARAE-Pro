@@ -1,0 +1,7 @@
+Total Pages: 1
+OCR Used: Yes
+OCR Languages: heb, eng, ara
+Creator: Writer
+Producer: LibreOffice 6.4
+
+Page 1 | Method: ocr_no_text

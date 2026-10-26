@@ -1,0 +1,127 @@
+Total Slides: 1
+
+Slide 1
+
+C:\Documents and Settings\Nick\Desktop\Embeded\empty.mp3
+
+Rectangle 2
+
+Rectangle 3
+
+Rectangle 4
+
+Rectangle 5
+
+Rectangle 6
+
+Default Design
+
+alfresco-logo
+
+Picture 4
+
+alfresco-logo.png
+
+testGIF
+
+Picture 5
+
+testGIF.gif
+
+empty.mp3
+
+cancelBubble
+
+playFrom(0.0)
+
+^k2#z
+
+tableStyles.xml
+
+_rels/.relsPK
+
+drs/slideMasters/slideMaster1.xml
+
+4g$Bs"
+
+* =/(%
+
+Click to edit Master title style
+
+Click to edit Master text styles
+
+drs/shapexml.xml
+
+V\rKru
+
+>{d2BL7_#
+
+0U]t`B
+
+8Gc/u#v
+
+U<`k\H
+
+drs/downrev.xmlD
+
+is[*u.
+
+yQ xD}.,b
+
+^Q2)0Wg
+
+,uKzCfZ9
+
+U=;i1W
+
+theme/theme/themeManager.xml
+
+theme/theme/theme1.xml
+
+?t"[-i
+
+theme/theme/_rels/themeManager.xml.rels
+
+K(M&$R(.1
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<a:clrMap xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>
+
+[Content_Types].xml|
+
+drs/slideLayouts/slideLayout1.xml
+
+w!/G!_
+
+:iMutx0
+
+Db_L$64
+
+\gdEKc
+
+`?9K4l
+
+i+ L$2
+
+L8MX&y
+
+rmdYtv
+
+kYp{[VR
+
+G+o}N[G
+
+CvIC,j
+
+hCEEy+
+
+The quick brown fox jumps over the lazy dog
+
+_rels/.relsl
+
+4\i8~>O
+
+BD6h=
+
+jli_Sy)

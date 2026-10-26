@@ -1,0 +1,117 @@
+Total Slides: 10
+
+Slide 1
+
+This is some content
+
+12/16/2016
+
+1
+
+Slide 2
+
+Slide2Header
+
+FirstBullet
+SecondBullet
+tika_hyperlink
+
+Slide2TextBox
+
+Table 1
+R1c1	R1c2	r1c3		
+r2c1		lucene_hyperlink		
+				
+
+12/16/2016
+
+2
+
+Slide 3
+
+Slide3Header
+
+This is some WordART
+
+12/16/2016
+
+3
+
+Slide 4
+
+12/16/2016
+
+4
+
+Slide 5
+
+[Image: slide_5_shape_2]
+
+12/16/2016
+
+5
+
+Slide 6
+
+12/16/2016
+
+6
+
+Slide 7
+
+12/16/2016
+
+7
+
+Slide 8
+
+3/4
+
+12/16/2016
+
+8
+
+Slide 9
+
+This slide is hidden
+
+12/16/2016
+
+9
+
+Slide 10
+
+12/16/2016
+
+MASTERFOOTERMSG
+
+10
+
+This is some content12/16/20161
+12/16/2016MASTERFOOTERMSG10
+Slide2HeaderFirstBulletSecondBullettika_hyperlink12/16/20162Slide2TextBoxR1c1R1c2r1c3r2c1lucene_hyperlink
+Slide3Header12/16/20163This is some WordART
+12/16/20164
+12/16/20165
+12/16/20166
+12/16/20167
+12/16/201683/4
+This slide is hidden12/16/20169
+NotesForSlide2 NotesMasterHeaderNotesMasterFooter		NotesMasterPageNumber 2NotesWordArtPage2NotesTableSlide2
+Notes for slide3NotesMasterHeaderNotesMasterFooter		NotesMasterPageNumber 3
+NotesMasterHeaderNotesMasterFooter		NotesMasterPageNumber 7
+This is a comment
+This is a reply to the initial comment
+This is a reply to the reply
+This is another comment
+Slide2Comment
+CommentSlide3
+ppt/media/image4.emf
+ppt/media/image1.jpg
+ppt/media/image2.jpg
+ppt/media/image3.jpg
+ppt/media/image7.wmf
+ppt/media/image8.emf
+ppt/media/image6.wmf
+ppt/media/image5.jpg
+ppt/media/image9.emf

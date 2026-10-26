@@ -1,0 +1,7 @@
+bold
+bold italic
+italic bold
+italic
+bold then italic then not bold
+italic then bold then not italic
+

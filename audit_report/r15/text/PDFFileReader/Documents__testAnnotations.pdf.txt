@@ -1,0 +1,15 @@
+Total Pages: 1
+OCR Used: No
+OCR Languages: heb, eng, ara
+Author: Michael McCandless
+Creator: Microsoft® Office Word 2007
+Producer: Mac OS X 10.6.8 Quartz PDFContext
+
+Page 1 | Method: direct_extraction | Length: 43 chars
+Here  is  some  text.  
+Here is a 
+comment
+
+
+Here is a comment
+Michael McCandless

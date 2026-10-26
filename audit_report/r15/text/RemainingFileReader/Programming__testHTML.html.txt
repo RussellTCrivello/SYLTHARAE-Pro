@@ -1,0 +1,19 @@
+Title: Title : Test Indexation Html
+H1: Test Indexation Html
+Links (1 total):
+Indexation -> http://www.apache.org/
+
+--- Content ---
+
+
+
+Title : Test Indexation Html
+
+
+
+
+
+Test Indexation Html
+Indexation du fichier
+
+

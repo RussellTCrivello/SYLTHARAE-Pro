@@ -1,0 +1,22 @@
+family,files,complete,near_complete,partial,incomplete,empty_or_media,error,no_oracle,mean_recall,min_recall,stored_chars,location_units
+Archive,46,0,0,0,0,34,11,1,,,1464,document:1
+Audio,46,0,0,0,0,40,6,0,,,0,
+Camera raw,6,0,0,0,0,5,1,0,,,0,
+Delimited text,8,8,0,0,0,0,0,0,1.0,1.0,56659,
+Design,4,0,0,0,0,0,3,1,,,755,document:1
+Excel,38,21,0,0,0,0,5,12,1.0,1.0,431945,cell:23
+Excel (.xls),32,22,0,0,0,0,2,8,1.0,1.0,833964,cell:22
+Excel (.xlsb),5,0,0,0,0,0,1,4,,,3663,cell:3
+Executable,6,0,0,0,0,2,4,0,,,0,
+HTML,39,30,1,3,0,1,0,4,0.984,0.8,124788,
+Image,49,0,0,0,0,33,2,14,,,10996,ocr-word:12;document:2
+OpenDocument,25,13,2,1,3,0,1,5,0.829,0.0,79423,paragraph:14;cell:3;table-row:2;shape:2;document:1
+PDF,67,37,0,0,0,0,4,26,1.0,1.0,594405,page:43;document:6
+Plain text,74,70,0,1,1,1,0,1,0.985,0.0,1119124,document:72
+PowerPoint,32,23,1,0,0,0,2,6,0.998,0.9524,10482,shape:23;slide-notes:1
+PowerPoint (.ppt),22,0,0,0,0,0,0,22,,,33578,shape:22
+RTF,44,36,0,0,0,6,0,2,1.0,1.0,43912,document:38
+Video,16,0,0,0,0,12,4,0,,,0,
+Word,70,29,2,11,13,7,6,2,0.789,0.0,166501,paragraph:51;table-row:11
+Word (.doc),53,0,0,0,0,0,2,51,,,49557,paragraph:45;document:6
+iWork,16,0,0,0,0,0,3,13,,,57421,paragraph:13

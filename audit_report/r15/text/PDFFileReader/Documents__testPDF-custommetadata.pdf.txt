@@ -1,0 +1,11 @@
+Total Pages: 1
+OCR Used: Yes
+OCR Languages: heb, eng, ara
+Title: Document title
+Author: Document author
+Subject: Document subject
+Creator: Tool used to make the PDF
+Producer: Apache FOP Version svn-trunk
+
+Page 1 | Method: ocr_rapidocr | Length: 12 chars
+Hello World!

@@ -1,0 +1,21 @@
+Sheet: Feuil1
+Rows: 2
+Columns: 1
+Fichier test pour propriétés sur xlsx
+Second line
+
+Sheet: Feuil2
+Rows: 1
+Columns: 1
+
+
+Sheet: Feuil3
+Rows: 1
+Columns: 1
+
+
+2010-12-30T22:00:00Z
+MyStringValue
+2010-12-29T22:00:00Z
+3
+true

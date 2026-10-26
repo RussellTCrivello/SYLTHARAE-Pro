@@ -1,0 +1,17 @@
+Title: None
+Images (1 total):
+Image: No alt -> tika.png
+
+--- Content ---
+
+
+
+
+
+Welcome to Apache Tika version ${project.version}!
+To see what Tika can do, just drop
+      a file or a URL to this window.
+      Use the View menu to switch views.
+
+
+

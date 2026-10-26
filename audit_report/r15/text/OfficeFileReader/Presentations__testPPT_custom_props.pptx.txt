@@ -1,0 +1,12 @@
+Total Slides: 1
+
+Slide 1
+
+Test extraction propertiespptx
+
+Test extraction propertiespptx
+2010-12-30T22:00:00Z
+MyStringValue
+2010-12-29T22:00:00Z
+3
+true

@@ -1,0 +1,9 @@
+Total Pages: 1
+OCR Used: Yes
+OCR Languages: heb, eng, ara
+Creator: PDFpen
+Producer: PDFpen
+
+Page 1 | Method: ocr_rapidocr | Length: 33 chars
+Here is some formatted text
+Smile

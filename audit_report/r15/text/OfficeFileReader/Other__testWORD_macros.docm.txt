@@ -1,0 +1,33 @@
+' --- word/vbaProject.bin :: ThisDocument.cls
+Attribute VB_Name = "ThisDocument"
+Attribute VB_Base = "1Normal.ThisDocument"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
+Attribute VB_TemplateDerived = True
+Attribute VB_Customizable = True
+
+' --- word/vbaProject.bin :: NewMacros.bas
+Attribute VB_Name = "NewMacros"
+Sub Embolden()
+Attribute Embolden.VB_Description = "This tests changing the selection to bold"
+Attribute Embolden.VB_ProcData.VB_Invoke_Func = "Project.NewMacros.Embolden"
+'
+' Embolden Macro
+'
+'
+    Selection.Font.Bold = wdToggle
+    Selection.Font.BoldBi = wdToggle
+End Sub
+
+Sub Italicize()
+Attribute Italicize.VB_Description = "This tests italicizing"
+Attribute Italicize.VB_ProcData.VB_Invoke_Func = "Project.NewMacros.Italicize"
+'
+' Italicize Macro
+'
+'
+    Selection.Font.Italic = wdToggle
+    Selection.Font.ItalicBi = wdToggle
+End Sub

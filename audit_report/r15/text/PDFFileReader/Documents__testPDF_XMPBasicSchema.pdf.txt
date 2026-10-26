@@ -1,0 +1,6 @@
+Total Pages: 1
+OCR Used: Yes
+OCR Languages: heb, eng, ara
+
+Page 1 | Method: ocr_rapidocr | Length: 29 chars
+Multiple rdf:Description tags
