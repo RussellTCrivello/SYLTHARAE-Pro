@@ -162,10 +162,11 @@ def units_from_content(content: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
     units: List[Dict[str, Any]] = []
 
-    def add(kind: str, loc: str, text: Any, **meta: Any) -> None:
+    def add(kind: str, loc: str, text: Any, allow_empty: bool = False,
+            **meta: Any) -> None:
         if isinstance(text, (int, float)):
             text = str(text)
-        if not isinstance(text, str) or not text.strip():
+        if not allow_empty and (not isinstance(text, str) or not text.strip()):
             return
         unit = {"kind": kind, "loc": loc, "chars": len(text), "text": text}
         if meta:
@@ -175,9 +176,27 @@ def units_from_content(content: Dict[str, Any]) -> List[Dict[str, Any]]:
     pages = content.get("pages")
     if isinstance(pages, list) and pages and isinstance(pages[0], dict):
         for i, page in enumerate(pages, 1):
-            add("page", f"page {page.get('page_number', page.get('number', i))}",
-                page.get("text"), width=page.get("width"),
-                height=page.get("height"))
+            number = page.get("page_number", page.get("number", i))
+            add("page", f"page {number}", page.get("text"),
+                width=page.get("width"), height=page.get("height"),
+                rotation=page.get("rotation"), columns=page.get("columns"),
+                method=page.get("method"))
+            # Where on the page the text sits. A PDF page has no paragraphs, so
+            # the block geometry is the only location record the format offers.
+            for block in (page.get("blocks") or []):
+                if not isinstance(block, dict):
+                    continue
+                add("pdf-block", f"page {number} block {block.get('index')}",
+                    (block.get("text") or ""), allow_empty=True,
+                    bbox=block.get("bbox"), column=block.get("column"),
+                    dir=block.get("dir"), lines=block.get("lines"),
+                    font_size=block.get("font_size"), block_type=block.get("type"))
+            for table in (page.get("tables") or []):
+                if not isinstance(table, dict):
+                    continue
+                add("pdf-table", f"page {number} table {table.get('table_number')}",
+                    table.get("text"), rows=table.get("row_count"),
+                    columns=table.get("column_count"), bbox=table.get("bbox"))
 
     sheets = content.get("sheets")
     sheet_list = []
@@ -353,6 +372,109 @@ def probe(path: Path, svc, pipe, corpus: Path, timeout: int) -> Dict[str, Any]:
     return rec
 
 
+#: Word at a line end broken by a hyphen. The product's PDF reader rejoins
+#: these (correctly - "peri-\nodic" is one word in the document); if the oracle
+#: did not do the same, every join would be scored as two lost tokens.
+_ORACLE_BREAK_RE = re.compile(r"(?<=[^\W\d_])\-[ \t]*\n[ \t]*(?=[^\W\d_])", re.UNICODE)
+
+#: Presentation ligatures ("\ufb01le"), which no search finds as "file".
+_ORACLE_LIGATURES = {"\ufb00": "ff", "\ufb01": "fi", "\ufb02": "fl", "\ufb03": "ffi",
+                     "\ufb04": "ffl", "\ufb05": "st", "\ufb06": "st"}
+
+
+def normalise_for_recall(text: str) -> str:
+    """Orthographic normalisation only - never content removal.
+
+    Both sides of the comparison get the same treatment, so the score measures
+    whether text survived, not whether two tools agree about hyphenation.
+    """
+    for ligature, letters in _ORACLE_LIGATURES.items():
+        text = text.replace(ligature, letters)
+    text = text.replace("\u00ad", "").replace("\u00a0", " ")
+    return _ORACLE_BREAK_RE.sub("", text)
+
+
+W_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+A_NS = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
+
+
+def _ooxml_runs(xml: str, namespace: str) -> List[str]:
+    """Text of every ``<t>`` run under ``namespace``, tolerant of bad XML.
+
+    A regex over ``<w:t>(.*?)</w:t>`` is only safe on well-formed input: this
+    corpus contains a Word document with an unclosed run, and the regex happily
+    swallowed the following markup into the "text", so the oracle counted
+    attribute names (``smallCaps``, ``hAnsi``, ``Arial``) as document words and
+    every extraction looked lossy.
+
+    ElementTree is authoritative, so it is tried first; a part that will not
+    parse falls back to the regex with any residual markup removed.
+    """
+    import xml.etree.ElementTree as ET
+
+    prefix = "w" if "wordprocessingml" in namespace else "a"
+    paragraph_tag = namespace + "p"
+
+    def join_paragraph(runs) -> str:
+        # Runs inside one paragraph concatenate with *no* separator: the spaces
+        # a document has are inside its runs. Joining them with a space
+        # fabricates word breaks - testWORD_various.docx formats a single word
+        # as <w:t>ita</w:t><w:t>li</w:t><w:t>c</w:t> - and every such document
+        # then looked lossy because the oracle held "ita", "li", "c" where the
+        # reader correctly stored "italic".
+        return "".join(runs)
+
+    try:
+        root = ET.fromstring(xml)
+        # A text box anchored in a paragraph carries its own w:p inside a
+        # w:txbxContent subtree. Counting its runs as part of the anchoring
+        # paragraph as well stores every boxed caption twice.
+        box_tag = namespace + "txbxContent"
+
+        def paragraph_text(paragraph) -> str:
+            collected: List[str] = []
+
+            def collect(node) -> None:
+                for child in node:
+                    if child.tag == box_tag:
+                        continue
+                    if child.tag == namespace + "t":
+                        collected.append(child.text or "")
+                    collect(child)
+
+            collect(paragraph)
+            return join_paragraph(collected)
+
+        paragraphs: List[str] = []
+
+        def walk(node, inside_paragraph: bool = False) -> None:
+            for child in node:
+                if child.tag == paragraph_tag:
+                    if not inside_paragraph:
+                        paragraphs.append(paragraph_text(child))
+                    walk(child, True)
+                elif child.tag == box_tag:
+                    walk(child, False)
+                else:
+                    walk(child, inside_paragraph)
+
+        walk(root)
+        if not paragraphs:
+            return [node.text or "" for node in root.iter(namespace + "t")]
+        return paragraphs
+    except ET.ParseError:
+        pattern = re.compile(r"<{0}:t(?:\s[^>]*)?>(.*?)</{0}:t>".format(prefix), re.S)
+        paragraphs = re.split(r"</{0}:p>".format(prefix), xml)
+        out = []
+        for paragraph in paragraphs:
+            runs = [re.sub(r"<[^>]*>", "", capture)
+                    for capture in pattern.findall(paragraph)]
+            if runs:
+                out.append("".join(runs))
+        return out or [re.sub(r"<[^>]*>", "", capture)
+                       for capture in pattern.findall(xml)]
+
+
 def _oracle_text(path: Path, ext: str) -> str:
     """Oracle text, kept out of the archive but used for the recall score."""
     try:
@@ -360,7 +482,7 @@ def _oracle_text(path: Path, ext: str) -> str:
             import pymupdf
 
             with pymupdf.open(path) as doc:
-                return "".join(p.get_text() for p in doc)
+                return normalise_for_recall("".join(p.get_text() for p in doc))
         if ext in (".docx", ".docm", ".dotx", ".dotm"):
             import zipfile
 
@@ -375,12 +497,16 @@ def _oracle_text(path: Path, ext: str) -> str:
                 parts = [n for n in zf.namelist()
                          if n == "word/document.xml"
                          or re.match(r"word/(header|footer|footnotes|endnotes|comments)\d*\.xml$", n)]
-                runs = {n: t_re.findall(fallback_re.sub("", zf.read(n).decode("utf-8", "replace")))
+                runs = {n: _ooxml_runs(fallback_re.sub("", zf.read(n).decode("utf-8", "replace")), W_NS)
                         for n in sorted(parts)}
-                # two readings: runs abut (as Word renders them) and runs are
-                # word-separated (as a paragraph/cell boundary implies)
-                return [" ".join("".join(r) for r in runs.values()),
-                        " ".join(" ".join(r) for r in runs.values())]
+                # One reading, with Word's own semantics: runs inside a
+                # paragraph abut (a word may be formatted in pieces), and
+                # paragraphs are separated. A second, word-separated reading was
+                # kept here once to tolerate readers that glued paragraphs
+                # together; it also raised the score of a reader that *split*
+                # words at formatting boundaries, which is the same defect seen
+                # from the other side, so it is gone.
+                return "\n".join("\n".join(r) for r in runs.values())
         if ext in (".xlsx", ".xlsm", ".xltx", ".xltm"):
             import openpyxl
 
@@ -407,15 +533,22 @@ def _oracle_text(path: Path, ext: str) -> str:
             with zipfile.ZipFile(path) as zf:
                 slides = [n for n in zf.namelist()
                           if re.match(r"ppt/slides/slide\d+\.xml$", n)]
-                a_re = re.compile(r"<a:t(?:\s[^>]*)?>(.*?)</a:t>", re.S)
                 notes = [n for n in zf.namelist()
                          if re.match(r"ppt/notesSlides/notesSlide\d+\.xml$", n)]
-                return " ".join("".join(a_re.findall(zf.read(n).decode("utf-8", "replace")))
-                                for n in slides + notes)
+                return "\n".join("\n".join(_ooxml_runs(zf.read(n).decode("utf-8", "replace"), A_NS))
+                                 for n in slides + notes)
         if ext in (".odt", ".ods", ".odp", ".ott", ".ots", ".otp", ".odg"):
             import zipfile
 
             with zipfile.ZipFile(path) as zf:
+                names = zf.namelist()
+                if "META-INF/manifest.xml" in names and b"encryption-data" in zf.read(
+                        "META-INF/manifest.xml"):
+                    # Ciphertext has no oracle. Decoding it anyway produced
+                    # tokens such as "j7U" and scored a protected document as a
+                    # total extraction loss, which is not a measurement of the
+                    # reader at all.
+                    return ""
                 xml = zf.read("content.xml").decode("utf-8", "replace")
             return re.sub(r"<[^>]+>", " ", xml)
         if ext in (".html", ".htm", ".xhtml"):

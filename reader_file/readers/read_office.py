@@ -137,6 +137,151 @@ def _docx_iter_blocks(container, parent):
                 yield from _docx_iter_blocks(content, parent)
 
 
+def _pptx_openable_copy(filepath: str) -> Optional[str]:
+    """A path python-pptx accepts, for packages with a non-deck main part.
+
+    ``.ppsx`` (slideshow) and ``.potx`` (template) are the same container as
+    ``.pptx`` with a different content type. python-pptx validates that string
+    and refuses the file with "is not a PowerPoint file", so a slideshow could
+    not be read at all - testPPT.ppsx scored 0.75 on whatever the error path
+    happened to leave behind. The copy changes only that declaration and is
+    deleted as soon as the package is open; nothing about the artifact changes.
+    """
+    import tempfile
+    import zipfile
+
+    variants = (b"presentationml.slideshow.main+xml",
+                b"presentationml.template.main+xml",
+                b"presentationml.macroEnabled.main+xml")
+    try:
+        with zipfile.ZipFile(filepath) as archive:
+            content_types = archive.read('[Content_Types].xml')
+            if not any(variant in content_types for variant in variants):
+                return None
+            replacement = content_types
+            for variant in variants:
+                replacement = replacement.replace(
+                    variant, b"presentationml.presentation.main+xml")
+            members = [(info.filename, archive.read(info.filename))
+                       for info in archive.infolist()]
+    except Exception:
+        return None
+
+    handle, temp_path = tempfile.mkstemp(suffix='.pptx')
+    os.close(handle)
+    try:
+        with zipfile.ZipFile(temp_path, 'w', zipfile.ZIP_DEFLATED) as copy:
+            for name, data in members:
+                if name == '[Content_Types].xml':
+                    data = replacement
+                copy.writestr(name, data)
+    except Exception:
+        try:
+            os.unlink(temp_path)
+        except OSError:
+            pass
+        return None
+    return temp_path
+
+
+def _drawingml_paragraph_texts(xml: str) -> List[str]:
+    """Every ``a:p``'s text in a DrawingML part, runs concatenated.
+
+    python-pptx models shapes it understands. A WordArt, a diagram or a shape
+    inside a structure the library does not describe keeps its text in
+    ``a:t`` runs that no shape object exposes - testPPT_various2.pptx has notes
+    placeholders holding "NotesMasterHeader" and "NotesWordArtPage2" which
+    python-pptx reports as empty text frames. Reading the part is the only
+    reliable way to be sure the text is not there.
+    """
+    import xml.etree.ElementTree as ET
+
+    a = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
+    if not xml or "<a:p" not in xml:
+        return []
+    try:
+        root = ET.fromstring(xml)
+    except ET.ParseError:
+        return []
+    paragraphs: List[str] = []
+    for paragraph in root.iter(a + "p"):
+        text = "".join(node.text or "" for node in paragraph.iter(a + "t"))
+        text = " ".join(text.split())
+        if text:
+            paragraphs.append(text)
+    return paragraphs
+
+
+def _pptx_cover_remaining(slides: List[Dict[str, Any]], filepath: str) -> Dict[str, Any]:
+    """Add the DrawingML paragraphs the shape walk did not reach.
+
+    Slides, notes pages and the notes master are read part by part. A paragraph
+    already present in the slide's stored text is not repeated; one that is not
+    is appended with ``source: xml_backfill`` and the part it came from, so
+    recovered text is distinguishable from parsed text.
+    """
+    import zipfile
+
+    try:
+        with zipfile.ZipFile(filepath) as archive:
+            parts = [name for name in archive.namelist()
+                     if name.endswith('.xml')
+                     and (name.startswith('ppt/slides/slide')
+                          or name.startswith('ppt/notesSlides/notesSlide')
+                          or name.startswith('ppt/notesMasters/'))]
+            payload = {name: archive.read(name).decode('utf-8', 'replace')
+                       for name in parts}
+    except Exception as exc:
+        return {"error": f"{type(exc).__name__}: {exc}", "added": 0}
+
+    by_slide = {}
+    for slide in slides:
+        haystack = " ".join(str(text) for text in (slide.get('texts') or []))
+        haystack += " " + " ".join(
+            str(element.get('text') or '') for element in (slide.get('elements') or []))
+        haystack += " " + str(slide.get('notes') or '')
+        by_slide[int(slide.get('slide_number') or 0)] = haystack
+
+    added, per_part, leftovers = 0, {}, []
+    for name in sorted(payload):
+        number = 0
+        match = re.search(r'(slide|notesSlide)(\d+)\.xml$', name)
+        if match:
+            number = int(match.group(2))
+        paragraphs = _drawingml_paragraph_texts(payload[name])
+        kept = 0
+        for text in paragraphs:
+            haystack = by_slide.get(number)
+            if haystack is None or text in haystack:
+                if haystack is None:
+                    leftovers.append(f"{name}: {text}")
+                continue
+            slide = next((s for s in slides if int(s.get('slide_number') or 0) == number), None)
+            if slide is None:
+                leftovers.append(f"{name}: {text}")
+                continue
+            slide.setdefault('elements', []).append({
+                "type": "text",
+                "text": text,
+                "source": "xml_backfill",
+                "location": name,
+            })
+            slide.setdefault('texts', []).append(text)
+            by_slide[number] = haystack + " " + text
+            kept += 1
+            added += 1
+        per_part[name] = {"paragraphs": len(paragraphs), "recovered": kept}
+
+    result = {"added": added, "parts": per_part}
+    if leftovers:
+        # Text in a part that belongs to no slide - the notes master's header
+        # and footer placeholders, for instance - is still furniture of this
+        # deck. It goes to the forensic channel, which the pipeline indexes.
+        result["unattributed"] = leftovers
+        result["forensic_text"] = "\n".join(leftovers)
+    return result
+
+
 def _odf_node_text(node):
     """All text under an ODF node, in document order.
 
@@ -215,12 +360,38 @@ def _docx_paragraph_texts(xml: str) -> List[str]:
 
     texts: List[str] = []
 
+    def paragraph_text(paragraph) -> str:
+        """The paragraph's own runs.
+
+        ``paragraph.iter(w:t)`` also collects the runs of a text box anchored in
+        the paragraph, so the box's caption appeared twice: once as part of the
+        anchoring paragraph and once as its own paragraph. A ``w:txbxContent``
+        subtree holds its own ``w:p`` elements and the walk below visits them,
+        so it is skipped here.
+        """
+        collected: List[str] = []
+
+        def collect(node) -> None:
+            for child in list(node):
+                if child.tag == w + "txbxContent":
+                    continue
+                if child.tag == w + "t":
+                    collected.append(child.text or "")
+                collect(child)
+
+        collect(paragraph)
+        return "".join(collected)
+
     def walk(node, inside_paragraph: bool = False) -> None:
         for child in list(node):
             if child.tag == w + "p":
                 if not inside_paragraph:
-                    texts.append("".join(t.text or "" for t in child.iter(w + "t")))
+                    texts.append(paragraph_text(child))
                 walk(child, True)
+            elif child.tag == w + "txbxContent":
+                # The box's paragraphs are blocks of their own: visit them, but
+                # outside the anchoring paragraph's text.
+                walk(child, False)
             else:
                 walk(child, inside_paragraph)
 
@@ -903,7 +1074,12 @@ class OfficeFileReader(BaseReader):
                 errors.extend(features.get('extraction_errors') or [])
                 feature_text = text_from_features(features)
                 if feature_text:
-                    result['forensic_text'] = feature_text
+                    # Additive: the reader may already have put content here
+                    # (a deck's notes-master text, for instance). Replacing it
+                    # dropped that text silently.
+                    existing = str(result.get('forensic_text') or '')
+                    result['forensic_text'] = '\n'.join(
+                        part for part in (existing, feature_text) if part)
             except Exception as exc:
                 errors.append({'scope': 'package_features', 'error': str(exc)})
 
@@ -1899,8 +2075,45 @@ class OfficeFileReader(BaseReader):
             if not os.path.exists(filepath):
                 return {"error": "File not found", "filepath": filepath}
             
-            prs = Presentation(filepath)
-            
+            openable = _pptx_openable_copy(filepath)
+            try:
+                prs = Presentation(openable or filepath)
+            finally:
+                if openable:
+                    try:
+                        os.unlink(openable)
+                    except OSError:
+                        pass
+
+            def flatten_shapes(shapes, group: str = None):
+                """Shapes with groups expanded, in document order.
+
+                ``slide.shapes`` yields a group as one object; its children are
+                reachable only through ``group.shapes``. A deck that arranges
+                its content in groups therefore read as empty, and the whole
+                slide was stored as no text at all - testPPT_groups.pptx scored
+                0.33 because "WordArt1", "box1Text" and the link text live
+                inside a group. Each expanded shape carries the name of the
+                group it came from, so the result keeps the nesting.
+                """
+                for shape in shapes:
+                    label = group
+                    try:
+                        is_group = (getattr(shape, 'shape_type', None) == MSO_SHAPE_TYPE.GROUP
+                                    or str(type(shape).__name__) == 'GroupShape')
+                        children = getattr(shape, 'shapes', None) if is_group else None
+                    except Exception:
+                        children = None
+                    if children is not None:
+                        try:
+                            nested = group or str(getattr(shape, 'name', '') or 'group')
+                            yield from flatten_shapes(children, nested)
+                            continue
+                        except Exception as exc:
+                            logger.debug("Failed to expand group %s: %s",
+                                         getattr(shape, "name", "?"), exc)
+                    yield shape, label
+
             total_slides = len(prs.slides)
             
             result = {
@@ -1931,16 +2144,36 @@ class OfficeFileReader(BaseReader):
                         "comments": []  # Slide comments
                     }
                     
-                    # Extract speaker notes
+                    # Extract speaker notes. The notes page is a slide of its
+                    # own with several placeholders - the body placeholder is
+                    # what notes_text_frame returns, but a notes page also
+                    # carries header, footer and date placeholders, and a
+                    # template can put real text in them. Walking every shape
+                    # on the notes page is what stores the page, not one third
+                    # of it.
                     if slide.has_notes_slide:
                         try:
                             notes_slide = slide.notes_slide
-                            notes_text_frame = notes_slide.notes_text_frame
-                            if notes_text_frame and notes_text_frame.text.strip():
-                                slide_data["notes"] = notes_text_frame.text.strip()
+                            notes_parts: List[str] = []
+                            for notes_shape, _group in flatten_shapes(notes_slide.shapes):
+                                text = ""
+                                try:
+                                    if getattr(notes_shape, 'has_text_frame', False):
+                                        text = notes_shape.text_frame.text.strip()
+                                    elif getattr(notes_shape, 'has_table', False):
+                                        text = "\n".join(
+                                            " | ".join(cell.text.strip() for cell in row.cells)
+                                            for row in notes_shape.table.rows)
+                                except Exception:
+                                    text = ""
+                                if text and text not in notes_parts:
+                                    notes_parts.append(text)
+                            if notes_parts:
+                                notes_text = "\n".join(notes_parts)
+                                slide_data["notes"] = notes_text
                                 result["presentation_notes"].append({
                                     "slide_number": slide_idx + 1,
-                                    "notes": notes_text_frame.text.strip()
+                                    "notes": notes_text
                                 })
                         except Exception as e:
                             logger.debug(f"Failed to extract notes from slide {slide_idx + 1}: {e}")
@@ -1948,7 +2181,7 @@ class OfficeFileReader(BaseReader):
                     # Collect all shapes with their positions
                     shapes_with_positions = []
                     
-                    for shape_idx, shape in enumerate(slide.shapes):
+                    for shape_idx, (shape, group_name) in enumerate(flatten_shapes(slide.shapes)):
                         # Yield periodically during shape processing
                         if shape_idx > 0 and shape_idx % 10 == 0:
                             self.yield_cpu_if_needed(aggressive=True)
@@ -1964,6 +2197,7 @@ class OfficeFileReader(BaseReader):
                         element_data = {
                             "type": None,
                             "position": shape_idx,
+                            "group": group_name,
                             "spatial_order": (top, left),
                             "top": top,
                             "left": left,
@@ -2188,6 +2422,19 @@ class OfficeFileReader(BaseReader):
             elif total_slides > 50:
                 logger.info(f"Presentation processing complete: {slides_processed}/{total_slides} slides processed successfully")
             
+            # Cover pass: whatever the shape walk did not reach in the slide,
+            # notes-page and notes-master parts is still text of this deck.
+            try:
+                result["xml_backfill"] = _pptx_cover_remaining(result["slides"], filepath)
+                if result["xml_backfill"].get("forensic_text"):
+                    existing = str(result.get("forensic_text") or "")
+                    result["forensic_text"] = "\n".join(
+                        part for part in (existing, result["xml_backfill"]["forensic_text"])
+                        if part)
+            except Exception as backfill_error:  # never fail a read over the guarantee
+                logger.debug("PPTX cover pass failed for %s: %s", filepath, backfill_error)
+                result["xml_backfill"] = {"error": str(backfill_error)[:200], "added": 0}
+
             # Extract and OCR images from the PPTX archive (with error handling)
             try:
                 result["extracted_images"] = self.extract_images_from_pptx(filepath)
