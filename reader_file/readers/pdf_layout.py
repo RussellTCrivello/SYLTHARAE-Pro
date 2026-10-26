@@ -69,6 +69,7 @@ _SOFT_BREAK_RE = re.compile(r"(?<=[^\W\d_])\-[\u00ad]?[ \t]*\n[ \t]*(?=[^\W\d_])
 _WORD_CHAR_RE = re.compile(r"[^\W\d_]", re.UNICODE)
 
 
+
 def normalize_text(text: str) -> Tuple[str, Dict[str, int]]:
     """Ligatures out, invisible characters gone, odd spaces made ordinary.
 
@@ -133,9 +134,20 @@ def text_quality(text: str) -> float:
     tokens = text.split()
     if not tokens:
         return 0.0
-    good = sum(1 for t in tokens if len(_WORD_CHAR_RE.findall(t)) >= 2)
+    # Dot leaders, rules and bullet glyphs are layout, not recognition
+    # residue: a table of contents is 40% ". . . ." by token count, and scoring
+    # it as garbage made the reader hand the page to OCR.
+    # Dot leaders, page numbers and rules are layout, and a table of contents
+    # is mostly them: counting them made a perfectly readable page look like
+    # recognition residue, so the page was handed to OCR and came back shorter.
+    # The question this function answers is "of the *words* on this page, how
+    # many are words", so only tokens containing letters take part.
+    words = [t for t in tokens if _WORD_CHAR_RE.search(t)]
+    if not words:
+        return 0.0
+    good = sum(1 for t in words if len(_WORD_CHAR_RE.findall(t)) >= 2)
     replacement = text.count("\ufffd") / max(1, len(text))
-    return max(0.0, good / len(tokens) - min(0.5, replacement * 5))
+    return max(0.0, good / len(words) - min(0.5, replacement * 5))
 
 
 # --------------------------------------------------------------------------- #
@@ -269,6 +281,32 @@ def reading_order(blocks: List[Dict[str, Any]], page_width: float, page_height: 
             + reading_order(right, page_width, page_height, line_height, depth + 1))
 
 
+def assign_columns(ordered: List[Dict[str, Any]]) -> int:
+    """Number the vertical bands the blocks fall into, and tag each block.
+
+    ``block["column"]`` used to be the block's index in the reading order, which
+    is a position, not a column: a two-column page reported columns 0..30 and
+    the stored structure could not be used to reconstruct the layout. The bands
+    are computed on the blocks' own ``u`` axis (so a rotated page bands along
+    its baseline), and the reading position is kept as ``block["order"]``.
+    """
+    if not ordered:
+        return 0
+    bands: List[List[float]] = []
+    span_of: Dict[int, int] = {}
+    for position, block in enumerate(sorted(ordered, key=lambda b: b["axes"][2])):
+        u0, u1 = block["axes"][2], block["axes"][3]
+        if bands and u0 <= bands[-1][1] + 2:
+            bands[-1][1] = max(bands[-1][1], u1)
+        else:
+            bands.append([u0, u1])
+        span_of[id(block)] = len(bands) - 1
+    for position, block in enumerate(ordered):
+        block["column"] = span_of.get(id(block), 0)
+        block["order"] = position
+    return max(1, len(bands))
+
+
 def columns_of(ordered: List[Dict[str, Any]], page_width: float) -> int:
     """How many distinct column bands the ordered blocks fall into."""
     if not ordered:
@@ -343,11 +381,12 @@ def page_model(page: Any, want_tables: bool = True) -> Dict[str, Any]:
     rect = page.rect
     ordered = reading_order(text_blocks, rect.width, rect.height, line_height)
 
+    columns = assign_columns(ordered)
+
     pieces: List[str] = []
     joins = 0
     normal = {"ligatures": 0, "invisible": 0, "spaces": 0}
-    for column, block in enumerate(ordered):
-        block["column"] = column
+    for block in ordered:
         fixed, block_joins = dehyphenate(normalize_text(block["text"])[0])
         block_stats = normalize_text(block["text"])[1]
         for key in normal:
@@ -380,7 +419,7 @@ def page_model(page: Any, want_tables: bool = True) -> Dict[str, Any]:
         "text": text,
         "text_raw": normalized_raw,
         "blocks": ordered,
-        "columns": columns_of(ordered, rect.width),
+        "columns": columns,
         "tables": tables,
         "rotation": int(getattr(page, "rotation", 0) or 0),
         "width": round(rect.width, 2),

@@ -152,3 +152,82 @@ def test_scanned_annex_with_real_engine_produces_text(tmp_path):
     assert annex["method"] == "ocr_layout_fallback", annex.get("method")
     assert "ANNEX" in annex["text"].upper(), annex["text"]
     assert annex["ocr_fallback"]["engine"]
+
+
+class _ImageBranchReader(PDFFileReader):
+    """Stands in for the OCR engine on a document typed ``image``."""
+
+    def __init__(self, recognised):
+        super().__init__()
+        self.recognised = recognised
+        self.calls = 0
+
+    def process_page_optimized(self, page_data):
+        self.calls += 1
+        return {
+            "page_number": page_data[0] + 1,
+            "text": self.recognised,
+            "text_length": len(self.recognised),
+            "method": "ocr_stub",
+            "ocr_derived": True,
+            "ocr_engine": "stub",
+            "ocr_confidence": 0.9,
+        }
+
+
+def _short_layer_pdf(tmp_path):
+    """One page: a real, short text layer plus an image.
+
+    Its 24 characters are below the 50-character average the document-level
+    sample uses, so the document is typed "image" and the page is routed to OCR
+    even though nothing about its text layer is broken.
+    """
+    doc = fitz.open()
+    page = doc.new_page(width=400, height=300)
+    page.insert_text((40, 60), "This is page one.", fontsize=12)
+    page.insert_text((40, 80), "1", fontsize=10)
+    pix = fitz.Pixmap(fitz.csRGB, fitz.IRect(0, 0, 10, 10), 0)
+    pix.clear_with(200)
+    page.insert_image(fitz.Rect(300, 20, 380, 100), pixmap=pix)
+    path = tmp_path / "short_layer.pdf"
+    doc.save(str(path))
+    doc.close()
+    return path
+
+
+def test_a_short_but_real_text_layer_is_not_replaced_by_a_shorter_ocr_reading(
+        tmp_path, monkeypatch):
+    monkeypatch.setattr(read_pdf_module, "get_ocr_engine", lambda: object())
+    path = _short_layer_pdf(tmp_path)
+    reader = _ImageBranchReader("This is page one.")
+    content = _content(reader.read_file({"path": str(path), "extension": ".pdf"}))
+
+    page = content["pages"][0]
+    assert reader.calls == 1, "the page should still be offered to OCR"
+    assert page["method"] == "text_layer_preferred"
+    assert "1" in page["text"], page["text"]
+    assert page["ocr_text"] == "This is page one."
+    assert page["ocr_rejected"]["reason"] == "text_layer_reads_as_language"
+
+
+def test_a_scanned_page_still_uses_recognition(tmp_path, monkeypatch):
+    monkeypatch.setattr(read_pdf_module, "get_ocr_engine", lambda: object())
+    path = _mixed_pdf(tmp_path)   # page 1 is born-digital, so build a pure scan
+    doc = fitz.open()
+    src = doc.new_page(width=400, height=300)
+    src.insert_text((40, 60), "SCANNED PAGE", fontsize=18)
+    pix = src.get_pixmap(dpi=150)
+    scan_path = tmp_path / "scan.pdf"
+    page = doc.new_page(width=400, height=300)
+    doc.save(str(scan_path))
+    doc.close()
+    doc = fitz.open()
+    only = doc.new_page(width=400, height=300)
+    only.insert_image(fitz.Rect(0, 0, 400, 300), pixmap=pix)
+    doc.save(str(scan_path))
+    doc.close()
+
+    reader = _ImageBranchReader("SCANNED PAGE")
+    content = _content(reader.read_file({"path": str(scan_path), "extension": ".pdf"}))
+    assert content["pages"][0]["method"] == "ocr_stub"
+    assert content["pages"][0]["text"] == "SCANNED PAGE"

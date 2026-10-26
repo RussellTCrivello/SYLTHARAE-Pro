@@ -65,6 +65,58 @@ MIN_PAGE_TEXT_CHARS = 32
 MIN_TEXT_LAYER_QUALITY = 0.5
 
 
+def choose_reading(native_text, ocr_text, layer_quality: float,
+                   min_quality: float = MIN_TEXT_LAYER_QUALITY) -> dict:
+    """Decide which reading of a page to store: its text layer, OCR, or neither.
+
+    OCR exists to recover pages that have no usable text of their own. It is not
+    a second opinion on a page that already reads: a rendered page loses
+    characters to hinting, column layout and table rules, so a recognition of
+    the *same* page is usually shorter than the layer it was rendered from. When
+    the two were compared by lexical quality alone the shorter OCR reading won
+    (it has a higher ratio of real words - it simply has fewer of them), and
+    testPDF_childAttachments.pdf stored 1 566 characters for a page of 2 503.
+
+    The rule, in order:
+    1. no usable text layer  -> OCR is the page;
+    2. no OCR text           -> the layer is the page;
+    3. the layer reads as language (quality >= ``min_quality``) -> keep it;
+    4. otherwise the page's layer is recognition residue -> OCR, but only when
+       it is both better and not shorter than what it replaces.
+
+    Returns ``{text, source, reason, native_quality, ocr_quality}`` so the
+    decision is auditable per page rather than implied by a stored string.
+    """
+    native = str(native_text or "")
+    ocr = str(ocr_text or "")
+    native_quality = round(float(layer_quality or 0.0), 4)
+    ocr_quality = round(text_quality(ocr), 4) if ocr else 0.0
+    decision = {"native_quality": native_quality, "ocr_quality": ocr_quality}
+
+    if not native.strip():
+        if ocr.strip():
+            return {**decision, "text": ocr, "source": "ocr", "reason": "no_text_layer"}
+        return {**decision, "text": "", "source": "none", "reason": "no_text_and_no_ocr"}
+
+    if not ocr.strip():
+        return {**decision, "text": native, "source": "text_layer", "reason": "no_ocr_text"}
+
+    if native_quality >= min_quality:
+        return {**decision, "text": native, "source": "text_layer",
+                "reason": "text_layer_reads_as_language"}
+
+    if ocr_quality <= native_quality:
+        return {**decision, "text": native, "source": "text_layer",
+                "reason": "ocr_not_better_than_residue"}
+
+    if len(ocr.strip()) < 0.9 * len(native.strip()):
+        return {**decision, "text": native, "source": "text_layer",
+                "reason": "ocr_shorter_than_residue"}
+
+    return {**decision, "text": ocr, "source": "ocr",
+            "reason": "text_layer_is_recognition_residue"}
+
+
 def ocr_render_zoom(page) -> float:
     """Zoom at which to rasterise ``page`` for OCR.
 
@@ -572,18 +624,29 @@ class PDFFileReader(BaseReader):
                                     ocr_languages, ocr_available)
                                 if fallback and str(fallback.get("text") or "").strip():
                                     ocr_text = str(fallback.get("text") or "")
-                                    if (text_quality(ocr_text) > layer_quality
-                                            or not text.strip()
-                                            or len(ocr_text) > 2 * len(text)):
+                                    choice = choose_reading(text, ocr_text, layer_quality)
+                                    if choice["source"] == "ocr":
                                         result["ocr_used"] = True
-                                        text = ocr_text
-                                        model["text"] = ocr_text
+                                        text = choice["text"]
+                                        model["text"] = text
                                         model["ocr_fallback"] = {
                                             "trigger": fallback.get("ocr_trigger"),
                                             "engine": fallback.get("ocr_engine"),
                                             "confidence": fallback.get("ocr_confidence"),
                                             "render_dpi": fallback.get("ocr_render_dpi"),
                                             "replaced_chars": len(model.get("text_raw") or ""),
+                                            "decision": choice["reason"],
+                                        }
+                                    else:
+                                        # The page keeps its own layer: record that OCR was
+                                        # considered and why it was not used, so the
+                                        # choice is evidence rather than an absence.
+                                        model["ocr_rejected"] = {
+                                            "reason": choice["reason"],
+                                            "native_chars": len(text),
+                                            "ocr_chars": len(ocr_text.strip()),
+                                            "native_quality": choice["native_quality"],
+                                            "ocr_quality": choice["ocr_quality"],
                                         }
 
                         text_len = len(text)
@@ -680,6 +743,7 @@ class PDFFileReader(BaseReader):
                 # Prepare page data for parallel processing
                 page_data_list = []
                 render_dpi = {}  # page index -> resolution it was rasterised at for OCR
+                native_texts = {}  # page index -> the page's own text layer
                 
                 try:
                     for page_num in range(len(doc)):
@@ -743,6 +807,7 @@ class PDFFileReader(BaseReader):
                                     pix = page.get_pixmap(matrix=fitz.Matrix(zoom, zoom), alpha=False)
                                     img_bytes = pix.tobytes("png")
                                     
+                                    native_texts[page_num] = text
                                     page_data_list.append((
                                         page_num,
                                         img_bytes,
@@ -803,6 +868,33 @@ class PDFFileReader(BaseReader):
                                 page_result = future.result()
                                 if page_result.get("ocr_derived") and futures[future] in render_dpi:
                                     page_result["ocr_render_dpi"] = render_dpi[futures[future]]
+
+                                # A document typed "image" from a three-page
+                                # sample can still hold pages with a short, real
+                                # text layer: a cover page with a title and a
+                                # page number, or a form with printed labels.
+                                # The recognition of the rendered page is
+                                # shorter than that layer (rendering loses
+                                # hinting, rules and column order), and before
+                                # this the layer was simply discarded.
+                                native_text = native_texts.get(futures[future], "")
+                                if (page_result.get("ocr_derived") and native_text.strip()):
+                                    choice = choose_reading(
+                                        native_text, page_result.get("text"),
+                                        text_quality(native_text))
+                                    if choice["source"] == "text_layer":
+                                        page_result["ocr_text"] = page_result.get("text")
+                                        page_result["text"] = choice["text"]
+                                        page_result["text_length"] = len(choice["text"])
+                                        page_result["method"] = "text_layer_preferred"
+                                        page_result["ocr_rejected"] = {
+                                            "reason": choice["reason"],
+                                            "native_chars": len(native_text.strip()),
+                                            "ocr_chars": len(str(
+                                                page_result.get("ocr_text") or "").strip()),
+                                            "native_quality": choice["native_quality"],
+                                            "ocr_quality": choice["ocr_quality"],
+                                        }
                                 result["pages"].append(page_result)
                             except Exception as ocr_error:
                                 # If OCR fails for a page, we should still have the page number
