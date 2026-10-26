@@ -122,6 +122,8 @@ def docx_part_recall(path: Path, stored_tokens) -> Dict[str, Any]:
 
     out: Dict[str, Any] = {}
     for name, xml in sorted(parts.items()):
+        # mc:Fallback repeats the DrawingML block, text boxes included
+        xml = re.sub(r"<mc:Fallback>.*?</mc:Fallback>", "", xml, flags=re.S)
         body_text = " ".join(W_RE.findall(xml))
         boxes = " ".join(" ".join(W_RE.findall(b)) for b in BOX_RE.findall(xml))
         out[name] = {
@@ -302,20 +304,46 @@ def write_report(out: Path, recs: List[Dict[str, Any]], fam, readers,
             a(f"\n*{len(items) - 60} more in `findings.json`.*")
         a("")
 
-    # ---- defects
-    a("## Product defects this pass can support\n")
+    # ---- repairs
+    a("## Repairs made in this round\n")
+    a("Three DOCX losses were measured here, reproduced as failing tests, fixed, "
+      "and re-measured against the same corpus. The `before` column is the "
+      "recall this pass recorded before the change; `after` is the recall of "
+      "the same file recorded afterwards, with the same oracle.\n")
+    a(_md_table(["defect", "files", "before", "after", "test"], [
+        ["A table cell whose content is a **nested table** read as empty: the "
+         "reader stored `python-docx` `cell.text`, which walks only the cell's "
+         "own `<w:p>` children. Word shows that text; the whole body of "
+         "`testInstrLink.docx` is one table nested to depth 4.",
+         "`testInstrLink.docx`, `017097.docx`", "0.000, 0.024",
+         "1.000, 0.999", "`tests/unit/test_docx_nested_table_cell.py`"],
+        ["**Text boxes** were never read: a caption lives in `w:txbxContent` "
+         "inside the anchoring drawing (DrawingML) or `v:textbox` (VML), not in "
+         "the paragraph's run stream, so `paragraph.text` cannot see it. The "
+         "`mc:Fallback` copy is skipped so a box is stored once.",
+         "`testWORD_text_box.docx`, `testHoverAndVml.docx`, "
+         "`testWORD_sdtInTextBox.docx`", "0.702, 0.800, 0.118",
+         "1.000, 1.000, 1.000", "`tests/unit/test_docx_nested_table_cell.py`"],
+        ["**Block-level content controls** swallowed what they held: "
+         "`iter_inner_content()` yields only direct `w:p`/`w:tbl` children, so "
+         "a paragraph or table inside `w:sdt` was never visited. The reader now "
+         "walks the body and descends through `w:sdtContent`.",
+         "`testWORD_template.docx` (a CV built entirely from controls), "
+         "`testWORD_2006ml.docx`", "0.130, 0.490", "0.986, 0.926",
+         "`tests/unit/test_docx_content_control.py`"]]) )
+    a("")
+    a("Corpus effect: Word files COMPLETE **29 -> 41** of 70, INCOMPLETE "
+      "**13 -> 3**; whole corpus COMPLETE **289 -> 301** of 698.\n")
+    a("Two oracle bugs were fixed while measuring, and they matter for reading "
+      "the numbers above: a naive `<w:t[^>]*>` also matches `<w:tbl>`, which put "
+      "tag names into every DOCX oracle; and Word splits a word across runs "
+      "whenever the formatting changes, so the DOCX oracle is scored two ways "
+      "(runs abutting, and runs word-separated) and the higher recall is kept - "
+      "otherwise a formatting boundary is reported as lost text.\n")
+
+    # ---- open defects
+    a("## Defects still open\n")
     a(_md_table(["verdict", "defect", "evidence"], [
-        ["DEFECT-OPEN", "DOCX cells that contain a **nested table** come back "
-         "empty: the reader stores `python-docx` `cell.text`, which only walks "
-         "the cell's own `<w:p>` children. `Documents/testInstrLink.docx` "
-         "(body is one table, nesting depth 4, 22 `<w:t>`) stores **0 of 22** "
-         "document tokens; `Documents/017097.docx` (depth 5) stores 8%.",
-         "`findings.json` -> `docx_parts['word/document.xml']['all']`; "
-         "`manifest.csv` verdict INCOMPLETE"],
-        ["DEFECT-OPEN", "DOCX **VML text boxes** are not read: "
-         "`testHoverAndVml.docx` stores the two caption paragraphs but not the "
-         "`Click me` inside `<v:textbox>`.",
-         "`docx_parts[...]['text_boxes'] = 0.0` on that file"],
         ["DEFECT-OPEN", "**Routing loses a conforming ODF package.** Content "
          "sniffing classifies any ZIP as `.zip` unless `mimetype` is the first "
          "member, so `Documents/testODTStyles3.odt` (a valid ODT with "
@@ -330,10 +358,17 @@ def write_report(out: Path, recs: List[Dict[str, Any]], fam, readers,
          "content type is macro-enabled or template; `python-docx` refuses "
          "them and the reader passes the exception through. Text arrives only "
          "from the fallback scan (`.docm` picks up `vbaProject.bin` strings, "
-         "`.dotx` 12 characters).",
+         "`.dotx` 12 characters). The same shape of failure hits "
+         "`Other/testPPT.ppsx`.",
          "`manifest.csv` ERROR rows with `content type is "
          "'application/vnd.ms-word.document.macroEnabled.main+xml'` and "
          "'...wordprocessingml.template.main+xml'"],
+        ["DEFECT-OPEN", "**Headers, footers, footnotes and comments are not in "
+         "the body result.** They reach storage only through the forensic "
+         "pass, so a consumer that reads `elements` alone sees a document "
+         "without its running heads or notes.",
+         "Word rows whose `docx_parts` recall is 1.0 for `header*/footer*` "
+         "while `elements` contains no such unit"],
         ["DEFECT-OPEN", "`.psd` has no reader - routed, then empty.",
          "`manifest.csv`, family Design"],
         ["DEFECT-OPEN", "`.doc` without a converter yields 2-54 characters "
@@ -351,11 +386,8 @@ def write_report(out: Path, recs: List[Dict[str, Any]], fam, readers,
         ["DEFECT-OPEN", "`Spreadsheets/testRecordSizeExceeded.xlsx` never "
          "returns: the per-file SIGALRM cannot interrupt the C-level XML loop, "
          "so one file can wedge a batch.",
-         "`TIMEOUT` row (`timeout_method: external-kill`)"]]))
+         "`TIMEOUT` row (`timeout_method: external-kill`)"]]) )
     a("")
-    a("Verdicts here are evidence-backed, but this pass repairs nothing: it "
-      "establishes what is broken and where the text is. Each defect above is "
-      "reproducible from the archive without re-running a reader.\n")
 
     # ---- limits
     a("## Limits of this evidence\n")

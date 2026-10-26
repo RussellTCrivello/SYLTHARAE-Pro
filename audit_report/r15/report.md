@@ -1,24 +1,24 @@
 # Round 15 - what every reader actually extracts
 
-Corpus: `test-doc/` - **698 files**. Archive: `audit_report/r15/archive/records.jsonl.gz` (1,634,906 bytes gzipped, one JSON record per file, including the exact text handed to storage). Every number below is computed from that archive by `tools/audit/report_extraction.py`; regenerate with
+Corpus: `test-doc/` - **698 files**. Archive: `audit_report/r15/archive/records.jsonl.gz` (1,651,184 bytes gzipped, one JSON record per file, including the exact text handed to storage). Every number below is computed from that archive by `tools/audit/report_extraction.py`; regenerate with
 
 ```
 tools/audit/report_extraction.py --archive audit_report/r15/archive/records.jsonl.gz --corpus test-doc --out .
 ```
 
-Total stored characters across the corpus: **3,618,637**.
+Total stored characters across the corpus: **3,655,078**.
 
 ## Verdicts
 
 | verdict | files | share | meaning |
 |---|---|---|---|
-| COMPLETE | 289 | 41.4% | every oracle token was stored (recall >= 0.995) |
+| COMPLETE | 301 | 43.1% | every oracle token was stored (recall >= 0.995) |
 | OK-NO-ORACLE | 172 | 24.6% | text stored, but this family has no independent oracle in this environment, so completeness is unmeasured |
 | EMPTY-PLAUSIBLE | 140 | 20.1% | nothing stored; the format holds no text a reader can reach (pixels, audio, container entries) |
 | ERROR | 56 | 8.0% | the reader raised |
-| INCOMPLETE | 17 | 2.4% | recall < 0.75 |
-| PARTIAL | 16 | 2.3% | recall 0.75-0.95 |
-| NEAR-COMPLETE | 6 | 0.9% | recall 0.95-0.995 |
+| PARTIAL | 11 | 1.6% | recall 0.75-0.95 |
+| NEAR-COMPLETE | 9 | 1.3% | recall 0.95-0.995 |
+| INCOMPLETE | 7 | 1.0% | recall < 0.75 |
 | EMPTY-AGREED | 1 | 0.1% | nothing stored and the oracle agrees there is no text |
 | TIMEOUT | 1 | 0.1% | the reader never returned |
 
@@ -52,7 +52,7 @@ Recall is **token recall** over case-sensitive alphanumeric runs, banded COMPLET
 | family | files | COMPLETE | NEAR | PARTIAL | INCOMPLETE | empty | error | no oracle | mean recall | stored chars | where the text lives |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | Plain text | 74 | 70 | 0 | 1 | 1 | 1 | 0 | 1 | 0.985 | 1119124 | the file itself, decoded with charset detection |
-| Word | 70 | 29 | 2 | 11 | 13 | 7 | 6 | 2 | 0.789 | 166501 | the document body (paragraphs), tables including nested tables, text boxes, and the separate header/footer/footnote/endnote/comment parts |
+| Word | 70 | 41 | 5 | 6 | 3 | 7 | 6 | 2 | 0.919 | 202942 | the document body (paragraphs), tables including nested tables, text boxes, and the separate header/footer/footnote/endnote/comment parts |
 | PDF | 67 | 37 | 0 | 0 | 0 | 0 | 4 | 26 | 1.000 | 594405 | per page, in the content stream; scanned pages hold an image instead |
 | Word (.doc) | 53 | 0 | 0 | 0 | 0 | 0 | 2 | 51 | - | 49557 | a binary OLE stream (WordDocument), reachable only with an external converter or a heuristic byte scan |
 | Image | 49 | 0 | 0 | 0 | 0 | 33 | 2 | 14 | - | 10996 | pixels, reachable only through OCR |
@@ -81,7 +81,7 @@ Recall is **token recall** over case-sensitive alphanumeric runs, banded COMPLET
 | ArchiveFileReader | 49 | EMPTY-PLAUSIBLE 36, ERROR 11, OK-NO-ORACLE 1, INCOMPLETE 1 |
 | AudioFileReader | 45 | EMPTY-PLAUSIBLE 40, ERROR 5 |
 | ImageFileReader | 55 | EMPTY-PLAUSIBLE 38, OK-NO-ORACLE 14, ERROR 2, INCOMPLETE 1 |
-| OfficeFileReader | 293 | OK-NO-ORACLE 116, COMPLETE 116, ERROR 21, INCOMPLETE 15, PARTIAL 12, EMPTY-PLAUSIBLE 6, NEAR-COMPLETE 5, EMPTY-AGREED 1, TIMEOUT 1 |
+| OfficeFileReader | 293 | COMPLETE 128, OK-NO-ORACLE 116, ERROR 21, NEAR-COMPLETE 8, PARTIAL 7, EMPTY-PLAUSIBLE 6, INCOMPLETE 5, EMPTY-AGREED 1, TIMEOUT 1 |
 | PDFFileReader | 61 | COMPLETE 37, OK-NO-ORACLE 20, ERROR 4 |
 | RemainingFileReader | 170 | COMPLETE 136, OK-NO-ORACLE 21, EMPTY-PLAUSIBLE 8, PARTIAL 4, NEAR-COMPLETE 1 |
 | VideoFileReader | 17 | EMPTY-PLAUSIBLE 12, ERROR 5 |
@@ -90,42 +90,27 @@ One reader class per format family is dispatched by extension (`reader_file/serv
 
 ## Findings
 
-90 files are not COMPLETE. They are grouped by cause below; per-file detail, including the missing-token sample, is in `findings.json`, and `manifest.csv` lists all 698.
+75 files are not COMPLETE. They are grouped by cause below; per-file detail, including the missing-token sample, is in `findings.json`, and `manifest.csv` lists all 698.
 
-### Word (30)
+### Word (15)
 
 | file | verdict | recall | reader | cause |
 |---|---|---|---|---|
-| Documents/testInstrLink.docx | INCOMPLETE | 0.000 | OfficeFileReader | missing tokens: GmailShared, Workspace, Cooperate, Document |
 | Documents/testWORD_missing_ooxml_bean1.docx | INCOMPLETE | 0.000 | OfficeFileReader | missing tokens: b |
-| Other/testWORD_macros.docm | ERROR | 0.000 | OfficeFileReader | file '/home/user/SYLTHARAE-Pro/test-doc/Other/testWORD_macros.docm' is not a Word file, content type is 'application/vnd.ms-word.document.macroEnabled.main+xml' |
-| Other/testWORD_template.dotx | ERROR | 0.018 | OfficeFileReader | file '/home/user/SYLTHARAE-Pro/test-doc/Other/testWORD_template.dotx' is not a Word file, content type is 'application/vnd.openxmlformats-officedocument.wordpro |
-| Documents/017097.docx | INCOMPLETE | 0.024 | OfficeFileReader | missing tokens: QUESTIONNAIRESocial, applicationmanager, promotionEducation, APPLICATIONSAPPLY |
-| Documents/testWORD_template.docx | INCOMPLETE | 0.060 | OfficeFileReader | missing tokens: HetfieldGuitaristNeverneverland867, textReferencesReferences, MetallicaGuitaristSlept, ObjectiveGetting |
-| Documents/testWORD_sdtInTextBox.docx | INCOMPLETE | 0.118 | OfficeFileReader | missing tokens: textrich, content, control, boxrich |
-| Documents/testWORD_missing_text.docx | INCOMPLETE | 0.167 | OfficeFileReader | missing tokens: professionalExperienceBigCompanyotherCell0Rich, StatementSeasoned, cellCell2, text |
-| Documents/testPDFEmbeddingAndEmbedded.docx | INCOMPLETE | 0.333 | OfficeFileReader | missing tokens: haystackOuter |
+| Other/testWORD_macros.docm | ERROR | 0.000 | OfficeFileReader | file 'test-doc/Other/testWORD_macros.docm' is not a Word file, content type is 'application/vnd.ms-word.document.macroEnabled.main+xml' |
+| Other/testWORD_template.dotx | ERROR | 0.020 | OfficeFileReader | file 'test-doc/Other/testWORD_template.dotx' is not a Word file, content type is 'application/vnd.openxmlformats-officedocument.wordprocessingml.template.main+x |
+| Documents/testWORD_missing_text.docx | INCOMPLETE | 0.429 | OfficeFileReader | missing tokens: professional, Seasoned, Company, Rich |
 | Documents/testWORD_features.docx | INCOMPLETE | 0.478 | OfficeFileReader | missing tokens: litoraMaecenas, litoratorquent, commentThis, sociosquad |
-| Documents/testWORD_2006ml.docx | INCOMPLETE | 0.490 | OfficeFileReader | missing tokens: tabtabHeading1R1c1R1c2R4c1R3c2R4c2Heading2Some, SubtitleContentsHeading13Heading23Table, CaptionR1c1R1c2R1c3Embedded, 4BibliographyMattmann |
-| Documents/testWORD_embedded_pics.docx | INCOMPLETE | 0.636 | OfficeFileReader | missing tokens: footnoteThis, commentThis, endnoteThis, imageThis |
-| Documents/testWORD_numbered_list.docx | INCOMPLETE | 0.658 | OfficeFileReader | missing tokens: listyetanotherlistIntervening, paragraphfoobarbazbaqThis, multiLevelIntervening, bListfoobarbazThis |
-| Documents/testWORD_override_list_numbering.docx | INCOMPLETE | 0.688 | OfficeFileReader | missing tokens: ListFormatOverride1BCAB4Test, 32nd3rd4th5thTest, between0th1st1st, variants000101 |
-| Documents/testWORD_text_box.docx | INCOMPLETE | 0.702 | OfficeFileReader | missing tokens: document, inside, text, This |
-| Documents/testWORD_various.docx | PARTIAL | 0.768 | OfficeFileReader | missing tokens: strikethroughitalicitalicunderlineHere, Keyword2This, boxFootnote, 3Suddenly |
-| Documents/testHoverAndVml.docx | PARTIAL | 0.800 | OfficeFileReader | missing tokens: Click, me |
-| Documents/testWORD.docx | PARTIAL | 0.830 | OfficeFileReader | missing tokens: HeadingHeading, subtitleMain, tableNested, TikaApache |
-| Documents/testWORD_tableInRunInsideParagraph.docx | PARTIAL | 0.831 | OfficeFileReader | missing tokens: aliquyamgubergreaccusam, aliquyamaliquyamLorem, voluptuaaliquyamdiam, sanctusaliquyamdiam |
-| Documents/testWORD_3imgs.docx | PARTIAL | 0.889 | OfficeFileReader | missing tokens: thisMore, dogThe |
-| Documents/testWORD_embedded_pdf.docx | PARTIAL | 0.889 | OfficeFileReader | missing tokens: ByeBye |
-| Documents/testWORD_embeded.docx | PARTIAL | 0.889 | OfficeFileReader | missing tokens: thisMore, dogThe |
-| Documents/018367.docx | PARTIAL | 0.917 | OfficeFileReader | missing tokens: Approved539845786748495400, Denied857683460833454408, Filed231268174148130114, ExhibitsOrganizational |
-| Documents/014760.docx | PARTIAL | 0.925 | OfficeFileReader | missing tokens: Qualifications12345678910111213141516171819202122232425Location, ReviewedDescriptionCodeRemarksCrew, ReportingSAFENETSAFECOMCA, SuperintendentAssistant |
+| Documents/testWORD_override_list_numbering.docx | PARTIAL | 0.888 | OfficeFileReader | missing tokens: someOtherText, someText, st, th |
+| Documents/testWORD_various.docx | PARTIAL | 0.925 | OfficeFileReader | missing tokens: unde, line, ita, li |
+| Documents/testWORD_2006ml.docx | PARTIAL | 0.926 | OfficeFileReader | missing tokens: paragraph, Mattmann, Zitting, Second |
+| Documents/testWORD_embedded_pics.docx | PARTIAL | 0.926 | OfficeFileReader | missing tokens: embedded, Deeply |
+| Documents/testWORD_numbered_list.docx | PARTIAL | 0.928 | OfficeFileReader | missing tokens: Footnote, comment, list, here |
 | Documents/testWORD_emptyParaInTextbox.docx | PARTIAL | 0.940 | OfficeFileReader | missing tokens: publikáciáchVysokoškolské, zamestnancovPrehľad, časopisochPočet, ohlasovVedúci |
-| Documents/017091.docx | PARTIAL | 0.942 | OfficeFileReader | missing tokens: EvaluationQualifications, EndorsementDutiesMajor, AccommodationFederal, backgroundsDescribe |
-| Documents/protected_normal_case.docx | ERROR | - | OfficeFileReader | Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Documents/protected_normal_case.docx' |
-| Documents/protected_upper_case.docx | ERROR | - | OfficeFileReader | Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Documents/protected_upper_case.docx' |
-| Documents/testWORD_protected_passtika.docx | ERROR | - | OfficeFileReader | Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Documents/testWORD_protected_passtika.docx' |
-| Documents/testWORD_truncated.docx | ERROR | - | OfficeFileReader | Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Documents/testWORD_truncated.docx' |
+| Documents/protected_normal_case.docx | ERROR | - | OfficeFileReader | Package not found at 'test-doc/Documents/protected_normal_case.docx' |
+| Documents/protected_upper_case.docx | ERROR | - | OfficeFileReader | Package not found at 'test-doc/Documents/protected_upper_case.docx' |
+| Documents/testWORD_protected_passtika.docx | ERROR | - | OfficeFileReader | Package not found at 'test-doc/Documents/testWORD_protected_passtika.docx' |
+| Documents/testWORD_truncated.docx | ERROR | - | OfficeFileReader | Package not found at 'test-doc/Documents/testWORD_truncated.docx' |
 
 ### Archive (11)
 
@@ -236,8 +221,8 @@ One reader class per format family is dispatched by extension (`reader_file/serv
 
 | file | verdict | recall | reader | cause |
 |---|---|---|---|---|
-| Other/testPPT.ppsx | ERROR | 1.000 | OfficeFileReader | file '/home/user/SYLTHARAE-Pro/test-doc/Other/testPPT.ppsx' is not a PowerPoint file, content type is 'application/vnd.openxmlformats-officedocument.presentatio |
-| Presentations/testPPT_protected_passtika.pptx | ERROR | - | OfficeFileReader | Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Presentations/testPPT_protected_passtika.pptx' |
+| Other/testPPT.ppsx | ERROR | 1.000 | OfficeFileReader | file 'test-doc/Other/testPPT.ppsx' is not a PowerPoint file, content type is 'application/vnd.openxmlformats-officedocument.presentationml.slideshow.main+xml' |
+| Presentations/testPPT_protected_passtika.pptx | ERROR | - | OfficeFileReader | Package not found at 'test-doc/Presentations/testPPT_protected_passtika.pptx' |
 
 ### Word (.doc) (2)
 
@@ -272,22 +257,33 @@ One reader class per format family is dispatched by extension (`reader_file/serv
 |---|---|---|---|---|
 | Other/testEXCEL.xlsb | ERROR | - | OfficeFileReader | Could not read .xlsb: pyxlsb failed (KeyError: '\x04') and no LibreOffice conversion was available. Install LibreOffice (soffice) to read this workbook. |
 
-## Product defects this pass can support
+## Repairs made in this round
+
+Three DOCX losses were measured here, reproduced as failing tests, fixed, and re-measured against the same corpus. The `before` column is the recall this pass recorded before the change; `after` is the recall of the same file recorded afterwards, with the same oracle.
+
+| defect | files | before | after | test |
+|---|---|---|---|---|
+| A table cell whose content is a **nested table** read as empty: the reader stored `python-docx` `cell.text`, which walks only the cell's own `<w:p>` children. Word shows that text; the whole body of `testInstrLink.docx` is one table nested to depth 4. | `testInstrLink.docx`, `017097.docx` | 0.000, 0.024 | 1.000, 0.999 | `tests/unit/test_docx_nested_table_cell.py` |
+| **Text boxes** were never read: a caption lives in `w:txbxContent` inside the anchoring drawing (DrawingML) or `v:textbox` (VML), not in the paragraph's run stream, so `paragraph.text` cannot see it. The `mc:Fallback` copy is skipped so a box is stored once. | `testWORD_text_box.docx`, `testHoverAndVml.docx`, `testWORD_sdtInTextBox.docx` | 0.702, 0.800, 0.118 | 1.000, 1.000, 1.000 | `tests/unit/test_docx_nested_table_cell.py` |
+| **Block-level content controls** swallowed what they held: `iter_inner_content()` yields only direct `w:p`/`w:tbl` children, so a paragraph or table inside `w:sdt` was never visited. The reader now walks the body and descends through `w:sdtContent`. | `testWORD_template.docx` (a CV built entirely from controls), `testWORD_2006ml.docx` | 0.130, 0.490 | 0.986, 0.926 | `tests/unit/test_docx_content_control.py` |
+
+Corpus effect: Word files COMPLETE **29 -> 41** of 70, INCOMPLETE **13 -> 3**; whole corpus COMPLETE **289 -> 301** of 698.
+
+Two oracle bugs were fixed while measuring, and they matter for reading the numbers above: a naive `<w:t[^>]*>` also matches `<w:tbl>`, which put tag names into every DOCX oracle; and Word splits a word across runs whenever the formatting changes, so the DOCX oracle is scored two ways (runs abutting, and runs word-separated) and the higher recall is kept - otherwise a formatting boundary is reported as lost text.
+
+## Defects still open
 
 | verdict | defect | evidence |
 |---|---|---|
-| DEFECT-OPEN | DOCX cells that contain a **nested table** come back empty: the reader stores `python-docx` `cell.text`, which only walks the cell's own `<w:p>` children. `Documents/testInstrLink.docx` (body is one table, nesting depth 4, 22 `<w:t>`) stores **0 of 22** document tokens; `Documents/017097.docx` (depth 5) stores 8%. | `findings.json` -> `docx_parts['word/document.xml']['all']`; `manifest.csv` verdict INCOMPLETE |
-| DEFECT-OPEN | DOCX **VML text boxes** are not read: `testHoverAndVml.docx` stores the two caption paragraphs but not the `Click me` inside `<v:textbox>`. | `docx_parts[...]['text_boxes'] = 0.0` on that file |
 | DEFECT-OPEN | **Routing loses a conforming ODF package.** Content sniffing classifies any ZIP as `.zip` unless `mimetype` is the first member, so `Documents/testODTStyles3.odt` (a valid ODT with `content.xml` first, which `odfpy` loads without complaint) is handed to `ArchiveFileReader` and yields **0 characters**. It is the only ODF file in the corpus whose ZIP does not start with `mimetype`, and the only one routed to the archive reader. | `manifest.csv`: reader=ArchiveFileReader, verdict INCOMPLETE, recall 0.0 |
-| DEFECT-OPEN | **`.docm` and `.dotx` are rejected as "not a Word file".** They are valid WordprocessingML packages whose main part content type is macro-enabled or template; `python-docx` refuses them and the reader passes the exception through. Text arrives only from the fallback scan (`.docm` picks up `vbaProject.bin` strings, `.dotx` 12 characters). | `manifest.csv` ERROR rows with `content type is 'application/vnd.ms-word.document.macroEnabled.main+xml'` and '...wordprocessingml.template.main+xml' |
+| DEFECT-OPEN | **`.docm` and `.dotx` are rejected as "not a Word file".** They are valid WordprocessingML packages whose main part content type is macro-enabled or template; `python-docx` refuses them and the reader passes the exception through. Text arrives only from the fallback scan (`.docm` picks up `vbaProject.bin` strings, `.dotx` 12 characters). The same shape of failure hits `Other/testPPT.ppsx`. | `manifest.csv` ERROR rows with `content type is 'application/vnd.ms-word.document.macroEnabled.main+xml'` and '...wordprocessingml.template.main+xml' |
+| DEFECT-OPEN | **Headers, footers, footnotes and comments are not in the body result.** They reach storage only through the forensic pass, so a consumer that reads `elements` alone sees a document without its running heads or notes. | Word rows whose `docx_parts` recall is 1.0 for `header*/footer*` while `elements` contains no such unit |
 | DEFECT-OPEN | `.psd` has no reader - routed, then empty. | `manifest.csv`, family Design |
 | DEFECT-OPEN | `.doc` without a converter yields 2-54 characters (byte scrape only). Two files do yield thousands, so the path works when the stream is conventional. | family `Word (.doc)`, `OK-NO-ORACLE` |
 | DEFECT-OPEN | `.xls` stores one tab per column pair rather than a row grid, so column order is lost on re-read. | `text/OfficeFileReader/Spreadsheets__*.xls.txt` |
 | DEFECT-OPEN | RTF surrogate pairs leak lone surrogates (`\ud800`) into the stored text. | `lone_surrogates` column in `manifest.csv` |
 | DEFECT-OPEN | `protected_*.docx` raises instead of returning a 'password protected' result. | `ERROR` rows, Word family |
 | DEFECT-OPEN | `Spreadsheets/testRecordSizeExceeded.xlsx` never returns: the per-file SIGALRM cannot interrupt the C-level XML loop, so one file can wedge a batch. | `TIMEOUT` row (`timeout_method: external-kill`) |
-
-Verdicts here are evidence-backed, but this pass repairs nothing: it establishes what is broken and where the text is. Each defect above is reproducible from the archive without re-running a reader.
 
 ## Limits of this evidence
 

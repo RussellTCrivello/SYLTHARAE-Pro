@@ -147,6 +147,8 @@ Overview
 
 On October 5, 1990, Congress passed the Radiation Exposure Compensation Act (RECA or the Act).  The Act offers an apology and monetary compensation to individuals who contracted certain cancers and other serious diseases as a result of their exposure to radiation released during above-ground atmospheric nuclear weapons tests or as a result of their occupational exposure while employed in the uranium industry during the build-up to the Cold War.  This unique program was designed as an alternative to litigation in that the statutory criteria do not require claimants to establish causality.  Specifically, if the claimant can satisfy the requirements outlined in the statute, which include demonstrating that he or she contracted a compensable disease after working or residing in a designated location for a specified period of time, he or she qualifies for compensation.  The amount of the award is statutorily prescribed and ranges from $50,000 to $100,000, depending on claimant category.  Congress charged the Attorney General with responsibility for adjudicating claims under the Act.
 
+[Style: Text Box] “It is the purpose of this Act to establish a procedure to make partial restitution to the individuals… for the burdens they have borne for the Nation as a whole. …The Congress apologizes on behalf of the Nation to the individuals… and their families for the hardships they have endured.” Radiation Exposure Compensation Act
+
 
 
 The Department of Justice (DOJ) established the Radiation Exposure Compensation Program (the Program) within the Civil Division.  The Program commenced operations in April 1992.  Since its inception, 27,492 claims have been filed and over $1.2 billion has been awarded to 18,885 claimants (as of January 6, 2008).
@@ -160,6 +162,8 @@ The RECA Program was evaluated with OMB’s Program Assessment Rating Tool (PART
 Electronic copies of DOJ’s Congressional Budget Justifications and Capital Asset Plan and Business Case exhibits can be viewed or downloaded from the Internet using the Internet address:  http://www.usdoj.gov/jmd/2009justification/.
 
 
+
+[Style: Text Box] Mission Statement: Fairly and expeditiously adjudicate claims, fully consistent with the Radiation Exposure Compensation Act, as amended; educate the public about the Act; and develop strategies for improving the Program.
 
 Program Description
 

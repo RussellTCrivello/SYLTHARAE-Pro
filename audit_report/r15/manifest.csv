@@ -95,19 +95,19 @@ Design/testAI_PS.ai,Design,.ai,755,RemainingFileReader,OK-NO-ORACLE,,,,755,1,doc
 Design/testPSD.psd,Design,.psd,69410,,ERROR,,,,0,0,,0.2,0,Unsupported file type: .psd,53277dbfc70635b72d918b851b1fccba3715b3217764c781160bd93a7bfe7b6e
 Design/testPSD2.psd,Design,.psd,31315,,ERROR,,,,0,0,,0.1,0,Unsupported file type: .psd,0541e32bf3bb28755a0bbebb0a756ff85f429ba6ebd8d79bbb5d08c3df49f831
 Design/testPSD_xmp.psd,Design,.psd,114796,,ERROR,,,,0,0,,0.1,0,Unsupported file type: .psd,69ea01bf88cb85c48d3a78c3bb9e06ae141c9c9fc6a88267eae95c315e16180e
-Documents/014760.docx,Word,.docx,39631,OfficeFileReader,PARTIAL,0.9253,1097,82,9788,107,paragraph:5;table-row:102,127.0,0,,f538e934e60c77ff561cbf91876dc2a252da283d2fe83b5fe620268fe27dcce6
-Documents/017091.docx,Word,.docx,37440,OfficeFileReader,PARTIAL,0.9423,4971,287,34986,465,paragraph:462;table-row:3,186.8,0,,6a41ce073ac8fa7f7a03e2d80224b7e34a5b53064733b937f14f43ba1314e368
-Documents/017097.docx,Word,.docx,64325,OfficeFileReader,INCOMPLETE,0.0242,5157,5032,842,1,table-row:1,3212.9,0,,9d261a88188744a3006314966f6e5c45ce38c8235341854fb6ffca64fa2c565c
-Documents/018367.docx,Word,.docx,203043,OfficeFileReader,PARTIAL,0.9174,2495,206,17424,114,paragraph:83;table-row:31,1892.1,0,,fc72225c1f6185a1f62772e208c8e06827371c8ba1460013011017873a6f46ba
-Documents/2exe.docx,Word,.docx,715333,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,13.7,0,,2adbe75ad93300a8b4c5a8ffa95d6510ec3a97d8d0f5279e704f6133026a44e2
+Documents/014760.docx,Word,.docx,39631,OfficeFileReader,NEAR-COMPLETE,0.9818,1210,22,9777,107,paragraph:5;table-row:102,123.2,0,,f538e934e60c77ff561cbf91876dc2a252da283d2fe83b5fe620268fe27dcce6
+Documents/017091.docx,Word,.docx,37440,OfficeFileReader,NEAR-COMPLETE,0.9931,5235,36,34986,465,paragraph:462;table-row:3,201.3,0,,6a41ce073ac8fa7f7a03e2d80224b7e34a5b53064733b937f14f43ba1314e368
+Documents/017097.docx,Word,.docx,64325,OfficeFileReader,COMPLETE,0.999,5218,5,34324,4,table-row:4,3495.7,0,,9d261a88188744a3006314966f6e5c45ce38c8235341854fb6ffca64fa2c565c
+Documents/018367.docx,Word,.docx,203043,OfficeFileReader,NEAR-COMPLETE,0.9726,2697,74,18009,116,paragraph:85;table-row:31,2121.6,0,,fc72225c1f6185a1f62772e208c8e06827371c8ba1460013011017873a6f46ba
+Documents/2exe.docx,Word,.docx,715333,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,17.0,0,,2adbe75ad93300a8b4c5a8ffa95d6510ec3a97d8d0f5279e704f6133026a44e2
 Documents/2pic.doc,Word (.doc),.doc,4339712,OfficeFileReader,OK-NO-ORACLE,,,,4,1,paragraph:1,4.0,0,,e9b1b4f84a75589354d2e278ff51ec7a04a8348203b74c01186e302f1ac6725e
-Documents/2pic.docx,Word,.docx,883427,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,4371.2,0,,f6816eedde86726eb912fcc6ec35220f0d7af7ac79faf59408e446d06b468cf3
+Documents/2pic.docx,Word,.docx,883427,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,4242.7,0,,f6816eedde86726eb912fcc6ec35220f0d7af7ac79faf59408e446d06b468cf3
 Documents/Doc1_ole.doc,Word (.doc),.doc,89600,OfficeFileReader,OK-NO-ORACLE,,,,43,1,paragraph:1,2.8,0,,880b15cbec25f290ac44548a11349577e334bd1d9292e4ecb260bc1603dde1aa
-Documents/EmbeddedDocument.docx,Word,.docx,13219,OfficeFileReader,COMPLETE,1.0,10,0,52,1,paragraph:1,4.4,0,,4aaabe19c2c4e30db9f13aa32bc3c35e913867c64627c574d5e6152b4c635115
-Documents/EmbeddedOutlook.docx,Word,.docx,113242,OfficeFileReader,COMPLETE,1.0,8,0,49,1,paragraph:1,4.9,0,,45d84c0cbf2bc695588dca1364dba224158f5a7acd1e92d1b732b94ba6cdbe06
-Documents/EmbeddedPDF.docx,Word,.docx,99389,OfficeFileReader,COMPLETE,1.0,6,0,36,1,paragraph:1,4.0,0,,f39a3ab2ce59d9b363d05831d75efae2a6d18309d752696854bdcc28674244c7
+Documents/EmbeddedDocument.docx,Word,.docx,13219,OfficeFileReader,COMPLETE,1.0,10,0,52,1,paragraph:1,4.1,0,,4aaabe19c2c4e30db9f13aa32bc3c35e913867c64627c574d5e6152b4c635115
+Documents/EmbeddedOutlook.docx,Word,.docx,113242,OfficeFileReader,COMPLETE,1.0,8,0,49,1,paragraph:1,4.4,0,,45d84c0cbf2bc695588dca1364dba224158f5a7acd1e92d1b732b94ba6cdbe06
+Documents/EmbeddedPDF.docx,Word,.docx,99389,OfficeFileReader,COMPLETE,1.0,6,0,36,1,paragraph:1,4.8,0,,f39a3ab2ce59d9b363d05831d75efae2a6d18309d752696854bdcc28674244c7
 Documents/LibreOfficeWriter_odt_1.3.odt,OpenDocument,.odt,9683,OfficeFileReader,COMPLETE,1.0,5,0,39,1,paragraph:1,21.8,0,,3f0241958a222058664cf981f7cc1565a22dce01a8b6b8102c6aa4ea3352c8c0
-Documents/NullHeader.docx,Word,.docx,4355,OfficeFileReader,NEAR-COMPLETE,0.9928,692,5,4006,32,paragraph:32,12.0,0,,4878c775336eb563fd88ca13adc134aed9203d8b3d73cdd0eef904a0354b6d56
+Documents/NullHeader.docx,Word,.docx,4355,OfficeFileReader,COMPLETE,1.0,697,0,4006,32,paragraph:32,10.6,0,,4878c775336eb563fd88ca13adc134aed9203d8b3d73cdd0eef904a0354b6d56
 Documents/embedded.docx,Word,.docx,99389,OfficeFileReader,COMPLETE,1.0,6,0,36,1,paragraph:1,4.1,0,,f39a3ab2ce59d9b363d05831d75efae2a6d18309d752696854bdcc28674244c7
 Documents/file1.pdf,PDF,.pdf,543,RemainingFileReader,OK-NO-ORACLE,,,,543,1,document:1,0.2,0,,be665e40974379b6504635031a1babf96bfbad3c01d5fd52ffe007e08ac899e6
 Documents/file13_attachANotB.doc,Word (.doc),.doc,452,RemainingFileReader,OK-NO-ORACLE,,,,304,1,document:1,0.2,0,,7f2c42ea85fd18a05df5d46d2f24d5a77060fb0b7dea44c81a73f28a546c601a
@@ -118,49 +118,49 @@ Documents/file5_emptyA.pdf,PDF,.pdf,543,RemainingFileReader,OK-NO-ORACLE,,,,543,
 Documents/file6_accessEx.pdf,PDF,.pdf,543,RemainingFileReader,OK-NO-ORACLE,,,,543,1,document:1,0.2,0,,be665e40974379b6504635031a1babf96bfbad3c01d5fd52ffe007e08ac899e6
 Documents/file7_badJson.pdf,PDF,.pdf,543,RemainingFileReader,OK-NO-ORACLE,,,,543,1,document:1,0.2,0,,be665e40974379b6504635031a1babf96bfbad3c01d5fd52ffe007e08ac899e6
 Documents/file8_IOEx.pdf,PDF,.pdf,543,RemainingFileReader,OK-NO-ORACLE,,,,543,1,document:1,0.2,0,,be665e40974379b6504635031a1babf96bfbad3c01d5fd52ffe007e08ac899e6
-Documents/footnotes.docx,Word,.docx,12823,OfficeFileReader,COMPLETE,1.0,7,0,41,1,paragraph:1,4.4,0,,9070094b27ff5201477f4de4b2c027730c66cb889106a1609c5adeed207a59c1
-Documents/headerPic.docx,Word,.docx,16206,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,452.0,0,,50d9b17f7575c8a91129fd8a3e6a70feec886480ab9f089e29a7f8ac7e5ed51a
-Documents/protected_normal_case.docx,Word,.docx,17920,OfficeFileReader,ERROR,,,,0,0,,1.2,0,Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Documents/protected_normal_case.docx',254d301a6ee3248248a6de921c5af8baf8eb0d7cd27af349e4539a227fc8d1ff
-Documents/protected_upper_case.docx,Word,.docx,17920,OfficeFileReader,ERROR,,,,0,0,,1.8,0,Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Documents/protected_upper_case.docx',e57ddbf2d16a9a1cc3eb8bb485aeb002f00b0082430d2e286e0085b87ddf5759
+Documents/footnotes.docx,Word,.docx,12823,OfficeFileReader,COMPLETE,1.0,7,0,41,1,paragraph:1,3.9,0,,9070094b27ff5201477f4de4b2c027730c66cb889106a1609c5adeed207a59c1
+Documents/headerPic.docx,Word,.docx,16206,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,462.9,0,,50d9b17f7575c8a91129fd8a3e6a70feec886480ab9f089e29a7f8ac7e5ed51a
+Documents/protected_normal_case.docx,Word,.docx,17920,OfficeFileReader,ERROR,,,,0,0,,1.7,0,Package not found at 'test-doc/Documents/protected_normal_case.docx',254d301a6ee3248248a6de921c5af8baf8eb0d7cd27af349e4539a227fc8d1ff
+Documents/protected_upper_case.docx,Word,.docx,17920,OfficeFileReader,ERROR,,,,0,0,,2.3,0,Package not found at 'test-doc/Documents/protected_upper_case.docx',e57ddbf2d16a9a1cc3eb8bb485aeb002f00b0082430d2e286e0085b87ddf5759
 Documents/simple_lower_case.doc,Word (.doc),.doc,27136,OfficeFileReader,OK-NO-ORACLE,,,,54,1,paragraph:1,2.0,0,,e7efecd456de7ed610a333beb4b6870a9e3a4fe234e68d7bb611d189497f5e22
 Documents/simple_normal_case.doc,Word (.doc),.doc,27136,OfficeFileReader,OK-NO-ORACLE,,,,54,1,paragraph:1,1.9,0,,62366d1126bb3fef1a9ed6589dd2512fbfd23d3b7f6d129f57ffba9a48e6cef5
 Documents/simple_upper_case.doc,Word (.doc),.doc,27136,OfficeFileReader,OK-NO-ORACLE,,,,54,1,paragraph:1,2.0,0,,3ce5c7cf1a9718f6b7bb9393f2c4cb70e0bcc3eff308509173572aa9291d38e9
 Documents/test-pdf-with-print-ticket-header.pdf,PDF,.pdf,36766,PDFFileReader,COMPLETE,1.0,29,0,378,1,page:1,8.0,0,,d53035f5ea1aae5580250101a3c08db1fe8b7f258b9bce9bc9ae2b404ab87627
 Documents/test.doc,Word (.doc),.doc,9216,OfficeFileReader,OK-NO-ORACLE,,,,8,1,paragraph:1,1.8,0,,c1a64465a40dc19cfe5854e59a2da043e06019c810d9b91167ea7c5a7221de1a
 Documents/test2.doc,Word (.doc),.doc,10752,OfficeFileReader,OK-NO-ORACLE,,,,8,1,paragraph:1,1.6,0,,bc38e6031943ec3e47b463e11ffc2d2a63aa670ee44894a74912bc0afcc54fcc
-Documents/testAltChunkHTML.docx,Word,.docx,2631,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,2.0,0,,4e69425bf505c9b439be04f6cbb10271e5ea8ec2fbec820fe459a0f74db2fb7b
-Documents/testAltChunkMHT.docx,Word,.docx,3070,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.7,0,,e1669cb83f3042413a84593814f529db9cc19dd29ba52906a29d90d29c43b2af
+Documents/testAltChunkHTML.docx,Word,.docx,2631,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.9,0,,4e69425bf505c9b439be04f6cbb10271e5ea8ec2fbec820fe459a0f74db2fb7b
+Documents/testAltChunkMHT.docx,Word,.docx,3070,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.8,0,,e1669cb83f3042413a84593814f529db9cc19dd29ba52906a29d90d29c43b2af
 Documents/testAnnotations.pdf,PDF,.pdf,18580,PDFFileReader,COMPLETE,1.0,8,0,301,1,page:1,8.5,0,,9ded4c4df46c85b51af002ed484765603c46c95d81c8e14a2fbb47a6539e2e51
 Documents/testAppleSingleFile.pdf,PDF,.pdf,1893,PDFFileReader,COMPLETE,1.0,2,0,119,1,page:1,2517.5,0,,f50a85432544cbb5fc76b332b057c1529b20145693ff1191177d28b670fd23c1
-Documents/testAttachedTemplate.docx,Word,.docx,2284,OfficeFileReader,COMPLETE,1.0,5,0,40,1,paragraph:1,5.0,0,,4565fda29525e369c6949437893f75c2548e16735e99a14e9586984aed718fc2
+Documents/testAttachedTemplate.docx,Word,.docx,2284,OfficeFileReader,COMPLETE,1.0,5,0,40,1,paragraph:1,2.4,0,,4565fda29525e369c6949437893f75c2548e16735e99a14e9586984aed718fc2
 Documents/testBinControlWord.rtf,RTF,.rtf,4075,RemainingFileReader,EMPTY-PLAUSIBLE,,,,0,0,,5.4,0,,f2653872bdc25640cd5083881ce7bf668ef7353b12b299446b5b3596e5ffffdb
 Documents/testColorRendering.pdf,PDF,.pdf,1794,PDFFileReader,OK-NO-ORACLE,,,,130,0,,2908.6,0,,9d28fd146aa3d94ee81e630268eb5bf14be72ba162884af3dc44016f80a99b66
 Documents/testComment.doc,Word (.doc),.doc,22528,OfficeFileReader,OK-NO-ORACLE,,,,48,1,paragraph:1,2.8,0,,132a7833d2f1686b7bbcf05bb59b9a97184a4fbedacc6a640a623bd79dcac545
-Documents/testComment.docx,Word,.docx,11019,OfficeFileReader,COMPLETE,1.0,8,0,37,1,paragraph:1,4.0,0,,740337ba9a0f0c9dd4cc0ea07b6a7b413c7b67ee28ec4b430a1a242c688fe5b5
+Documents/testComment.docx,Word,.docx,11019,OfficeFileReader,COMPLETE,1.0,8,0,37,1,paragraph:1,3.5,0,,740337ba9a0f0c9dd4cc0ea07b6a7b413c7b67ee28ec4b430a1a242c688fe5b5
 Documents/testComment.pdf,PDF,.pdf,68398,PDFFileReader,COMPLETE,1.0,10,0,239,1,page:1,3.2,0,,4b3ca29653a45df68b01e60a688c45bf3fe8389ab712f2168cad354872378cb3
 Documents/testComment.rtf,RTF,.rtf,33481,RemainingFileReader,COMPLETE,1.0,4,0,19,1,document:1,6.3,0,,742ec05361e5c9bfc128ae3f1885acd558ef1a48a9b3a92bb843d7d54cfc3844
 Documents/testContentStreamSpaceGlyphs.pdf,PDF,.pdf,805,PDFFileReader,COMPLETE,1.0,1,0,161,1,page:1,3.3,0,,8efce06b2659092c7c445c0f2da2486a9999c89b7596791da1766713bbe55a77
 Documents/testControlCharacters.doc,Word (.doc),.doc,448000,OfficeFileReader,OK-NO-ORACLE,,,,8000,1,paragraph:1,10.2,0,,b4cd7937aecf63a0a2e4dd80949e726c854e49e770f351c4af1a0f0a3906a075
-Documents/testDOCX_Thumbnail.docx,Word,.docx,13810,OfficeFileReader,COMPLETE,1.0,5,0,30,1,paragraph:1,4.0,0,,28e77040dc0b1df9cde900f2a125051b5d9d21b9f90e40569d9127160b04c4f8
+Documents/testDOCX_Thumbnail.docx,Word,.docx,13810,OfficeFileReader,COMPLETE,1.0,5,0,30,1,paragraph:1,4.5,0,,28e77040dc0b1df9cde900f2a125051b5d9d21b9f90e40569d9127160b04c4f8
 Documents/testDocumentLink.doc,Word (.doc),.doc,812032,OfficeFileReader,OK-NO-ORACLE,,,,178,1,paragraph:1,2.1,0,,0c7092c09279f10763f258d26d1a076fd19d5366811219c4e4921e26510e4d62
 Documents/testException1.doc,Word (.doc),.doc,49152,OfficeFileReader,OK-NO-ORACLE,,,,7484,1,paragraph:1,2.5,0,,2f6152a79832bc165167a9d6cafdda8e616625e607526db24276c7e058985484
 Documents/testException2.doc,Word (.doc),.doc,58368,OfficeFileReader,OK-NO-ORACLE,,,,6907,1,paragraph:1,5.9,0,,cecacf88f03237b59e187cce039522ede4e1013a7dead9e9f28c5d24ef4903c6
-Documents/testExternalRefs.docx,Word,.docx,2125,OfficeFileReader,COMPLETE,1.0,16,0,349,4,paragraph:4,3.8,0,,7447372cdbd43edeba1fcfe316154e3ba5153a623cad7acb1e3a9131ddc966ee
+Documents/testExternalRefs.docx,Word,.docx,2125,OfficeFileReader,COMPLETE,1.0,16,0,349,4,paragraph:4,5.0,0,,7447372cdbd43edeba1fcfe316154e3ba5153a623cad7acb1e3a9131ddc966ee
 Documents/testExtraSpaces.pdf,PDF,.pdf,20743,PDFFileReader,COMPLETE,1.0,5,0,174,1,page:1,2415.4,0,,b471f64746c4d916351223b3990812cf73f1cc56a5ce3e3349a2c05b0e92c3b4
 Documents/testFlashInPDF.pdf,PDF,.pdf,161445,PDFFileReader,OK-NO-ORACLE,,,,200,1,page:1,2724.8,0,,b39db8542746952a4ca1fd8ce7f71ebcabea2256c0a7b956b7d72ae9c46b8b79
 Documents/testFontAfterBufferedText.rtf,RTF,.rtf,210,RemainingFileReader,COMPLETE,1.0,2,0,19,1,document:1,0.5,0,,e9127c2424b358bfb6f0eaede9e326926762715dea0d201bb7010d5e32e6731a
 Documents/testFooter.odt,OpenDocument,.odt,8381,OfficeFileReader,COMPLETE,1.0,11,0,122,3,paragraph:3,39.7,0,,bb7618380607111c7181867aaf6e9568f490ba0a62a2308e78f120a268d96188
-Documents/testFrameset.docx,Word,.docx,2328,OfficeFileReader,COMPLETE,1.0,3,0,22,1,paragraph:1,2.7,0,,d5c60722ba6c3cf9db497efc3812236e91d0b13f635db520f72c18a4962a778c
-Documents/testHoverAndVml.docx,Word,.docx,2270,OfficeFileReader,PARTIAL,0.8,10,2,59,2,paragraph:2,2.7,0,,7ff4f180062462af9e9e6adf403d9fed8dd373195b9cfecf58a85944557770eb
-Documents/testInstrLink.docx,Word,.docx,14464,OfficeFileReader,INCOMPLETE,0.0,28,28,111,0,,6.8,0,,4f96a04634eceebda4249a8204e7f632cd6ad2067154984a578c097b241bf3ce
+Documents/testFrameset.docx,Word,.docx,2328,OfficeFileReader,COMPLETE,1.0,3,0,22,1,paragraph:1,3.2,0,,d5c60722ba6c3cf9db497efc3812236e91d0b13f635db520f72c18a4962a778c
+Documents/testHoverAndVml.docx,Word,.docx,2270,OfficeFileReader,COMPLETE,1.0,10,0,87,3,paragraph:3,3.6,0,,7ff4f180062462af9e9e6adf403d9fed8dd373195b9cfecf58a85944557770eb
+Documents/testInstrLink.docx,Word,.docx,14464,OfficeFileReader,COMPLETE,1.0,30,0,313,1,table-row:1,14.2,0,,4f96a04634eceebda4249a8204e7f632cd6ad2067154984a578c097b241bf3ce
 Documents/testJournalParser.pdf,PDF,.pdf,985125,PDFFileReader,COMPLETE,1.0,6481,0,43540,10,page:10,65.5,0,,105f9d5fa72021d79c8382de941f3ac42cced7758735b276cc401eb451b7d515
 Documents/testLargeOLEDoc.doc,Word (.doc),.doc,2077696,OfficeFileReader,OK-NO-ORACLE,,,,42,1,paragraph:1,2.4,0,,ca25e3451b9cb521670bda677fd6f82786b4d45dfd6c5bc9d32a1bc6e28d4259
 Documents/testLinkAnnotationsButNoContents.pdf,PDF,.pdf,1236,PDFFileReader,OK-NO-ORACLE,,,,88,0,,2875.8,0,,61f083d476e58afe06369f0efe7d5f3069fd8a5e313a209f060082694bf9e48d
 Documents/testMSEquation-govdocs-863534.doc,Word (.doc),.doc,30720,OfficeFileReader,OK-NO-ORACLE,,,,8674,1,paragraph:1,2.9,0,,88619cf1ad37819c2eda2ab13be06a0f377c574e8cf3a3346dbe5af33fd0e704
-Documents/testMailMerge.docx,Word,.docx,2306,OfficeFileReader,COMPLETE,1.0,4,0,24,1,paragraph:1,2.9,0,,e388dda2c53b8e1ac3b6904a2c32cedcfcf3b8c60a4af97771bb14737958678d
+Documents/testMailMerge.docx,Word,.docx,2306,OfficeFileReader,COMPLETE,1.0,4,0,24,1,paragraph:1,2.5,0,,e388dda2c53b8e1ac3b6904a2c32cedcfcf3b8c60a4af97771bb14737958678d
 Documents/testMicrosoftIRMServices.pdf,PDF,.pdf,290327,PDFFileReader,COMPLETE,1.0,42,0,447,1,page:1,8.1,0,,d2ff3a8cc84e0387792b86e490823851115387ffab340f599cc5ced338228fdc
 Documents/testNPEOpenDocument.odt,OpenDocument,.odt,18304,OfficeFileReader,NEAR-COMPLETE,0.99,1206,12,9600,102,paragraph:102,21.8,0,,4a9bea2bd669d76756c0e4e81cb0b1a1d888b3469144901e23d45fe9bd4f7ccc
-Documents/testOCR.docx,Word,.docx,62041,OfficeFileReader,COMPLETE,1.0,9,0,74,2,paragraph:2,1351.3,0,,9bbac8ae8790581133abd2570c6ce4cc831216dc9030d9b16801a24ff393905f
+Documents/testOCR.docx,Word,.docx,62041,OfficeFileReader,COMPLETE,1.0,9,0,74,2,paragraph:2,1321.7,0,,9bbac8ae8790581133abd2570c6ce4cc831216dc9030d9b16801a24ff393905f
 Documents/testOCR.pdf,PDF,.pdf,41936,PDFFileReader,OK-NO-ORACLE,,,,236,1,page:1,1997.7,0,,ca4e1851095ea410a7c5dbbfa064fef7c4b36da3ef0d49bddf29619e88b301de
 Documents/testODFwithOOo3.odt,OpenDocument,.odt,24286,OfficeFileReader,INCOMPLETE,0.717,106,30,682,16,paragraph:16,30.5,0,,b6cd74b570a98fcb6d838dd85ab869604e0711812d9533d5ecde0000b24ba7ef
 Documents/testODT-TIKA-6000.odt,OpenDocument,.odt,3888830,OfficeFileReader,NEAR-COMPLETE,0.9766,9347,219,63211,656,paragraph:656,19.5,0,,69afeb988fa86b967bd24d1ec1b9d693943c2007d2771be799142f681b3c064a
@@ -175,14 +175,14 @@ Documents/testODT_svgTitleInStyledSpan.odt,OpenDocument,.odt,6820,OfficeFileRead
 Documents/testODTnotaZipFile.odt,OpenDocument,.odt,24,RemainingFileReader,OK-NO-ORACLE,,,,24,1,document:1,0.1,0,,4b7cbd32a251475097b417f66ee3d3777c666586d59004d0f5be9feeb0e98876
 Documents/testOpenOffice2.odt,OpenDocument,.odt,26460,OfficeFileReader,COMPLETE,1.0,16,0,96,1,paragraph:1,6.2,0,,daee7b62602780f2599c19b3593a1e455a21e041959416304c112bdb136640bb
 Documents/testOptionalHyphen.doc,Word (.doc),.doc,22016,OfficeFileReader,OK-NO-ORACLE,,,,26,1,paragraph:1,2.1,0,,a033be4d6f83322060bb052ebaa8b202181657243234cbb2643641ee339dfaf4
-Documents/testOptionalHyphen.docx,Word,.docx,10382,OfficeFileReader,COMPLETE,1.0,1,0,14,1,paragraph:1,3.7,0,,647cb4fae2d7bf7d209c1b33c98f1d72363798289e9fb37eede118dd3a45e110
+Documents/testOptionalHyphen.docx,Word,.docx,10382,OfficeFileReader,COMPLETE,1.0,1,0,14,1,paragraph:1,3.5,0,,647cb4fae2d7bf7d209c1b33c98f1d72363798289e9fb37eede118dd3a45e110
 Documents/testOptionalHyphen.pdf,PDF,.pdf,44954,PDFFileReader,COMPLETE,1.0,1,0,224,1,page:1,1984.5,0,,336be0fb3c30d93a6f625c120f7e00b9419bccc2cc09a74a222f2c3f5869af7c
 Documents/testOptionalHyphen.rtf,RTF,.rtf,30842,RemainingFileReader,COMPLETE,1.0,2,0,16,1,document:1,6.3,0,,55efd4086da22fd712b71a5f8b78ff0aafa0d03891fb94cda8e3dd360c53ab43
 Documents/testOverlappingText.pdf,PDF,.pdf,899,PDFFileReader,COMPLETE,1.0,8,0,153,1,page:1,2.9,0,,906bfbc390a95b09417abf33c6ef2bf7c9190cbf9787996bcfa5c0bc17b8bde1
 Documents/testPDF-TIKA-4444.pdf,PDF,.pdf,103951,PDFFileReader,COMPLETE,1.0,8895,0,61696,13,page:13,34.3,0,,c99b9de35d6f6135028665007f2319790c7c01de20687b645dbfe435d19457a6
 Documents/testPDF-custommetadata.pdf,PDF,.pdf,7495,PDFFileReader,COMPLETE,1.0,2,0,266,1,page:1,2413.8,0,,c6f5d857a87d8b8f2265265a1fb650df57b6fdad4d3b58cafefe6f42aaba4391
 Documents/testPDF.pdf,PDF,.pdf,34824,PDFFileReader,COMPLETE,1.0,163,0,1257,1,page:1,11.0,0,,8035bc3f748d8b97b8a9978bd812197bf40cf2b294a7e9b30e39d7167ddc720e
-Documents/testPDFEmbeddingAndEmbedded.docx,Word,.docx,34139,OfficeFileReader,INCOMPLETE,0.3333,6,4,86,5,paragraph:5,8.8,0,,908d3fdd5b961c3bb2c837acee609b5e4396e97945d1f5bd993619df1bf7ca53
+Documents/testPDFEmbeddingAndEmbedded.docx,Word,.docx,34139,OfficeFileReader,COMPLETE,1.0,10,0,86,5,paragraph:5,6.9,0,,908d3fdd5b961c3bb2c837acee609b5e4396e97945d1f5bd993619df1bf7ca53
 Documents/testPDFFileEmbInAnnotation.pdf,PDF,.pdf,97211,PDFFileReader,COMPLETE,1.0,10,0,322,1,page:1,4.4,0,,9825311c6eba48b5c6612a50c654458282075fdac9fa6a78a0d4030ccc0a3413
 Documents/testPDFFileEmbInAnnotation_noContents.pdf,PDF,.pdf,198342,PDFFileReader,OK-NO-ORACLE,,,,266,1,page:1,2657.6,0,,a667c1515735cabccb2d0edeee6cc47b037f8a2dc26a02a8486e02b229e800fa
 Documents/testPDFPackage.pdf,PDF,.pdf,92359,PDFFileReader,COMPLETE,1.0,86,0,675,1,page:1,10.5,0,,9676f28b3a11d339309f5d18eb1aaf51458c3cbf422183650d577b74bd8e823c
@@ -267,80 +267,80 @@ Documents/testRTF_nestedHyperlinkPageRef.rtf,RTF,.rtf,188,RemainingFileReader,CO
 Documents/testRTF_npeFromWMFInTikaServer.rtf,RTF,.rtf,44288,RemainingFileReader,COMPLETE,1.0,6,0,43,1,document:1,7.3,0,,efcb8295ccd5c2b6e3d841cd8240710585fdccbe48f240be3427359d4ff79355
 Documents/testRTF_parInsideHyperlink.rtf,RTF,.rtf,153,RemainingFileReader,COMPLETE,1.0,4,0,26,1,document:1,0.2,0,,4cf8c333c0eac3d303dbad83ba97601de1d3c1a22cbddb47d97c1499d65d69e9
 Documents/testStyles.odt,OpenDocument,.odt,11663,OfficeFileReader,COMPLETE,1.0,16,0,182,8,paragraph:8,10.6,0,,b70625835f2c1fe8fd4c3b625bb51b0b10e323b1a92d3c338c3be4e2cf16a766
-Documents/testSubdocument.docx,Word,.docx,1980,OfficeFileReader,COMPLETE,1.0,4,0,33,1,paragraph:1,2.8,0,,8355ed73c6d7cfd11e72188ca320095054be49a10027589e30d5864092b9335a
+Documents/testSubdocument.docx,Word,.docx,1980,OfficeFileReader,COMPLETE,1.0,4,0,33,1,paragraph:1,2.1,0,,8355ed73c6d7cfd11e72188ca320095054be49a10027589e30d5864092b9335a
 Documents/testUnicodePassword.pdf,PDF,.pdf,18849,PDFFileReader,ERROR,,,,14,0,,31.6,0,PDF is encrypted and cannot be decrypted,7824e7215ffeb8a54b089290340c38cdf62500fa627fab72fc24803eecfa0262
 Documents/testWORD.doc,Word (.doc),.doc,32768,OfficeFileReader,OK-NO-ORACLE,,,,927,1,paragraph:1,2.7,0,,5ca19b67876f284a0e04ed06df44a004f850629a871fe522d014e1fdff912799
-Documents/testWORD.docx,Word,.docx,13436,OfficeFileReader,PARTIAL,0.8302,106,18,1158,16,paragraph:14;table-row:2,12.1,0,,67797f5691cb5346201f1c40000a959f9f08d05d0b4493b4291e8d5f16e81e65
+Documents/testWORD.docx,Word,.docx,13436,OfficeFileReader,COMPLETE,1.0,121,0,1195,17,paragraph:14;table-row:3,11.7,0,,67797f5691cb5346201f1c40000a959f9f08d05d0b4493b4291e8d5f16e81e65
 Documents/testWORD6.doc,Word (.doc),.doc,6656,OfficeFileReader,OK-NO-ORACLE,,,,190,1,paragraph:1,1.5,0,,58ea3347378e85e7c8d19ad64e74ad533b2f51b30f047594b434f380712f8b50
 Documents/testWORDML_tableInsideParagraph.doc,Word (.doc),.doc,35185,OfficeFileReader,ERROR,,,,0,0,,0.4,0,File is not a valid OLE2 format .doc file,8b2fd1269898c195da52512bd18a5d3aeed167269b896fe6b3fce39a967c927f
 Documents/testWORD_1img.doc,Word (.doc),.doc,14848,OfficeFileReader,OK-NO-ORACLE,,,,364,1,paragraph:1,1.9,0,,6c94d2c13ebed034f3046969761e6f2a2acf361baf73a8f5086f1453a366e88a
-Documents/testWORD_1img.docx,Word,.docx,8325,OfficeFileReader,COMPLETE,1.0,9,0,82,1,paragraph:1,1118.8,0,,d9dbb66913b6af41e7e5ef6fb969eb60d1ee49f4350bd649168225e15709ad0d
+Documents/testWORD_1img.docx,Word,.docx,8325,OfficeFileReader,COMPLETE,1.0,9,0,82,1,paragraph:1,1185.0,0,,d9dbb66913b6af41e7e5ef6fb969eb60d1ee49f4350bd649168225e15709ad0d
 Documents/testWORD_2006ml.doc,Word (.doc),.doc,265728,OfficeFileReader,OK-NO-ORACLE,,,,2135,1,paragraph:1,9.2,0,,06b4d4ea1ad7dfb75024ccd956ebc316d8d32361e3e5c7617678a0b4a9343f72
-Documents/testWORD_2006ml.docx,Word,.docx,151733,OfficeFileReader,INCOMPLETE,0.4899,198,101,1587,27,paragraph:23;table-row:4,739.9,0,,a27f2b9244f5147cce25a05d4cddb1eec9c72259a41d52a7bf5eb3806b28207c
+Documents/testWORD_2006ml.docx,Word,.docx,151733,OfficeFileReader,PARTIAL,0.9258,229,17,2289,47,paragraph:42;table-row:5,714.3,0,,a27f2b9244f5147cce25a05d4cddb1eec9c72259a41d52a7bf5eb3806b28207c
 Documents/testWORD_3imgs.doc,Word (.doc),.doc,36352,OfficeFileReader,OK-NO-ORACLE,,,,1989,1,paragraph:1,3.9,0,,5ceb1e33c8a5fa1bcd7ebe8202efc8061dd6dd4dc138c1e15091471438ab7254
-Documents/testWORD_3imgs.docx,Word,.docx,31303,OfficeFileReader,PARTIAL,0.8889,18,2,318,4,paragraph:4,2228.9,0,,3c7d3114d21dae635e2e3dfb742d3cb5737ef957be5548a3c8a787cf9e4cdd2c
-Documents/testWORD_EMFAndAttachments.docx,Word,.docx,61769,OfficeFileReader,COMPLETE,1.0,7,0,38,1,paragraph:1,5.2,0,,9b4ee4a8dad5dab45aa291a33842c7d5d71988c5e83f460adf263f73c3c96773
+Documents/testWORD_3imgs.docx,Word,.docx,31303,OfficeFileReader,COMPLETE,1.0,20,0,318,4,paragraph:4,2196.0,0,,3c7d3114d21dae635e2e3dfb742d3cb5737ef957be5548a3c8a787cf9e4cdd2c
+Documents/testWORD_EMFAndAttachments.docx,Word,.docx,61769,OfficeFileReader,COMPLETE,1.0,7,0,38,1,paragraph:1,4.7,0,,9b4ee4a8dad5dab45aa291a33842c7d5d71988c5e83f460adf263f73c3c96773
 Documents/testWORD_boldHyperlink.doc,Word (.doc),.doc,27136,OfficeFileReader,OK-NO-ORACLE,,,,183,1,paragraph:1,6.2,0,,ad9890445a2b6d6ce5259748c49923a0fd13768f95b67abaee2b22afe86bc4f7
-Documents/testWORD_boldHyperlink.docx,Word,.docx,12382,OfficeFileReader,COMPLETE,1.0,14,0,79,1,paragraph:1,4.7,0,,dead3afa9ff59b827cea3e9c5e73a9d018d3eadd9c1c51ea63dd19db6edd9060
+Documents/testWORD_boldHyperlink.docx,Word,.docx,12382,OfficeFileReader,COMPLETE,1.0,14,0,79,1,paragraph:1,5.5,0,,dead3afa9ff59b827cea3e9c5e73a9d018d3eadd9c1c51ea63dd19db6edd9060
 Documents/testWORD_bold_character_runs.doc,Word (.doc),.doc,22016,OfficeFileReader,OK-NO-ORACLE,,,,17,1,paragraph:1,2.1,0,,ceef10bcf49319a0ed608144cc66bd429cb601cec227fac8fdaf6329121c91c1
-Documents/testWORD_bold_character_runs.docx,Word,.docx,12912,OfficeFileReader,COMPLETE,1.0,1,0,6,1,paragraph:1,3.6,0,,a4a0603c0151d0813cc840e3a3dba5ab436a9ac5edba00118aa6277db6a6a2e8
+Documents/testWORD_bold_character_runs.docx,Word,.docx,12912,OfficeFileReader,COMPLETE,1.0,1,0,6,1,paragraph:1,3.4,0,,a4a0603c0151d0813cc840e3a3dba5ab436a9ac5edba00118aa6277db6a6a2e8
 Documents/testWORD_bold_character_runs2.doc,Word (.doc),.doc,22016,OfficeFileReader,OK-NO-ORACLE,,,,11,1,paragraph:1,2.1,0,,16b1b2e99dc5facd3a254d711c796d5934b38ef5a7393ad9b12af11d2cbeda11
-Documents/testWORD_bold_character_runs2.docx,Word,.docx,12863,OfficeFileReader,COMPLETE,1.0,1,0,6,1,paragraph:1,3.5,0,,6b19e83626f763ee96245f027b2514ef5859e2eb4b72ac9902753f702d7d78c3
-Documents/testWORD_charts.docx,Word,.docx,15586,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,4.4,0,,04580520e7577ab4cdf08d289d5c03d6a1b942dd261f4101de53124334a500cd
+Documents/testWORD_bold_character_runs2.docx,Word,.docx,12863,OfficeFileReader,COMPLETE,1.0,1,0,6,1,paragraph:1,3.4,0,,6b19e83626f763ee96245f027b2514ef5859e2eb4b72ac9902753f702d7d78c3
+Documents/testWORD_charts.docx,Word,.docx,15586,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,3.6,0,,04580520e7577ab4cdf08d289d5c03d6a1b942dd261f4101de53124334a500cd
 Documents/testWORD_closingSmartQInHyperLink.doc,Word (.doc),.doc,26624,OfficeFileReader,OK-NO-ORACLE,,,,75,1,paragraph:1,2.3,0,,3536a1e171981a55f9811c5440029004d610c54c7cc72adcc9d30a636b377b99
 Documents/testWORD_custom_props.doc,Word (.doc),.doc,22528,OfficeFileReader,OK-NO-ORACLE,,,,21,1,paragraph:1,1.9,0,,0954ac51bbf4a478e322c29a81b2d735c513f3faca0cf7641c753d9e622bec29
-Documents/testWORD_custom_props.docx,Word,.docx,13942,OfficeFileReader,COMPLETE,1.0,2,0,80,1,paragraph:1,3.8,0,,6ccf04f70122b1c32b3623c739b2b8a4d2d7795968b8e2939e665319bf482787
-Documents/testWORD_diagramData.docx,Word,.docx,49860,OfficeFileReader,COMPLETE,1.0,8,0,46,1,paragraph:1,5.2,0,,c4c3f15c28df87ffb1c062e489a8b22bf72ef22df5bdb8020e48f26dd3b7a57e
-Documents/testWORD_docSecurity.docx,Word,.docx,12861,OfficeFileReader,COMPLETE,1.0,1,0,135,1,paragraph:1,3.6,0,,52049d0938d54fc4edbdd27ea7a97629572c498dc5125ea45df9713ac5504dfe
+Documents/testWORD_custom_props.docx,Word,.docx,13942,OfficeFileReader,COMPLETE,1.0,2,0,80,1,paragraph:1,3.4,0,,6ccf04f70122b1c32b3623c739b2b8a4d2d7795968b8e2939e665319bf482787
+Documents/testWORD_diagramData.docx,Word,.docx,49860,OfficeFileReader,COMPLETE,1.0,8,0,46,1,paragraph:1,6.8,0,,c4c3f15c28df87ffb1c062e489a8b22bf72ef22df5bdb8020e48f26dd3b7a57e
+Documents/testWORD_docSecurity.docx,Word,.docx,12861,OfficeFileReader,COMPLETE,1.0,1,0,135,1,paragraph:1,3.5,0,,52049d0938d54fc4edbdd27ea7a97629572c498dc5125ea45df9713ac5504dfe
 Documents/testWORD_embedded_pdf.doc,Word (.doc),.doc,1491456,OfficeFileReader,OK-NO-ORACLE,,,,70,1,paragraph:1,2.6,0,,1979c16391c17f5ca2c3d40008b10e8649dce4f9a8dd30b2432fe9416c201952
-Documents/testWORD_embedded_pdf.docx,Word,.docx,63294,OfficeFileReader,PARTIAL,0.8889,9,1,215,3,paragraph:3,7.8,0,,8af6790699d2bea7b91720b6ecda45f30c0bdffa43300924447bba32b2571401
-Documents/testWORD_embedded_pics.docx,Word,.docx,52399,OfficeFileReader,INCOMPLETE,0.6364,22,8,268,4,paragraph:4,1453.8,0,,416b7f04fc83bf3d393924f1e1aa49e6bf7cda06fa1559a0e23b889e0cb6205d
+Documents/testWORD_embedded_pdf.docx,Word,.docx,63294,OfficeFileReader,COMPLETE,1.0,10,0,215,3,paragraph:3,7.4,0,,8af6790699d2bea7b91720b6ecda45f30c0bdffa43300924447bba32b2571401
+Documents/testWORD_embedded_pics.docx,Word,.docx,52399,OfficeFileReader,PARTIAL,0.9259,27,2,295,5,paragraph:5,1478.0,0,,416b7f04fc83bf3d393924f1e1aa49e6bf7cda06fa1559a0e23b889e0cb6205d
 Documents/testWORD_embedded_rtf.doc,Word (.doc),.doc,16384,OfficeFileReader,OK-NO-ORACLE,,,,71,1,paragraph:1,2.0,0,,6c66cbe7708d3dfa78dd36fe15eb04b7dd69539ea61e1935b914112320ea2dcc
 Documents/testWORD_embeded.doc,Word (.doc),.doc,319488,OfficeFileReader,OK-NO-ORACLE,,,,2201,1,paragraph:1,5.5,0,,032d225f3437e8c3f126b45869056b603292cbb9d077ead55b312293e8e829c5
-Documents/testWORD_embeded.docx,Word,.docx,157830,OfficeFileReader,PARTIAL,0.8889,18,2,432,4,paragraph:4,2203.5,0,,0bbd355e6d3d3caa816b8913cd955a7bf4f167bce142d8c49998bb764ed79e71
-Documents/testWORD_emptyParaInTextbox.docx,Word,.docx,15982,OfficeFileReader,PARTIAL,0.9398,166,10,1629,24,paragraph:10;table-row:14,17.5,0,,28a372a0932d7d5ec5032094130200124fb8c3126d2dfaa3cc63312f5d92a36e
-Documents/testWORD_endnote_table.docx,Word,.docx,18504,OfficeFileReader,COMPLETE,0.9999,10737,1,73892,33,paragraph:33,17.3,0,,105709ab279ee6d5642edddf8b5e32257ff9b9cf54c2e886d7d251cb29e39c34
+Documents/testWORD_embeded.docx,Word,.docx,157830,OfficeFileReader,COMPLETE,1.0,20,0,432,4,paragraph:4,2278.9,0,,0bbd355e6d3d3caa816b8913cd955a7bf4f167bce142d8c49998bb764ed79e71
+Documents/testWORD_emptyParaInTextbox.docx,Word,.docx,15982,OfficeFileReader,PARTIAL,0.9398,166,10,1628,24,paragraph:10;table-row:14,18.9,0,,28a372a0932d7d5ec5032094130200124fb8c3126d2dfaa3cc63312f5d92a36e
+Documents/testWORD_endnote_table.docx,Word,.docx,18504,OfficeFileReader,COMPLETE,0.9999,10737,1,73892,33,paragraph:33,19.5,0,,105709ab279ee6d5642edddf8b5e32257ff9b9cf54c2e886d7d251cb29e39c34
 Documents/testWORD_features.doc,Word (.doc),.doc,11264,OfficeFileReader,OK-NO-ORACLE,,,,13,1,paragraph:1,1.7,0,,ea797cd1488187880e153c51e889d8835ac525c08db83dd486165cd6d2d23422
-Documents/testWORD_features.docx,Word,.docx,8169,OfficeFileReader,INCOMPLETE,0.4785,163,85,642,2,paragraph:2,5.2,0,,b0920ec3e38521c02ca75ef0b1ed1b2b19fabcd701b75366e89b818228094e25
-Documents/testWORD_formattingFlipUnderlineOrder.docx,Word,.docx,18506,OfficeFileReader,COMPLETE,0.9985,1358,2,10197,72,paragraph:72,32.8,0,,d717b9d30f3a4bd19d91840ede952a0af88dfe7d51698652acba2eef399bbcc5
+Documents/testWORD_features.docx,Word,.docx,8169,OfficeFileReader,INCOMPLETE,0.4785,163,85,642,2,paragraph:2,5.8,0,,b0920ec3e38521c02ca75ef0b1ed1b2b19fabcd701b75366e89b818228094e25
+Documents/testWORD_formattingFlipUnderlineOrder.docx,Word,.docx,18506,OfficeFileReader,COMPLETE,0.9985,1358,2,10197,72,paragraph:72,58.0,0,,d717b9d30f3a4bd19d91840ede952a0af88dfe7d51698652acba2eef399bbcc5
 Documents/testWORD_header_hyperlink.doc,Word (.doc),.doc,22528,OfficeFileReader,OK-NO-ORACLE,,,,135,1,paragraph:1,2.1,0,,1dbf0873c9dd8d62ae2359ed3dbeae7a0d8aada3abac042ba4acd25242ea792d
 Documents/testWORD_italicsSurroundingHyperlink.doc,Word (.doc),.doc,26624,OfficeFileReader,OK-NO-ORACLE,,,,129,1,paragraph:1,2.0,0,,c3339d6335588c11fa7815c835c872e2346bf5bcda9df2420b37da5ed2b18d88
 Documents/testWORD_macros.doc,Word (.doc),.doc,38400,OfficeFileReader,OK-NO-ORACLE,,,,969,1,paragraph:1,168.2,0,,5bf327a892944e5ed1dbcc0db2b332aba6ec17b0f8bcde9f86f691216b44d5c9
-Documents/testWORD_missing_ooxml_bean1.docx,Word,.docx,17913,OfficeFileReader,INCOMPLETE,0.0,1,1,10,0,,6.1,0,,95de9f3b655bfec5b619ee31d1319e5a9a6ce4f253a9738898876640a2969665
-Documents/testWORD_missing_text.docx,Word,.docx,31592,OfficeFileReader,INCOMPLETE,0.1667,6,5,161,3,table-row:3,13.9,0,,85265e95dddecd8dfbf3fe70d27cbc8dd5e83d238b2c10abd8014f1d8d74268e
+Documents/testWORD_missing_ooxml_bean1.docx,Word,.docx,17913,OfficeFileReader,INCOMPLETE,0.0,1,1,10,0,,5.4,0,,95de9f3b655bfec5b619ee31d1319e5a9a6ce4f253a9738898876640a2969665
+Documents/testWORD_missing_text.docx,Word,.docx,31592,OfficeFileReader,INCOMPLETE,0.4286,14,8,161,3,table-row:3,12.1,0,,85265e95dddecd8dfbf3fe70d27cbc8dd5e83d238b2c10abd8014f1d8d74268e
 Documents/testWORD_multi_authors.doc,Word (.doc),.doc,22528,OfficeFileReader,OK-NO-ORACLE,,,,4,1,paragraph:1,2.4,0,,91cdb6173904530195ca983bea25c1c0bc61dd16ffa4c22f0fb87b0d82514190
-Documents/testWORD_multi_authors.docx,Word,.docx,12054,OfficeFileReader,OK-NO-ORACLE,,,,19,0,,4.2,0,,8435a0e087a5452b0418ba860136683e95ba17ba3be8e22ec21d678b5db1f1b9
+Documents/testWORD_multi_authors.docx,Word,.docx,12054,OfficeFileReader,OK-NO-ORACLE,,,,19,0,,3.4,0,,8435a0e087a5452b0418ba860136683e95ba17ba3be8e22ec21d678b5db1f1b9
 Documents/testWORD_no_format.doc,Word (.doc),.doc,74752,OfficeFileReader,OK-NO-ORACLE,,,,432,1,paragraph:1,9.6,0,,2345333163a5b9b6233d82a40022660dcca833d661c2fa80b5274be47672f56c
-Documents/testWORD_no_format.docx,Word,.docx,37018,OfficeFileReader,COMPLETE,1.0,13,0,84,1,paragraph:1,12.2,0,,1cdbf5dc2b9e8a1e2d5307e3b6d49b9afd0268dacd3975e176fbc9fd9e5805f3
-Documents/testWORD_null_style.docx,Word,.docx,29018,OfficeFileReader,NEAR-COMPLETE,0.9937,158,1,1568,6,paragraph:6,11.6,0,,c8bd6f119d65896b2ec8e34ce56cb532b7358173efb9d41af6abb389ac71176e
+Documents/testWORD_no_format.docx,Word,.docx,37018,OfficeFileReader,COMPLETE,1.0,13,0,84,1,paragraph:1,9.2,0,,1cdbf5dc2b9e8a1e2d5307e3b6d49b9afd0268dacd3975e176fbc9fd9e5805f3
+Documents/testWORD_null_style.docx,Word,.docx,29018,OfficeFileReader,NEAR-COMPLETE,0.9937,158,1,1568,6,paragraph:6,7.3,0,,c8bd6f119d65896b2ec8e34ce56cb532b7358173efb9d41af6abb389ac71176e
 Documents/testWORD_numbered_list.doc,Word (.doc),.doc,44032,OfficeFileReader,OK-NO-ORACLE,,,,943,1,paragraph:1,3.1,0,,4854e5fea6b92c2b99b418df5d12113cb2e35f2208784c7a59f3c1f9b3e6dea9
-Documents/testWORD_numbered_list.docx,Word,.docx,24696,OfficeFileReader,INCOMPLETE,0.6585,123,42,1787,43,paragraph:42;table-row:1,25.5,0,,3e500410c6ce4f56f871bd55beff2476152fc3d0b7049cf5a93781ae7946ff5b
+Documents/testWORD_numbered_list.docx,Word,.docx,24696,OfficeFileReader,PARTIAL,0.9281,167,12,1850,44,paragraph:43;table-row:1,28.7,0,,3e500410c6ce4f56f871bd55beff2476152fc3d0b7049cf5a93781ae7946ff5b
 Documents/testWORD_override_list_numbering.doc,Word (.doc),.doc,56320,OfficeFileReader,OK-NO-ORACLE,,,,580,1,paragraph:1,2.3,0,,7e4d98a6230b59f46c1761c0146449fffb0d5ffd00bca14a6a76d8829ebe7ccb
-Documents/testWORD_override_list_numbering.docx,Word,.docx,15746,OfficeFileReader,INCOMPLETE,0.6883,77,24,560,49,paragraph:49,22.7,0,,2d88b75145043fb8eef1d851e595b1d0f01d5a342552919fe3af22b36b57d086
+Documents/testWORD_override_list_numbering.docx,Word,.docx,15746,OfficeFileReader,PARTIAL,0.888,125,14,560,49,paragraph:49,23.2,0,,2d88b75145043fb8eef1d851e595b1d0f01d5a342552919fe3af22b36b57d086
 Documents/testWORD_phonetic.doc,Word (.doc),.doc,27136,OfficeFileReader,OK-NO-ORACLE,,,,20,1,paragraph:1,2.5,0,,d802dd16c86a2faf5ed2cb04d7493ab0183b5213bf5b954f49fe24c3a24c2961
 Documents/testWORD_phonetic.docx,Word,.docx,12523,OfficeFileReader,EMPTY-AGREED,,0,0,0,0,,3.8,0,,abda850b3685027eef32a4c583b2b5f7f20f243026d8c453cdb3315348ed6ff0
 Documents/testWORD_protected_drm.doc,Word (.doc),.doc,72192,OfficeFileReader,OK-NO-ORACLE,,,,271,1,paragraph:1,2.2,0,,6f8b55671b60f80f71a8466a041b1afb8189c67c08d0602507eaac6e46d9a91f
 Documents/testWORD_protected_passtika.doc,Word (.doc),.doc,22016,OfficeFileReader,OK-NO-ORACLE,,,,236,1,paragraph:1,2.0,0,,9231e724bb17a2e5f74815728d90b06e15684cf5fb2443a6fa24deebd33be952
-Documents/testWORD_protected_passtika.docx,Word,.docx,14336,OfficeFileReader,ERROR,,,,0,0,,1.0,0,Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Documents/testWORD_protected_passtika.docx',09b941cabd222172dfd0b213a6a3fd404348b930ca285fa951bad14afb0fdf5c
-Documents/testWORD_sdtInTextBox.docx,Word,.docx,21117,OfficeFileReader,INCOMPLETE,0.1176,17,15,64,1,paragraph:1,5.6,0,,c2f5b10e5850b081c62f7ff3fde05587836f13ccbc0e19bcb4544b8763c5b0c1
-Documents/testWORD_signed.docx,Word,.docx,18245,OfficeFileReader,COMPLETE,1.0,1,0,6,1,paragraph:1,3.8,0,,40bd97185ad6203230c439694a55eada99db48f5fc023f04dc1969ba462c73cb
+Documents/testWORD_protected_passtika.docx,Word,.docx,14336,OfficeFileReader,ERROR,,,,0,0,,1.1,0,Package not found at 'test-doc/Documents/testWORD_protected_passtika.docx',09b941cabd222172dfd0b213a6a3fd404348b930ca285fa951bad14afb0fdf5c
+Documents/testWORD_sdtInTextBox.docx,Word,.docx,21117,OfficeFileReader,COMPLETE,1.0,14,0,156,3,paragraph:3,6.1,0,,c2f5b10e5850b081c62f7ff3fde05587836f13ccbc0e19bcb4544b8763c5b0c1
+Documents/testWORD_signed.docx,Word,.docx,18245,OfficeFileReader,COMPLETE,1.0,1,0,6,1,paragraph:1,3.6,0,,40bd97185ad6203230c439694a55eada99db48f5fc023f04dc1969ba462c73cb
 Documents/testWORD_specialControlCharacter1415.doc,Word (.doc),.doc,25600,OfficeFileReader,OK-NO-ORACLE,,,,195,1,paragraph:1,2.0,0,,8f203e199a34e2beee0c59f320de98a7ff4765c19282ba1c9dec7a55c6c46121
-Documents/testWORD_tableInRunInsideParagraph.docx,Word,.docx,18606,OfficeFileReader,PARTIAL,0.8309,136,23,743,4,paragraph:1;table-row:3,9.7,0,,11cdfd70ce1d984fa6c28d278cd516ce5b7573331d84ffbb58f0c8c8c170550f
+Documents/testWORD_tableInRunInsideParagraph.docx,Word,.docx,18606,OfficeFileReader,COMPLETE,1.0,141,0,906,5,paragraph:2;table-row:3,10.2,0,,11cdfd70ce1d984fa6c28d278cd516ce5b7573331d84ffbb58f0c8c8c170550f
 Documents/testWORD_tabular_symbol.doc,Word (.doc),.doc,10240,OfficeFileReader,OK-NO-ORACLE,,,,8,1,paragraph:1,1.7,0,,48dfcb2d8fdb247d65a8029940bf47d0ad2b1b85283a461b3369ce1df8f5ba17
-Documents/testWORD_template.docx,Word,.docx,44942,OfficeFileReader,INCOMPLETE,0.0597,134,126,198,5,paragraph:5,11.8,0,,b05df2e299e825b5b25b34ff5af63f3c309bf6afcd94b3dd8fab224ac507f163
-Documents/testWORD_text_box.docx,Word,.docx,25271,OfficeFileReader,INCOMPLETE,0.7021,94,28,309,1,paragraph:1,5.1,0,,82d4d863c5e8c1ed0137587323d85f3c66f1c16bbaf0ee69e4806b0bd802b73a
-Documents/testWORD_totalTimeOutOfRange.docx,Word,.docx,11047,OfficeFileReader,COMPLETE,1.0,14,0,79,1,paragraph:1,4.4,0,,a97effd80acf1e4ae1ec8d96af35954858ea031cc71014a1d5de2bd3ff842cb3
-Documents/testWORD_truncated.docx,Word,.docx,763,OfficeFileReader,ERROR,,,,0,0,,0.3,0,Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Documents/testWORD_truncated.docx',8bb91125cc08ec4a5a771e86ff20cfd0646998b2c1da4361e0241036816a471f
+Documents/testWORD_template.docx,Word,.docx,44942,OfficeFileReader,NEAR-COMPLETE,0.9855,138,2,1150,18,paragraph:18,19.2,0,,b05df2e299e825b5b25b34ff5af63f3c309bf6afcd94b3dd8fab224ac507f163
+Documents/testWORD_text_box.docx,Word,.docx,25271,OfficeFileReader,COMPLETE,1.0,52,0,391,2,paragraph:2,5.7,0,,82d4d863c5e8c1ed0137587323d85f3c66f1c16bbaf0ee69e4806b0bd802b73a
+Documents/testWORD_totalTimeOutOfRange.docx,Word,.docx,11047,OfficeFileReader,COMPLETE,1.0,14,0,79,1,paragraph:1,4.1,0,,a97effd80acf1e4ae1ec8d96af35954858ea031cc71014a1d5de2bd3ff842cb3
+Documents/testWORD_truncated.docx,Word,.docx,763,OfficeFileReader,ERROR,,,,0,0,,0.4,0,Package not found at 'test-doc/Documents/testWORD_truncated.docx',8bb91125cc08ec4a5a771e86ff20cfd0646998b2c1da4361e0241036816a471f
 Documents/testWORD_various.doc,Word (.doc),.doc,17408,OfficeFileReader,OK-NO-ORACLE,,,,14,1,paragraph:1,2.1,0,,87a69bd33b7d6134f802b54d95ae0cadb7a9f4bda0d8bab96daa9abde42be180
-Documents/testWORD_various.docx,Word,.docx,14470,OfficeFileReader,PARTIAL,0.7685,108,25,913,30,paragraph:28;table-row:2,22.0,0,,f7761e3893d795ed09f12f89a16d3265c3919da549adf00127b0f7094bccd0ee
+Documents/testWORD_various.docx,Word,.docx,14470,OfficeFileReader,PARTIAL,0.9254,134,10,951,31,paragraph:29;table-row:2,20.6,0,,f7761e3893d795ed09f12f89a16d3265c3919da549adf00127b0f7094bccd0ee
 Documents/testWPSAttachment.doc,Word (.doc),.doc,222720,OfficeFileReader,OK-NO-ORACLE,,,,72,1,paragraph:1,5.9,0,,f59f67ea70ed5565211e5bfc4deeb75d1481837f38a76bae212a905c32b19591
-Documents/testWPSAttachment.docx,Word,.docx,130189,OfficeFileReader,OK-NO-ORACLE,,,,50,0,,7.7,0,,f9373ab9c763603ce72e4a5490c727be745bf48a98d703bab1c9f98ff9cc8a36
+Documents/testWPSAttachment.docx,Word,.docx,130189,OfficeFileReader,OK-NO-ORACLE,,,,50,0,,7.3,0,,f9373ab9c763603ce72e4a5490c727be745bf48a98d703bab1c9f98ff9cc8a36
 Documents/testWordPerfect_42.doc,Word (.doc),.doc,725,OfficeFileReader,ERROR,,,,0,0,,0.3,0,File is not a valid OLE2 format .doc file,eaf0c297a08d0be2f9aca0a022136f2c3f5a8d4097c9e0d49bfb77b92690bb96
 Documents/test_TIKA-1251.doc,Word (.doc),.doc,50688,OfficeFileReader,OK-NO-ORACLE,,,,3734,1,paragraph:1,2.4,0,,0f2419a0fadc0acf266d300ac8bb9eb980067ffad4f47d22c947ebbfde541310
 Documents/test_list_override.rtf,RTF,.rtf,1250,RemainingFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.2,0,,95b9fce362bebb837100280562981a6fa130a9b5676f9a3f63be1a6fa657ba84
 Documents/test_recursive_embedded.doc,Word (.doc),.doc,31744,OfficeFileReader,OK-NO-ORACLE,,,,65,1,paragraph:1,2.9,0,,01dea6383aa123ecfc6c970faa9b7b922792f718d3715a1aa1f3b1a6a3f3a81b
-Documents/test_recursive_embedded.docx,Word,.docx,27082,OfficeFileReader,COMPLETE,1.0,2,0,11,1,paragraph:1,5.7,0,,c4b7fab030a8b6a9d6691f6699ac8e6f82bc53764a0f1430d134ae3b70c32654
-Documents/test_recursive_embedded_npe.docx,Word,.docx,27817,OfficeFileReader,COMPLETE,1.0,2,0,11,1,paragraph:1,5.5,0,,f3ff590386f645943719622badc7a16a578c3cd1fea2fdb433d25bab0f12f721
+Documents/test_recursive_embedded.docx,Word,.docx,27082,OfficeFileReader,COMPLETE,1.0,2,0,11,1,paragraph:1,6.0,0,,c4b7fab030a8b6a9d6691f6699ac8e6f82bc53764a0f1430d134ae3b70c32654
+Documents/test_recursive_embedded_npe.docx,Word,.docx,27817,OfficeFileReader,COMPLETE,1.0,2,0,11,1,paragraph:1,6.0,0,,f3ff590386f645943719622badc7a16a578c3cd1fea2fdb433d25bab0f12f721
 Executables/testAPK.apk,Executable,.apk,11740,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,3.0,0,,c1b43cd0eed5e6576b2fbb38144f7aa065d38e2ed828553806dc623534e2f9a2
 Executables/testTinyPE.exe,Executable,.exe,1024,,ERROR,,,,0,0,,0.1,0,Unsupported file type: .exe,3aac3c2e03600fd7dbedac01eb42b8565d5265ddb06623ac66e62e997c81ced0
 Executables/testWindows-x86-32-icons.exe,Executable,.exe,32768,,ERROR,,,,0,0,,0.1,0,Unsupported file type: .exe,595c230fddca24d569d3c3ffcdd0df7647a048789b50285196756ff622e089e4
@@ -418,7 +418,7 @@ Other/testNEF_dup.nef,Camera raw,.nef,828,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0
 Other/testNumbers.numbers,iWork,.numbers,134571,OfficeFileReader,OK-NO-ORACLE,,,,237,2,paragraph:2,69.6,0,,6fb57a2fc3cfc532713ac3e58d2b7e9de93342f7d84cf76599901281a26d56cc
 Other/testNumbers2013.numbers,iWork,.numbers,179147,OfficeFileReader,OK-NO-ORACLE,,,,3145,255,paragraph:255,4.4,0,,74a834857c02d06dbc399aff8ba475f7708092e42501cc665d7fa489f385831f
 Other/testNumbersCharts.numbers,iWork,.numbers,104547,OfficeFileReader,OK-NO-ORACLE,,,,80,2,paragraph:2,90.7,0,,f4430f2aa0ddab186e7e32f15552b58b7b03abada7a978dfbcd51e5548757789
-Other/testPPT.ppsx,PowerPoint,.ppsx,36521,OfficeFileReader,ERROR,1.0,37,0,272,0,,47.1,0,"file '/home/user/SYLTHARAE-Pro/test-doc/Other/testPPT.ppsx' is not a PowerPoint file, content type is 'application/vnd.openxmlformats-officedocument.presentationml.slideshow.main+x",82dcd905dfeb155d8ffea9d4f7e69d03a39895148407c32fa971a1addbea5656
+Other/testPPT.ppsx,PowerPoint,.ppsx,36521,OfficeFileReader,ERROR,1.0,37,0,272,0,,47.1,0,"file 'test-doc/Other/testPPT.ppsx' is not a PowerPoint file, content type is 'application/vnd.openxmlformats-officedocument.presentationml.slideshow.main+xml'",82dcd905dfeb155d8ffea9d4f7e69d03a39895148407c32fa971a1addbea5656
 Other/testPPT.pptm,PowerPoint,.pptm,36541,OfficeFileReader,COMPLETE,1.0,37,0,601,4,shape:4,17.1,0,,d8c6e14116eafecc8c6efa30aa40d755729d4cd3d97550dc9f77fa3c1562eb5b
 Other/testPPT_macros.pptm,PowerPoint,.pptm,32824,OfficeFileReader,COMPLETE,1.0,2,0,377,1,shape:1,12.4,0,,eb1fa9f03d20e99ab6f5760c30c2d9f8fa8aac73dc7a5e932b9e6a70749f45d5
 Other/testPages.pages,iWork,.pages,134152,OfficeFileReader,OK-NO-ORACLE,,,,5493,20,paragraph:20,13.4,0,,a276a2784a9ce6ea4aba7fe2cbfd555fe2edecf4db7dbe1f0998c803a150f446
@@ -431,8 +431,8 @@ Other/testPagesHeadersFootersRomanLower.pages,iWork,.pages,103923,OfficeFileRead
 Other/testPagesHeadersFootersRomanUpper.pages,iWork,.pages,174197,OfficeFileReader,OK-NO-ORACLE,,,,7026,37,paragraph:37,11.3,0,,703a25faf3e75076aad4116abceab45c4f50af426077cbc823644fbe66aca424
 Other/testPagesLayout.pages,iWork,.pages,66480,OfficeFileReader,OK-NO-ORACLE,,,,3294,12,paragraph:12,10.7,0,,6157fe7a95f7bc7d42251872f990d2f2d589f7f5e25a52b58e25c14cc447a4b2
 Other/testPagesPwdProtected.pages,iWork,.pages,33166,OfficeFileReader,ERROR,,,,0,0,,0.6,0,That compression method is not supported,19f6aa69facc4d20abe7ee21fcf1d7cf695b41135dc0d803aa2621f94b30ee81
-Other/testWORD_macros.docm,Word,.docm,17322,OfficeFileReader,ERROR,0.0,4,4,967,0,,8.6,0,"file '/home/user/SYLTHARAE-Pro/test-doc/Other/testWORD_macros.docm' is not a Word file, content type is 'application/vnd.ms-word.document.macroEnabled.main+xml'",8c30f81956e2f8c9e243bab09038fadb1cce36b593540484e5edcbcc1b56c1d3
-Other/testWORD_template.dotx,Word,.dotx,59583,OfficeFileReader,ERROR,0.0181,166,163,12,0,,11.0,0,"file '/home/user/SYLTHARAE-Pro/test-doc/Other/testWORD_template.dotx' is not a Word file, content type is 'application/vnd.openxmlformats-officedocument.wordprocessingml.template.m",e21a1c1e7c1f30176bf03e5228282750afd6a6708f6706eb9906c6254c08fbae
+Other/testWORD_macros.docm,Word,.docm,17322,OfficeFileReader,ERROR,0.0,4,4,967,0,,59.0,0,"file 'test-doc/Other/testWORD_macros.docm' is not a Word file, content type is 'application/vnd.ms-word.document.macroEnabled.main+xml'",8c30f81956e2f8c9e243bab09038fadb1cce36b593540484e5edcbcc1b56c1d3
+Other/testWORD_template.dotx,Word,.dotx,59583,OfficeFileReader,ERROR,0.0201,149,146,12,0,,11.2,0,"file 'test-doc/Other/testWORD_template.dotx' is not a Word file, content type is 'application/vnd.openxmlformats-officedocument.wordprocessingml.template.main+xml'",e21a1c1e7c1f30176bf03e5228282750afd6a6708f6706eb9906c6254c08fbae
 Presentations/LibreOfficeImpress_odp_1.3.odp,OpenDocument,.odp,24035,OfficeFileReader,COMPLETE,1.0,6,0,99,2,shape:2,77.2,0,,ecc8129a5b22c77b378504d87774ef26245d9e4146e8b15ec30a2f58fd0ebb93
 Presentations/pictures.ppt,PowerPoint (.ppt),.ppt,75776,OfficeFileReader,OK-NO-ORACLE,,,,108,3,shape:3,2.6,0,,5318e8486f47c7d9e838eaa4edfe385ba27d7d0ce145364792df53488430e98c
 Presentations/testComment.ppt,PowerPoint (.ppt),.ppt,101376,OfficeFileReader,OK-NO-ORACLE,,,,1133,55,shape:55,5.9,0,,9d1d7001c4e0fbbbe89ea9e603f5dd99d7642507da6a8091ad615776def94cf5
@@ -478,7 +478,7 @@ Presentations/testPPT_masterText2.pptx,PowerPoint,.pptx,32291,OfficeFileReader,O
 Presentations/testPPT_oleWorkbook.ppt,PowerPoint (.ppt),.ppt,98304,OfficeFileReader,OK-NO-ORACLE,,,,1280,74,shape:74,6.8,0,,b5c19872ad7b0417c4c601f97bc0f8ee855fd7bbe9c196ab9dbad8316a71f44c
 Presentations/testPPT_oleWorkbook.pptx,PowerPoint,.pptx,44001,OfficeFileReader,COMPLETE,1.0,1,0,64,1,shape:1,18.7,0,,9f079067f8b693a24b36f0b541d48625f13f468932f9a9af4f3192271ecc8749
 Presentations/testPPT_protected_passtika.ppt,PowerPoint (.ppt),.ppt,43008,OfficeFileReader,OK-NO-ORACLE,,,,620,65,shape:65,5.5,0,,152e2429873512d3e3719889a5db2aac3496d5c80e01acedf13e0a6c3cc7e59b
-Presentations/testPPT_protected_passtika.pptx,PowerPoint,.pptx,41472,OfficeFileReader,ERROR,,,,0,0,,1.3,0,Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Presentations/testPPT_protected_passtika.pptx',c06c45e88ab3dcb17ae2c662085be504cad48c836c245367491c448b96c1c02a
+Presentations/testPPT_protected_passtika.pptx,PowerPoint,.pptx,41472,OfficeFileReader,ERROR,,,,0,0,,1.3,0,Package not found at 'test-doc/Presentations/testPPT_protected_passtika.pptx',c06c45e88ab3dcb17ae2c662085be504cad48c836c245367491c448b96c1c02a
 Presentations/testPPT_signed.pptx,PowerPoint,.pptx,39761,OfficeFileReader,COMPLETE,1.0,1,0,36,1,shape:1,8.8,0,,429eb4255ab47e6efec780c15d40cd8f887fefba9bdee34cbcb868b424ea4750
 Presentations/testPPT_skipBadCompressedObject.ppt,PowerPoint (.ppt),.ppt,228352,OfficeFileReader,OK-NO-ORACLE,,,,7787,314,shape:314,18.8,0,,a066ef34216c1a2694c356d87e305d237d7f0eefb022a0333f8a957f48a9e01a
 Presentations/testPPT_various.ppt,PowerPoint (.ppt),.ppt,160768,OfficeFileReader,OK-NO-ORACLE,,,,2279,124,shape:124,12.0,0,,54790b849e108dca237b44ebffc53dcc3920e159e84f6d590bff2db906412687

@@ -26,6 +26,116 @@ logger = logging.getLogger(__name__)
 MAX_CSV_ROWS = 200_000
 
 
+def _docx_text_boxes(paragraph) -> List[str]:
+    """Text of the text boxes anchored in one paragraph, one entry per box.
+
+    A text box is not part of the paragraph's ``w:r``/``w:t`` stream: Word keeps
+    it in a ``w:txbxContent`` subtree inside the drawing (DrawingML) or the
+    ``v:textbox`` (VML) that anchors it. ``paragraph.text`` therefore never sees
+    it, and a caption living in a box was stored as an empty paragraph.
+
+    ``mc:AlternateContent`` carries the same box twice - once in ``mc:Choice``
+    for new readers, once in ``mc:Fallback`` for old ones. Only the ``Choice``
+    copy is taken, otherwise every boxed caption is stored twice.
+    """
+    from docx.oxml.ns import qn
+
+    # python-docx's namespace map has no "mc" prefix, so spell the URI out
+    fallback = "{http://schemas.openxmlformats.org/markup-compatibility/2006}Fallback"
+    out = []
+    for box in paragraph._p.iter(qn("w:txbxContent")):
+        ancestor, in_fallback = box.getparent(), False
+        while ancestor is not None:
+            if ancestor.tag == fallback:
+                in_fallback = True
+                break
+            ancestor = ancestor.getparent()
+        if in_fallback:
+            continue
+        text = " ".join(" ".join(t.text or "" for t in box.iter(qn("w:t"))).split())
+        if text:
+            out.append(text)
+    return out
+
+
+def _docx_cell_text(cell, depth: int = 0) -> str:
+    """All the text a Word table cell displays, nested tables included.
+
+    ``python-docx``'s ``cell.text`` walks the cell's own ``w:p`` children only.
+    A cell whose content is another table - a form layout, a nested grid, the
+    whole body of ``test-doc/Documents/testInstrLink.docx`` - therefore reads as
+    ``""`` even though Word shows its text. This walks the ``tc`` children in
+    document order, so a paragraph, the nested table and a trailing paragraph
+    keep their order.
+    """
+    from docx.oxml.ns import qn
+    from docx.table import Table as DocxTable
+    from docx.text.paragraph import Paragraph as DocxParagraph
+
+    if depth > 20:  # a malformed file cannot make this recurse forever
+        return ""
+
+    parts = []
+    for child in cell._tc.iterchildren():
+        if child.tag == qn("w:p"):
+            paragraph = DocxParagraph(child, cell)
+            parts.append(paragraph.text)
+            parts.extend(_docx_text_boxes(paragraph))
+        elif child.tag == qn("w:tbl"):
+            for row in _docx_table_rows(DocxTable(child, cell), depth + 1):
+                parts.append(" | ".join(value for value in row if value))
+    return "\n".join(part for part in parts if part)
+
+
+def _docx_table_rows(table, depth: int = 0):
+    """Rows of cell strings, with merged-cell text kept once (as before)."""
+    rows = []
+    emitted_cells: list = []
+    for row in table.rows:
+        row_cells = []
+        for cell in row.cells:
+            # A merged cell is the SAME tc element at several grid positions.
+            # The text is kept once, at the first position it covers; the rest
+            # stay empty so the grid keeps its shape and the reading order.
+            if any(cell._tc is seen for seen in emitted_cells):
+                row_cells.append("")
+                continue
+            emitted_cells.append(cell._tc)
+            row_cells.append(_docx_cell_text(cell, depth))
+        rows.append(row_cells)
+    return rows
+
+
+def _docx_iter_blocks(container, parent):
+    """Yield the paragraphs and tables of a block container, in document order.
+
+    ``python-docx``'s ``iter_inner_content()`` yields only direct ``w:p`` and
+    ``w:tbl`` children. A block wrapped in ``w:sdt`` - a content control: form
+    field, date picker, repeating section, reusable snippet - is not a direct
+    child, so its paragraphs and tables were never visited, and Word documents
+    built out of content controls stored almost none of their text
+    (``testWORD_template.docx``: 13% of document tokens, and its CV body is
+    entirely controlled paragraphs).
+
+    Descends through ``w:sdtContent`` instead of treating the control as opaque,
+    keeping document order and visiting each block exactly once.
+    """
+    from docx.oxml.ns import qn
+    from docx.table import Table as DocxTable
+    from docx.text.paragraph import Paragraph as DocxParagraph
+
+    p_tag, tbl_tag, sdt_tag = qn("w:p"), qn("w:tbl"), qn("w:sdt")
+    for child in container.iterchildren():
+        if child.tag == p_tag:
+            yield DocxParagraph(child, parent)
+        elif child.tag == tbl_tag:
+            yield DocxTable(child, parent)
+        elif child.tag == sdt_tag:
+            content = child.find(qn("w:sdtContent"))
+            if content is not None:
+                yield from _docx_iter_blocks(content, parent)
+
+
 class OfficeFileReader(BaseReader):
     """
     Reader for office document files.
@@ -292,7 +402,7 @@ class OfficeFileReader(BaseReader):
             # remembered by id(); those proxies are rebuilt and freed on every
             # access, so a reused address made a different paragraph look
             # "already processed" and it was silently dropped (DOCX-DROP-01).
-            for block in doc.iter_inner_content():
+            for block in _docx_iter_blocks(doc.element.body, doc):
                 if isinstance(block, DocxParagraph):
                     para = block
                     if para is not None:
@@ -306,7 +416,27 @@ class OfficeFileReader(BaseReader):
                             "index": paragraph_idx
                         }
                         result["elements"].append(para_data)
-                        
+
+                        # A text box anchored in this paragraph is content the
+                        # paragraph's own text stream does not contain. Emit it
+                        # here so it keeps the paragraph's place in the reading
+                        # order instead of being appended at the end or lost.
+                        for box_text in _docx_text_boxes(para):
+                            result["elements"].append({
+                                "type": "paragraph",
+                                "position": element_position,
+                                "text": box_text,
+                                "style": "Text Box",
+                                "index": paragraph_idx,
+                                "source": "text_box"
+                            })
+                            result["paragraphs"].append({
+                                "text": box_text,
+                                "style": "Text Box"
+                            })
+                            paragraph_idx += 1
+                            element_position += 1
+
                         # Also add to paragraphs list for backward compatibility (only non-empty)
                         if para_text:
                             result["paragraphs"].append({
@@ -327,25 +457,11 @@ class OfficeFileReader(BaseReader):
                             "rows": []
                         }
                         
-                        # A merged cell is the SAME tc element at several
-                        # grid positions: horizontally (one row) or vertically
-                        # (one column, several rows). python-docx hands back
-                        # that same text for every position the merge covers,
-                        # so a merged heading was stored - and displayed - as
-                        # many times as it had columns or rows. The text is
-                        # kept once, at the first position it covers; the
-                        # remaining positions stay empty, which keeps the grid
-                        # the same shape and leaves the reading order alone.
-                        emitted_cells = []
-                        for row in table.rows:
-                            row_cells = []
-                            for cell in row.cells:
-                                if any(cell._tc is seen for seen in emitted_cells):
-                                    row_cells.append("")
-                                    continue
-                                emitted_cells.append(cell._tc)
-                                row_cells.append(cell.text)
-                            table_data["rows"].append(row_cells)
+                        # Merged-cell de-duplication and nested-table
+                        # recursion both live in _docx_table_rows: the text of
+                        # a cell that contains a table used to be dropped
+                        # because cell.text does not descend into it.
+                        table_data["rows"] = _docx_table_rows(table)
                         
                         result["elements"].append(table_data)
                         result["tables"].append({

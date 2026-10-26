@@ -99,12 +99,45 @@ TOKEN_RE = re.compile(r"[0-9A-Za-z\u00c0-\u024f\u0400-\u04ff\u0590-\u05ff"
                       r"\u0600-\u06ff]+")
 
 
+#: This checkout's own absolute path. Reader error messages quote the file they
+#: failed on, so the archive would bake a machine path into a tracked file - and
+#: tests/unit/test_no_machine_paths.py scans tracked files for exactly that.
+_CHECKOUT = str(Path(__file__).resolve().parents[2])
+
+
+def scrub_paths(value):
+    """Remove this checkout's absolute path from any string in a record."""
+    if isinstance(value, str):
+        return value.replace(_CHECKOUT + "/", "").replace(_CHECKOUT, ".")
+    if isinstance(value, dict):
+        return {k: scrub_paths(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [scrub_paths(v) for v in value]
+    return value
+
+
 def tokens(text: str) -> collections.Counter:
     return collections.Counter(TOKEN_RE.findall(text or ""))
 
 
-def recall(oracle_text: str, stored_text: str) -> Dict[str, Any]:
-    """Share of the oracle's word occurrences that survived to storage."""
+def recall(oracle_text, stored_text: str) -> Dict[str, Any]:
+    """Share of the oracle's word occurrences that survived to storage.
+
+    ``oracle_text`` may be a list of readings of the same file - Word splits a
+    word across runs whenever the formatting changes, so "<w:t>In</w:t>
+    <w:t>voice</w:t>" is one word and "<w:t>Gmail</w:t><w:t>Shared</w:t>" in two
+    cells is two. Rather than guess, the caller passes both joins and the
+    reader gets the benefit of the better one: run boundaries are formatting,
+    and a metric that punished them would report formatting as loss.
+    """
+    if isinstance(oracle_text, (list, tuple)):
+        scored = [recall(text, stored_text) for text in oracle_text]
+        scored = [s for s in scored if s["oracle_tokens"]]
+        if not scored:
+            return {"recall": None, "oracle_tokens": 0, "missing_tokens": 0,
+                    "missing_sample": []}
+        return max(scored, key=lambda s: s["recall"])
+
     o, s = tokens(oracle_text), tokens(stored_text)
     total = sum(o.values())
     if not total:
@@ -284,7 +317,8 @@ def probe(path: Path, svc, pipe, corpus: Path, timeout: int) -> Dict[str, Any]:
         o = oracle_for(path, ext)
         rec["oracle"] = {k: v for k, v in o.items() if k != "text"}
         oracle_text = _oracle_text(path, ext)
-        if not (oracle_text or "").strip():
+        readings = oracle_text if isinstance(oracle_text, (list, tuple)) else [oracle_text]
+        if not any((r or "").strip() for r in readings):
             rec["verdict"] = "ERROR" if rec.get("error") else (
                 "OK-NO-ORACLE" if stored.strip() else "EMPTY-PLAUSIBLE")
         else:
@@ -333,12 +367,20 @@ def _oracle_text(path: Path, ext: str) -> str:
             # <w:t ...> only: a naive <w:t[^>]*> also matches <w:tbl>, which
             # put tag names into the oracle and made every DOCX look lossy.
             t_re = re.compile(r"<w:t(?:\s[^>]*)?>(.*?)</w:t>", re.S)
+            # mc:Fallback repeats the whole DrawingML block (text boxes
+            # included) for old readers. Counting it would ask the reader to
+            # store every boxed caption twice.
+            fallback_re = re.compile(r"<mc:Fallback>.*?</mc:Fallback>", re.S)
             with zipfile.ZipFile(path) as zf:
                 parts = [n for n in zf.namelist()
                          if n == "word/document.xml"
                          or re.match(r"word/(header|footer|footnotes|endnotes|comments)\d*\.xml$", n)]
-                return " ".join("".join(t_re.findall(zf.read(n).decode("utf-8", "replace")))
-                                for n in sorted(parts))
+                runs = {n: t_re.findall(fallback_re.sub("", zf.read(n).decode("utf-8", "replace")))
+                        for n in sorted(parts)}
+                # two readings: runs abut (as Word renders them) and runs are
+                # word-separated (as a paragraph/cell boundary implies)
+                return [" ".join("".join(r) for r in runs.values()),
+                        " ".join(" ".join(r) for r in runs.values())]
         if ext in (".xlsx", ".xlsm", ".xltx", ".xltm"):
             import openpyxl
 
@@ -439,7 +481,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     with jsonl.open("a", encoding="utf-8") as fh:
         for i, path in enumerate(files, 1):
             rec = probe(path, svc, pipe, corpus, args.timeout)
-            fh.write(json.dumps(scrub(rec), ensure_ascii=False) + "\n")
+            fh.write(json.dumps(scrub_paths(scrub(rec)), ensure_ascii=False) + "\n")
             fh.flush()
             print(f"[{i}/{len(files)}] {rec['verdict']:<16} "
                   f"recall={rec.get('recall')} units={len(rec.get('units', [])):4} "

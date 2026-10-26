@@ -44,8 +44,8 @@ IHC Personnel Roster (Name/Working Title):				NWCG Qualifications
 23				
 24				
 25				
-Location:      			Date:     			
-Respondent:      			Reviewed By:     			
+Location:     			Date:     			
+Respondent:     			Reviewed By:     			
 Key Code:  E = Exceeds Standard    M = Meets Standard    NI = Needs Improvement    NR = Not Reviewed						
 Description			Code	Remarks		
 		Crew meets Agency and National Standards for Organizational Requirements: Superintendent Assistant Superintendent/Captains Squad Boss Senior Firefighters Number of career positions (7 required)	     	     		
@@ -81,9 +81,9 @@ INCIDENT QUALIFICATIONS AND CERTIFICATION CONSIDERATIONS
 FACILITIES						
 		Annual Agency Safety Inspection is documented and complete.	     	     		
 		Computer/fax/telephone equipment meets the needs of the IHC(s).	     	     		
-		Facility has security for: Personnel records (privacy act notice OS-76 Item 43 schedule) Government equipment Personal equipment 	     	     		
-		Safety Equipment and Signing includes: (OSHA 29CFR1910) Fire Extinguisher Smoke alarms First aid kits 	     	     		
-		Storage of flammables/hazardous materials meets standards.  (OSHA 29 CFR1910) 	     	     		
+		Facility has security for: Personnel records (privacy act notice OS-76 Item 43 schedule) Government equipment Personal equipment	     	     		
+		Safety Equipment and Signing includes: (OSHA 29CFR1910) Fire Extinguisher Smoke alarms First aid kits	     	     		
+		Storage of flammables/hazardous materials meets standards.  (OSHA 29 CFR1910)	     	     		
 		Bulletin board includes appropriate postings: Unit and IHC organization charts. Emergency Notification Procedures 10 Standard Firefighting Orders 18 Watch Out Situations LCES Facility fire plan Fire danger information Fire weather information Smoking policy Sexual harassment policy/EEO counselors Department of Labor required information	     	     		
 		Employee right-to-know information/Material Safety Data Sheet (MSDS) is posted.	     	     		
 CACHE						
@@ -124,11 +124,11 @@ This is a listing of skills that an IHC should have as a minimum.  How the Profi
 
 Table 3
 PREPAREDNESS REVIEW SUMMARY
-Comments: 
-General preparedness of the crew: 
-Items which are deficient: 
-Corrective action to be taken: 
- I have reviewed the _____________________________ IHC program and certify the crew meets the requirements of the Standards for Interagency Hotshot Crew Operations. Crew Superintendent:  __________________________________________ Reviewing Official:  ____________________________________________ Signature and Title Date:  ________________________________ 
+Comments:
+General preparedness of the crew:
+Items which are deficient:
+Corrective action to be taken:
+I have reviewed the _____________________________ IHC program and certify the crew meets the requirements of the Standards for Interagency Hotshot Crew Operations. Crew Superintendent:  __________________________________________ Reviewing Official:  ____________________________________________ Signature and Title Date:  ________________________________
 
 
 

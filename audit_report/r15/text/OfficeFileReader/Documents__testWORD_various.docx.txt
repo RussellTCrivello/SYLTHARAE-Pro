@@ -1,5 +1,7 @@
 Footnote appears here
 
+[Style: Text Box] Here is a text box
+
 
 
 Bold italic underline superscript subscript strikethrough

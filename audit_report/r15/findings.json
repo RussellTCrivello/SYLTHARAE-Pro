@@ -1,48 +1,5 @@
 [
  {
-  "path": "Documents/testInstrLink.docx",
-  "family": "Word",
-  "verdict": "INCOMPLETE",
-  "reader": "OfficeFileReader",
-  "recall": 0.0,
-  "oracle_tokens": 28,
-  "missing_tokens": 28,
-  "missing_sample": [
-   "GmailShared",
-   "Workspace",
-   "Cooperate",
-   "Document",
-   "document",
-   "OneDrive",
-   "docxWord",
-   "Invoice",
-   "Amended",
-   "invoice",
-   "Expires",
-   "shared",
-   "Access",
-   "Google",
-   "Gmail",
-   "hours",
-   "2026",
-   "with",
-   "your",
-   "from"
-  ],
-  "stored_chars": 111,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 30,
-     "recall": 0.0
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   }
-  }
- },
- {
   "path": "Documents/testODTEncrypted.odt",
   "family": "OpenDocument",
   "verdict": "ERROR",
@@ -211,7 +168,7 @@
    "fox"
   ],
   "stored_chars": 967,
-  "error": "file '/home/user/SYLTHARAE-Pro/test-doc/Other/testWORD_macros.docm' is not a Word file, content type is 'application/vnd.ms-word.document.macroEnabled.main+xml'"
+  "error": "file 'test-doc/Other/testWORD_macros.docm' is not a Word file, content type is 'application/vnd.ms-word.document.macroEnabled.main+xml'"
  },
  {
   "path": "Text/testBMPfp.txt",
@@ -251,9 +208,9 @@
   "family": "Word",
   "verdict": "ERROR",
   "reader": "OfficeFileReader",
-  "recall": 0.0181,
-  "oracle_tokens": 166,
-  "missing_tokens": 163,
+  "recall": 0.0201,
+  "oracle_tokens": 149,
+  "missing_tokens": 146,
   "missing_sample": [
    "textReferencesReferences",
    "ObjectiveGetting",
@@ -277,50 +234,7 @@
    "replace"
   ],
   "stored_chars": 12,
-  "error": "file '/home/user/SYLTHARAE-Pro/test-doc/Other/testWORD_template.dotx' is not a Word file, content type is 'application/vnd.openxmlformats-officedocument.wordprocessingml.template.main+xml'"
- },
- {
-  "path": "Documents/017097.docx",
-  "family": "Word",
-  "verdict": "INCOMPLETE",
-  "reader": "OfficeFileReader",
-  "recall": 0.0242,
-  "oracle_tokens": 5157,
-  "missing_tokens": 5032,
-  "missing_sample": [
-   "QUESTIONNAIRESocial",
-   "applicationmanager",
-   "promotionEducation",
-   "APPLICATIONSAPPLY",
-   "citizenshipSocial",
-   "responsibilities",
-   "ConditionalDuty",
-   "Questionnaireor",
-   "AvailabilityThe",
-   "Identification",
-   "Qualifications",
-   "electronically",
-   "administrative",
-   "qualifications",
-   "correspondence",
-   "communications",
-   "interpretation",
-   "responsibility",
-   "NumberVN201385",
-   "AvailabilityIf"
-  ],
-  "stored_chars": 842,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 5218,
-     "recall": 0.083
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   }
-  }
+  "error": "file 'test-doc/Other/testWORD_template.dotx' is not a Word file, content type is 'application/vnd.openxmlformats-officedocument.wordprocessingml.template.main+xml'"
  },
  {
   "path": "Presentations/testODP_NPE.odp",
@@ -356,139 +270,21 @@
   "error": null
  },
  {
-  "path": "Documents/testWORD_template.docx",
-  "family": "Word",
-  "verdict": "INCOMPLETE",
-  "reader": "OfficeFileReader",
-  "recall": 0.0597,
-  "oracle_tokens": 134,
-  "missing_tokens": 126,
-  "missing_sample": [
-   "HetfieldGuitaristNeverneverland867",
-   "textReferencesReferences",
-   "MetallicaGuitaristSlept",
-   "ObjectiveGetting",
-   "tightEducation",
-   "challenging",
-   "experience",
-   "education",
-   "provided",
-   "matching",
-   "gripping",
-   "Location",
-   "Website",
-   "perfect",
-   "looking",
-   "started",
-   "replace",
-   "another",
-   "entries",
-   "appears"
-  ],
-  "stored_chars": 198,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 144,
-     "recall": 0.062
-    },
-    "text_boxes": {
-     "tokens": 16,
-     "recall": 0.0
-    },
-    "has_text_boxes": true
-   },
-   "word/endnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footer1.xml": {
-    "all": {
-     "tokens": 4,
-     "recall": 1.0
-    },
-    "text_boxes": {
-     "tokens": 4,
-     "recall": 1.0
-    },
-    "has_text_boxes": true
-   },
-   "word/footnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/header1.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/header2.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   }
-  }
- },
- {
-  "path": "Documents/testWORD_sdtInTextBox.docx",
-  "family": "Word",
-  "verdict": "INCOMPLETE",
-  "reader": "OfficeFileReader",
-  "recall": 0.1176,
-  "oracle_tokens": 17,
-  "missing_tokens": 15,
-  "missing_sample": [
-   "textrich",
-   "content",
-   "control",
-   "boxrich",
-   "inside",
-   "text"
-  ],
-  "stored_chars": 64,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 22,
-     "recall": 0.318
-    },
-    "text_boxes": {
-     "tokens": 16,
-     "recall": 0.25
-    },
-    "has_text_boxes": true
-   }
-  }
- },
- {
   "path": "Documents/testWORD_missing_text.docx",
   "family": "Word",
   "verdict": "INCOMPLETE",
   "reader": "OfficeFileReader",
-  "recall": 0.1667,
-  "oracle_tokens": 6,
-  "missing_tokens": 5,
+  "recall": 0.4286,
+  "oracle_tokens": 14,
+  "missing_tokens": 8,
   "missing_sample": [
-   "professionalExperienceBigCompanyotherCell0Rich",
-   "StatementSeasoned",
-   "cellCell2",
+   "professional",
+   "Seasoned",
+   "Company",
+   "Rich",
    "text",
+   "cell",
+   "Big",
    "in"
   ],
   "stored_chars": 161,
@@ -522,94 +318,6 @@
     "all": {
      "tokens": 1,
      "recall": 1.0
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footer3.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/header1.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/header2.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/header3.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   }
-  }
- },
- {
-  "path": "Documents/testPDFEmbeddingAndEmbedded.docx",
-  "family": "Word",
-  "verdict": "INCOMPLETE",
-  "reader": "OfficeFileReader",
-  "recall": 0.3333,
-  "oracle_tokens": 6,
-  "missing_tokens": 4,
-  "missing_sample": [
-   "haystackOuter"
-  ],
-  "stored_chars": 86,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 10,
-     "recall": 1.0
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/endnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footer1.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footer2.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
     },
     "text_boxes": null,
     "has_text_boxes": false
@@ -708,36 +416,244 @@
   }
  },
  {
-  "path": "Documents/testWORD_2006ml.docx",
-  "family": "Word",
+  "path": "Documents/testODFwithOOo3.odt",
+  "family": "OpenDocument",
   "verdict": "INCOMPLETE",
   "reader": "OfficeFileReader",
-  "recall": 0.4899,
-  "oracle_tokens": 198,
-  "missing_tokens": 101,
+  "recall": 0.717,
+  "oracle_tokens": 106,
+  "missing_tokens": 30,
   "missing_sample": [
-   "tabtabHeading1R1c1R1c2R4c1R3c2R4c2Heading2Some",
-   "SubtitleContentsHeading13Heading23Table",
-   "CaptionR1c1R1c2R1c3Embedded",
-   "4BibliographyMattmann",
-   "tableWordartr1c1This",
-   "tableWordartr1c1Here",
-   "Casescitation4This",
-   "contentRepeating",
-   "controlRepeating",
-   "controlSimple",
-   "citationindex",
-   "footnoteThis",
-   "Caption2The",
-   "spacesTable",
-   "thereSecond",
-   "contentDrop",
-   "AuthorThis",
-   "SubtitleMy",
-   "shapeThis",
-   "paragraph"
+   "Bibliography",
+   "Hanssens",
+   "rather",
+   "border",
+   "05T19",
+   "Title",
+   "2009",
+   "Bart",
+   "This",
+   "10",
+   "09",
+   "00",
+   "26",
+   "1"
   ],
-  "stored_chars": 1587,
+  "stored_chars": 682,
+  "error": null
+ },
+ {
+  "path": "Programming/big-preamble.html",
+  "family": "HTML",
+  "verdict": "PARTIAL",
+  "reader": "RemainingFileReader",
+  "recall": 0.8,
+  "oracle_tokens": 40,
+  "missing_tokens": 8,
+  "missing_sample": [
+   "2100",
+   "100",
+   "130",
+   "918",
+   "520",
+   "465",
+   "25",
+   "7"
+  ],
+  "stored_chars": 19948,
+  "error": null
+ },
+ {
+  "path": "Programming/testlargerbuffer.html",
+  "family": "HTML",
+  "verdict": "PARTIAL",
+  "reader": "RemainingFileReader",
+  "recall": 0.8,
+  "oracle_tokens": 40,
+  "missing_tokens": 8,
+  "missing_sample": [
+   "2100",
+   "100",
+   "130",
+   "918",
+   "520",
+   "465",
+   "25",
+   "7"
+  ],
+  "stored_chars": 19948,
+  "error": null
+ },
+ {
+  "path": "Spreadsheets/test-columnar.ods",
+  "family": "OpenDocument",
+  "verdict": "PARTIAL",
+  "reader": "OfficeFileReader",
+  "recall": 0.8632,
+  "oracle_tokens": 234,
+  "missing_tokens": 32,
+  "missing_sample": [
+   "10",
+   "of",
+   "0",
+   "1",
+   "2",
+   "4",
+   "3",
+   "7",
+   "5",
+   "6",
+   "8"
+  ],
+  "stored_chars": 833,
+  "error": null
+ },
+ {
+  "path": "Documents/testWORD_override_list_numbering.docx",
+  "family": "Word",
+  "verdict": "PARTIAL",
+  "reader": "OfficeFileReader",
+  "recall": 0.888,
+  "oracle_tokens": 125,
+  "missing_tokens": 14,
+  "missing_sample": [
+   "someOtherText",
+   "someText",
+   "st",
+   "th",
+   "1",
+   "2",
+   "3",
+   "4"
+  ],
+  "stored_chars": 560,
+  "error": null,
+  "docx_parts": {
+   "word/document.xml": {
+    "all": {
+     "tokens": 125,
+     "recall": 0.944
+    },
+    "text_boxes": null,
+    "has_text_boxes": false
+   }
+  }
+ },
+ {
+  "path": "Programming/test_ignore_IBM420.html",
+  "family": "HTML",
+  "verdict": "PARTIAL",
+  "reader": "RemainingFileReader",
+  "recall": 0.907,
+  "oracle_tokens": 86,
+  "missing_tokens": 8,
+  "missing_sample": [
+   "ABCDEFG",
+   "ltda",
+   "Tel",
+   "00",
+   "l"
+  ],
+  "stored_chars": 530,
+  "error": null
+ },
+ {
+  "path": "Text/russian.cp866.txt",
+  "family": "Plain text",
+  "verdict": "PARTIAL",
+  "reader": "RemainingFileReader",
+  "recall": 0.9211,
+  "oracle_tokens": 38,
+  "missing_tokens": 3,
+  "missing_sample": [
+   "\u017d",
+   "\u0178",
+   "\u0192"
+  ],
+  "stored_chars": 207,
+  "error": null
+ },
+ {
+  "path": "Documents/testWORD_various.docx",
+  "family": "Word",
+  "verdict": "PARTIAL",
+  "reader": "OfficeFileReader",
+  "recall": 0.9254,
+  "oracle_tokens": 134,
+  "missing_tokens": 10,
+  "missing_sample": [
+   "unde",
+   "line",
+   "ita",
+   "li",
+   "c",
+   "l",
+   "i",
+   "r"
+  ],
+  "stored_chars": 951,
+  "error": null,
+  "docx_parts": {
+   "word/document.xml": {
+    "all": {
+     "tokens": 120,
+     "recall": 0.917
+    },
+    "text_boxes": {
+     "tokens": 5,
+     "recall": 1.0
+    },
+    "has_text_boxes": true
+   },
+   "word/footer1.xml": {
+    "all": {
+     "tokens": 5,
+     "recall": 1.0
+    },
+    "text_boxes": null,
+    "has_text_boxes": false
+   },
+   "word/footnotes.xml": {
+    "all": {
+     "tokens": 4,
+     "recall": 1.0
+    },
+    "text_boxes": null,
+    "has_text_boxes": false
+   },
+   "word/header1.xml": {
+    "all": {
+     "tokens": 5,
+     "recall": 1.0
+    },
+    "text_boxes": null,
+    "has_text_boxes": false
+   }
+  }
+ },
+ {
+  "path": "Documents/testWORD_2006ml.docx",
+  "family": "Word",
+  "verdict": "PARTIAL",
+  "reader": "OfficeFileReader",
+  "recall": 0.9258,
+  "oracle_tokens": 229,
+  "missing_tokens": 17,
+  "missing_sample": [
+   "paragraph",
+   "Mattmann",
+   "Zitting",
+   "Second",
+   "here",
+   "2011",
+   "amp",
+   "ped",
+   "dog",
+   "um",
+   "j",
+   "t"
+  ],
+  "stored_chars": 2289,
   "error": null,
   "docx_parts": {
    "word/comments.xml": {
@@ -750,12 +666,12 @@
    },
    "word/document.xml": {
     "all": {
-     "tokens": 234,
-     "recall": 0.645
+     "tokens": 198,
+     "recall": 0.939
     },
     "text_boxes": {
-     "tokens": 72,
-     "recall": 0.5
+     "tokens": 36,
+     "recall": 1.0
     },
     "has_text_boxes": true
    },
@@ -828,22 +744,16 @@
  {
   "path": "Documents/testWORD_embedded_pics.docx",
   "family": "Word",
-  "verdict": "INCOMPLETE",
+  "verdict": "PARTIAL",
   "reader": "OfficeFileReader",
-  "recall": 0.6364,
-  "oracle_tokens": 22,
-  "missing_tokens": 8,
+  "recall": 0.9259,
+  "oracle_tokens": 27,
+  "missing_tokens": 2,
   "missing_sample": [
-   "footnoteThis",
-   "commentThis",
-   "endnoteThis",
-   "imageThis",
-   "sdtDeeply",
    "embedded",
-   "rich",
-   "text"
+   "Deeply"
   ],
-  "stored_chars": 268,
+  "stored_chars": 295,
   "error": null,
   "docx_parts": {
    "word/comments.xml": {
@@ -857,7 +767,7 @@
    "word/document.xml": {
     "all": {
      "tokens": 27,
-     "recall": 0.815
+     "recall": 0.926
     },
     "text_boxes": null,
     "has_text_boxes": false
@@ -931,34 +841,20 @@
  {
   "path": "Documents/testWORD_numbered_list.docx",
   "family": "Word",
-  "verdict": "INCOMPLETE",
+  "verdict": "PARTIAL",
   "reader": "OfficeFileReader",
-  "recall": 0.6585,
-  "oracle_tokens": 123,
-  "missing_tokens": 42,
+  "recall": 0.9281,
+  "oracle_tokens": 167,
+  "missing_tokens": 12,
   "missing_sample": [
-   "listyetanotherlistIntervening",
-   "paragraphfoobarbazbaqThis",
-   "multiLevelIntervening",
-   "bListfoobarbazThis",
-   "boxShortStout2",
-   "sixsevenseven",
-   "tableWithin",
-   "alphaGreek",
-   "breaklist",
-   "2Finally",
-   "ThisIsA",
-   "itemsAA",
-   "little",
-   "aseven",
-   "eseven",
-   "3Greek",
-   "beta11",
-   "1Cell",
-   "aCell",
-   "1list"
+   "Footnote",
+   "comment",
+   "list",
+   "here",
+   "gt",
+   "2"
   ],
-  "stored_chars": 1787,
+  "stored_chars": 1850,
   "error": null,
   "docx_parts": {
    "word/comments.xml": {
@@ -971,12 +867,12 @@
    },
    "word/document.xml": {
     "all": {
-     "tokens": 154,
-     "recall": 0.89
+     "tokens": 141,
+     "recall": 0.979
     },
     "text_boxes": {
-     "tokens": 26,
-     "recall": 0.462
+     "tokens": 13,
+     "recall": 1.0
     },
     "has_text_boxes": true
    },
@@ -992,669 +888,6 @@
     "all": {
      "tokens": 11,
      "recall": 1.0
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   }
-  }
- },
- {
-  "path": "Documents/testWORD_override_list_numbering.docx",
-  "family": "Word",
-  "verdict": "INCOMPLETE",
-  "reader": "OfficeFileReader",
-  "recall": 0.6883,
-  "oracle_tokens": 77,
-  "missing_tokens": 24,
-  "missing_sample": [
-   "ListFormatOverride1BCAB4Test",
-   "32nd3rd4th5thTest",
-   "between0th1st1st",
-   "variants000101",
-   "1someText1st",
-   "2someText1st",
-   "3someText1st",
-   "levels11",
-   "12Test",
-   "III22",
-   "bTest",
-   "11st",
-   "21st",
-   "II1",
-   "172",
-   "182",
-   "ii2",
-   "102",
-   "a1",
-   "I1"
-  ],
-  "stored_chars": 560,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 125,
-     "recall": 0.944
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   }
-  }
- },
- {
-  "path": "Documents/testWORD_text_box.docx",
-  "family": "Word",
-  "verdict": "INCOMPLETE",
-  "reader": "OfficeFileReader",
-  "recall": 0.7021,
-  "oracle_tokens": 94,
-  "missing_tokens": 28,
-  "missing_sample": [
-   "document",
-   "inside",
-   "text",
-   "This",
-   "body",
-   "the",
-   "box",
-   "of",
-   "is",
-   "in",
-   "a"
-  ],
-  "stored_chars": 309,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 38,
-     "recall": 1.0
-    },
-    "text_boxes": {
-     "tokens": 28,
-     "recall": 1.0
-    },
-    "has_text_boxes": true
-   },
-   "word/endnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footer1.xml": {
-    "all": {
-     "tokens": 28,
-     "recall": 1.0
-    },
-    "text_boxes": {
-     "tokens": 28,
-     "recall": 1.0
-    },
-    "has_text_boxes": true
-   },
-   "word/footnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/header1.xml": {
-    "all": {
-     "tokens": 28,
-     "recall": 1.0
-    },
-    "text_boxes": {
-     "tokens": 28,
-     "recall": 1.0
-    },
-    "has_text_boxes": true
-   }
-  }
- },
- {
-  "path": "Documents/testODFwithOOo3.odt",
-  "family": "OpenDocument",
-  "verdict": "INCOMPLETE",
-  "reader": "OfficeFileReader",
-  "recall": 0.717,
-  "oracle_tokens": 106,
-  "missing_tokens": 30,
-  "missing_sample": [
-   "Bibliography",
-   "Hanssens",
-   "rather",
-   "border",
-   "05T19",
-   "Title",
-   "2009",
-   "Bart",
-   "This",
-   "10",
-   "09",
-   "00",
-   "26",
-   "1"
-  ],
-  "stored_chars": 682,
-  "error": null
- },
- {
-  "path": "Documents/testWORD_various.docx",
-  "family": "Word",
-  "verdict": "PARTIAL",
-  "reader": "OfficeFileReader",
-  "recall": 0.7685,
-  "oracle_tokens": 108,
-  "missing_tokens": 25,
-  "missing_sample": [
-   "strikethroughitalicitalicunderlineHere",
-   "Keyword2This",
-   "boxFootnote",
-   "3Suddenly",
-   "hereBold",
-   "boxHere",
-   "1Bullet",
-   "2Bullet",
-   "1Number",
-   "2Number",
-   "hereRow",
-   "3Here",
-   "1Row",
-   "2Row",
-   "text",
-   "3Row",
-   "is",
-   "a"
-  ],
-  "stored_chars": 913,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 125,
-     "recall": 0.904
-    },
-    "text_boxes": {
-     "tokens": 10,
-     "recall": 0.8
-    },
-    "has_text_boxes": true
-   },
-   "word/footer1.xml": {
-    "all": {
-     "tokens": 5,
-     "recall": 1.0
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footnotes.xml": {
-    "all": {
-     "tokens": 4,
-     "recall": 1.0
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/header1.xml": {
-    "all": {
-     "tokens": 5,
-     "recall": 1.0
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   }
-  }
- },
- {
-  "path": "Documents/testHoverAndVml.docx",
-  "family": "Word",
-  "verdict": "PARTIAL",
-  "reader": "OfficeFileReader",
-  "recall": 0.8,
-  "oracle_tokens": 10,
-  "missing_tokens": 2,
-  "missing_sample": [
-   "Click",
-   "me"
-  ],
-  "stored_chars": 59,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 10,
-     "recall": 0.8
-    },
-    "text_boxes": {
-     "tokens": 2,
-     "recall": 0.0
-    },
-    "has_text_boxes": true
-   }
-  }
- },
- {
-  "path": "Programming/big-preamble.html",
-  "family": "HTML",
-  "verdict": "PARTIAL",
-  "reader": "RemainingFileReader",
-  "recall": 0.8,
-  "oracle_tokens": 40,
-  "missing_tokens": 8,
-  "missing_sample": [
-   "2100",
-   "100",
-   "130",
-   "918",
-   "520",
-   "465",
-   "25",
-   "7"
-  ],
-  "stored_chars": 19948,
-  "error": null
- },
- {
-  "path": "Programming/testlargerbuffer.html",
-  "family": "HTML",
-  "verdict": "PARTIAL",
-  "reader": "RemainingFileReader",
-  "recall": 0.8,
-  "oracle_tokens": 40,
-  "missing_tokens": 8,
-  "missing_sample": [
-   "2100",
-   "100",
-   "130",
-   "918",
-   "520",
-   "465",
-   "25",
-   "7"
-  ],
-  "stored_chars": 19948,
-  "error": null
- },
- {
-  "path": "Documents/testWORD.docx",
-  "family": "Word",
-  "verdict": "PARTIAL",
-  "reader": "OfficeFileReader",
-  "recall": 0.8302,
-  "oracle_tokens": 106,
-  "missing_tokens": 18,
-  "missing_sample": [
-   "HeadingHeading",
-   "subtitleMain",
-   "tableNested",
-   "TikaApache",
-   "styleThis",
-   "tableMore",
-   "againThis",
-   "TitleAnd",
-   "1Heading",
-   "2Heading",
-   "tableThe",
-   "itApache",
-   "POIThis",
-   "nested",
-   "3This",
-   "our",
-   "of"
-  ],
-  "stored_chars": 1158,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 107,
-     "recall": 0.963
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/endnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footer1.xml": {
-    "all": {
-     "tokens": 7,
-     "recall": 1.0
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/header1.xml": {
-    "all": {
-     "tokens": 7,
-     "recall": 1.0
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   }
-  }
- },
- {
-  "path": "Documents/testWORD_tableInRunInsideParagraph.docx",
-  "family": "Word",
-  "verdict": "PARTIAL",
-  "reader": "OfficeFileReader",
-  "recall": 0.8309,
-  "oracle_tokens": 136,
-  "missing_tokens": 23,
-  "missing_sample": [
-   "aliquyamgubergreaccusam",
-   "aliquyamaliquyamLorem",
-   "voluptuaaliquyamdiam",
-   "sanctusaliquyamdiam",
-   "etaliquyamaliquyam",
-   "nonumyaliquyamduo",
-   "duoAAAAtakimata",
-   "eaaliquyamLorem",
-   "gubergreaccusam",
-   "dolores",
-   "justo",
-   "ipsum",
-   "et"
-  ],
-  "stored_chars": 743,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 163,
-     "recall": 0.975
-    },
-    "text_boxes": {
-     "tokens": 44,
-     "recall": 0.909
-    },
-    "has_text_boxes": true
-   }
-  }
- },
- {
-  "path": "Spreadsheets/test-columnar.ods",
-  "family": "OpenDocument",
-  "verdict": "PARTIAL",
-  "reader": "OfficeFileReader",
-  "recall": 0.8632,
-  "oracle_tokens": 234,
-  "missing_tokens": 32,
-  "missing_sample": [
-   "10",
-   "of",
-   "0",
-   "1",
-   "2",
-   "4",
-   "3",
-   "7",
-   "5",
-   "6",
-   "8"
-  ],
-  "stored_chars": 833,
-  "error": null
- },
- {
-  "path": "Documents/testWORD_3imgs.docx",
-  "family": "Word",
-  "verdict": "PARTIAL",
-  "reader": "OfficeFileReader",
-  "recall": 0.8889,
-  "oracle_tokens": 18,
-  "missing_tokens": 2,
-  "missing_sample": [
-   "thisMore",
-   "dogThe"
-  ],
-  "stored_chars": 318,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 20,
-     "recall": 1.0
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   }
-  }
- },
- {
-  "path": "Documents/testWORD_embedded_pdf.docx",
-  "family": "Word",
-  "verdict": "PARTIAL",
-  "reader": "OfficeFileReader",
-  "recall": 0.8889,
-  "oracle_tokens": 9,
-  "missing_tokens": 1,
-  "missing_sample": [
-   "ByeBye"
-  ],
-  "stored_chars": 215,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 10,
-     "recall": 1.0
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   }
-  }
- },
- {
-  "path": "Documents/testWORD_embeded.docx",
-  "family": "Word",
-  "verdict": "PARTIAL",
-  "reader": "OfficeFileReader",
-  "recall": 0.8889,
-  "oracle_tokens": 18,
-  "missing_tokens": 2,
-  "missing_sample": [
-   "thisMore",
-   "dogThe"
-  ],
-  "stored_chars": 432,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 20,
-     "recall": 1.0
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   }
-  }
- },
- {
-  "path": "Programming/test_ignore_IBM420.html",
-  "family": "HTML",
-  "verdict": "PARTIAL",
-  "reader": "RemainingFileReader",
-  "recall": 0.907,
-  "oracle_tokens": 86,
-  "missing_tokens": 8,
-  "missing_sample": [
-   "ABCDEFG",
-   "ltda",
-   "Tel",
-   "00",
-   "l"
-  ],
-  "stored_chars": 530,
-  "error": null
- },
- {
-  "path": "Documents/018367.docx",
-  "family": "Word",
-  "verdict": "PARTIAL",
-  "reader": "OfficeFileReader",
-  "recall": 0.9174,
-  "oracle_tokens": 2495,
-  "missing_tokens": 206,
-  "missing_sample": [
-   "Approved539845786748495400",
-   "Denied857683460833454408",
-   "Filed231268174148130114",
-   "ExhibitsOrganizational",
-   "ObjectiveJustification",
-   "Approved99181801565848",
-   "Year971813644761296244",
-   "AvailabilityCrosswalk",
-   "StrategiesPerformance",
-   "AdjustmentsCrosswalk",
-   "Year2602682472089189",
-   "BUDGETCongressional",
-   "RequirementsProgram",
-   "AvailabilitySummary",
-   "SubmissionFebruary",
-   "JusticeRadiation",
-   "EstimateSection",
-   "DescriptionThe",
-   "BackgroundFrom",
-   "StatisticsOver"
-  ],
-  "stored_chars": 17424,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 2696,
-     "recall": 0.975
-    },
-    "text_boxes": {
-     "tokens": 84,
-     "recall": 0.75
-    },
-    "has_text_boxes": true
-   },
-   "word/endnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footer1.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footer2.xml": {
-    "all": {
-     "tokens": 1,
-     "recall": 1.0
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   }
-  }
- },
- {
-  "path": "Text/russian.cp866.txt",
-  "family": "Plain text",
-  "verdict": "PARTIAL",
-  "reader": "RemainingFileReader",
-  "recall": 0.9211,
-  "oracle_tokens": 38,
-  "missing_tokens": 3,
-  "missing_sample": [
-   "\u017d",
-   "\u0178",
-   "\u0192"
-  ],
-  "stored_chars": 207,
-  "error": null
- },
- {
-  "path": "Documents/014760.docx",
-  "family": "Word",
-  "verdict": "PARTIAL",
-  "reader": "OfficeFileReader",
-  "recall": 0.9253,
-  "oracle_tokens": 1097,
-  "missing_tokens": 82,
-  "missing_sample": [
-   "Qualifications12345678910111213141516171819202122232425Location",
-   "ReviewedDescriptionCodeRemarksCrew",
-   "ReportingSAFENETSAFECOMCA",
-   "SuperintendentAssistant",
-   "SituationsLCESFacility",
-   "specificationsLongline",
-   "authorityOperational",
-   "counselorsDepartment",
-   "frequenciesInventory",
-   "constructionChainsaw",
-   "organizationPortable",
-   "protectionMedivacMap",
-   "formsCommunications",
-   "flammablesDirecting",
-   "FirefightersNumber",
-   "pathogensHazardous",
-   "informationSmoking",
-   "VEHICLESPreventive",
-   "manifestingWeight",
-   "CONSIDERATIONSThe"
-  ],
-  "stored_chars": 9788,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 1210,
-     "recall": 0.983
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/endnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
     },
     "text_boxes": null,
     "has_text_boxes": false
@@ -1681,7 +914,7 @@
    "rokovPo\u010det",
    "spoluod"
   ],
-  "stored_chars": 1629,
+  "stored_chars": 1628,
   "error": null,
   "docx_parts": {
    "word/document.xml": {
@@ -1698,81 +931,6 @@
   }
  },
  {
-  "path": "Documents/017091.docx",
-  "family": "Word",
-  "verdict": "PARTIAL",
-  "reader": "OfficeFileReader",
-  "recall": 0.9423,
-  "oracle_tokens": 4971,
-  "missing_tokens": 287,
-  "missing_sample": [
-   "EvaluationQualifications",
-   "EndorsementDutiesMajor",
-   "AccommodationFederal",
-   "backgroundsDescribe",
-   "InformationBenefits",
-   "InformationVeterans",
-   "A2OverviewChaplain",
-   "CHAPLAINSQualified",
-   "DomiciliaryJanuary",
-   "practicesDescribe",
-   "HOLIOpportunities",
-   "EXAMINERSCHAPLAIN",
-   "Livermore94550605",
-   "MASSACHUSETTS518",
-   "writingDescribe",
-   "settingDescribe",
-   "AffairsNational",
-   "LOCATIONSCircle",
-   "Orleans70146667",
-   "PENNSYLVANIA503"
-  ],
-  "stored_chars": 34986,
-  "error": null,
-  "docx_parts": {
-   "word/document.xml": {
-    "all": {
-     "tokens": 5235,
-     "recall": 0.998
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/endnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footer1.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/footnotes.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   },
-   "word/header1.xml": {
-    "all": {
-     "tokens": 0,
-     "recall": null
-    },
-    "text_boxes": null,
-    "has_text_boxes": false
-   }
-  }
- },
- {
   "path": "Other/testPPT.ppsx",
   "family": "PowerPoint",
   "verdict": "ERROR",
@@ -1782,7 +940,7 @@
   "missing_tokens": 0,
   "missing_sample": [],
   "stored_chars": 272,
-  "error": "file '/home/user/SYLTHARAE-Pro/test-doc/Other/testPPT.ppsx' is not a PowerPoint file, content type is 'application/vnd.openxmlformats-officedocument.presentationml.slideshow.main+xml'"
+  "error": "file 'test-doc/Other/testPPT.ppsx' is not a PowerPoint file, content type is 'application/vnd.openxmlformats-officedocument.presentationml.slideshow.main+xml'"
  },
  {
   "path": "Archives/full_encrypted.7z",
@@ -2034,7 +1192,7 @@
   "missing_tokens": null,
   "missing_sample": null,
   "stored_chars": 0,
-  "error": "Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Documents/protected_normal_case.docx'"
+  "error": "Package not found at 'test-doc/Documents/protected_normal_case.docx'"
  },
  {
   "path": "Documents/protected_upper_case.docx",
@@ -2046,7 +1204,7 @@
   "missing_tokens": null,
   "missing_sample": null,
   "stored_chars": 0,
-  "error": "Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Documents/protected_upper_case.docx'"
+  "error": "Package not found at 'test-doc/Documents/protected_upper_case.docx'"
  },
  {
   "path": "Documents/testPDF_no_extract_no_accessibility_owner_user.pdf",
@@ -2118,7 +1276,7 @@
   "missing_tokens": null,
   "missing_sample": null,
   "stored_chars": 0,
-  "error": "Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Documents/testWORD_protected_passtika.docx'"
+  "error": "Package not found at 'test-doc/Documents/testWORD_protected_passtika.docx'"
  },
  {
   "path": "Documents/testWORD_truncated.docx",
@@ -2130,7 +1288,7 @@
   "missing_tokens": null,
   "missing_sample": null,
   "stored_chars": 0,
-  "error": "Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Documents/testWORD_truncated.docx'"
+  "error": "Package not found at 'test-doc/Documents/testWORD_truncated.docx'"
  },
  {
   "path": "Documents/testWordPerfect_42.doc",
@@ -2286,7 +1444,7 @@
   "missing_tokens": null,
   "missing_sample": null,
   "stored_chars": 0,
-  "error": "Package not found at '/home/user/SYLTHARAE-Pro/test-doc/Presentations/testPPT_protected_passtika.pptx'"
+  "error": "Package not found at 'test-doc/Presentations/testPPT_protected_passtika.pptx'"
  },
  {
   "path": "Spreadsheets/password.xls",

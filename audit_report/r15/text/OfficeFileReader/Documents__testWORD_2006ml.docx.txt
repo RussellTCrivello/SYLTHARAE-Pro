@@ -1,3 +1,21 @@
+
+
+[Style: Text Box] This is the Author
+
+[Style: Text Box] This is an engaging title page
+
+[Style: Text Box] My Document Title My Document Subtitle
+
+
+
+[Style: TOC Heading] Contents
+
+[Style: toc 1] Heading1	3
+
+[Style: toc 1] Heading2	3
+
+
+
 [Style: table of figures] Table 1: Table1 Caption	2
 
 
@@ -21,6 +39,8 @@ The quick brown fox jumped over the lazy brown .
 
 
 This should have a footnote
+
+[Style: Text Box] This is a text box
 
 
 
@@ -48,13 +68,15 @@ Table 1
 R1c1	R1c2	R1c3
 		
 		
-		
+	Embedded table r1c1	
 
 
 
 
 
 
+
+[Style: Text Box] This is text within a shape
 
 
 
@@ -80,13 +102,29 @@ First paragraph there
 
 
 
+Rich text content control
 
 
 
+Simple text content control
 
 
 
+Repeating content
 
+Repeating content
+
+Repeating content
+
+Repeating content
+
+
+
+Drop down1
+
+
+
+11/16/2016
 
 
 
@@ -141,6 +179,8 @@ Some text
 
 
 
+[Style: Text Box] This is some serious word art With table Wordartr1c1
+
 
 
 
@@ -180,6 +220,12 @@ Here’s a citation
 [Style: index 1] index, 4
 
 
+
+
+
+[Style: Heading 1] Bibliography
+
+[Style: Bibliography] Mattmann, C., & Zitting, J. (2011). Tika in Action. The Internet: Manning.
 
 
 
