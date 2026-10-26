@@ -1,0 +1,58 @@
+test_file_select_toggle.py - the one failure this round introduced, repaired
+===========================================================================
+
+The round-14 fix that gave each co-loading action name one owner per page
+replaced an assignment the file pinned by its exact text:
+
+    window.toggleAllFilesSelection = fileSelection.toggleAllFilesSelection;
+  -> window.toggleAllFilesSelectionShared = fileSelection.toggleAllFilesSelection;
+     (the files list page now publishes the unsuffixed name itself)
+
+Which side was wrong
+--------------------
+The product behaviour is correct and was left alone: the files list page owns
+`toggleAllFilesSelection` and delegates to FileManagement; the shared module
+export carries the suffix; and the FMAS control in
+static/js/modules/views/file-view.js names the suffixed copy explicitly
+(`data-on-click="toggleAllFilesSelectionShared?.()"`). The stale side was the
+test, which asserted the text of one assignment rather than the ownership rule
+it was protecting.
+
+The repair asserts the rule, not the text, and is strictly stronger:
+
+  * the suffixed export exists;
+  * `window.toggleAllFilesSelection = ` does NOT appear in the manager (an
+    assignment there is exactly the collision the round fixed);
+  * the control that consumes the shared copy names it explicitly, so the
+    suffix cannot silently become a dead button.
+
+RED - before the repair, at 9377d3c
+-----------------------------------
+$ python -m pytest tests/unit/test_file_select_toggle.py -q -p no:randomly -x
+sss.F
+=================================== FAILURES ===================================
+_____ TestTheWiring.test_the_function_manager_exposes_the_module_function ______
+>       assert "window.toggleAllFilesSelection = fileSelection.toggleAllFilesSelection;" in source
+E       assert 'window.toggleAllFilesSelection = fileSelection.toggleAllFilesSelection;' in "..."
+tests/unit/test_file_select_toggle.py:77: AssertionError
+FAILED tests/unit/test_file_select_toggle.py::TestTheWiring::test_the_function_manager_exposes_the_module_function
+
+GREEN - after the repair
+------------------------
+$ python -m pytest tests/unit/test_file_select_toggle.py -q -p no:randomly
+sss.....                                                                 [100%]
+5 passed, 3 skipped
+(the three skips are the node-dependent behaviours: no node is installed here)
+
+$ python -m pytest tests/unit/test_js_action_ownership.py \
+                   tests/unit/test_js_global_collisions.py -q -p no:randomly
+..........                                                               [100%]
+10 passed
+
+Scope of this check
+-------------------
+Only this file and the two ownership files were re-run: the environment for this
+repair had pytest and nothing else, so the full suite was NOT re-run and the
+clean-clone counts in item5_clean_clone_suite.md still describe the pre-repair
+state (39 unit failing identifiers, one of them this one). The other 38 are
+untouched by this change and are still open.
