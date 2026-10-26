@@ -25,6 +25,7 @@ import gzip
 import hashlib
 import json
 import re
+import resource
 import sys
 import time
 import traceback
@@ -300,6 +301,17 @@ def probe(path: Path, svc, pipe, corpus: Path, timeout: int) -> Dict[str, Any]:
         "bytes": path.stat().st_size,
         "started_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
+
+    def peak_memory_kb() -> int:
+        """High-water mark of this process, in KiB.
+
+        Not the file's own footprint: the harness reads files in one process, so
+        this is a running maximum, and it is reported as an upper bound rather
+        than per-file attribution. A true per-file figure needs a child process
+        per file (see the backlog); a bound that is honest beats a number that
+        is invented.
+        """
+        return int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
     import signal
 
     signal.signal(signal.SIGALRM, _alarm)
@@ -330,6 +342,7 @@ def probe(path: Path, svc, pipe, corpus: Path, timeout: int) -> Dict[str, Any]:
         rec["stored_chars"] = len(stored)
         rec["stored_sha256"] = sha256_text(stored)
         rec["lone_surrogates"] = len(re.findall(r"[\ud800-\udfff]", stored))
+        rec["peak_rss_kb"] = peak_memory_kb()
         rec["units"] = units_from_content(content)
         rec["unit_kinds"] = dict(collections.Counter(u["kind"] for u in rec["units"]))
 
@@ -338,8 +351,17 @@ def probe(path: Path, svc, pipe, corpus: Path, timeout: int) -> Dict[str, Any]:
         oracle_text = _oracle_text(path, ext)
         readings = oracle_text if isinstance(oracle_text, (list, tuple)) else [oracle_text]
         if not any((r or "").strip() for r in readings):
-            rec["verdict"] = "ERROR" if rec.get("error") else (
-                "OK-NO-ORACLE" if stored.strip() else "EMPTY-PLAUSIBLE")
+            if rec.get("error"):
+                rec["verdict"] = "ERROR"
+            elif not stored.strip():
+                rec["verdict"] = "EMPTY-PLAUSIBLE"
+            else:
+                proxies = ocr_proxies(content)
+                if proxies.get("kind") == "ocr":
+                    rec["verdict"] = "UNVERIFIABLE"
+                    rec["proxies"] = proxies
+                else:
+                    rec["verdict"] = "OK-NO-ORACLE"
         else:
             # the oracle text is re-derived from the file, never stored
             rec.update(recall(oracle_text, stored))
@@ -473,6 +495,45 @@ def _ooxml_runs(xml: str, namespace: str) -> List[str]:
                 out.append("".join(runs))
         return out or [re.sub(r"<[^>]*>", "", capture)
                        for capture in pattern.findall(xml)]
+
+
+def ocr_proxies(content: dict) -> dict:
+    """What *can* be said about text no oracle can check.
+
+    A scanned page has no ground truth: the only honest verdict is
+    UNVERIFIABLE. Reporting OK-NO-ORACLE for it claimed the extraction was fine
+    because nothing objected. The proxies below are what evidence exists -
+    coverage (pages that produced text), the engine's own confidence, and how
+    much text per page - together with how it could actually be verified.
+    """
+    pages = content.get("pages") if isinstance(content, dict) else None
+    if not isinstance(pages, list) or not pages:
+        text = str(content.get("text") or "") if isinstance(content, dict) else ""
+        if not text.strip():
+            return {}
+        return {"kind": "text", "chars": len(text),
+                "how_to_verify": "second reader or human transcription"}
+
+    ocr_pages = [p for p in pages if "ocr" in str(p.get("method") or "")]
+    confidences = [float(p["ocr_confidence"]) for p in pages
+                   if isinstance(p.get("ocr_confidence"), (int, float))]
+    with_text = [p for p in pages if str(p.get("text") or "").strip()]
+    return {
+        "kind": "ocr",
+        "pages": len(pages),
+        "ocr_pages": len(ocr_pages),
+        "pages_with_text": len(with_text),
+        "coverage": round(len(with_text) / len(pages), 3) if pages else 0.0,
+        "chars_per_page": round(
+            sum(len(str(p.get("text") or "")) for p in pages) / len(pages), 1),
+        "mean_confidence": (round(sum(confidences) / len(confidences), 3)
+                            if confidences else None),
+        "engines": sorted({str(p.get("ocr_engine") or p.get("method") or "?")
+                           for p in ocr_pages}),
+        "how_to_verify": ("recognition of a scanned page cannot be compared with "
+                          "an independent reading of the same file; verify with a "
+                          "second engine on a sample, or human transcription"),
+    }
 
 
 def _oracle_text(path: Path, ext: str) -> str:

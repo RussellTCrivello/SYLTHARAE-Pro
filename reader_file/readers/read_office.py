@@ -1714,6 +1714,13 @@ class OfficeFileReader(BaseReader):
                     "name": sheet_name,
                     "max_row": sheet.max_row,
                     "max_column": sheet.max_column,
+                    # A hidden sheet is still part of the workbook, and is
+                    # often where a spreadsheet keeps the working it does not
+                    # want on screen. It is read like any other sheet; the state
+                    # is stored beside the content rather than used to skip it.
+                    "state": str(getattr(sheet, "sheet_state", "visible") or "visible"),
+                    "hidden": str(getattr(sheet, "sheet_state", "visible")
+                                  or "visible") != "visible",
                     "data": []
                 }
 
@@ -1740,12 +1747,50 @@ class OfficeFileReader(BaseReader):
                     sheet_data["cells_read"] = sheet_cells
                 sheet_data["cells_available"] = (
                     (sheet.max_row or 0) * (sheet.max_column or 0))
+
+                # Cell comments are content: a reviewer's note, a decision, a
+                # correction. openpyxl attaches them to cells, so a value-only
+                # read of the sheet never sees them and they were stored
+                # nowhere. Collected per sheet with their anchor cell so the
+                # note keeps its address.
+                try:
+                    comments = []
+                    for row in sheet.iter_rows():
+                        for cell in row:
+                            note = getattr(cell, "comment", None)
+                            if note is None or not str(getattr(note, "text", "") or "").strip():
+                                continue
+                            comments.append({
+                                "cell": cell.coordinate,
+                                "author": str(getattr(note, "author", "") or ""),
+                                "text": " ".join(str(note.text).split()),
+                            })
+                    if comments:
+                        sheet_data["comments"] = comments
+                except Exception as comment_error:
+                    sheet_data["comments_error"] = str(comment_error)[:200]
+
                 result["sheets"][sheet_name] = sheet_data
 
             result["cells_read"] = cells_read
             if any((sheet or {}).get("truncated")
                    for sheet in result["sheets"].values()):
                 result["truncated"] = True
+
+            hidden_sheets = [name for name, sheet in result["sheets"].items()
+                             if (sheet or {}).get("hidden")]
+            if hidden_sheets:
+                result["hidden_sheets"] = hidden_sheets
+            comment_count = sum(len(sheet.get("comments") or [])
+                                for sheet in result["sheets"].values())
+            if comment_count:
+                result["comment_count"] = comment_count
+                result["forensic_text"] = "\n".join(
+                    f"Comment on {name}!{note['cell']}"
+                    + (f" ({note['author']})" if note.get("author") else "")
+                    + f": {note['text']}"
+                    for name, sheet in result["sheets"].items()
+                    for note in (sheet.get("comments") or []))
             
             # Extract and OCR images from the workbook
             try:
