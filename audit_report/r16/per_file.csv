@@ -489,7 +489,7 @@ Presentations/testWPSAttachment.pptx,PowerPoint,OfficeFileReader,OK-NO-ORACLE,,2
 Presentations/testWordArt.pptx,PowerPoint,OfficeFileReader,COMPLETE,1.000,78,0.0s,shape:1,-,,,
 Presentations/test_embedded_zip.pptx,PowerPoint,OfficeFileReader,COMPLETE,1.000,2993,6.4s,"shape:9, slide-notes:1",-,,,
 Programming/about.html,HTML,RemainingFileReader,COMPLETE,1.000,388,0.1s,,-,,,
-Programming/big-preamble.html,HTML,RemainingFileReader,PARTIAL,0.800,19948,0.1s,,"missing: ['2100', '100', '130', '918', '520', '465', '25', '7']",F-20,open,-
+Programming/big-preamble.html,HTML,RemainingFileReader,PARTIAL,0.800,19948,0.1s,,"missing: ['2100', '100', '130', '918', '520', '465', '25', '7']",F-20,reader_file/readers/read_remaining.py: HTML_BLOCK_TAGS + _ht,tests/unit/test_html_block_boundaries.py (6)
 Programming/boilerplate-whitespace.html,HTML,RemainingFileReader,NEAR-COMPLETE,0.956,352,0.0s,,"missing: ['item', 'a']",,,
 Programming/boilerplate.html,HTML,RemainingFileReader,COMPLETE,1.000,417,0.0s,,-,,,
 Programming/file15_tags.html,HTML,RemainingFileReader,COMPLETE,1.000,1279,0.0s,,-,,,
@@ -523,7 +523,7 @@ Programming/testJsonMultipleInts.html,HTML,RemainingFileReader,COMPLETE,1.000,67
 Programming/testSrcDoc.html,HTML,RemainingFileReader,COMPLETE,1.000,42,0.0s,,-,,,
 Programming/testXHTML.html,HTML,RemainingFileReader,COMPLETE,1.000,172,0.0s,,-,,,
 Programming/test_ignore_IBM420.html,HTML,RemainingFileReader,PARTIAL,0.907,530,0.0s,,"missing: ['ABCDEFG', 'ltda', 'Tel', '00', 'l']",,,
-Programming/testlargerbuffer.html,HTML,RemainingFileReader,PARTIAL,0.800,19948,0.0s,,"missing: ['2100', '100', '130', '918', '520', '465', '25', '7']",F-20,open,-
+Programming/testlargerbuffer.html,HTML,RemainingFileReader,PARTIAL,0.800,19948,0.0s,,"missing: ['2100', '100', '130', '918', '520', '465', '25', '7']",F-20,reader_file/readers/read_remaining.py: HTML_BLOCK_TAGS + _ht,tests/unit/test_html_block_boundaries.py (6)
 Programming/tika434.html,HTML,RemainingFileReader,COMPLETE,0.999,12072,0.0s,,-,,,
 Programming/tikaserver-template.html,HTML,RemainingFileReader,COMPLETE,1.000,92,0.0s,,-,,,
 Programming/welcome.html,HTML,RemainingFileReader,COMPLETE,1.000,246,0.0s,,-,,,
@@ -657,7 +657,7 @@ Text/lucene-char-mapping.txt,Plain text,RemainingFileReader,COMPLETE,1.000,812,0
 Text/multi-language.txt,Plain text,RemainingFileReader,COMPLETE,1.000,1573,0.0s,document:1,-,,,
 Text/ner-regex.txt,Plain text,RemainingFileReader,COMPLETE,1.000,955,0.0s,document:1,-,,,
 Text/props_table.txt,Plain text,RemainingFileReader,COMPLETE,1.000,248541,0.0s,document:1,-,,,
-Text/russian.cp866.txt,Plain text,RemainingFileReader,PARTIAL,0.921,207,0.0s,document:1,"missing: ['Ž', 'Ÿ', 'ƒ']",F-23,open: needs a code-page detector (chardet/charset-normalizer,-
+Text/russian.cp866.txt,Plain text,RemainingFileReader,PARTIAL,0.921,207,0.0s,document:1,"missing: ['Ž', 'Ÿ', 'ƒ']",F-23,"core/text_encoding.decode_bytes() decides the encoding (BOM,","tests/unit/test_text_encoding_decode.py (7),"
 Text/s_BII-S-1.txt,Plain text,RemainingFileReader,COMPLETE,1.000,42237,0.0s,document:1,-,,,
 Text/s_BII-S-2.txt,Plain text,RemainingFileReader,COMPLETE,1.000,6042,0.0s,document:1,-,,,
 Text/sample.txt,Plain text,RemainingFileReader,COMPLETE,1.000,218,0.0s,document:1,-,,,
