@@ -3,7 +3,7 @@
 {% block title %}Scenarios{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/monitoring.css') }}">
+
 {% endblock %}
 
 {% block content %}
@@ -82,11 +82,6 @@
 {% endblock %}
 
 {% block scripts_extra %}
-<script src="{{ url_for('static', filename='js/pages/scenarios-page.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/pages/scenarios-page.js') }}"></script>
 <script id="monitoring-page-data" type="application/json">{{ page_data | tojson }}</script>
-<script>
-    // Pass page data to JS
-    window.pageData = {{ page_data | tojson }};
-    window.starterScenario = {{ page_data.starter_scenario | tojson }};
-</script>
 {% endblock %}

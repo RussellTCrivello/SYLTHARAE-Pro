@@ -1,0 +1,1785 @@
+{
+  "database": {
+    "name": "file_analysis_scale",
+    "paths": 100000,
+    "content_signals": 75000
+  },
+  "measured_at": "2026-10-25T15:44:47",
+  "requests": [
+    {
+      "url": "/api/paths?offset=0&limit=50",
+      "status": 200,
+      "ms": 10.4,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 3.9,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 1.93,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.248,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "UPDATE sessions SET expires_at = %s WHERE session_id = %s",
+          "ms": 0.347,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=5000&limit=50",
+      "status": 200,
+      "ms": 10.5,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 4.2,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.036,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 0.94,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "SELECT id, file_name, file_path, file_size, file_type, file_status, file_date, date_creation, context_id FROM paths WHERE 1=1 ORDER BY date_creation DESC OFFSET %s LIMIT %s",
+          "ms": 0.858,
+          "caller": "Api.utils_module.execute_query"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=50000&limit=50",
+      "status": 200,
+      "ms": 16.5,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 10.6,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT id, file_name, file_path, file_size, file_type, file_status, file_date, date_creation, context_id FROM paths WHERE 1=1 ORDER BY date_creation DESC OFFSET %s LIMIT %s",
+          "ms": 7.134,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.01,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.041,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=99500&limit=50",
+      "status": 200,
+      "ms": 20.9,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 14.3,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT id, file_name, file_path, file_size, file_type, file_status, file_date, date_creation, context_id FROM paths WHERE 1=1 ORDER BY date_creation DESC OFFSET %s LIMIT %s",
+          "ms": 10.867,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 1.973,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.074,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=0&limit=500",
+      "status": 200,
+      "ms": 12.3,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 4.0,
+      "returned_rows": 500,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 1.88,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.22,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "SELECT id, file_name, file_path, file_size, file_type, file_status, file_date, date_creation, context_id FROM paths WHERE 1=1 ORDER BY date_creation DESC OFFSET %s LIMIT %s",
+          "ms": 0.517,
+          "caller": "Api.utils_module.execute_query"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=99500&limit=500",
+      "status": 200,
+      "ms": 21.4,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 13.8,
+      "returned_rows": 500,
+      "slowest": [
+        {
+          "sql": "SELECT id, file_name, file_path, file_size, file_type, file_status, file_date, date_creation, context_id FROM paths WHERE 1=1 ORDER BY date_creation DESC OFFSET %s LIMIT %s",
+          "ms": 9.857,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.318,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.174,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=0&limit=50&sort=file_date&order=desc",
+      "status": 200,
+      "ms": 9.4,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 3.5,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 1.983,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.01,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "UPDATE sessions SET expires_at = %s WHERE session_id = %s",
+          "ms": 0.218,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=0&limit=50&status=Read",
+      "status": 200,
+      "ms": 9.6,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 3.7,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.079,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 0.982,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "UPDATE sessions SET expires_at = %s WHERE session_id = %s",
+          "ms": 0.299,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/signals?limit=50",
+      "status": 200,
+      "ms": 242.0,
+      "statements": 11,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 233.8,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT",
+          "ms": 79.667,
+          "caller": "services.detection.signal_query._facets"
+        },
+        {
+          "sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.det",
+          "ms": 75.088,
+          "caller": "services.detection.signal_query.explore"
+        },
+        {
+          "sql": "SELECT COUNT(*), COUNT(DISTINCT s.hash_id) FROM content_signals s WHERE EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc",
+          "ms": 74.395,
+          "caller": "services.detection.signal_query.explore"
+        }
+      ]
+    },
+    {
+      "url": "/api/signals?limit=50&signal_type=place_mention",
+      "status": 200,
+      "ms": 208.4,
+      "statements": 11,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 198.0,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT",
+          "ms": 79.466,
+          "caller": "services.detection.signal_query._facets"
+        },
+        {
+          "sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.det",
+          "ms": 60.512,
+          "caller": "services.detection.signal_query.explore"
+        },
+        {
+          "sql": "SELECT COUNT(*), COUNT(DISTINCT s.hash_id) FROM content_signals s WHERE (s.signal_type = ANY(%s)) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h",
+          "ms": 52.339,
+          "caller": "services.detection.signal_query.explore"
+        }
+      ]
+    },
+    {
+      "url": "/api/signals?limit=50&offset=1000",
+      "status": 200,
+      "ms": 292.1,
+      "statements": 11,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 281.4,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT",
+          "ms": 122.241,
+          "caller": "services.detection.signal_query._facets"
+        },
+        {
+          "sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.det",
+          "ms": 89.564,
+          "caller": "services.detection.signal_query.explore"
+        },
+        {
+          "sql": "SELECT COUNT(*), COUNT(DISTINCT s.hash_id) FROM content_signals s WHERE EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc",
+          "ms": 62.867,
+          "caller": "services.detection.signal_query.explore"
+        }
+      ]
+    },
+    {
+      "url": "/api/signals?limit=50&offset=49950",
+      "status": 200,
+      "ms": 278.0,
+      "statements": 11,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 267.7,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.det",
+          "ms": 111.422,
+          "caller": "services.detection.signal_query.explore"
+        },
+        {
+          "sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT",
+          "ms": 85.168,
+          "caller": "services.detection.signal_query._facets"
+        },
+        {
+          "sql": "SELECT COUNT(*), COUNT(DISTINCT s.hash_id) FROM content_signals s WHERE EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc",
+          "ms": 65.479,
+          "caller": "services.detection.signal_query.explore"
+        }
+      ]
+    },
+    {
+      "url": "/api/signals/horizon?limit=50",
+      "status": 200,
+      "ms": 87.5,
+      "statements": 11,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 78.8,
+      "returned_rows": 0,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*), COUNT(*) FILTER (WHERE r.hash_id IS NULL), COUNT(*) FILTER (WHERE r.status = 'failed'), COUNT(*) FILTER (WHERE r.status <> 'failed' AND r.detector_ver IS DISTINCT FROM %s), COUNT(*) F",
+          "ms": 72.908,
+          "caller": "services.detection.signal_query.coverage"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 1.946,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.462,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/signals?limit=50&identifier_kind=email",
+      "status": 200,
+      "ms": 89.7,
+      "statements": 11,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 78.8,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT",
+          "ms": 29.514,
+          "caller": "services.detection.signal_query._facets"
+        },
+        {
+          "sql": "SELECT COUNT(*), COUNT(DISTINCT s.hash_id) FROM content_signals s WHERE s.evidence->>'kind' = ANY(%s) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN has",
+          "ms": 27.127,
+          "caller": "services.detection.signal_query.explore"
+        },
+        {
+          "sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.det",
+          "ms": 15.883,
+          "caller": "services.detection.signal_query.explore"
+        }
+      ]
+    },
+    {
+      "url": "/api/signals?limit=50&identifier_kind=email&offset=8000",
+      "status": 200,
+      "ms": 95.2,
+      "statements": 11,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 84.4,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.det",
+          "ms": 27.95,
+          "caller": "services.detection.signal_query.explore"
+        },
+        {
+          "sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT",
+          "ms": 26.37,
+          "caller": "services.detection.signal_query._facets"
+        },
+        {
+          "sql": "SELECT COUNT(*), COUNT(DISTINCT s.hash_id) FROM content_signals s WHERE s.evidence->>'kind' = ANY(%s) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN has",
+          "ms": 24.739,
+          "caller": "services.detection.signal_query.explore"
+        }
+      ]
+    },
+    {
+      "url": "/api/signals/horizon?limit=50&identifier_kind=email",
+      "status": 200,
+      "ms": 97.7,
+      "statements": 11,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 89.7,
+      "returned_rows": 0,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*), COUNT(*) FILTER (WHERE r.hash_id IS NULL), COUNT(*) FILTER (WHERE r.status = 'failed'), COUNT(*) FILTER (WHERE r.status <> 'failed' AND r.detector_ver IS DISTINCT FROM %s), COUNT(*) F",
+          "ms": 83.551,
+          "caller": "services.detection.signal_query.coverage"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.144,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.338,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/files?page=1",
+      "status": 200,
+      "ms": 99.4,
+      "statements": 17,
+      "repeated_statements": 7,
+      "repeated_detail": [
+        {
+          "count": 7,
+          "sql": "SELECT 1"
+        },
+        {
+          "count": 2,
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.id WHERE p.file_stat"
+        }
+      ],
+      "sql_ms": 74.1,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "SELECT p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, COALESCE(s.name, 'Unknown') as source_name, COALESCE(si.name, 'Unknown') as side_name FROM",
+          "ms": 49.841,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.",
+          "ms": 10.162,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.",
+          "ms": 5.653,
+          "caller": "Api.utils_module.execute_query"
+        }
+      ]
+    },
+    {
+      "url": "/files?page=5",
+      "status": 200,
+      "ms": 105.7,
+      "statements": 17,
+      "repeated_statements": 7,
+      "repeated_detail": [
+        {
+          "count": 7,
+          "sql": "SELECT 1"
+        },
+        {
+          "count": 2,
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.id WHERE p.file_stat"
+        }
+      ],
+      "sql_ms": 77.3,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "SELECT p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, COALESCE(s.name, 'Unknown') as source_name, COALESCE(si.name, 'Unknown') as side_name FROM",
+          "ms": 54.894,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.",
+          "ms": 8.998,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.",
+          "ms": 5.197,
+          "caller": "Api.utils_module.execute_query"
+        }
+      ]
+    },
+    {
+      "url": "/files?page=40",
+      "status": 200,
+      "ms": 106.4,
+      "statements": 17,
+      "repeated_statements": 7,
+      "repeated_detail": [
+        {
+          "count": 7,
+          "sql": "SELECT 1"
+        },
+        {
+          "count": 2,
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.id WHERE p.file_stat"
+        }
+      ],
+      "sql_ms": 78.8,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "SELECT p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, COALESCE(s.name, 'Unknown') as source_name, COALESCE(si.name, 'Unknown') as side_name FROM",
+          "ms": 56.047,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.",
+          "ms": 9.307,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.",
+          "ms": 5.142,
+          "caller": "Api.utils_module.execute_query"
+        }
+      ]
+    },
+    {
+      "url": "/api/lexis/manage/files?page=1",
+      "status": 200,
+      "ms": 254.5,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 246.0,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "WITH file_term_counts AS ( SELECT hc.id AS context_id, ( COUNT(DISTINCT wc.word_id) + COUNT(DISTINCT kh.keyword_id) )::int AS term_count FROM hash_contexts hc LEFT JOIN words_hashs wh ON wh.hash_id = ",
+          "ms": 241.857,
+          "caller": "Api.services.lexis_cosmos._read"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.212,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.463,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/lexis/manage/files?page=2",
+      "status": 200,
+      "ms": 263.9,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 254.8,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "WITH file_term_counts AS ( SELECT hc.id AS context_id, ( COUNT(DISTINCT wc.word_id) + COUNT(DISTINCT kh.keyword_id) )::int AS term_count FROM hash_contexts hc LEFT JOIN words_hashs wh ON wh.hash_id = ",
+          "ms": 249.926,
+          "caller": "Api.services.lexis_cosmos._read"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.579,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.696,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/lexis/manage/files?page=20",
+      "status": 200,
+      "ms": 261.1,
+      "statements": 7,
+      "repeated_statements": 2,
+      "repeated_detail": [
+        {
+          "count": 2,
+          "sql": "SELECT 1"
+        }
+      ],
+      "sql_ms": 251.3,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "WITH file_term_counts AS ( SELECT hc.id AS context_id, ( COUNT(DISTINCT wc.word_id) + COUNT(DISTINCT kh.keyword_id) )::int AS term_count FROM hash_contexts hc LEFT JOIN words_hashs wh ON wh.hash_id = ",
+          "ms": 246.597,
+          "caller": "Api.services.lexis_cosmos._read"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.197,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.613,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/sources",
+      "status": 200,
+      "ms": 13.0,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 4.8,
+      "returned_rows": 4,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.109,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.608,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "UPDATE sessions SET expires_at = %s WHERE session_id = %s",
+          "ms": 0.661,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/sides",
+      "status": 200,
+      "ms": 10.3,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 4.2,
+      "returned_rows": 2,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.312,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.224,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "UPDATE sessions SET expires_at = %s WHERE session_id = %s",
+          "ms": 0.342,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/places?page=1",
+      "status": 200,
+      "ms": 9.8,
+      "statements": 6,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 4.0,
+      "returned_rows": 0,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 1.892,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.011,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "SELECT p.id, p.label, p.category_id, p.country_codes, p.latitude, p.longitude, p.retired, w.word as cat_word FROM geo_places p JOIN categorys cat ON cat.id = p.category_id JOIN words w ON w.id = cat.w",
+          "ms": 0.434,
+          "caller": "Api.routes.places.run"
+        }
+      ]
+    },
+    {
+      "url": "/api/reports/dashboard",
+      "status": 200,
+      "ms": 213.5,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 207.3,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "WITH f AS ( SELECT p.id AS path_id, p.file_type AS file_type, p.processing_status AS processing_status, hc.hash_id AS hash_id, hc.source_id AS source_id, hc.side_id AS side_id, s.name AS source_name, ",
+          "ms": 203.531,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.34,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.116,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/reports/overview",
+      "status": 200,
+      "ms": 182.6,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 174.6,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "WITH f AS ( SELECT p.id AS path_id, p.file_type AS file_type, p.processing_status AS processing_status, hc.hash_id AS hash_id, hc.source_id AS source_id, hc.side_id AS side_id, s.name AS source_name, ",
+          "ms": 170.386,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.36,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.423,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/lexis/manage/dashboard",
+      "status": 200,
+      "ms": 323.4,
+      "statements": 13,
+      "repeated_statements": 5,
+      "repeated_detail": [
+        {
+          "count": 5,
+          "sql": "SELECT 1"
+        }
+      ],
+      "sql_ms": 313.4,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "SELECT p.id, p.file_name, p.file_type, p.file_date, COUNT(*) OVER() AS total_uncategorised FROM paths p JOIN hash_contexts hc ON hc.id = p.context_id WHERE NOT EXISTS ( SELECT 1 FROM words_hashs wh JO",
+          "ms": 163.968,
+          "caller": "Api.services.lexis_cosmos._read"
+        },
+        {
+          "sql": "SELECT si.name AS side_name, COUNT(DISTINCT p.id) AS file_count FROM sides si JOIN hash_contexts hc ON hc.side_id = si.id JOIN paths p ON p.context_id = hc.id GROUP BY si.id, si.name HAVING COUNT(DIST",
+          "ms": 110.08,
+          "caller": "Api.services.lexis_cosmos._read"
+        },
+        {
+          "sql": "SELECT COALESCE(NULLIF(BTRIM(p.file_type), ''), 'Unknown') AS file_type, COUNT(*) AS file_count FROM paths p GROUP BY COALESCE(NULLIF(BTRIM(p.file_type), ''), 'Unknown') ORDER BY file_count DESC, file",
+          "ms": 25.426,
+          "caller": "Api.services.lexis_cosmos._read"
+        }
+      ]
+    },
+    {
+      "url": "/dashboard/charts",
+      "status": 200,
+      "ms": 18.9,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 4.5,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.02,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.51,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "UPDATE sessions SET expires_at = %s WHERE session_id = %s",
+          "ms": 0.444,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/dashboard/comprehensive",
+      "status": 200,
+      "ms": 15.6,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 3.9,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.002,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.138,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "UPDATE sessions SET expires_at = %s WHERE session_id = %s",
+          "ms": 0.296,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/search/suggestions?q=document",
+      "status": 200,
+      "ms": 9.0,
+      "statements": 3,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 3.3,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 1.921,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.083,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "UPDATE sessions SET expires_at = %s WHERE session_id = %s",
+          "ms": 0.277,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/keywords",
+      "status": 200,
+      "ms": 10.9,
+      "statements": 7,
+      "repeated_statements": 2,
+      "repeated_detail": [
+        {
+          "count": 2,
+          "sql": "SELECT 1"
+        }
+      ],
+      "sql_ms": 4.6,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.102,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.105,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "SELECT k.id, k.keyword, k.category_id, COALESCE(COUNT(DISTINCT p.id), 0) as usage_count, c.word as category_name FROM keywords k LEFT JOIN keywords_hashs kp ON k.id = kp.keyword_id LEFT JOIN hash_cont",
+          "ms": 0.708,
+          "caller": "Api.utils_module.execute_query"
+        }
+      ]
+    },
+    {
+      "url": "/api/scenarios",
+      "status": 200,
+      "ms": 10.0,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 3.9,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.036,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.076,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "UPDATE sessions SET expires_at = %s WHERE session_id = %s",
+          "ms": 0.38,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    }
+  ],
+  "heaviest": [
+    {
+      "label": "/api/lexis/manage/files?page=2",
+      "kind": "execute",
+      "sql": "WITH file_term_counts AS (\n    SELECT\n        hc.id AS context_id,\n        (\n            COUNT(DISTINCT wc.word_id) +\n            COUNT(DISTINCT kh.keyword_id)\n        )::int AS term_count\n    FROM hash_contexts hc\n    LEFT JOIN words_hashs wh ON wh.hash_id = hc.hash_id\n    LEFT JOIN words_categorys wc ON wc.word_id = wh.word_id\n    LEFT JOIN keywords_hashs kh ON kh.hash_id = hc.hash_id\n    GROUP BY hc.id\n)\nSELECT\n    p.id AS id,\n    p.file_name AS name,\n    p.file_type AS type,\n    s.name AS source,\n    p.file_date AS date,\n    si.name AS side,\n    p.file_status AS status,\n    LEFT(COALESCE(cr.content, ''), 70) AS snippet,\n    COALESCE(ftc.term_count, 0) AS matched_terms_count,\n    COUNT(*) OVER() AS total_count\nFROM paths p\nJOIN hash_contexts hc ON hc.id = p.context_id\nLEFT JOIN sources s ON s.id = hc.source_id\nLEFT JOIN sides si ON si.id = hc.side_id\nLEFT JOIN contents_raw cr ON cr.hash_id = hc.hash_id AND cr.chunk_seq = 0\nLEFT JOIN file_term_counts ftc ON ftc.context_id = hc.id\nWHERE (%(file_type)s::text IS NULL OR %(file_type)s = '' OR p.file_type = %(file_type)s)\n  AND (\n      %(mfq)s::text IS NULL\n      OR %(mfq)s = ''\n      OR p.file_name ILIKE '%%' || %(mfq)s || '%%'\n      OR s.name ILIKE '%%' || %(mfq)s || '%%'\n      OR si.name ILIKE '%%' || %(mfq)s || '%%'\n      OR EXISTS (\n          SELECT 1\n          FROM contents_raw cr_search\n          WHERE cr_search.hash_id = hc.hash_id\n            AND cr_search.content ILIKE '%%' || %(mfq)s || '%%'\n      )\n  )\nORDER BY p.date_creation DESC, p.id DESC\nLIMIT %(limit)s OFFSET %(offset)s",
+      "params": [
+        "{'file_type': None, 'mfq': None, 'limit': 50, 'offset': 0}"
+      ],
+      "ms": 249.926,
+      "rows": null,
+      "caller": "Api.services.lexis_cosmos._read",
+      "error": null,
+      "plan": "Limit  (cost=27704.29..27704.42 rows=50 width=113) (actual time=380.791..380.822 rows=50 loops=1)\n  Output: p.id, p.file_name, p.file_type, s.name, p.file_date, si.name, p.file_status, (\"left\"(COALESCE(cr.content, ''::text), 70)), (COALESCE(ftc.term_count, 0)), (count(*) OVER (?)), p.date_creation\n  Buffers: shared hit=3409, temp read=1996 written=1168\n  ->  Sort  (cost=27704.29..27954.29 rows=100000 width=113) (actual time=380.789..380.815 rows=50 loops=1)\n        Output: p.id, p.file_name, p.file_type, s.name, p.file_date, si.name, p.file_status, (\"left\"(COALESCE(cr.content, ''::text), 70)), (COALESCE(ftc.term_count, 0)), (count(*) OVER (?)), p.date_creation\n        Sort Key: p.date_creation DESC, p.id DESC\n        Sort Method: top-N heapsort  Memory: 38kB\n        Buffers: shared hit=3409, temp read=1996 written=1168\n        ->  WindowAgg  (cost=17883.46..24382.36 rows=100000 width=113) (actual time=332.004..350.564 rows=100000 loops=1)\n              Output: p.id, p.file_name, p.file_type, s.name, p.file_date, si.name, p.file_status, \"left\"(COALESCE(cr.content, ''::text), 70), COALESCE(ftc.term_count, 0), count(*) OVER (?), p.date_creation\n              Buffers: shared hit=3403, temp read=1996 written=1168\n              ->  Hash Left Join  (cost=17883.46..22882.36 rows=100000 width=105) (actual time=182.047..293.459 rows=100000 loops=1)\n                    Output: p.id, p.file_name, p.file_type, s.name, p.file_date, si.name, p.file_status, cr.content, ftc.term_count, p.date_creation\n                    Inner Unique: true\n                    Hash Cond: (hc.id = ftc.context_id)\n                    Buffers: shared hit=3403\n                    ->  Hash Left Join  (cost=2889.15..7625.54 rows=100000 width=105) (actual time=24.369..108.679 rows=100000 loops=1)\n                          Output: p.id, p.file_name, p.file_type, p.file_date, p.file_status, p.date_creation, hc.id, s.name, si.name, cr.content\n                          Inner Unique: true\n                          Hash Cond: (hc.hash_id = cr.hash_id)\n                          Buffers: shared hit=2491\n                          ->  Hash Left Join  (cost=2889.14..7363.02 rows=100000 width=77) (actual time=24.352..97.229 rows=100000 loops=1)\n                                Output: p.id, p.file_name, p.file_type, p.file_date, p.file_status, p.date_creation, hc.id, hc.hash_id, s.name, si.name\n                                Inner Unique: true\n                                Hash Cond: (hc.side_id = si.id)\n                                Buffers: shared hit=2491\n                                ->  Hash Left Join  (cost=2888.09..6543.23 rows=100000 width=68) (actual time=24.332..83.318 rows=100000 loops=1)\n                                      Output: p.id, p.file_name, p.file_type, p.file_date, p.file_status, p.date_creation, hc.id, hc.side_id, hc.hash_id, s.name\n                                      Inner Unique: true\n                                      Hash Cond: (hc.source_id = s.id)\n                                      Buffers: shared hit=2490\n                                      ->  Hash Join  (cost=2887.00..6001.51 rows=100000 width=57) (actual time=24.298..69.270 rows=100000 loops=1)\n                                            Output: p.id, p.file_name, p.file_type, p.file_date, p.file_status, p.date_creation, hc.id, hc.source_id, hc.side_id, hc.hash_id\n                                            Inner Unique: true\n                                            Hash Cond: (p.context_id = hc.id)\n                                            Buffers: shared hit=2489\n                                            ->  Seq Scan on public.paths p  (cost=0.00..2852.00 rows=100000 width=45) (actual time=0.005..12.146 rows=100000 loops=1)\n                                                  Output: p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, p.context_id, p.coordinates, p.extraction_provenance, p.parent_path_id, p.hierarchy_path, p.processing_status, p.status_detail, p.attempts, p.status_updated_at, p.error_message\n                                                  Buffers: shared hit=1852\n                                            ->  Hash  (cost=1637.00..1637.00 rows=100000 width=16) (actual time=23.820..23.827 rows=100000 loops=1)\n                                                  Output: hc.id, hc.source_id, hc.side_id, hc.hash_id\n                                                  Buckets: 131072  Batches: 1  Memory Usage: 5712kB\n                                                  Buffers: shared hit=637\n                                                  ->  Seq Scan on public.hash_contexts hc  (cost=0.00..1637.00 rows=100000 width=16) (actual time=0.006..9.348 rows=100000 loops=1)\n                                                        Output: hc.id, hc.source_id, hc.side_id, hc.hash_id\n                                                        Buffers: shared hit=637\n                                      ->  Hash  (cost=1.04..1.04 rows=4 width=19) (actual time=0.013..0.014 rows=4 loops=1)\n                                            Output: s.name, s.id\n                                            Buckets: 1024  Batches: 1  Memory Usage: 9kB\n                                            Buffers: shared hit=1\n                                            ->  Seq Scan on public.sources s  (cost=0.00..1.04 rows=4 width=19) (actual time=0.007..0.008 rows=4 loops=1)\n                                                  Output: s.name, s.id\n                                                  Buffers: shared hit=1\n                                ->  Hash  (cost=1.02..1.02 rows=2 width=17) (actual time=0.006..0.007 rows=2 loops=1)\n                                      Output: si.name, si.id\n                                      Buckets: 1024  Batches: 1  Memory Usage: 9kB\n                                      Buffers: shared hit=1\n                                      ->  Seq Scan on public.sides si  (cost=0.00..1.02 rows=2 width=17) (actual time=0.003..0.003 rows=2 loops=1)\n                                            Output: si.name, si.id\n                                            Buffers: shared hit=1\n                          ->  Hash  (cost=0.00..0.00 rows=1 width=36) (actual time=0.003..0.004 rows=0 loops=1)\n                                Output: cr.content, cr.hash_id\n                                Buckets: 1024  Batches: 1  Memory Usage: 8kB\n                                ->  Seq Scan on public.contents_raw cr  (cost=0.00..0.00 rows=1 width=36) (actual time=0.003..0.003 rows=0 loops=1)\n                                      Output: cr.content, cr.hash_id\n                                      Filter: (cr.chunk_seq = 0)\n                    ->  Hash  (cost=13744.31..13744.31 rows=100000 width=8) (actual time=157.211..157.218 rows=100000 loops=1)\n                          Output: ftc.term_count, ftc.context_id\n                          Buckets: 131072  Batches: 1  Memory Usage: 4931kB\n                          Buffers: shared hit=912\n                          ->  Subquery Scan on ftc  (cost=0.36..13744.31 rows=100000 width=8) (actual time=0.095..139.244 rows=100000 loops=1)\n                                Output: ftc.term_count, ftc.context_id\n                                Buffers: shared hit=912\n                                ->  GroupAggregate  (cost=0.36..12744.31 rows=100000 width=8) (actual time=0.094..130.507 rows=100000 loops=1)\n                                      Output: hc_1.id, ((count(DISTINCT wc.word_id) + count(DISTINCT kh.keyword_id)))::integer\n                                      Group Key: hc_1.id\n                                      Buffers: shared hit=912\n                                      ->  Incremental Sort  (cost=0.36..10494.31 rows=100000 width=12) (actual time=0.069..77.627 rows=100000 loops=1)\n                                            Output: hc_1.id, wc.word_id, kh.keyword_id\n                                            Sort Key: hc_1.id, wc.word_id\n                                            Presorted Key: hc_1.id\n                                            Full-sort Groups: 3125  Sort Method: quicksort  Average Memory: 26kB  Peak Memory: 26kB\n                                            Buffers: shared hit=912\n                                            ->  Nested Loop Left Join  (cost=0.29..5994.31 rows=100000 width=12) (actual time=0.030..63.470 rows=100000 loops=1)\n                                                  Output: hc_1.id, wc.word_id, kh.keyword_id\n                                                  Join Filter: (kh.hash_id = hc_1.hash_id)\n                                                  Buffers: shared hit=912\n                                                  ->  Nested Loop Left Join  (cost=0.29..4744.31 rows=100000 width=12) (actual time=0.026..30.535 rows=100000 loops=1)\n                                                        Output: hc_1.id, hc_1.hash_id, wc.word_id\n                                                        Join Filter: (wh.hash_id = hc_1.hash_id)\n                                                        Buffers: shared hit=912\n                                                        ->  Index Scan using hash_contexts_pkey on public.hash_contexts hc_1  (cost=0.29..3244.29 rows=100000 width=8) (actual time=0.013..11.387 rows=100000 loops=1)\n                                                              Output: hc_1.id, hc_1.hash_id, hc_1.source_id, hc_1.side_id, hc_1.date_creation\n                                                              Buffers: shared hit=912\n                                                        ->  Materialize  (cost=0.00..0.02 rows=1 width=8) (actual time=0.000..0.000 rows=0 loops=100000)\n                                                              Output: wh.hash_id, wc.word_id\n                                                              ->  Nested Loop Left Join  (cost=0.00..0.01 rows=1 width=8) (actual time=0.003..0.004 rows=0 loops=1)\n                                                                    Output: wh.hash_id, wc.word_id\n                                                                    Join Filter: (wc.word_id = wh.word_id)\n                                                                    ->  Seq Scan on public.words_hashs wh  (cost=0.00..0.00 rows=1 width=8) (actual time=0.002..0.002 rows=0 loops=1)\n                                                                          Output: wh.hash_id, wh.word_id, wh.word_count, wh.position_indexer\n                                                                    ->  Seq Scan on public.words_categorys wc  (cost=0.00..0.00 rows=1 width=4) (never executed)\n                                                                          Output: wc.word_id, wc.category_id\n                                                  ->  Seq Scan on public.keywords_hashs kh  (cost=0.00..0.00 rows=1 width=8) (actual time=0.000..0.000 rows=0 loops=100000)\n                                                        Output: kh.hash_id, kh.keyword_id, kh.word_count\nPlanning:\n  Buffers: shared hit=824\nPlanning Time: 2.909 ms\nExecution Time: 381.318 ms",
+      "explained_sql": "WITH file_term_counts AS (\n    SELECT\n        hc.id AS context_id,\n        (\n            COUNT(DISTINCT wc.word_id) +\n            COUNT(DISTINCT kh.keyword_id)\n        )::int AS term_count\n    FROM hash_contexts hc\n    LEFT JOIN words_hashs wh ON wh.hash_id = hc.hash_id\n    LEFT JOIN words_categorys wc ON wc.word_id = wh.word_id\n    LEFT JOIN keywords_hashs kh ON kh.hash_id = hc.hash_id\n    GROUP BY hc.id\n)\nSELECT\n    p.id AS id,\n    p.file_name AS name,\n    p.file_type AS type,\n    s.name AS source,\n    p.file_date AS date,\n    si.name AS side,\n    p.file_status AS status,\n    LEFT(COALESCE(cr.content, ''), 70) AS snippet,\n    COALESCE(ftc.term_count, 0) AS matched_terms_count,\n    COUNT(*) OVER() AS total_count\nFROM paths p\nJOIN hash_contexts hc ON hc.id = p.context_id\nLEFT JOIN sources s ON s.id = hc.source_id\nLEFT JOIN sides si ON si.id = hc.side_id\nLEFT JOIN contents_raw cr ON cr.hash_id = hc.hash_id AND cr.chunk_seq = 0\nLEFT JOIN file_term_counts ftc ON ftc.context_id = hc.id\nWHERE (NULL::text IS NULL OR NULL = '' OR p.file_type = NULL)\n  AND (\n      NULL::text IS NULL\n      OR NULL = ''\n      OR p.file_name ILIKE '%' || NULL || '%'\n      OR s.name ILIKE '%' || NULL || '%'\n      OR si.name ILIKE '%' || NULL || '%'\n      OR EXISTS (\n          SELECT 1\n          FROM contents_raw cr_search\n          WHERE cr_search.hash_id = hc.hash_id\n            AND cr_search.content ILIKE '%' || NULL || '%'\n      )\n  )\nORDER BY p.date_creation DESC, p.id DESC\nLIMIT 50 OFFSET 0"
+    },
+    {
+      "label": "/api/reports/dashboard",
+      "kind": "execute",
+      "sql": "WITH f AS (\n    SELECT p.id            AS path_id,\n           p.file_type     AS file_type,\n           p.processing_status AS processing_status,\n           hc.hash_id      AS hash_id,\n           hc.source_id    AS source_id,\n           hc.side_id      AS side_id,\n           s.name          AS source_name,\n           sd.name         AS side_name\n    FROM paths p\n    LEFT JOIN hash_contexts hc ON hc.id = p.context_id\n    LEFT JOIN sources s ON s.id = hc.source_id\n    LEFT JOIN sides sd ON sd.id = hc.side_id\n    WHERE (%(source_id)s::int IS NULL OR hc.source_id = %(source_id)s::int)\n      AND (%(side_id)s::int IS NULL OR hc.side_id = %(side_id)s::int)\n      AND (%(date_from)s::date IS NULL OR p.date_creation >= %(date_from)s::date)\n      AND (%(date_to)s::date IS NULL OR p.date_creation <= %(date_to)s::date)\n      AND (%(time_from)s::time IS NULL\n           OR p.status_updated_at IS NOT NULL\n          AND p.status_updated_at::time >= %(time_from)s::time)\n      AND (%(time_to)s::time IS NULL\n           OR p.status_updated_at IS NOT NULL\n          AND p.status_updated_at::time <= %(time_to)s::time)\n), totals AS (\n    SELECT COUNT(*) AS total,\n           COUNT(*) FILTER (WHERE processing_status = ANY(%(success)s)) AS success,\n           COUNT(*) FILTER (WHERE processing_status = ANY(%(partial)s)) AS partial,\n           COUNT(*) FILTER (WHERE processing_status = ANY(%(failed)s))  AS failed,\n           COUNT(*) FILTER (WHERE processing_status = ANY(%(skipped)s)) AS skipped\n    FROM f\n), by_type AS (\n    SELECT file_type,\n           COUNT(*) AS total,\n           COUNT(*) FILTER (WHERE processing_status = ANY(%(success)s)) AS success,\n           COUNT(*) FILTER (WHERE processing_status = ANY(%(partial)s)) AS partial,\n           COUNT(*) FILTER (WHERE processing_status = ANY(%(failed)s))  AS failed,\n           COUNT(*) FILTER (WHERE processing_status = ANY(%(skipped)s)) AS skipped\n    FROM f\n    GROUP BY file_type\n), classifications AS (\n    SELECT c.id  AS category_id,\n           w.word AS category_term,\n           COUNT(DISTINCT x.path_id) AS paths\n    FROM f x\n    JOIN words_hashs wh ON wh.hash_id = x.hash_id\n    JOIN words_categorys wc ON wc.word_id = wh.word_id\n    JOIN categorys c ON c.id = wc.category_id\n    JOIN words w ON w.id = c.word_id\n    GROUP BY c.id, w.word\n), keywords AS (\n    -- ``keywords.keyword`` is a packed list of word ids, not text: a keyword\n    -- here is a phrase. The facet is grouped by id; the phrase is decoded in\n    -- Python for the bounded top-N (see ``attach_keyword_phrases``).\n    SELECT kh.keyword_id AS keyword_id, COUNT(DISTINCT x.path_id) AS paths\n    FROM f x\n    JOIN keywords_hashs kh ON kh.hash_id = x.hash_id\n    GROUP BY kh.keyword_id\n), by_source AS (\n    SELECT source_id, source_name, COUNT(*) AS paths\n    FROM f WHERE source_id IS NOT NULL\n    GROUP BY source_id, source_name\n), by_side AS (\n    SELECT side_id, side_name, COUNT(*) AS paths\n    FROM f WHERE side_id IS NOT NULL\n    GROUP BY side_id, side_name\n)\nSELECT jsonb_build_object(\n    'totals', (SELECT to_jsonb(t) FROM totals t),\n    'by_file_type', COALESCE((SELECT jsonb_agg(to_jsonb(bt) ORDER BY bt.file_type)\n                              FROM by_type bt), '[]'::jsonb),\n    'classifications', COALESCE((SELECT jsonb_agg(to_jsonb(cls) ORDER BY cls.category_term)\n                                 FROM classifications cls), '[]'::jsonb),\n    'keywords', COALESCE((SELECT jsonb_agg(to_jsonb(kw) ORDER BY kw.paths DESC,\n                                                         kw.keyword_id)\n                          FROM keywords kw), '[]'::jsonb),\n    'sources', COALESCE((SELECT jsonb_agg(to_jsonb(bs) ORDER BY bs.source_name)\n                         FROM by_source bs), '[]'::jsonb),\n    'sides', COALESCE((SELECT jsonb_agg(to_jsonb(bd) ORDER BY bd.side_name)\n                       FROM by_side bd), '[]'::jsonb)\n) AS report",
+      "params": [
+        "{'source_id': None, 'side_id': None, 'date_from': None, '..."
+      ],
+      "ms": 203.531,
+      "rows": null,
+      "caller": "Api.utils_module.execute_query",
+      "error": null,
+      "plan": "Result  (cost=36843.10..36843.11 rows=1 width=32) (actual time=216.111..216.135 rows=1 loops=1)\n  Output: jsonb_build_object('totals', $1, 'by_file_type', COALESCE($2, '[]'::jsonb), 'classifications', COALESCE($3, '[]'::jsonb), 'keywords', COALESCE($4, '[]'::jsonb), 'sources', COALESCE($5, '[]'::jsonb), 'sides', COALESCE($6, '[]'::jsonb))\n  Buffers: shared hit=2500, temp read=2625 written=875\n  CTE f\n    ->  Hash Left Join  (cost=2889.14..7363.02 rows=100000 width=59) (actual time=20.726..82.169 rows=100000 loops=1)\n          Output: p.id, p.file_type, p.processing_status, hc.hash_id, hc.source_id, hc.side_id, s.name, sd.name\n          Inner Unique: true\n          Hash Cond: (hc.side_id = sd.id)\n          Buffers: shared hit=2491\n          ->  Hash Left Join  (cost=2888.09..6543.23 rows=100000 width=46) (actual time=20.708..70.307 rows=100000 loops=1)\n                Output: p.id, p.file_type, p.processing_status, hc.hash_id, hc.source_id, hc.side_id, s.name\n                Inner Unique: true\n                Hash Cond: (hc.source_id = s.id)\n                Buffers: shared hit=2490\n                ->  Hash Left Join  (cost=2887.00..6001.51 rows=100000 width=31) (actual time=20.685..58.277 rows=100000 loops=1)\n                      Output: p.id, p.file_type, p.processing_status, hc.hash_id, hc.source_id, hc.side_id\n                      Inner Unique: true\n                      Hash Cond: (p.context_id = hc.id)\n                      Buffers: shared hit=2489\n                      ->  Seq Scan on public.paths p  (cost=0.00..2852.00 rows=100000 width=23) (actual time=0.005..10.898 rows=100000 loops=1)\n                            Output: p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, p.context_id, p.coordinates, p.extraction_provenance, p.parent_path_id, p.hierarchy_path, p.processing_status, p.status_detail, p.attempts, p.status_updated_at, p.error_message\n                            Buffers: shared hit=1852\n                      ->  Hash  (cost=1637.00..1637.00 rows=100000 width=16) (actual time=20.209..20.210 rows=100000 loops=1)\n                            Output: hc.hash_id, hc.source_id, hc.side_id, hc.id\n                            Buckets: 131072  Batches: 1  Memory Usage: 5712kB\n                            Buffers: shared hit=637\n                            ->  Seq Scan on public.hash_contexts hc  (cost=0.00..1637.00 rows=100000 width=16) (actual time=0.006..8.024 rows=100000 loops=1)\n                                  Output: hc.hash_id, hc.source_id, hc.side_id, hc.id\n                                  Buffers: shared hit=637\n                ->  Hash  (cost=1.04..1.04 rows=4 width=19) (actual time=0.009..0.011 rows=4 loops=1)\n                      Output: s.name, s.id\n                      Buckets: 1024  Batches: 1  Memory Usage: 9kB\n                      Buffers: shared hit=1\n                      ->  Seq Scan on public.sources s  (cost=0.00..1.04 rows=4 width=19) (actual time=0.004..0.005 rows=4 loops=1)\n                            Output: s.name, s.id\n                            Buffers: shared hit=1\n          ->  Hash  (cost=1.02..1.02 rows=2 width=17) (actual time=0.004..0.005 rows=2 loops=1)\n                Output: sd.name, sd.id\n                Buckets: 1024  Batches: 1  Memory Usage: 9kB\n                Buffers: shared hit=1\n                ->  Seq Scan on public.sides sd  (cost=0.00..1.02 rows=2 width=17) (actual time=0.002..0.002 rows=2 loops=1)\n                      Output: sd.name, sd.id\n                      Buffers: shared hit=1\n  InitPlan 2 (returns $1)\n    ->  Subquery Scan on t  (cost=3875.00..3875.02 rows=1 width=32) (actual time=142.150..142.151 rows=1 loops=1)\n          Output: to_jsonb(t.*)\n          Buffers: shared hit=2491, temp written=874\n          ->  Aggregate  (cost=3875.00..3875.01 rows=1 width=40) (actual time=142.111..142.112 rows=1 loops=1)\n                Output: count(*), count(*) FILTER (WHERE ((f.processing_status)::text = ANY ('{processed}'::text[]))), count(*) FILTER (WHERE ((f.processing_status)::text = ANY ('{partially_processed}'::text[]))), count(*) FILTER (WHERE ((f.processing_status)::text = ANY ('{failed}'::text[]))), count(*) FILTER (WHERE ((f.processing_status)::text = ANY ('{unsupported,skipped}'::text[])))\n                Buffers: shared hit=2491, temp written=874\n                ->  CTE Scan on f  (cost=0.00..2000.00 rows=100000 width=66) (actual time=20.729..125.571 rows=100000 loops=1)\n                      Output: f.path_id, f.file_type, f.processing_status, f.hash_id, f.source_id, f.side_id, f.source_name, f.side_name\n                      Buffers: shared hit=2491, temp written=874\n  InitPlan 3 (returns $2)\n    ->  Aggregate  (cost=4138.15..4138.16 rows=1 width=32) (actual time=28.975..28.977 rows=1 loops=1)\n          Output: jsonb_agg(to_jsonb(bt.*) ORDER BY bt.file_type)\n          Buffers: shared hit=3, temp read=875 written=1\n          ->  Sort  (cost=4136.64..4137.14 rows=200 width=460) (actual time=28.925..28.927 rows=5 loops=1)\n                Output: bt.*, bt.file_type\n                Sort Key: bt.file_type\n                Sort Method: quicksort  Memory: 25kB\n                Buffers: shared hit=3, temp read=875 written=1\n                ->  Subquery Scan on bt  (cost=4125.00..4129.00 rows=200 width=460) (actual time=28.872..28.877 rows=5 loops=1)\n                      Output: bt.*, bt.file_type\n                      Buffers: temp read=875 written=1\n                      ->  HashAggregate  (cost=4125.00..4127.00 rows=200 width=258) (actual time=28.865..28.867 rows=5 loops=1)\n                            Output: f_1.file_type, count(*), count(*) FILTER (WHERE ((f_1.processing_status)::text = ANY ('{processed}'::text[]))), count(*) FILTER (WHERE ((f_1.processing_status)::text = ANY ('{partially_processed}'::text[]))), count(*) FILTER (WHERE ((f_1.processing_status)::text = ANY ('{failed}'::text[]))), count(*) FILTER (WHERE ((f_1.processing_status)::text = ANY ('{unsupported,skipped}'::text[])))\n                            Group Key: f_1.file_type\n                            Batches: 1  Memory Usage: 40kB\n                            Buffers: temp read=875 written=1\n                            ->  CTE Scan on f f_1  (cost=0.00..2000.00 rows=100000 width=284) (actual time=0.016..7.108 rows=100000 loops=1)\n                                  Output: f_1.path_id, f_1.file_type, f_1.processing_status, f_1.hash_id, f_1.source_id, f_1.side_id, f_1.source_name, f_1.side_name\n                                  Buffers: temp read=875 written=1\n  InitPlan 4 (returns $3)\n    ->  Aggregate  (cost=2386.36..2386.37 rows=1 width=32) (actual time=0.075..0.081 rows=1 loops=1)\n          Output: jsonb_agg(to_jsonb(cls.*) ORDER BY cls.category_term)\n          Buffers: shared hit=3\n          ->  Sort  (cost=2386.35..2386.35 rows=1 width=92) (actual time=0.074..0.079 rows=0 loops=1)\n                Output: cls.*, cls.category_term\n                Sort Key: cls.category_term\n                Sort Method: quicksort  Memory: 25kB\n                Buffers: shared hit=3\n                ->  Subquery Scan on cls  (cost=2386.30..2386.34 rows=1 width=92) (actual time=0.049..0.053 rows=0 loops=1)\n                      Output: cls.*, cls.category_term\n                      Buffers: shared hit=3\n                      ->  GroupAggregate  (cost=2386.30..2386.33 rows=1 width=44) (actual time=0.048..0.052 rows=0 loops=1)\n                            Output: c.id, w.word, count(DISTINCT x.path_id)\n                            Group Key: c.id, w.word\n                            Buffers: shared hit=3\n                            ->  Sort  (cost=2386.30..2386.30 rows=2 width=40) (actual time=0.047..0.051 rows=0 loops=1)\n                                  Output: c.id, w.word, x.path_id\n                                  Sort Key: c.id, w.word, x.path_id\n                                  Sort Method: quicksort  Memory: 25kB\n                                  Buffers: shared hit=3\n                                  ->  Nested Loop  (cost=0.01..2386.29 rows=2 width=40) (actual time=0.009..0.012 rows=0 loops=1)\n                                        Output: c.id, w.word, x.path_id\n                                        Join Filter: (wh.word_id = wc.word_id)\n                                        ->  Nested Loop  (cost=0.00..0.03 rows=1 width=40) (actual time=0.008..0.010 rows=0 loops=1)\n                                              Output: wc.word_id, c.id, w.word\n                                              Inner Unique: true\n                                              Join Filter: (c.word_id = w.id)\n                                              ->  Nested Loop  (cost=0.00..0.01 rows=1 width=12) (actual time=0.008..0.009 rows=0 loops=1)\n                                                    Output: wc.word_id, c.id, c.word_id\n                                                    Inner Unique: true\n                                                    Join Filter: (wc.category_id = c.id)\n                                                    ->  Seq Scan on public.words_categorys wc  (cost=0.00..0.00 rows=1 width=8) (actual time=0.007..0.008 rows=0 loops=1)\n                                                          Output: wc.word_id, wc.category_id\n                                                    ->  Seq Scan on public.categorys c  (cost=0.00..0.00 rows=1 width=8) (never executed)\n                                                          Output: c.id, c.word_id, c.parent_id\n                                              ->  Seq Scan on public.words w  (cost=0.00..0.00 rows=1 width=36) (never executed)\n                                                    Output: w.id, w.word\n                                        ->  Hash Join  (cost=0.01..2380.01 rows=500 width=8) (never executed)\n                                              Output: x.path_id, wh.word_id\n                                              Hash Cond: (x.hash_id = wh.hash_id)\n                                              ->  CTE Scan on f x  (cost=0.00..2000.00 rows=100000 width=8) (never executed)\n                                                    Output: x.path_id, x.file_type, x.processing_status, x.hash_id, x.source_id, x.side_id, x.source_name, x.side_name\n                                              ->  Hash  (cost=0.00..0.00 rows=1 width=8) (never executed)\n                                                    Output: wh.hash_id, wh.word_id\n                                                    ->  Seq Scan on public.words_hashs wh  (cost=0.00..0.00 rows=1 width=8) (never executed)\n                                                          Output: wh.hash_id, wh.word_id\n  InitPlan 5 (returns $4)\n    ->  Aggregate  (cost=2406.22..2406.23 rows=1 width=32) (actual time=0.045..0.048 rows=1 loops=1)\n          Output: jsonb_agg(to_jsonb(kw.*) ORDER BY kw.paths DESC, kw.keyword_id)\n          Buffers: shared hit=3\n          ->  Sort  (cost=2406.21..2406.21 rows=1 width=48) (actual time=0.044..0.047 rows=0 loops=1)\n                Output: kw.*, kw.paths, kw.keyword_id\n                Sort Key: kw.paths DESC, kw.keyword_id\n                Sort Method: quicksort  Memory: 25kB\n                Buffers: shared hit=3\n                ->  Subquery Scan on kw  (cost=2402.43..2406.20 rows=1 width=48) (actual time=0.030..0.033 rows=0 loops=1)\n                      Output: kw.*, kw.paths, kw.keyword_id\n                      ->  GroupAggregate  (cost=2402.43..2406.19 rows=1 width=12) (actual time=0.030..0.032 rows=0 loops=1)\n                            Output: kh.keyword_id, count(DISTINCT x_1.path_id)\n                            Group Key: kh.keyword_id\n                            ->  Sort  (cost=2402.43..2403.68 rows=500 width=8) (actual time=0.030..0.031 rows=0 loops=1)\n                                  Output: kh.keyword_id, x_1.path_id\n                                  Sort Key: kh.keyword_id, x_1.path_id\n                                  Sort Method: quicksort  Memory: 25kB\n                                  ->  Hash Join  (cost=0.01..2380.01 rows=500 width=8) (actual time=0.022..0.024 rows=0 loops=1)\n                                        Output: kh.keyword_id, x_1.path_id\n                                        Hash Cond: (x_1.hash_id = kh.hash_id)\n                                        ->  CTE Scan on f x_1  (cost=0.00..2000.00 rows=100000 width=8) (never executed)\n                                              Output: x_1.path_id, x_1.file_type, x_1.processing_status, x_1.hash_id, x_1.source_id, x_1.side_id, x_1.source_name, x_1.side_name\n                                        ->  Hash  (cost=0.00..0.00 rows=1 width=8) (actual time=0.005..0.005 rows=0 loops=1)\n                                              Output: kh.keyword_id, kh.hash_id\n                                              Buckets: 1024  Batches: 1  Memory Usage: 8kB\n                                              ->  Seq Scan on public.keywords_hashs kh  (cost=0.00..0.00 rows=1 width=8) (actual time=0.004..0.004 rows=0 loops=1)\n                                                    Output: kh.keyword_id, kh.hash_id\n  InitPlan 6 (returns $5)\n    ->  Aggregate  (cost=8337.14..8337.15 rows=1 width=32) (actual time=22.240..22.241 rows=1 loops=1)\n          Output: jsonb_agg(to_jsonb(bs.*) ORDER BY bs.source_name)\n          Buffers: temp read=875\n          ->  Sort  (cost=8262.14..8287.14 rows=10000 width=1060) (actual time=22.211..22.212 rows=4 loops=1)\n                Output: bs.*, bs.source_name\n                Sort Key: bs.source_name\n                Sort Method: quicksort  Memory: 25kB\n                Buffers: temp read=875\n                ->  Subquery Scan on bs  (cost=2746.25..2946.25 rows=10000 width=1060) (actual time=22.178..22.199 rows=4 loops=1)\n                      Output: bs.*, bs.source_name\n                      Buffers: temp read=875\n                      ->  HashAggregate  (cost=2746.25..2846.25 rows=10000 width=528) (actual time=22.173..22.192 rows=4 loops=1)\n                            Output: f_2.source_id, f_2.source_name, count(*)\n                            Group Key: f_2.source_id, f_2.source_name\n                            Batches: 1  Memory Usage: 217kB\n                            Buffers: temp read=875\n                            ->  CTE Scan on f f_2  (cost=0.00..2000.00 rows=99500 width=520) (actual time=0.004..9.497 rows=100000 loops=1)\n                                  Output: f_2.path_id, f_2.file_type, f_2.processing_status, f_2.hash_id, f_2.source_id, f_2.side_id, f_2.source_name, f_2.side_name\n                                  Filter: (f_2.source_id IS NOT NULL)\n                                  Buffers: temp read=875\n  InitPlan 7 (returns $6)\n    ->  Aggregate  (cost=8337.14..8337.15 rows=1 width=32) (actual time=22.586..22.587 rows=1 loops=1)\n          Output: jsonb_agg(to_jsonb(bd.*) ORDER BY bd.side_name)\n          Buffers: temp read=875\n          ->  Sort  (cost=8262.14..8287.14 rows=10000 width=1060) (actual time=22.555..22.555 rows=2 loops=1)\n                Output: bd.*, bd.side_name\n                Sort Key: bd.side_name\n                Sort Method: quicksort  Memory: 25kB\n                Buffers: temp read=875\n                ->  Subquery Scan on bd  (cost=2746.25..2946.25 rows=10000 width=1060) (actual time=22.503..22.532 rows=2 loops=1)\n                      Output: bd.*, bd.side_name\n                      Buffers: temp read=875\n                      ->  HashAggregate  (cost=2746.25..2846.25 rows=10000 width=528) (actual time=22.495..22.523 rows=2 loops=1)\n                            Output: f_3.side_id, f_3.side_name, count(*)\n                            Group Key: f_3.side_id, f_3.side_name\n                            Batches: 1  Memory Usage: 217kB\n                            Buffers: temp read=875\n                            ->  CTE Scan on f f_3  (cost=0.00..2000.00 rows=99500 width=520) (actual time=0.003..9.683 rows=100000 loops=1)\n                                  Output: f_3.path_id, f_3.file_type, f_3.processing_status, f_3.hash_id, f_3.source_id, f_3.side_id, f_3.source_name, f_3.side_name\n                                  Filter: (f_3.side_id IS NOT NULL)\n                                  Buffers: temp read=875\nPlanning:\n  Buffers: shared hit=888\nPlanning Time: 2.194 ms\nExecution Time: 217.785 ms",
+      "explained_sql": "WITH f AS (\n    SELECT p.id            AS path_id,\n           p.file_type     AS file_type,\n           p.processing_status AS processing_status,\n           hc.hash_id      AS hash_id,\n           hc.source_id    AS source_id,\n           hc.side_id      AS side_id,\n           s.name          AS source_name,\n           sd.name         AS side_name\n    FROM paths p\n    LEFT JOIN hash_contexts hc ON hc.id = p.context_id\n    LEFT JOIN sources s ON s.id = hc.source_id\n    LEFT JOIN sides sd ON sd.id = hc.side_id\n    WHERE (NULL::int IS NULL OR hc.source_id = NULL::int)\n      AND (NULL::int IS NULL OR hc.side_id = NULL::int)\n      AND (NULL::date IS NULL OR p.date_creation >= NULL::date)\n      AND (NULL::date IS NULL OR p.date_creation <= NULL::date)\n      AND (NULL::time IS NULL\n           OR p.status_updated_at IS NOT NULL\n          AND p.status_updated_at::time >= NULL::time)\n      AND (NULL::time IS NULL\n           OR p.status_updated_at IS NOT NULL\n          AND p.status_updated_at::time <= NULL::time)\n), totals AS (\n    SELECT COUNT(*) AS total,\n           COUNT(*) FILTER (WHERE processing_status = ANY(ARRAY['processed'])) AS success,\n           COUNT(*) FILTER (WHERE processing_status = ANY(ARRAY['partially_processed'])) AS partial,\n           COUNT(*) FILTER (WHERE processing_status = ANY(ARRAY['failed']))  AS failed,\n           COUNT(*) FILTER (WHERE processing_status = ANY(ARRAY['unsupported','skipped'])) AS skipped\n    FROM f\n), by_type AS (\n    SELECT file_type,\n           COUNT(*) AS total,\n           COUNT(*) FILTER (WHERE processing_status = ANY(ARRAY['processed'])) AS success,\n           COUNT(*) FILTER (WHERE processing_status = ANY(ARRAY['partially_processed'])) AS partial,\n           COUNT(*) FILTER (WHERE processing_status = ANY(ARRAY['failed']))  AS failed,\n           COUNT(*) FILTER (WHERE processing_status = ANY(ARRAY['unsupported','skipped'])) AS skipped\n    FROM f\n    GROUP BY file_type\n), classifications AS (\n    SELECT c.id  AS category_id,\n           w.word AS category_term,\n           COUNT(DISTINCT x.path_id) AS paths\n    FROM f x\n    JOIN words_hashs wh ON wh.hash_id = x.hash_id\n    JOIN words_categorys wc ON wc.word_id = wh.word_id\n    JOIN categorys c ON c.id = wc.category_id\n    JOIN words w ON w.id = c.word_id\n    GROUP BY c.id, w.word\n), keywords AS (\n    -- ``keywords.keyword`` is a packed list of word ids, not text: a keyword\n    -- here is a phrase. The facet is grouped by id; the phrase is decoded in\n    -- Python for the bounded top-N (see ``attach_keyword_phrases``).\n    SELECT kh.keyword_id AS keyword_id, COUNT(DISTINCT x.path_id) AS paths\n    FROM f x\n    JOIN keywords_hashs kh ON kh.hash_id = x.hash_id\n    GROUP BY kh.keyword_id\n), by_source AS (\n    SELECT source_id, source_name, COUNT(*) AS paths\n    FROM f WHERE source_id IS NOT NULL\n    GROUP BY source_id, source_name\n), by_side AS (\n    SELECT side_id, side_name, COUNT(*) AS paths\n    FROM f WHERE side_id IS NOT NULL\n    GROUP BY side_id, side_name\n)\nSELECT jsonb_build_object(\n    'totals', (SELECT to_jsonb(t) FROM totals t),\n    'by_file_type', COALESCE((SELECT jsonb_agg(to_jsonb(bt) ORDER BY bt.file_type)\n                              FROM by_type bt), '[]'::jsonb),\n    'classifications', COALESCE((SELECT jsonb_agg(to_jsonb(cls) ORDER BY cls.category_term)\n                                 FROM classifications cls), '[]'::jsonb),\n    'keywords', COALESCE((SELECT jsonb_agg(to_jsonb(kw) ORDER BY kw.paths DESC,\n                                                         kw.keyword_id)\n                          FROM keywords kw), '[]'::jsonb),\n    'sources', COALESCE((SELECT jsonb_agg(to_jsonb(bs) ORDER BY bs.source_name)\n                         FROM by_source bs), '[]'::jsonb),\n    'sides', COALESCE((SELECT jsonb_agg(to_jsonb(bd) ORDER BY bd.side_name)\n                       FROM by_side bd), '[]'::jsonb)\n) AS report"
+    },
+    {
+      "label": "/api/lexis/manage/dashboard",
+      "kind": "execute",
+      "sql": "SELECT\n    p.id,\n    p.file_name,\n    p.file_type,\n    p.file_date,\n    COUNT(*) OVER() AS total_uncategorised\nFROM paths p\nJOIN hash_contexts hc ON hc.id = p.context_id\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM words_hashs wh\n    JOIN words_categorys wc ON wc.word_id = wh.word_id\n    WHERE wh.hash_id = hc.hash_id\n)\nAND NOT EXISTS (\n    SELECT 1\n    FROM keywords_hashs kh\n    WHERE kh.hash_id = hc.hash_id\n)\nORDER BY p.date_creation DESC, p.id DESC\nLIMIT 8",
+      "params": [
+        "{}"
+      ],
+      "ms": 163.968,
+      "rows": null,
+      "caller": "Api.services.lexis_cosmos._read",
+      "error": null,
+      "plan": "Limit  (cost=8100.61..8104.61 rows=8 width=44) (actual time=224.180..224.265 rows=8 loops=1)\n  Output: p.id, p.file_name, p.file_type, p.file_date, (count(*) OVER (?)), p.date_creation\n  Buffers: shared hit=301896, temp read=913 written=1218\n  ->  WindowAgg  (cost=8100.61..58149.30 rows=99998 width=44) (actual time=224.178..224.261 rows=8 loops=1)\n        Output: p.id, p.file_name, p.file_type, p.file_date, count(*) OVER (?), p.date_creation\n        Buffers: shared hit=301896, temp read=913 written=1218\n        ->  Nested Loop Anti Join  (cost=8100.61..56899.32 rows=99998 width=36) (actual time=34.674..198.805 rows=100000 loops=1)\n              Output: p.id, p.file_name, p.file_type, p.file_date, p.date_creation\n              Join Filter: (wh.hash_id = hc.hash_id)\n              Buffers: shared hit=301896, temp read=634 written=636\n              ->  Nested Loop Anti Join  (cost=8100.61..55399.32 rows=99999 width=40) (actual time=34.666..180.107 rows=100000 loops=1)\n                    Output: p.id, p.file_name, p.file_type, p.file_date, p.date_creation, hc.hash_id\n                    Join Filter: (kh.hash_id = hc.hash_id)\n                    Buffers: shared hit=301896, temp read=634 written=636\n                    ->  Nested Loop  (cost=8100.61..54149.32 rows=100000 width=40) (actual time=34.658..145.109 rows=100000 loops=1)\n                          Output: p.id, p.file_name, p.file_type, p.file_date, p.date_creation, hc.hash_id\n                          Inner Unique: true\n                          Buffers: shared hit=301896, temp read=634 written=636\n                          ->  Gather Merge  (cost=8100.32..19497.38 rows=100000 width=40) (actual time=34.639..54.504 rows=100000 loops=1)\n                                Output: p.id, p.file_name, p.file_type, p.file_date, p.date_creation, p.context_id\n                                Workers Planned: 1\n                                Workers Launched: 1\n                                Buffers: shared hit=1896, temp read=634 written=636\n                                ->  Sort  (cost=7100.31..7247.37 rows=58824 width=40) (actual time=32.294..37.068 rows=50000 loops=2)\n                                      Output: p.id, p.file_name, p.file_type, p.file_date, p.date_creation, p.context_id\n                                      Sort Key: p.date_creation DESC, p.id DESC\n                                      Sort Method: external merge  Disk: 2616kB\n                                      Buffers: shared hit=1896, temp read=634 written=636\n                                      Worker 0:  actual time=30.269..34.744 rows=48376 loops=1\n                                        Sort Method: external merge  Disk: 2456kB\n                                        Buffers: shared hit=940, temp read=307 written=308\n                                      ->  Parallel Seq Scan on public.paths p  (cost=0.00..2440.24 rows=58824 width=40) (actual time=0.012..8.103 rows=50000 loops=2)\n                                            Output: p.id, p.file_name, p.file_type, p.file_date, p.date_creation, p.context_id\n                                            Buffers: shared hit=1852\n                                            Worker 0:  actual time=0.016..7.612 rows=48376 loops=1\n                                              Buffers: shared hit=896\n                          ->  Index Scan using hash_contexts_pkey on public.hash_contexts hc  (cost=0.29..0.35 rows=1 width=8) (actual time=0.001..0.001 rows=1 loops=100000)\n                                Output: hc.id, hc.hash_id, hc.source_id, hc.side_id, hc.date_creation\n                                Index Cond: (hc.id = p.context_id)\n                                Buffers: shared hit=300000\n                    ->  Seq Scan on public.keywords_hashs kh  (cost=0.00..0.00 rows=1 width=4) (actual time=0.000..0.000 rows=0 loops=100000)\n                          Output: kh.hash_id, kh.keyword_id, kh.word_count\n              ->  Materialize  (cost=0.00..0.02 rows=1 width=4) (actual time=0.000..0.000 rows=0 loops=100000)\n                    Output: wh.hash_id\n                    ->  Nested Loop  (cost=0.00..0.01 rows=1 width=4) (actual time=0.003..0.004 rows=0 loops=1)\n                          Output: wh.hash_id\n                          Join Filter: (wh.word_id = wc.word_id)\n                          ->  Seq Scan on public.words_hashs wh  (cost=0.00..0.00 rows=1 width=8) (actual time=0.002..0.002 rows=0 loops=1)\n                                Output: wh.hash_id, wh.word_id, wh.word_count, wh.position_indexer\n                          ->  Seq Scan on public.words_categorys wc  (cost=0.00..0.00 rows=1 width=4) (never executed)\n                                Output: wc.word_id, wc.category_id\nPlanning:\n  Buffers: shared hit=509\nPlanning Time: 1.657 ms\nExecution Time: 225.474 ms",
+      "explained_sql": "SELECT\n    p.id,\n    p.file_name,\n    p.file_type,\n    p.file_date,\n    COUNT(*) OVER() AS total_uncategorised\nFROM paths p\nJOIN hash_contexts hc ON hc.id = p.context_id\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM words_hashs wh\n    JOIN words_categorys wc ON wc.word_id = wh.word_id\n    WHERE wh.hash_id = hc.hash_id\n)\nAND NOT EXISTS (\n    SELECT 1\n    FROM keywords_hashs kh\n    WHERE kh.hash_id = hc.hash_id\n)\nORDER BY p.date_creation DESC, p.id DESC\nLIMIT 8"
+    },
+    {
+      "label": "/api/signals?limit=50&offset=1000",
+      "kind": "execute",
+      "sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT(*) FROM content_signals s WHERE EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE)) GROUP BY GROUPING SETS ((s.detector), (s.signal_type), (s.confidence), (s.language), (s.calendar), (s.resolution), (s.method))",
+      "params": [],
+      "ms": 122.241,
+      "rows": null,
+      "caller": "services.detection.signal_query._facets",
+      "error": null,
+      "plan": "HashAggregate  (cost=11617.76..13877.82 rows=805 width=310) (actual time=134.415..134.427 rows=9 loops=1)\n  Output: s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), count(*)\n  Hash Key: s.detector\n  Hash Key: s.signal_type\n  Hash Key: s.confidence\n  Hash Key: s.language\n  Hash Key: s.calendar\n  Hash Key: s.resolution\n  Hash Key: s.method\n  Batches: 1  Memory Usage: 136kB\n  Buffers: shared hit=4699\n  ->  Hash Semi Join  (cost=7251.51..11242.76 rows=75000 width=298) (actual time=76.841..106.278 rows=75000 loops=1)\n        Output: s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method\n        Hash Cond: (s.hash_id = hc.hash_id)\n        Buffers: shared hit=4699\n        ->  Seq Scan on public.content_signals s  (cost=0.00..2960.00 rows=75000 width=302) (actual time=0.005..9.465 rows=75000 loops=1)\n              Output: s.id, s.hash_id, s.detector, s.detector_ver, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.dedup_key, s.detected_at\n              Buffers: shared hit=2210\n        ->  Hash  (cost=6001.51..6001.51 rows=100000 width=4) (actual time=76.289..76.293 rows=100000 loops=1)\n              Output: hc.hash_id\n              Buckets: 131072  Batches: 1  Memory Usage: 4540kB\n              Buffers: shared hit=2489\n              ->  Hash Join  (cost=2887.00..6001.51 rows=100000 width=4) (actual time=26.918..61.673 rows=100000 loops=1)\n                    Output: hc.hash_id\n                    Inner Unique: true\n                    Hash Cond: (p.context_id = hc.id)\n                    Buffers: shared hit=2489\n                    ->  Seq Scan on public.paths p  (cost=0.00..2852.00 rows=100000 width=4) (actual time=0.035..11.052 rows=100000 loops=1)\n                          Output: p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, p.context_id, p.coordinates, p.extraction_provenance, p.parent_path_id, p.hierarchy_path, p.processing_status, p.status_detail, p.attempts, p.status_updated_at, p.error_message\n                          Buffers: shared hit=1852\n                    ->  Hash  (cost=1637.00..1637.00 rows=100000 width=8) (actual time=26.373..26.374 rows=100000 loops=1)\n                          Output: hc.id, hc.hash_id\n                          Buckets: 131072  Batches: 1  Memory Usage: 4931kB\n                          Buffers: shared hit=637\n                          ->  Seq Scan on public.hash_contexts hc  (cost=0.00..1637.00 rows=100000 width=8) (actual time=0.015..10.253 rows=100000 loops=1)\n                                Output: hc.id, hc.hash_id\n                                Buffers: shared hit=637\nPlanning:\n  Buffers: shared hit=616\nPlanning Time: 1.347 ms\nExecution Time: 134.756 ms",
+      "explained_sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT(*) FROM content_signals s WHERE EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE)) GROUP BY GROUPING SETS ((s.detector), (s.signal_type), (s.confidence), (s.language), (s.calendar), (s.resolution), (s.method))"
+    },
+    {
+      "label": "/api/signals?limit=50&offset=49950",
+      "kind": "execute",
+      "sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at FROM content_signals s WHERE EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE)) ORDER BY s.date_from ASC NULLS LAST, s.date_to ASC NULLS LAST, s.hash_id ASC, s.char_start ASC, s.id ASC LIMIT %s OFFSET %s",
+      "params": [
+        "50",
+        "49950"
+      ],
+      "ms": 111.422,
+      "rows": null,
+      "caller": "services.detection.signal_query.explore",
+      "error": null,
+      "plan": "Limit  (cost=30263.84..30263.95 rows=1 width=576) (actual time=147.516..152.354 rows=50 loops=1)\n  Output: s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at\n  Buffers: shared hit=5435, temp read=1140 written=1420\n  ->  Gather Merge  (cost=25190.27..30263.84 rows=44118 width=576) (actual time=129.697..150.661 rows=50000 loops=1)\n        Output: s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at\n        Workers Planned: 1\n        Workers Launched: 1\n        Buffers: shared hit=5435, temp read=1140 written=1420\n        ->  Sort  (cost=24190.26..24300.55 rows=44118 width=576) (actual time=127.619..134.374 rows=25176 loops=2)\n              Output: s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at\n              Sort Key: s.date_from, s.date_to, s.hash_id, s.char_start, s.id\n              Sort Method: external merge  Disk: 6096kB\n              Buffers: shared hit=5435, temp read=1140 written=1420\n              Worker 0:  actual time=125.834..132.628 rows=23138 loops=1\n                Sort Method: external merge  Disk: 5232kB\n                Buffers: shared hit=2502, temp read=549 written=656\n              ->  Parallel Hash Semi Join  (cost=6216.96..9474.76 rows=44118 width=576) (actual time=57.990..79.730 rows=37500 loops=2)\n                    Output: s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at\n                    Hash Cond: (s.hash_id = hc.hash_id)\n                    Buffers: shared hit=5383\n                    Worker 0:  actual time=56.650..78.957 rows=34569 loops=1\n                      Buffers: shared hit=2450\n                    ->  Parallel Seq Scan on public.content_signals s  (cost=0.00..2651.18 rows=44118 width=576) (actual time=0.007..6.063 rows=37500 loops=2)\n                          Output: s.id, s.hash_id, s.detector, s.detector_ver, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.dedup_key, s.detected_at\n                          Buffers: shared hit=2210\n                          Worker 0:  actual time=0.010..6.172 rows=34569 loops=1\n                            Buffers: shared hit=1020\n                    ->  Parallel Hash  (cost=5481.66..5481.66 rows=58824 width=4) (actual time=57.502..57.506 rows=50000 loops=2)\n                          Output: hc.hash_id\n                          Buckets: 131072  Batches: 1  Memory Usage: 4992kB\n                          Buffers: shared hit=3126\n                          Worker 0:  actual time=56.496..56.499 rows=40276 loops=1\n                            Buffers: shared hit=1383\n                          ->  Hash Join  (cost=2887.00..5481.66 rows=58824 width=4) (actual time=26.993..46.874 rows=50000 loops=2)\n                                Output: hc.hash_id\n                                Inner Unique: true\n                                Hash Cond: (p.context_id = hc.id)\n                                Buffers: shared hit=3126\n                                Worker 0:  actual time=29.125..46.972 rows=40276 loops=1\n                                  Buffers: shared hit=1383\n                                ->  Parallel Seq Scan on public.paths p  (cost=0.00..2440.24 rows=58824 width=4) (actual time=0.007..6.347 rows=50000 loops=2)\n                                      Output: p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, p.context_id, p.coordinates, p.extraction_provenance, p.parent_path_id, p.hierarchy_path, p.processing_status, p.status_detail, p.attempts, p.status_updated_at, p.error_message\n                                      Buffers: shared hit=1852\n                                      Worker 0:  actual time=0.009..5.794 rows=40276 loops=1\n                                        Buffers: shared hit=746\n                                ->  Hash  (cost=1637.00..1637.00 rows=100000 width=8) (actual time=26.507..26.508 rows=100000 loops=2)\n                                      Output: hc.id, hc.hash_id\n                                      Buckets: 131072  Batches: 1  Memory Usage: 4931kB\n                                      Buffers: shared hit=1274\n                                      Worker 0:  actual time=28.591..28.592 rows=100000 loops=1\n                                        Buffers: shared hit=637\n                                      ->  Seq Scan on public.hash_contexts hc  (cost=0.00..1637.00 rows=100000 width=8) (actual time=0.014..10.163 rows=100000 loops=2)\n                                            Output: hc.id, hc.hash_id\n                                            Buffers: shared hit=1274\n                                            Worker 0:  actual time=0.021..10.631 rows=100000 loops=1\n                                              Buffers: shared hit=637\nPlanning:\n  Buffers: shared hit=593\nPlanning Time: 1.328 ms\nExecution Time: 153.437 ms",
+      "explained_sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at FROM content_signals s WHERE EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE)) ORDER BY s.date_from ASC NULLS LAST, s.date_to ASC NULLS LAST, s.hash_id ASC, s.char_start ASC, s.id ASC LIMIT 50 OFFSET 49950"
+    },
+    {
+      "label": "/api/lexis/manage/dashboard",
+      "kind": "execute",
+      "sql": "SELECT\n    si.name AS side_name,\n    COUNT(DISTINCT p.id) AS file_count\nFROM sides si\nJOIN hash_contexts hc ON hc.side_id = si.id\nJOIN paths p ON p.context_id = hc.id\nGROUP BY si.id, si.name\nHAVING COUNT(DISTINCT p.id) > 0\nORDER BY file_count DESC, si.name ASC",
+      "params": [
+        "{}"
+      ],
+      "ms": 110.08,
+      "rows": null,
+      "caller": "Api.services.lexis_cosmos._read",
+      "error": null,
+      "plan": "Sort  (cost=17927.16..17927.17 rows=1 width=25) (actual time=147.331..147.338 rows=2 loops=1)\n  Output: si.name, (count(DISTINCT p.id)), si.id\n  Sort Key: (count(DISTINCT p.id)) DESC, si.name\n  Sort Method: quicksort  Memory: 25kB\n  Buffers: shared hit=2499, temp read=417 written=418\n  ->  GroupAggregate  (cost=17177.13..17927.15 rows=1 width=25) (actual time=140.067..147.303 rows=2 loops=1)\n        Output: si.name, count(DISTINCT p.id), si.id\n        Group Key: si.id\n        Filter: (count(DISTINCT p.id) > 0)\n        Buffers: shared hit=2493, temp read=417 written=418\n        ->  Sort  (cost=17177.13..17427.13 rows=100000 width=21) (actual time=132.827..139.830 rows=100000 loops=1)\n              Output: si.id, si.name, p.id\n              Sort Key: si.id, p.id\n              Sort Method: external merge  Disk: 3336kB\n              Buffers: shared hit=2493, temp read=417 written=418\n              ->  Hash Join  (cost=2888.05..6821.31 rows=100000 width=21) (actual time=21.300..68.100 rows=100000 loops=1)\n                    Output: si.id, si.name, p.id\n                    Inner Unique: true\n                    Hash Cond: (hc.side_id = si.id)\n                    Buffers: shared hit=2490\n                    ->  Hash Join  (cost=2887.00..6001.51 rows=100000 width=8) (actual time=21.279..57.064 rows=100000 loops=1)\n                          Output: hc.side_id, p.id\n                          Inner Unique: true\n                          Hash Cond: (p.context_id = hc.id)\n                          Buffers: shared hit=2489\n                          ->  Seq Scan on public.paths p  (cost=0.00..2852.00 rows=100000 width=8) (actual time=0.002..10.952 rows=100000 loops=1)\n                                Output: p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, p.context_id, p.coordinates, p.extraction_provenance, p.parent_path_id, p.hierarchy_path, p.processing_status, p.status_detail, p.attempts, p.status_updated_at, p.error_message\n                                Buffers: shared hit=1852\n                          ->  Hash  (cost=1637.00..1637.00 rows=100000 width=8) (actual time=20.888..20.890 rows=100000 loops=1)\n                                Output: hc.side_id, hc.id\n                                Buckets: 131072  Batches: 1  Memory Usage: 4931kB\n                                Buffers: shared hit=637\n                                ->  Seq Scan on public.hash_contexts hc  (cost=0.00..1637.00 rows=100000 width=8) (actual time=0.003..8.290 rows=100000 loops=1)\n                                      Output: hc.side_id, hc.id\n                                      Buffers: shared hit=637\n                    ->  Hash  (cost=1.02..1.02 rows=2 width=17) (actual time=0.010..0.011 rows=2 loops=1)\n                          Output: si.name, si.id\n                          Buckets: 1024  Batches: 1  Memory Usage: 9kB\n                          Buffers: shared hit=1\n                          ->  Seq Scan on public.sides si  (cost=0.00..1.02 rows=2 width=17) (actual time=0.005..0.005 rows=2 loops=1)\n                                Output: si.name, si.id\n                                Buffers: shared hit=1\nPlanning:\n  Buffers: shared hit=417\nPlanning Time: 0.850 ms\nExecution Time: 147.949 ms",
+      "explained_sql": "SELECT\n    si.name AS side_name,\n    COUNT(DISTINCT p.id) AS file_count\nFROM sides si\nJOIN hash_contexts hc ON hc.side_id = si.id\nJOIN paths p ON p.context_id = hc.id\nGROUP BY si.id, si.name\nHAVING COUNT(DISTINCT p.id) > 0\nORDER BY file_count DESC, si.name ASC"
+    },
+    {
+      "label": "/api/signals/horizon?limit=50&identifier_kind=email",
+      "kind": "execute",
+      "sql": "SELECT COUNT(*), COUNT(*) FILTER (WHERE r.hash_id IS NULL), COUNT(*) FILTER (WHERE r.status = 'failed'), COUNT(*) FILTER (WHERE r.status <> 'failed' AND r.detector_ver IS DISTINCT FROM %s), COUNT(*) FILTER (WHERE r.status <> 'failed' AND r.detector_ver = %s), COUNT(*) FILTER (WHERE r.status = 'truncated' AND r.detector_ver = %s), COUNT(*) FILTER (WHERE r.status = 'no_text' AND r.detector_ver = %s) FROM (SELECT DISTINCT hc.hash_id FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id IS NOT NULL AND (TRUE)) m LEFT JOIN content_signal_runs r ON r.hash_id = m.hash_id AND r.detector = 'temporal'",
+      "params": [
+        "'temporal-1.1.0'",
+        "'temporal-1.1.0'",
+        "'temporal-1.1.0'",
+        "'temporal-1.1.0'"
+      ],
+      "ms": 83.551,
+      "rows": null,
+      "caller": "services.detection.signal_query.coverage",
+      "error": null,
+      "plan": "Aggregate  (cost=11514.03..11514.04 rows=1 width=56) (actual time=140.539..140.544 rows=1 loops=1)\n  Output: count(*), count(*) FILTER (WHERE (r.hash_id IS NULL)), count(*) FILTER (WHERE ((r.status)::text = 'failed'::text)), count(*) FILTER (WHERE (((r.status)::text <> 'failed'::text) AND ((r.detector_ver)::text IS DISTINCT FROM 'temporal-1.1.0'::text))), count(*) FILTER (WHERE (((r.status)::text <> 'failed'::text) AND ((r.detector_ver)::text = 'temporal-1.1.0'::text))), count(*) FILTER (WHERE (((r.status)::text = 'truncated'::text) AND ((r.detector_ver)::text = 'temporal-1.1.0'::text))), count(*) FILTER (WHERE (((r.status)::text = 'no_text'::text) AND ((r.detector_ver)::text = 'temporal-1.1.0'::text)))\n  Buffers: shared hit=2489, temp read=4 written=26\n  ->  Hash Left Join  (cost=6251.52..7514.03 rows=100000 width=152) (actual time=97.753..131.072 rows=100000 loops=1)\n        Output: r.hash_id, r.status, r.detector_ver\n        Inner Unique: true\n        Hash Cond: (hc.hash_id = r.hash_id)\n        Buffers: shared hit=2489, temp read=4 written=26\n        ->  HashAggregate  (cost=6251.51..7251.51 rows=100000 width=4) (actual time=97.726..120.045 rows=100000 loops=1)\n              Output: hc.hash_id\n              Group Key: hc.hash_id\n              Batches: 5  Memory Usage: 10289kB  Disk Usage: 200kB\n              Buffers: shared hit=2489, temp read=4 written=26\n              ->  Hash Join  (cost=2887.00..6001.51 rows=100000 width=4) (actual time=27.084..65.185 rows=100000 loops=1)\n                    Output: hc.hash_id\n                    Inner Unique: true\n                    Hash Cond: (p.context_id = hc.id)\n                    Buffers: shared hit=2489\n                    ->  Seq Scan on public.paths p  (cost=0.00..2852.00 rows=100000 width=4) (actual time=0.008..12.309 rows=100000 loops=1)\n                          Output: p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, p.context_id, p.coordinates, p.extraction_provenance, p.parent_path_id, p.hierarchy_path, p.processing_status, p.status_detail, p.attempts, p.status_updated_at, p.error_message\n                          Buffers: shared hit=1852\n                    ->  Hash  (cost=1637.00..1637.00 rows=100000 width=8) (actual time=26.623..26.624 rows=100000 loops=1)\n                          Output: hc.hash_id, hc.id\n                          Buckets: 131072  Batches: 1  Memory Usage: 4931kB\n                          Buffers: shared hit=637\n                          ->  Seq Scan on public.hash_contexts hc  (cost=0.00..1637.00 rows=100000 width=8) (actual time=0.011..10.569 rows=100000 loops=1)\n                                Output: hc.hash_id, hc.id\n                                Filter: (hc.hash_id IS NOT NULL)\n                                Buffers: shared hit=637\n        ->  Hash  (cost=0.00..0.00 rows=1 width=152) (actual time=0.010..0.011 rows=0 loops=1)\n              Output: r.hash_id, r.status, r.detector_ver\n              Buckets: 1024  Batches: 1  Memory Usage: 8kB\n              ->  Seq Scan on public.content_signal_runs r  (cost=0.00..0.00 rows=1 width=152) (actual time=0.009..0.010 rows=0 loops=1)\n                    Output: r.hash_id, r.status, r.detector_ver\n                    Filter: ((r.detector)::text = 'temporal'::text)\nPlanning:\n  Buffers: shared hit=443\nPlanning Time: 1.097 ms\nExecution Time: 142.489 ms",
+      "explained_sql": "SELECT COUNT(*), COUNT(*) FILTER (WHERE r.hash_id IS NULL), COUNT(*) FILTER (WHERE r.status = 'failed'), COUNT(*) FILTER (WHERE r.status <> 'failed' AND r.detector_ver IS DISTINCT FROM 'temporal-1.1.0'), COUNT(*) FILTER (WHERE r.status <> 'failed' AND r.detector_ver = 'temporal-1.1.0'), COUNT(*) FILTER (WHERE r.status = 'truncated' AND r.detector_ver = 'temporal-1.1.0'), COUNT(*) FILTER (WHERE r.status = 'no_text' AND r.detector_ver = 'temporal-1.1.0') FROM (SELECT DISTINCT hc.hash_id FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id IS NOT NULL AND (TRUE)) m LEFT JOIN content_signal_runs r ON r.hash_id = m.hash_id AND r.detector = 'temporal'"
+    },
+    {
+      "label": "/api/signals?limit=50&signal_type=place_mention",
+      "kind": "execute",
+      "sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT(*) FROM content_signals s WHERE (s.signal_type = ANY(%s)) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE)) GROUP BY GROUPING SETS ((s.detector), (s.signal_type), (s.confidence), (s.language), (s.calendar), (s.resolution), (s.method))",
+      "params": [
+        "['place_mention']"
+      ],
+      "ms": 79.466,
+      "rows": null,
+      "caller": "services.detection.signal_query._facets",
+      "error": null,
+      "plan": "HashAggregate  (cost=11242.85..12753.07 rows=805 width=310) (actual time=120.139..120.152 rows=7 loops=1)\n  Output: s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), count(*)\n  Hash Key: s.detector\n  Hash Key: s.signal_type\n  Hash Key: s.confidence\n  Hash Key: s.language\n  Hash Key: s.calendar\n  Hash Key: s.resolution\n  Hash Key: s.method\n  Batches: 1  Memory Usage: 136kB\n  Buffers: shared hit=4699\n  ->  Hash Semi Join  (cost=7251.51..10992.83 rows=50005 width=298) (actual time=75.573..101.077 rows=50000 loops=1)\n        Output: s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method\n        Hash Cond: (s.hash_id = hc.hash_id)\n        Buffers: shared hit=4699\n        ->  Seq Scan on public.content_signals s  (cost=0.00..3053.75 rows=50005 width=302) (actual time=0.008..12.405 rows=50000 loops=1)\n              Output: s.id, s.hash_id, s.detector, s.detector_ver, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.dedup_key, s.detected_at\n              Filter: ((s.signal_type)::text = ANY ('{place_mention}'::text[]))\n              Rows Removed by Filter: 25000\n              Buffers: shared hit=2210\n        ->  Hash  (cost=6001.51..6001.51 rows=100000 width=4) (actual time=75.154..75.158 rows=100000 loops=1)\n              Output: hc.hash_id\n              Buckets: 131072  Batches: 1  Memory Usage: 4540kB\n              Buffers: shared hit=2489\n              ->  Hash Join  (cost=2887.00..6001.51 rows=100000 width=4) (actual time=22.071..59.675 rows=100000 loops=1)\n                    Output: hc.hash_id\n                    Inner Unique: true\n                    Hash Cond: (p.context_id = hc.id)\n                    Buffers: shared hit=2489\n                    ->  Seq Scan on public.paths p  (cost=0.00..2852.00 rows=100000 width=4) (actual time=0.005..11.730 rows=100000 loops=1)\n                          Output: p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, p.context_id, p.coordinates, p.extraction_provenance, p.parent_path_id, p.hierarchy_path, p.processing_status, p.status_detail, p.attempts, p.status_updated_at, p.error_message\n                          Buffers: shared hit=1852\n                    ->  Hash  (cost=1637.00..1637.00 rows=100000 width=8) (actual time=21.568..21.571 rows=100000 loops=1)\n                          Output: hc.id, hc.hash_id\n                          Buckets: 131072  Batches: 1  Memory Usage: 4931kB\n                          Buffers: shared hit=637\n                          ->  Seq Scan on public.hash_contexts hc  (cost=0.00..1637.00 rows=100000 width=8) (actual time=0.007..8.752 rows=100000 loops=1)\n                                Output: hc.id, hc.hash_id\n                                Buffers: shared hit=637\nPlanning:\n  Buffers: shared hit=652\nPlanning Time: 1.383 ms\nExecution Time: 120.395 ms",
+      "explained_sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT(*) FROM content_signals s WHERE (s.signal_type = ANY(ARRAY['place_mention'])) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE)) GROUP BY GROUPING SETS ((s.detector), (s.signal_type), (s.confidence), (s.language), (s.calendar), (s.resolution), (s.method))"
+    },
+    {
+      "label": "/api/signals?limit=50",
+      "kind": "execute",
+      "sql": "SELECT COUNT(*), COUNT(DISTINCT s.hash_id) FROM content_signals s WHERE EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE))",
+      "params": [],
+      "ms": 74.395,
+      "rows": null,
+      "caller": "services.detection.signal_query.explore",
+      "error": null,
+      "plan": "Aggregate  (cost=17878.24..17878.25 rows=1 width=16) (actual time=115.952..115.959 rows=1 loops=1)\n  Output: count(*), count(DISTINCT s.hash_id)\n  Buffers: shared hit=4702\n  ->  Sort  (cost=17315.74..17503.24 rows=75000 width=4) (actual time=109.049..111.998 rows=75000 loops=1)\n        Output: s.hash_id\n        Sort Key: s.hash_id\n        Sort Method: quicksort  Memory: 3073kB\n        Buffers: shared hit=4702\n        ->  Hash Semi Join  (cost=7251.51..11242.76 rows=75000 width=4) (actual time=73.428..101.252 rows=75000 loops=1)\n              Output: s.hash_id\n              Hash Cond: (s.hash_id = hc.hash_id)\n              Buffers: shared hit=4699\n              ->  Seq Scan on public.content_signals s  (cost=0.00..2960.00 rows=75000 width=4) (actual time=0.003..10.252 rows=75000 loops=1)\n                    Output: s.id, s.hash_id, s.detector, s.detector_ver, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.dedup_key, s.detected_at\n                    Buffers: shared hit=2210\n              ->  Hash  (cost=6001.51..6001.51 rows=100000 width=4) (actual time=73.000..73.004 rows=100000 loops=1)\n                    Output: hc.hash_id\n                    Buckets: 131072  Batches: 1  Memory Usage: 4540kB\n                    Buffers: shared hit=2489\n                    ->  Hash Join  (cost=2887.00..6001.51 rows=100000 width=4) (actual time=21.500..57.759 rows=100000 loops=1)\n                          Output: hc.hash_id\n                          Inner Unique: true\n                          Hash Cond: (p.context_id = hc.id)\n                          Buffers: shared hit=2489\n                          ->  Seq Scan on public.paths p  (cost=0.00..2852.00 rows=100000 width=4) (actual time=0.003..11.465 rows=100000 loops=1)\n                                Output: p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, p.context_id, p.coordinates, p.extraction_provenance, p.parent_path_id, p.hierarchy_path, p.processing_status, p.status_detail, p.attempts, p.status_updated_at, p.error_message\n                                Buffers: shared hit=1852\n                          ->  Hash  (cost=1637.00..1637.00 rows=100000 width=8) (actual time=20.960..20.961 rows=100000 loops=1)\n                                Output: hc.id, hc.hash_id\n                                Buckets: 131072  Batches: 1  Memory Usage: 4931kB\n                                Buffers: shared hit=637\n                                ->  Seq Scan on public.hash_contexts hc  (cost=0.00..1637.00 rows=100000 width=8) (actual time=0.011..8.595 rows=100000 loops=1)\n                                      Output: hc.id, hc.hash_id\n                                      Buffers: shared hit=637\nPlanning:\n  Buffers: shared hit=526\nPlanning Time: 1.098 ms\nExecution Time: 116.259 ms",
+      "explained_sql": "SELECT COUNT(*), COUNT(DISTINCT s.hash_id) FROM content_signals s WHERE EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE))"
+    },
+    {
+      "label": "/api/signals?limit=50&signal_type=place_mention",
+      "kind": "execute",
+      "sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at FROM content_signals s WHERE (s.signal_type = ANY(%s)) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE)) ORDER BY s.date_from ASC NULLS LAST, s.date_to ASC NULLS LAST, s.hash_id ASC, s.char_start ASC, s.id ASC LIMIT %s OFFSET %s",
+      "params": [
+        "['place_mention']",
+        "50",
+        "0"
+      ],
+      "ms": 60.512,
+      "rows": null,
+      "caller": "services.detection.signal_query.explore",
+      "error": null,
+      "plan": "Limit  (cost=11304.89..11310.64 rows=50 width=576) (actual time=82.118..85.263 rows=50 loops=1)\n  Output: s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at\n  Buffers: shared hit=5435\n  ->  Gather Merge  (cost=11304.89..14687.62 rows=29415 width=576) (actual time=82.116..85.255 rows=50 loops=1)\n        Output: s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at\n        Workers Planned: 1\n        Workers Launched: 1\n        Buffers: shared hit=5435\n        ->  Sort  (cost=10304.88..10378.42 rows=29415 width=576) (actual time=80.453..80.460 rows=43 loops=2)\n              Output: s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at\n              Sort Key: s.date_from, s.date_to, s.hash_id, s.char_start, s.id\n              Sort Method: top-N heapsort  Memory: 37kB\n              Buffers: shared hit=5435\n              Worker 0:  actual time=79.244..79.250 rows=50 loops=1\n                Sort Method: top-N heapsort  Memory: 37kB\n                Buffers: shared hit=2885\n              ->  Parallel Hash Semi Join  (cost=6216.96..9327.74 rows=29415 width=576) (actual time=51.933..67.171 rows=25000 loops=2)\n                    Output: s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at\n                    Hash Cond: (s.hash_id = hc.hash_id)\n                    Buffers: shared hit=5383\n                    Worker 0:  actual time=50.695..66.189 rows=25935 loops=1\n                      Buffers: shared hit=2833\n                    ->  Parallel Seq Scan on public.content_signals s  (cost=0.00..2706.32 rows=29415 width=576) (actual time=0.014..6.958 rows=25000 loops=2)\n                          Output: s.id, s.hash_id, s.detector, s.detector_ver, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.dedup_key, s.detected_at\n                          Filter: ((s.signal_type)::text = ANY ('{place_mention}'::text[]))\n                          Rows Removed by Filter: 12500\n                          Buffers: shared hit=2210\n                          Worker 0:  actual time=0.017..7.025 rows=25935 loops=1\n                            Buffers: shared hit=1171\n                    ->  Parallel Hash  (cost=5481.66..5481.66 rows=58824 width=4) (actual time=51.068..51.071 rows=50000 loops=2)\n                          Output: hc.hash_id\n                          Buckets: 131072  Batches: 1  Memory Usage: 4960kB\n                          Buffers: shared hit=3126\n                          Worker 0:  actual time=50.562..50.565 rows=52804 loops=1\n                            Buffers: shared hit=1615\n                          ->  Hash Join  (cost=2887.00..5481.66 rows=58824 width=4) (actual time=21.763..41.742 rows=50000 loops=2)\n                                Output: hc.hash_id\n                                Inner Unique: true\n                                Hash Cond: (p.context_id = hc.id)\n                                Buffers: shared hit=3126\n                                Worker 0:  actual time=21.227..41.008 rows=52804 loops=1\n                                  Buffers: shared hit=1615\n                                ->  Parallel Seq Scan on public.paths p  (cost=0.00..2440.24 rows=58824 width=4) (actual time=0.007..6.362 rows=50000 loops=2)\n                                      Output: p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, p.context_id, p.coordinates, p.extraction_provenance, p.parent_path_id, p.hierarchy_path, p.processing_status, p.status_detail, p.attempts, p.status_updated_at, p.error_message\n                                      Buffers: shared hit=1852\n                                      Worker 0:  actual time=0.008..6.424 rows=52804 loops=1\n                                        Buffers: shared hit=978\n                                ->  Hash  (cost=1637.00..1637.00 rows=100000 width=8) (actual time=21.265..21.267 rows=100000 loops=2)\n                                      Output: hc.id, hc.hash_id\n                                      Buckets: 131072  Batches: 1  Memory Usage: 4931kB\n                                      Buffers: shared hit=1274\n                                      Worker 0:  actual time=20.778..20.779 rows=100000 loops=1\n                                        Buffers: shared hit=637\n                                      ->  Seq Scan on public.hash_contexts hc  (cost=0.00..1637.00 rows=100000 width=8) (actual time=0.015..8.161 rows=100000 loops=2)\n                                            Output: hc.id, hc.hash_id\n                                            Buffers: shared hit=1274\n                                            Worker 0:  actual time=0.017..7.986 rows=100000 loops=1\n                                              Buffers: shared hit=637\nPlanning:\n  Buffers: shared hit=637\nPlanning Time: 1.415 ms\nExecution Time: 85.434 ms",
+      "explained_sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at FROM content_signals s WHERE (s.signal_type = ANY(ARRAY['place_mention'])) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE)) ORDER BY s.date_from ASC NULLS LAST, s.date_to ASC NULLS LAST, s.hash_id ASC, s.char_start ASC, s.id ASC LIMIT 50 OFFSET 0"
+    }
+  ],
+  "jsonb_kind": [
+    {
+      "label": "/api/signals?limit=50&identifier_kind=email",
+      "kind": "execute",
+      "sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT(*) FROM content_signals s WHERE s.evidence->>'kind' = ANY(%s) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE)) GROUP BY GROUPING SETS ((s.detector), (s.signal_type), (s.confidence), (s.language), (s.calendar), (s.resolution), (s.method))",
+      "params": [
+        "['email']"
+      ],
+      "ms": 29.514,
+      "rows": null,
+      "caller": "services.detection.signal_query._facets",
+      "error": null,
+      "plan": "HashAggregate  (cost=5227.91..5247.68 rows=681 width=310) (actual time=29.209..31.149 rows=7 loops=1)\n  Output: s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), count(*)\n  Hash Key: s.detector\n  Hash Key: s.signal_type\n  Hash Key: s.confidence\n  Hash Key: s.language\n  Hash Key: s.calendar\n  Hash Key: s.resolution\n  Hash Key: s.method\n  Batches: 1  Memory Usage: 136kB\n  Buffers: shared hit=52210\n  ->  Gather  (cost=1000.59..5226.04 rows=375 width=298) (actual time=6.590..27.490 rows=8333 loops=1)\n        Output: s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method\n        Workers Planned: 1\n        Workers Launched: 1\n        Buffers: shared hit=52210\n        ->  Nested Loop Semi Join  (cost=0.58..4188.54 rows=221 width=298) (actual time=4.726..24.160 rows=4166 loops=2)\n              Output: s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method\n              Buffers: shared hit=52210\n              Worker 0:  actual time=3.109..24.102 rows=4593 loops=1\n                Buffers: shared hit=28398\n              ->  Parallel Seq Scan on public.content_signals s  (cost=0.00..2816.62 rows=221 width=302) (actual time=4.675..8.739 rows=4166 loops=2)\n                    Output: s.id, s.hash_id, s.detector, s.detector_ver, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.dedup_key, s.detected_at\n                    Filter: ((s.evidence ->> 'kind'::text) = ANY ('{email}'::text[]))\n                    Rows Removed by Filter: 33334\n                    Buffers: shared hit=2210\n                    Worker 0:  actual time=3.046..7.502 rows=4593 loops=1\n                      Buffers: shared hit=838\n              ->  Nested Loop  (cost=0.58..6.20 rows=1 width=4) (actual time=0.003..0.003 rows=1 loops=8333)\n                    Output: hc.hash_id\n                    Buffers: shared hit=50000\n                    Worker 0:  actual time=0.003..0.003 rows=1 loops=4593\n                      Buffers: shared hit=27560\n                    ->  Index Scan using idx_hash_contexts_hash_id on public.hash_contexts hc  (cost=0.29..5.79 rows=1 width=8) (actual time=0.001..0.001 rows=1 loops=8333)\n                          Output: hc.id, hc.hash_id, hc.source_id, hc.side_id, hc.date_creation\n                          Index Cond: (hc.hash_id = s.hash_id)\n                          Buffers: shared hit=25000\n                          Worker 0:  actual time=0.001..0.001 rows=1 loops=4593\n                            Buffers: shared hit=13780\n                    ->  Index Only Scan using idx_paths_hash_id on public.paths p  (cost=0.29..0.40 rows=1 width=4) (actual time=0.002..0.002 rows=1 loops=8333)\n                          Output: p.context_id, p.id\n                          Index Cond: (p.context_id = hc.id)\n                          Heap Fetches: 8333\n                          Buffers: shared hit=25000\n                          Worker 0:  actual time=0.002..0.002 rows=1 loops=4593\n                            Buffers: shared hit=13780\nPlanning:\n  Buffers: shared hit=659\nPlanning Time: 1.242 ms\nExecution Time: 31.262 ms",
+      "explained_sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT(*) FROM content_signals s WHERE s.evidence->>'kind' = ANY(ARRAY['email']) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE)) GROUP BY GROUPING SETS ((s.detector), (s.signal_type), (s.confidence), (s.language), (s.calendar), (s.resolution), (s.method))"
+    },
+    {
+      "label": "/api/signals?limit=50&identifier_kind=email&offset=8000",
+      "kind": "execute",
+      "sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at FROM content_signals s WHERE s.evidence->>'kind' = ANY(%s) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE)) ORDER BY s.date_from ASC NULLS LAST, s.date_to ASC NULLS LAST, s.hash_id ASC, s.char_start ASC, s.id ASC LIMIT %s OFFSET %s",
+      "params": [
+        "['email']",
+        "50",
+        "8000"
+      ],
+      "ms": 27.95,
+      "rows": null,
+      "caller": "services.detection.signal_query.explore",
+      "error": null,
+      "plan": "Limit  (cost=5222.57..5222.68 rows=1 width=576) (actual time=34.678..36.592 rows=50 loops=1)\n  Output: s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at\n  Buffers: shared hit=52233\n  ->  Gather Merge  (cost=5197.15..5222.57 rows=221 width=576) (actual time=32.386..36.271 rows=8050 loops=1)\n        Output: s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at\n        Workers Planned: 1\n        Workers Launched: 1\n        Buffers: shared hit=52233\n        ->  Sort  (cost=4197.14..4197.70 rows=221 width=576) (actual time=30.649..30.857 rows=4094 loops=2)\n              Output: s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at\n              Sort Key: s.date_from, s.date_to, s.hash_id, s.char_start, s.id\n              Sort Method: quicksort  Memory: 1282kB\n              Buffers: shared hit=52233\n              Worker 0:  actual time=29.273..29.511 rows=4107 loops=1\n                Sort Method: quicksort  Memory: 1251kB\n                Buffers: shared hit=25753\n              ->  Nested Loop Semi Join  (cost=0.58..4188.54 rows=221 width=576) (actual time=6.610..27.685 rows=4166 loops=2)\n                    Output: s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at\n                    Buffers: shared hit=52210\n                    Worker 0:  actual time=5.244..26.276 rows=4107 loops=1\n                      Buffers: shared hit=25730\n                    ->  Parallel Seq Scan on public.content_signals s  (cost=0.00..2816.62 rows=221 width=576) (actual time=6.558..11.071 rows=4166 loops=2)\n                          Output: s.id, s.hash_id, s.detector, s.detector_ver, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.dedup_key, s.detected_at\n                          Filter: ((s.evidence ->> 'kind'::text) = ANY ('{email}'::text[]))\n                          Rows Removed by Filter: 33334\n                          Buffers: shared hit=2210\n                          Worker 0:  actual time=5.175..9.381 rows=4107 loops=1\n                            Buffers: shared hit=1086\n                    ->  Nested Loop  (cost=0.58..6.20 rows=1 width=4) (actual time=0.004..0.004 rows=1 loops=8333)\n                          Output: hc.hash_id\n                          Buffers: shared hit=50000\n                          Worker 0:  actual time=0.004..0.004 rows=1 loops=4107\n                            Buffers: shared hit=24644\n                          ->  Index Scan using idx_hash_contexts_hash_id on public.hash_contexts hc  (cost=0.29..5.79 rows=1 width=8) (actual time=0.002..0.002 rows=1 loops=8333)\n                                Output: hc.id, hc.hash_id, hc.source_id, hc.side_id, hc.date_creation\n                                Index Cond: (hc.hash_id = s.hash_id)\n                                Buffers: shared hit=25000\n                                Worker 0:  actual time=0.002..0.002 rows=1 loops=4107\n                                  Buffers: shared hit=12322\n                          ->  Index Only Scan using idx_paths_hash_id on public.paths p  (cost=0.29..0.40 rows=1 width=4) (actual time=0.002..0.002 rows=1 loops=8333)\n                                Output: p.context_id, p.id\n                                Index Cond: (p.context_id = hc.id)\n                                Heap Fetches: 8333\n                                Buffers: shared hit=25000\n                                Worker 0:  actual time=0.002..0.002 rows=1 loops=4107\n                                  Buffers: shared hit=12322\nPlanning:\n  Buffers: shared hit=644\nPlanning Time: 1.303 ms\nExecution Time: 36.742 ms",
+      "explained_sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.detector_ver, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.hash_id, s.detected_at FROM content_signals s WHERE s.evidence->>'kind' = ANY(ARRAY['email']) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE)) ORDER BY s.date_from ASC NULLS LAST, s.date_to ASC NULLS LAST, s.hash_id ASC, s.char_start ASC, s.id ASC LIMIT 50 OFFSET 8000"
+    },
+    {
+      "label": "/api/signals?limit=50&identifier_kind=email",
+      "kind": "execute",
+      "sql": "SELECT COUNT(*), COUNT(DISTINCT s.hash_id) FROM content_signals s WHERE s.evidence->>'kind' = ANY(%s) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE))",
+      "params": [
+        "['email']"
+      ],
+      "ms": 27.127,
+      "rows": null,
+      "caller": "services.detection.signal_query.explore",
+      "error": null,
+      "plan": "Aggregate  (cost=5241.77..5241.78 rows=1 width=16) (actual time=30.633..32.085 rows=1 loops=1)\n  Output: count(*), count(DISTINCT s.hash_id)\n  Buffers: shared hit=52217\n  ->  Gather Merge  (cost=5197.15..5239.89 rows=375 width=4) (actual time=29.184..31.603 rows=8333 loops=1)\n        Output: s.hash_id\n        Workers Planned: 1\n        Workers Launched: 1\n        Buffers: shared hit=52217\n        ->  Sort  (cost=4197.14..4197.70 rows=221 width=4) (actual time=27.543..27.719 rows=4166 loops=2)\n              Output: s.hash_id\n              Sort Key: s.hash_id\n              Sort Method: quicksort  Memory: 193kB\n              Buffers: shared hit=52217\n              Worker 0:  actual time=26.295..26.456 rows=3625 loops=1\n                Sort Method: quicksort  Memory: 97kB\n                Buffers: shared hit=22598\n              ->  Nested Loop Semi Join  (cost=0.58..4188.54 rows=221 width=4) (actual time=5.403..27.159 rows=4166 loops=2)\n                    Output: s.hash_id\n                    Buffers: shared hit=52210\n                    Worker 0:  actual time=4.175..25.943 rows=3625 loops=1\n                      Buffers: shared hit=22591\n                    ->  Parallel Seq Scan on public.content_signals s  (cost=0.00..2816.62 rows=221 width=4) (actual time=5.355..9.852 rows=4166 loops=2)\n                          Output: s.id, s.hash_id, s.detector, s.detector_ver, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.method, s.confidence, s.confidence_basis, s.evidence_sentence, s.sentence_start, s.sentence_end, s.dedup_key, s.detected_at\n                          Filter: ((s.evidence ->> 'kind'::text) = ANY ('{email}'::text[]))\n                          Rows Removed by Filter: 33334\n                          Buffers: shared hit=2210\n                          Worker 0:  actual time=4.116..8.308 rows=3625 loops=1\n                            Buffers: shared hit=839\n                    ->  Nested Loop  (cost=0.58..6.20 rows=1 width=4) (actual time=0.004..0.004 rows=1 loops=8333)\n                          Output: hc.hash_id\n                          Buffers: shared hit=50000\n                          Worker 0:  actual time=0.005..0.005 rows=1 loops=3625\n                            Buffers: shared hit=21752\n                          ->  Index Scan using idx_hash_contexts_hash_id on public.hash_contexts hc  (cost=0.29..5.79 rows=1 width=8) (actual time=0.002..0.002 rows=1 loops=8333)\n                                Output: hc.id, hc.hash_id, hc.source_id, hc.side_id, hc.date_creation\n                                Index Cond: (hc.hash_id = s.hash_id)\n                                Buffers: shared hit=25000\n                                Worker 0:  actual time=0.002..0.002 rows=1 loops=3625\n                                  Buffers: shared hit=10876\n                          ->  Index Only Scan using idx_paths_hash_id on public.paths p  (cost=0.29..0.40 rows=1 width=4) (actual time=0.002..0.002 rows=1 loops=8333)\n                                Output: p.context_id, p.id\n                                Index Cond: (p.context_id = hc.id)\n                                Heap Fetches: 8333\n                                Buffers: shared hit=25000\n                                Worker 0:  actual time=0.002..0.002 rows=1 loops=3625\n                                  Buffers: shared hit=10876\nPlanning:\n  Buffers: shared hit=577\nPlanning Time: 1.400 ms\nExecution Time: 32.201 ms",
+      "explained_sql": "SELECT COUNT(*), COUNT(DISTINCT s.hash_id) FROM content_signals s WHERE s.evidence->>'kind' = ANY(ARRAY['email']) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc.hash_id = s.hash_id AND (TRUE))"
+    }
+  ],
+  "n_plus_one": [
+    {
+      "family": "/files",
+      "requests": 3,
+      "statements": "17",
+      "max_repeat_in_request": 7,
+      "rows": null,
+      "verdict": "no per-row statements; one statement repeated 7x per request"
+    },
+    {
+      "family": "/api/lexis/manage/dashboard",
+      "requests": 1,
+      "statements": "13",
+      "max_repeat_in_request": 5,
+      "rows": null,
+      "verdict": "no per-row statements; one statement repeated 5x per request"
+    },
+    {
+      "family": "/api/signals",
+      "requests": 6,
+      "statements": "11",
+      "max_repeat_in_request": 1,
+      "rows": 50,
+      "verdict": "no N+1: statement count flat, nothing repeated"
+    },
+    {
+      "family": "/api/signals/horizon",
+      "requests": 2,
+      "statements": "11",
+      "max_repeat_in_request": 1,
+      "rows": null,
+      "verdict": "no N+1: statement count flat, nothing repeated"
+    },
+    {
+      "family": "/api/keywords",
+      "requests": 1,
+      "statements": "7",
+      "max_repeat_in_request": 2,
+      "rows": null,
+      "verdict": "no per-row statements; one statement repeated 2x per request"
+    },
+    {
+      "family": "/api/lexis/manage/files",
+      "requests": 3,
+      "statements": "5-7",
+      "max_repeat_in_request": 2,
+      "rows": 50,
+      "verdict": "no per-row statements; one statement repeated 2x per request"
+    },
+    {
+      "family": "/api/places",
+      "requests": 1,
+      "statements": "6",
+      "max_repeat_in_request": 1,
+      "rows": null,
+      "verdict": "no N+1: statement count flat, nothing repeated"
+    },
+    {
+      "family": "/api/paths",
+      "requests": 8,
+      "statements": "5",
+      "max_repeat_in_request": 1,
+      "rows": 500,
+      "verdict": "no N+1: statement count flat, nothing repeated"
+    },
+    {
+      "family": "/api/reports/dashboard",
+      "requests": 1,
+      "statements": "5",
+      "max_repeat_in_request": 1,
+      "rows": null,
+      "verdict": "no N+1: statement count flat, nothing repeated"
+    },
+    {
+      "family": "/api/reports/overview",
+      "requests": 1,
+      "statements": "5",
+      "max_repeat_in_request": 1,
+      "rows": null,
+      "verdict": "no N+1: statement count flat, nothing repeated"
+    },
+    {
+      "family": "/api/scenarios",
+      "requests": 1,
+      "statements": "5",
+      "max_repeat_in_request": 1,
+      "rows": null,
+      "verdict": "no N+1: statement count flat, nothing repeated"
+    },
+    {
+      "family": "/api/sides",
+      "requests": 1,
+      "statements": "5",
+      "max_repeat_in_request": 1,
+      "rows": 2,
+      "verdict": "no N+1: statement count flat, nothing repeated"
+    },
+    {
+      "family": "/api/sources",
+      "requests": 1,
+      "statements": "5",
+      "max_repeat_in_request": 1,
+      "rows": 4,
+      "verdict": "no N+1: statement count flat, nothing repeated"
+    },
+    {
+      "family": "/dashboard/charts",
+      "requests": 1,
+      "statements": "5",
+      "max_repeat_in_request": 1,
+      "rows": null,
+      "verdict": "no N+1: statement count flat, nothing repeated"
+    },
+    {
+      "family": "/dashboard/comprehensive",
+      "requests": 1,
+      "statements": "5",
+      "max_repeat_in_request": 1,
+      "rows": null,
+      "verdict": "no N+1: statement count flat, nothing repeated"
+    },
+    {
+      "family": "/api/search/suggestions",
+      "requests": 1,
+      "statements": "3",
+      "max_repeat_in_request": 1,
+      "rows": null,
+      "verdict": "no N+1: statement count flat, nothing repeated"
+    }
+  ],
+  "pagination": [
+    {
+      "url": "/api/paths?offset=0&limit=50",
+      "status": 200,
+      "ms": 10.4,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 3.9,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 1.93,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.248,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "UPDATE sessions SET expires_at = %s WHERE session_id = %s",
+          "ms": 0.347,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=5000&limit=50",
+      "status": 200,
+      "ms": 10.5,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 4.2,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.036,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 0.94,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "SELECT id, file_name, file_path, file_size, file_type, file_status, file_date, date_creation, context_id FROM paths WHERE 1=1 ORDER BY date_creation DESC OFFSET %s LIMIT %s",
+          "ms": 0.858,
+          "caller": "Api.utils_module.execute_query"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=50000&limit=50",
+      "status": 200,
+      "ms": 16.5,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 10.6,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT id, file_name, file_path, file_size, file_type, file_status, file_date, date_creation, context_id FROM paths WHERE 1=1 ORDER BY date_creation DESC OFFSET %s LIMIT %s",
+          "ms": 7.134,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.01,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.041,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=99500&limit=50",
+      "status": 200,
+      "ms": 20.9,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 14.3,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT id, file_name, file_path, file_size, file_type, file_status, file_date, date_creation, context_id FROM paths WHERE 1=1 ORDER BY date_creation DESC OFFSET %s LIMIT %s",
+          "ms": 10.867,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 1.973,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.074,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=0&limit=500",
+      "status": 200,
+      "ms": 12.3,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 4.0,
+      "returned_rows": 500,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 1.88,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.22,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "SELECT id, file_name, file_path, file_size, file_type, file_status, file_date, date_creation, context_id FROM paths WHERE 1=1 ORDER BY date_creation DESC OFFSET %s LIMIT %s",
+          "ms": 0.517,
+          "caller": "Api.utils_module.execute_query"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=99500&limit=500",
+      "status": 200,
+      "ms": 21.4,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 13.8,
+      "returned_rows": 500,
+      "slowest": [
+        {
+          "sql": "SELECT id, file_name, file_path, file_size, file_type, file_status, file_date, date_creation, context_id FROM paths WHERE 1=1 ORDER BY date_creation DESC OFFSET %s LIMIT %s",
+          "ms": 9.857,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.318,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.174,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=0&limit=50&sort=file_date&order=desc",
+      "status": 200,
+      "ms": 9.4,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 3.5,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 1.983,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.01,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "UPDATE sessions SET expires_at = %s WHERE session_id = %s",
+          "ms": 0.218,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/paths?offset=0&limit=50&status=Read",
+      "status": 200,
+      "ms": 9.6,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 3.7,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.079,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 0.982,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "UPDATE sessions SET expires_at = %s WHERE session_id = %s",
+          "ms": 0.299,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/signals?limit=50&offset=1000",
+      "status": 200,
+      "ms": 292.1,
+      "statements": 11,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 281.4,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT",
+          "ms": 122.241,
+          "caller": "services.detection.signal_query._facets"
+        },
+        {
+          "sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.det",
+          "ms": 89.564,
+          "caller": "services.detection.signal_query.explore"
+        },
+        {
+          "sql": "SELECT COUNT(*), COUNT(DISTINCT s.hash_id) FROM content_signals s WHERE EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc",
+          "ms": 62.867,
+          "caller": "services.detection.signal_query.explore"
+        }
+      ]
+    },
+    {
+      "url": "/api/signals?limit=50&offset=49950",
+      "status": 200,
+      "ms": 278.0,
+      "statements": 11,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 267.7,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.det",
+          "ms": 111.422,
+          "caller": "services.detection.signal_query.explore"
+        },
+        {
+          "sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT",
+          "ms": 85.168,
+          "caller": "services.detection.signal_query._facets"
+        },
+        {
+          "sql": "SELECT COUNT(*), COUNT(DISTINCT s.hash_id) FROM content_signals s WHERE EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id WHERE hc",
+          "ms": 65.479,
+          "caller": "services.detection.signal_query.explore"
+        }
+      ]
+    },
+    {
+      "url": "/api/signals?limit=50&identifier_kind=email&offset=8000",
+      "status": 200,
+      "ms": 95.2,
+      "statements": 11,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 84.4,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "SELECT s.id, s.detector, s.signal_type, s.value, s.surface, s.char_start, s.char_end, s.language, s.calendar, s.resolution, s.date_from, s.date_to, s.text_orientation, s.anchor_date, s.evidence, s.det",
+          "ms": 27.95,
+          "caller": "services.detection.signal_query.explore"
+        },
+        {
+          "sql": "SELECT s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method, GROUPING(s.detector, s.signal_type, s.confidence, s.language, s.calendar, s.resolution, s.method), COUNT",
+          "ms": 26.37,
+          "caller": "services.detection.signal_query._facets"
+        },
+        {
+          "sql": "SELECT COUNT(*), COUNT(DISTINCT s.hash_id) FROM content_signals s WHERE s.evidence->>'kind' = ANY(%s) AND EXISTS (SELECT 1 FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN has",
+          "ms": 24.739,
+          "caller": "services.detection.signal_query.explore"
+        }
+      ]
+    },
+    {
+      "url": "/files?page=1",
+      "status": 200,
+      "ms": 99.4,
+      "statements": 17,
+      "repeated_statements": 7,
+      "repeated_detail": [
+        {
+          "count": 7,
+          "sql": "SELECT 1"
+        },
+        {
+          "count": 2,
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.id WHERE p.file_stat"
+        }
+      ],
+      "sql_ms": 74.1,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "SELECT p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, COALESCE(s.name, 'Unknown') as source_name, COALESCE(si.name, 'Unknown') as side_name FROM",
+          "ms": 49.841,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.",
+          "ms": 10.162,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.",
+          "ms": 5.653,
+          "caller": "Api.utils_module.execute_query"
+        }
+      ]
+    },
+    {
+      "url": "/files?page=5",
+      "status": 200,
+      "ms": 105.7,
+      "statements": 17,
+      "repeated_statements": 7,
+      "repeated_detail": [
+        {
+          "count": 7,
+          "sql": "SELECT 1"
+        },
+        {
+          "count": 2,
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.id WHERE p.file_stat"
+        }
+      ],
+      "sql_ms": 77.3,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "SELECT p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, COALESCE(s.name, 'Unknown') as source_name, COALESCE(si.name, 'Unknown') as side_name FROM",
+          "ms": 54.894,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.",
+          "ms": 8.998,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.",
+          "ms": 5.197,
+          "caller": "Api.utils_module.execute_query"
+        }
+      ]
+    },
+    {
+      "url": "/files?page=40",
+      "status": 200,
+      "ms": 106.4,
+      "statements": 17,
+      "repeated_statements": 7,
+      "repeated_detail": [
+        {
+          "count": 7,
+          "sql": "SELECT 1"
+        },
+        {
+          "count": 2,
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.id WHERE p.file_stat"
+        }
+      ],
+      "sql_ms": 78.8,
+      "returned_rows": null,
+      "slowest": [
+        {
+          "sql": "SELECT p.id, p.file_name, p.file_path, p.file_size, p.file_type, p.file_status, p.file_date, p.date_creation, COALESCE(s.name, 'Unknown') as source_name, COALESCE(si.name, 'Unknown') as side_name FROM",
+          "ms": 56.047,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.",
+          "ms": 9.307,
+          "caller": "Api.utils_module.execute_query"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM paths p LEFT JOIN hash_contexts hc ON p.context_id = hc.id LEFT JOIN hashs h ON hc.hash_id = h.id LEFT JOIN sources s ON hc.source_id = s.id LEFT JOIN sides si ON hc.side_id = si.",
+          "ms": 5.142,
+          "caller": "Api.utils_module.execute_query"
+        }
+      ]
+    },
+    {
+      "url": "/api/lexis/manage/files?page=1",
+      "status": 200,
+      "ms": 254.5,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 246.0,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "WITH file_term_counts AS ( SELECT hc.id AS context_id, ( COUNT(DISTINCT wc.word_id) + COUNT(DISTINCT kh.keyword_id) )::int AS term_count FROM hash_contexts hc LEFT JOIN words_hashs wh ON wh.hash_id = ",
+          "ms": 241.857,
+          "caller": "Api.services.lexis_cosmos._read"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.212,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.463,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/lexis/manage/files?page=2",
+      "status": 200,
+      "ms": 263.9,
+      "statements": 5,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 254.8,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "WITH file_term_counts AS ( SELECT hc.id AS context_id, ( COUNT(DISTINCT wc.word_id) + COUNT(DISTINCT kh.keyword_id) )::int AS term_count FROM hash_contexts hc LEFT JOIN words_hashs wh ON wh.hash_id = ",
+          "ms": 249.926,
+          "caller": "Api.services.lexis_cosmos._read"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.579,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.696,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/lexis/manage/files?page=20",
+      "status": 200,
+      "ms": 261.1,
+      "statements": 7,
+      "repeated_statements": 2,
+      "repeated_detail": [
+        {
+          "count": 2,
+          "sql": "SELECT 1"
+        }
+      ],
+      "sql_ms": 251.3,
+      "returned_rows": 50,
+      "slowest": [
+        {
+          "sql": "WITH file_term_counts AS ( SELECT hc.id AS context_id, ( COUNT(DISTINCT wc.word_id) + COUNT(DISTINCT kh.keyword_id) )::int AS term_count FROM hash_contexts hc LEFT JOIN words_hashs wh ON wh.hash_id = ",
+          "ms": 246.597,
+          "caller": "Api.services.lexis_cosmos._read"
+        },
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 2.197,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.613,
+          "caller": "core.security.service.validate_session"
+        }
+      ]
+    },
+    {
+      "url": "/api/places?page=1",
+      "status": 200,
+      "ms": 9.8,
+      "statements": 6,
+      "repeated_statements": 1,
+      "repeated_detail": [],
+      "sql_ms": 4.0,
+      "returned_rows": 0,
+      "slowest": [
+        {
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('words','paths','contents','users')",
+          "ms": 1.892,
+          "caller": "Api.routes.setup._is_initialized"
+        },
+        {
+          "sql": "SELECT s.session_id, s.user_id, s.expires_at, s.revoked_at, u.id AS uid, u.username, u.role, u.is_active, u.failed_login_count, u.locked_until, u.must_change_password, u.created_at FROM sessions s JOI",
+          "ms": 1.011,
+          "caller": "core.security.service.validate_session"
+        },
+        {
+          "sql": "SELECT p.id, p.label, p.category_id, p.country_codes, p.latitude, p.longitude, p.retired, w.word as cat_word FROM geo_places p JOIN categorys cat ON cat.id = p.category_id JOIN words w ON w.id = cat.w",
+          "ms": 0.434,
+          "caller": "Api.routes.places.run"
+        }
+      ]
+    }
+  ],
+  "statement_count": 260,
+  "statement_total_ms": 3081.5
+}

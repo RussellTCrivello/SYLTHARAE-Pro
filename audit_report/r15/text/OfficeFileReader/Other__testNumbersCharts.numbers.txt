@@ -1,0 +1,3 @@
+Sample pages document - this is the template document
+
+Some plain text to parse.

@@ -1,0 +1,18 @@
+Sheet: Лист1
+Rows: 3
+Columns: 3
+1	2	3
+pass:	q1	
+защищена формула от чтения в С3		
+
+Sheet: Лист2
+Rows: 1
+Columns: 1
+
+
+Sheet: Лист3
+Rows: 1
+Columns: 1
+
+
+SUM(A1:B1)

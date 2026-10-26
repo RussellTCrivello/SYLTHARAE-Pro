@@ -33,6 +33,7 @@ from typing import Optional
 
 from flask import g, jsonify, render_template, request, session
 
+from core.validation import PayloadError, query_text, text_field
 from Api.services.analyst_categories import (
     DEFAULT_SCOPE,
     SCOPE_SESSION_KEY,
@@ -134,13 +135,16 @@ def register_analyst_category_routes(app):
     @write_access_required
     def api_analyst_category_create():
         data = request.get_json(silent=True) or request.form.to_dict()
-        name = (data.get("name") or data.get("category_name") or "").strip()
-        if not name:
-            return jsonify({"success": False, "error": "Category name is required"}), 400
+        try:
+            name = text_field(data, "name", required=True, max_length=255, trim=True)
+            description = text_field(data, "description", max_length=1024) or None
+            color = text_field(data, "color", max_length=16) or None
+        except PayloadError as exc:
+            return jsonify({"success": False, **exc.to_dict()}), 400
         category_id, error = AnalystCategoryService.create_category(
             name=name,
-            description=data.get("description"),
-            color=data.get("color"),
+            description=description,
+            color=color,
             user=_current_user(),
         )
         if error:
@@ -155,11 +159,17 @@ def register_analyst_category_routes(app):
     @write_access_required
     def api_analyst_category_update(category_id):
         data = request.get_json(silent=True) or request.form.to_dict()
+        try:
+            name = text_field(data, "name", max_length=255, trim=True) or None
+            description = text_field(data, "description", max_length=1024) or None
+            color = text_field(data, "color", max_length=16) or None
+        except PayloadError as exc:
+            return jsonify({"success": False, **exc.to_dict()}), 400
         ok, error = AnalystCategoryService.update_category(
             category_id,
-            name=data.get("name"),
-            description=data.get("description"),
-            color=data.get("color"),
+            name=name,
+            description=description,
+            color=color,
         )
         if error:
             status = 404 if "not found" in error.lower() else 400
@@ -269,10 +279,10 @@ def register_analyst_category_routes(app):
             assignments, total = AnalystCategoryService.list_assignments(
                 category_id=_int_arg("category_id"),
                 analyst_id=_int_arg("analyst_id"),
-                date_from=request.args.get("date_from") or None,
-                date_to=request.args.get("date_to") or None,
-                query=request.args.get("q") or None,
-                file_query=request.args.get("file_query") or None,
+                date_from=query_text("date_from") or None,
+                date_to=query_text("date_to") or None,
+                query=query_text("q") or None,
+                file_query=query_text("file_query") or None,
                 file_id=_int_arg("file_id"),
                 limit=min(int(request.args.get("per_page", 50)), 500),
                 offset=max(int(request.args.get("page", 1)) - 1, 0) * min(int(request.args.get("per_page", 50)), 500),
@@ -384,10 +394,10 @@ def register_analyst_category_routes(app):
             rows = AnalystCategoryService.export_rows(
                 category_id=_int_arg("category_id"),
                 analyst_id=_int_arg("analyst_id"),
-                date_from=request.args.get("date_from") or None,
-                date_to=request.args.get("date_to") or None,
-                query=request.args.get("q") or None,
-                file_query=request.args.get("file_query") or None,
+                date_from=query_text("date_from") or None,
+                date_to=query_text("date_to") or None,
+                query=query_text("q") or None,
+                file_query=query_text("file_query") or None,
             )
 
             def _csv_safe(value) -> str:

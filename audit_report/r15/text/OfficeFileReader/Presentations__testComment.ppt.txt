@@ -1,0 +1,113 @@
+Total Slides: 1
+
+Slide 1
+
+Michael McCandless
+
+Title Placeholder 1
+
+Text Placeholder 2
+
+Date Placeholder 3
+
+Footer Placeholder 4
+
+Slide Number Placeholder 5
+
+Office Theme
+
+Title 1
+
+Subtitle 2
+
+Here is a comment
+
+^k2#z
+
+tableStyles.xml
+
+_rels/.relsPK
+
+drs/slideMasters/slideMaster1.xml
+
+Click to edit Master title style
+
+Click to edit Master text styles
+
+drs/shapexml.xml
+
+q8:G"9;
+
+Tr'E@E
+
+A-R$2t@
+
+VI'znK
+
+89;G+h
+
+drs/downrev.xmlD
+
+V9'#@A
+
+\b<vc0
+
+)Bwa1M/
+
+drs/downrev.xmlL
+
+theme/theme/themeManager.xml
+
+theme/theme/theme1.xml
+
+w toc'v
+
+)V+qki
+
+Yi+hei
+
+<{2Eah
+
+theme/theme/_rels/themeManager.xml.rels
+
+K(M&$R(.1
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<a:clrMap xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>
+
+[Content_Types].xml|
+
+drs/slideLayouts/slideLayout1.xml
+
+w!/G!_
+
+#[E"-l
+
+${\k<nK.
+
+\gdEKc
+
+`?9K4l
+
+i+ L$2
+
+L8MX&y
+
+rmdYtv
+
+[M"$mMO,
+
+M/y!N>
+
+#KO8;!\$
+
+Here is some text
+
+eFo(QPc
+
+"?u4yj\
+
+(WW/9n6
+
+&([FcX>

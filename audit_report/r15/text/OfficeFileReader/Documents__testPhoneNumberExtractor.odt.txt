@@ -1,0 +1,15 @@
+[Style: P1] This is a test document with a list of phone numbers:
+
+[Style: P2] 9498888888
+
+[Style: P3] 9497777777
+
+[Style: P4] (949) 666 - 6666
+
+[Style: P5] ninefourninefive5fivefive5fivefive
+
+[Style: P6] 4-1-9-3-4-0-4-6-4-5
+
+[Style: P6] [9][0][4]  [4][6][8]  [7][0][8][1]
+
+[Style: P6] TwO/6/zERo-FouR/0/NiNe-4/eIgHt/1/One

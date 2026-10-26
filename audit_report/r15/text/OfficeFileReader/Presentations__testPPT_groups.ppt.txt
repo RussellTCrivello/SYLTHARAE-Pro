@@ -1,0 +1,215 @@
+Total Slides: 1
+
+Slide 1
+
+tika link
+
+http://tika.apache.org/
+
+Calibri Light
+
+Title Placeholder 1
+
+Text Placeholder 2
+
+Date Placeholder 3
+
+Footer Placeholder 4
+
+Slide Number Placeholder 5
+
+Office Theme
+
+Title 1
+
+Content Placeholder 3
+
+Group 15
+
+TextBox 5
+
+Group 14
+
+TextBox 4
+
+TextBox 6
+
+Group 16
+
+TextBox 7
+
+Picture 11
+
+Group 18
+
+TextBox 8
+
+Diagram 17
+
+Group 21
+
+Rectangle 19
+
+Rectangle 20
+
+TextBox 22
+
+^k2#z
+
+tableStyles.xml
+
+_rels/.relsPK
+
+[Content_Types].xml|
+
+drs/slideMasters/slideMaster1.xml
+
+Y_m6EJ>V
+
+EVF67x
+
+RgN\aV
+
+Click to edit Master title style
+
+Edit Master text styles
+
+drs/shapexml.xml
+
+!3v2+m
+
+P6MKY8
+
+drs/downrev.xmlD
+
+|kYA:I@
+
+26dc b'v
+
+%sv0+m
+
+$.6=u
+
+3e/W/0
+
+;SrF`+_
+
+p3*-y1
+
+drs/downrev.xmlL
+
+theme/theme/themeManager.xml
+
+theme/theme/theme1.xml
+
+C|a#ao
+
+>Yr]H+
+
+theme/theme/_rels/themeManager.xml.rels
+
+K(M&$R(.1
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<a:clrMap xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>
+
+drs/slideLayouts/slideLayout1.xml
+
+' bwZ^*w[7
+
+\1*`zr
+
+Rl!qt(
+
+F?suk.
+
+t%BsX=
+
+QME5awr
+
+`?9K4l
+
+$/.;J2
+
+3^TTd5/
+
+P5NV_g
+
+?HRWhdPvf
+
+*tWy8w
+
+&U!0Mj
+
+_1lv,m
+
+_pb)?(
+
+MyTitle
+
+dlyLho
+
+drs/e2oDoc.xml
+
+_rels/.relsl
+
+ouS)RRW
+
+*li^Qq
+
+Text box3
+
+Text box1
+
+Text box2
+
+Text box4
+
+Text box5 tika link
+
+drs/diagrams/data1.xml
+
+Xe4QBH)
+
+4%ptO9
+
+drs/_rels/e2oDoc.xml.rels
+
+{K;?cFwac
+
+drs/downrev.xmlt
+
+HY v3s|
+
+drs/diagrams/colors1.xml
+
+eqJ<0<
+
+drs/diagrams/quickStyle1.xml
+
+zbO%haL9
+
+}@0::z.
+
+drs/diagrams/layout1.xml
+
+drs/diagrams/drawing1.xml
+
+F9($53
+
+=/xWFPO.:
+
+>D*iMr
+
+#@R_ZT
+
+4yuh8A?7I
+
+WordArt1
+
+I:KfS8
+
+WordArt2
+
+Ungrouped text box

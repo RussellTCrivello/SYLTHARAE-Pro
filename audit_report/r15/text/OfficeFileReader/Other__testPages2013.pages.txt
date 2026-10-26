@@ -1,0 +1,501 @@
+4t-2-paragraphS
+
+tableCell-3-headerRow
+
+41-series_4
+
+0stickyComment
+
+0-foot2
+
+,0-valueaxis_!s
+
+X81-referenceLine
+
+Column
+
+imaga3
+
+0-body
+
+%m(-0-category
+
+listE\
+
+)E05-legend
+
+0hyperlink
+
+defaul
+
+'
+
+kSFWPFootnoteTextE
+
+8Identifier
+
++
+
+TOC Heading 2
+
+`A*	Helvetica:
+
+!H!%-H
+
+Body Bullet
+
+"
+
+Numbered List2z
+
+)
+
+Free Form
+
+4fff@eff
+
+Gray Paper
+
+Formal Shadow
+
+ZX
+
+iIA
+
+Fill Cen
+
+Directional Key
+
+Medium
+
+Top Lr
+
+-fffj4
+
+SoftM+
+
+#>^UES
+
+Green"S;
+
+=/f=/Z
+
+=/&=/0W
+
+&^ENu]
+
+Hm2Hmn
+
+g
+
+~,i.huIw:,i4O
+
+Legal2
+
+'?-7Wz"
+
+6"v6"J
+
+tableName-5-shapeStyle
+
+column-s
+
+-default
+
+line-3-
+
+Chalk2
+
+chart-0-series_1
+
+Bright
+
+textbox
+
+-5BW
+
+2
+
+paragraph
+
+Helvetica-Bold:Z-
+
+4Cell-1-headerC
+
+n(2-footerRowRk
+
+Harvard
+
+Cm33 Cr
+
+&
+
+Heading 7
+
+B!J] B
+
+<1-referenceLine_
+
+0-legend
+
+-P(F
+
+&
+
+hyperlink%
+
+Green"
+
+0t-4-valueaxis&*
+
+Emphasis
+
+T<vT<V-
+
+#;,stickyCommen
+
+Neue:A
+
+,t-3-category6
+
+.>%LY9
+
++
+
+TOC
+
+toc&UE
+
+6
+
+Footnote Text
+
+*$Identifier
+
+u .
+
+#
+
+Unde
+
+CaptionJ
+
+-Obliqu
+
+4]tQ@e]t
+
+movie-0-
+
+s
+
+fs
+
+Z
+
+s
+
+"s
+
+Jm
+
+~	f~	Z
+
+~	"~	Jm
+
+>%A| ?-
+
+Fill Center
+
+al Key
+
+C"~C"*dl
+
+Helvetica
+
+chart-0-paragraphStyle_4*
+
+-P(#
+
+!
+
+acter-s!N
+
+-null%Q
+
+!~8t-5-valueaxis_0%K
+
+0-seriesm
+
+Green Paper
+
+}!?5333
+
+y	fy	Z
+
+y	"y	Jm
+
+">.y	J
+
+tableCell-5-headerColumnS
+
+&
+
+Heading 6
+
+-Bold:Z
+
+Blue"3*
+
+A$2-category6
+
+hart%y
+
+Default
+
+6(4-footerRow2
+
+cJ'Yf!6
+
+E f!+J4
+
+E vE J
+
+E fE Z
+
+E "E Jm
+
+PU&PU0U
+
+G! -5-legend
+
+.y	R
+
+S
+
+DsVDs$
+
+"&ERKNr
+
+L2
+
+'
+
+Strikethrough
+
+ableCell-5-footerRowStyle*
+
+movie-2-
+
+Helvetica-Bold:
+
+Normal 22
+
+Courier%R
+
+LucidaGrandeb
+
+?-.+J)x
+
+en_GB0
+
+AR
+
+Europe/London
+
+$3DEB2ADE-E533-46A8-874B-6FD40C68A007
+
+Table 1H
+
+V
+
+R
+
+%U
+
+Cell nine
+
+$eight
+
+0seven
+
+D three
+
+Column
+
+4
+
+Column one
+
+LucidaGrande@
+
+en_GB:
+
+iso-a4
+
+Blank"
+
+1>%S~;
+
+Sage TOC
+
+A text box with
+
+Sample pages document
+
+Some plain
+
+`to parse.
+
+Both P
+
+1.x and Keynote 2.x, which form the basis of Apple
+
+s iWork package, are powerful, yet easy to use applications that have attracted large
+
+Pever-growing customer
+
+es. The 2y
+
+a family
+
+@iApps productivit
+
+,ols.
+
+Because
+
+0uses an open,
+
+B0accessible fi
+
+Format, developers can take advantage of its XML schema to enhance exist
+
+Ds or create new on
+
+Beginn
+
+to build F]
+
+hange%
+
+conten
+
+present%
+
+. For exE[B
+
+n entiA
+
+dtheir own design simply by!k
+
+'L<key:slide-list> eleA
+
+in aee
+
+editor
+
+choice.
+
+A(
+
+engin!
+
+at drivesEu
+
+, specify
+
+y detail
+
+m2-
+
+appear%
+
+dbehavior
+
+from master
+
+$8each individual
+
+transitia3,used between	&m
+
+(also define%
+
+$user firstE
+
+Hs it. An understand
+
+of how
+
+comb%U
+
+(is critical
+
+$are robust%&
+
+well-%O4ed.
+
+Similarly,:
+
+structur%
+
+important
+
+layoua>(r add value
+
+A second
+
+F(....
+
+Exten
+
+cPMarkup Language (XML)!2(a ubiquitou
+
+d flex
+
+data. You
+
+wide r
+
+!Lof categories, incluE
+
+sources
+
+ion oI
+
+Internet.
+
+web-baa)
+
+servica#
+
+Text%?D
+
+.{	 >*
+
+Blank.template
+
+2010-05-09T21:34:38+0200
+
+Author-Date.ens
+
+$9A256E95-BF3C-4956-82DA-759B10182CA1
+
+DocumentMetadata"
+
+Tables/Tile:
+
+$DataList
+
+]PHeaderStorageBucket
+
+AnnotationAuthoQ$:,
+
+ViewStat>
+
+Calcul
+
+DocumentStyleshee=j
+
+simple_noise_2x.jpeg*
+
+ginger/00_theme/:&

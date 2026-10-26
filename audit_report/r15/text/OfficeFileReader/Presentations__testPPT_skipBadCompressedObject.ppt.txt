@@ -1,0 +1,631 @@
+Total Slides: 1
+
+Slide 1
+
+VISIO
+
+Visio.Drawing.50
+
+VISIO 5 Drawing
+
+Chart
+
+Excel.Chart.80
+
+Microsoft Excel Chart
+
+Human Factors Research and Technology DivisionO
+
+Human Factors Research and Technology Division
+
+http://www.hq.nasa.gov/office/pao/images/NASAlogo.gif
+
+NASA Logo
+
+Default Design
+
+Ownship
+
+Speed = 320 kts
+
+Initial Distance from Conflict:
+
+Near
+
+30 NM
+
+Mid
+
+45 NM
+
+Far
+
+60 NM
+
+Pilots have difficulty in designing resolutions without a dynamic alert aid that tells them if the proposed resolution is clear of conflicts
+
+Dynamic trajectory predictors are helpful, but not sufficient.  When combined with dynamic alerting, dynamic trajectory predictors lead pilots to add an extra
+
+margin
+
+to resolutions found acceptable using dynamic alerting alone.
+
+Without alerting, resolution costs rise to a peak at 60 degrees and then fall.  The smaller path deviations are correlated with higher conflict probabilities
+
+With alerting resolution costs are mostly monotonically decreasing with intercept angle
+
+For intercept angles greater than 60 degrees, alerting solely determines the overall size of the deviation, with alerting yielding better efficiency
+
+For intercept angles less than 60 degrees, pulse prediction decreases the
+
+efficiency
+
+of performance with and without alerting.
+
+Click to edit Master title style
+
+Click to edit Master text styles
+
+October 10, 2000
+
+NASA Human Information Research and Technology Division
+
+An Evaluation of CDTI Dynamic Predictor Display Technology
+
+Walter W. Johnson, Lisa Thomas, and Vernol Battiste
+
+Human Information Research and Technology Division
+
+NASA Ames Research Center
+
+Background
+
+Free Flight proposes to place some or all of the responsibility for conflict resolutions in the hands of the flight crew
+
+In order to effectively perform this function the flight crew will need displays and tools that aid in evaluating proposed resolutions
+
+Purpose
+
+Compare and contrast the relative utility of two CDTI-based tools for resolving conflicts
+
+Dynamic Conflict Alerting
+
+Dynamic Trajectory Pulse Prediction
+
+Design
+
+Manipulations
+
+3 Scenario Variables
+
+Conflict Angle
+
+Initial Ownship Distance from Conflict
+
+Initial Traffic Distance from Conflict
+
+2 Display Variables
+
+Conflict Scenarios
+
+Near  (2/3 Ownship Distance/Speed)
+
+Mid  (1.0 x Ownship Distance/Speed)
+
+Far    (1.5 x Ownship Distance/Speed)
+
+Traffic
+
+Design (cont.)
+
+Dependent Variables
+
+Response Time
+
+Resolution Conflict Probability (how often resolution worked)
+
+Distance to Traffic at Closest Approach
+
+Cost of Resolution (path deviation size in miles)
+
+Subjects
+
+8 General Aviation Pilots
+
+Procedure
+
+Trials were blocked by Dynamic Conflict Alerting and Dynamic Trajectory Pulse Prediction
+
+Each block showed all combinations of Conflict Angle, Initial Ownship Distance-to-Conflict, and Initial Traffic Distance-to-Conflict
+
+Subjects were instructed to solve each conflict with a primary emphasis on safety and a secondary emphasis on efficiency
+
+Summary
+
+Loss of Separation (LOS):
+
+Tools to avoid LOS were needed for conflict angles of 60 degrees or less.
+
+Dynamic alerting was the most effective aid for avoiding LOS.
+
+Closest Approach Distance:
+
+Dynamic alerting led to substantially smaller minimum separations
+
+Minimum separations were the least at the largest and smallest conflict angles.
+
+Head-on encounters(large angle) can be resolved with only a path separation at the conflict point.
+
+Small conflict angles require larger and less simple deviations.  An attempt to minimize this deviation could lead to the observed closer approaches and the greater number of projected LOS events.
+
+Resolution Costs:
+
+Dynamic alerting was the most effective aid for creating efficient resolutions
+
+With dynamic alerting, resolution costs monotonically decreased with conflict angle
+
+Without dynamic alerting, resolution costs rose to a peak at 60 degrees and then fell.  These smaller path deviations were correlated with higher conflict probabilities
+
+For intercept angles less than 60 degrees, dynamic trajectory prediction led pilots to generate resolutions with larger deviations (even when dynamic alerting was present)
+
+Response Time:
+
+Dynamic alerting led to faster response times
+
+Response times increased as conflict angle decreased
+
+Summary (cont.)
+
+Conclusions
+
+There is a need for aiding only for intercept angles less than 90 degrees.
+
+The lack of any aiding led to substantially inferior performance for intercept angles less than 90 degrees
+
+Alerting was the most effective aid for avoiding LOS.  The addition of trajectory pulse prediction was not of value.
+
+Trajectory pulse prediction was important for avoiding LOS only when alerting was not present
+
+Alerting led to substantially smaller separations overall
+
+Approximately equal separations both with and without alerting were found for the smallest and the largest angles.  This may be due to different mechanisms.  For the near head-on encounters (large angles), path separation at the conflict point will be the largest separation.  For the low conflict angles this is not the case and too small of a deviation will bring the aircraft close where their paths cross.
+
+Substantially larger separations were generated when resolving more lateral conflicts (those closer to 90 degrees)
+
+Smaller conflict angles require larger deviations, and the desire to minimize the size of the deviations would lead to closer approaches for smaller conflict angles
+
+Conflict angles greater than 90 degrees require smaller deviations
+
+Alerting led to faster response times
+
+Response times were approximately monotonic with conflict angle, with longer response times for more acute intercept angles
+
+Pulse prediction led to longer response times for the most acute intercept angles when no alerting was present.  This was probably due to the difficult nature of the solution, and the time needed to make effective use of the pulse prediction
+
+(5Qj}-
+
+\K,]|G
+
+"6F,"6Z
+
+%6H\"6@
+
+!6YT 6UT
+
+!vE\ vM\!
+
+`Jf%f+
+
+b9eabyeqb
+
+Go#VUo
+
+@b+u?bktob
+
+b=u>b]unb
+
+vZ/"vFG
+
+&v^w#v^w4Y[3]
+
+}tVbe5
+
+qU]$vIq
+
+#-7l&k
+
+k|k^c<
+
+x^FilU3
+
+"T!k5l
+
+VFM#VAqN
+
+OUAb/T~b)*
+
+tYb%uqb%tAb
+
+t(Il)x
+
+Fl3p/'
+
+`/+Uso
+
+9z0T-&6FM#6^
+
+3'^(^y
+
+{.O5{Y
+
+62ge55
+
+i-s~G3s~
+
+)^_UR5 VJ
+
+%1]1L_
+
+PODf=/3
+
+w~Q?QW
+
+x_Mu7h
+
+=>>JHM
+
+(rU}}ja
+
+rSr6!F%
+
+))_,"%n
+
+N7N:t6f
+
+3hh(r0
+
+98<rp|
+
+<-|k*3
+
+LP.SJt
+
+]9tW.~
+
+_x/@3d
+
+\+r(^z
+
+wzsEz}^
+
+G9L9^)
+
+EYtk}1
+
+cI!UNUR
+
+PW6BTW
+
+`9l5;Y
+
+LWnS>?
+
+}t X7E
+
+MyDyAy[
+
+T7V#GQ
+
+U!6PT8S
+
+Av}l!r
+
+>YG~!-
+
+f[y/3s
+
+0^r/JV+P`
+
+"O_~M*A
+
+U}.gd6
+
+)zQ_AI
+
+PAQI4}%
+
+&}W%W?
+
+U|]g\w5
+
+`n<5oa
+
+[<2[<RZ<
+
+h059IR
+
+35*SO:
+
+:EvZ>7v
+
+[d!P;f
+
+R'x>SGx
+
+eNe,s*
+
+r:s*g0
+
+r&s*g1
+
+cS2s%9}
+
+8Nod7=
+
+2L>S~5
+
+1n;$D{
+
+"ilC}0
+
+rxr=12
+
+*z+3rWL
+
+IzW*Px+v
+
+\Sn<r~
+
+kj.9:Z
+
+Yg*5Ws1[7
+
+H,F&}$
+
+4[` d{
+
+da(|NK(t
+
+6JU*1$
+
+Yi%21T'mz
+
+}YP+0~:
+
+e/H|t$>
+
+Zy~;#d
+
+wtX1Zdp=
+
+v|>E0 L
+
+ci"7$q
+
+_bNa3B
+
+%q=qI\
+
+_Fh:2=
+
+T*![%%?
+
+fdO=]
+
+C,=l1wMM
+
+!+n[W=
+
+d\2XsI
+
+2j]$p$W
+
+^ )bQ6HH
+
+KB]9m4
+
+L5PVZ-R
+
+^d-$8j!%
+
+_UOX?iQ<
+
+A58qLq
+
+-4~k(i
+
+67LKIS
+
+P8bhx?
+
+?Mb;616<88;k\
+
+13fZ-3aZ+
+
+0B6&iAAP
+
+JK1T?f
+
+s5mD\3
+
+J,Q!T!
+
+KRnr%)
+
+qx<O.'~
+
+y[rI34
+
+Zj'cE~
+
+e>,g+,g:\h
+
+mf5\&+
+
+]m3^f[]
+
+jZ}a&;
+
+ge|%u%|
+
+W,JW$J5
+
+^O7l\r
+
+Kh9]3)
+
+Y^KqQ-
+
+n w9zX.p
+
+-eI+I6
+
+GS3}U-
+
+1^.w+}
+
+Q@mcdjXL
+
+HbX\6ic
+
+|I/}.a-
+
+dM]lMM
+
+pE~81w_UU
+
+9JYQgm
+
+NC&JCT
+
+lW5U]UW
+
+<8%W;v
+
+=CjftZ
+
+$Cn|%?eQ
+
+ByCQ``
+
+-->z6a
+
+b@;1&@
+
+7^J``c4`a
+
+1m-SL?
+
+{qZk1r
+
+,rvmiG
+
+#,T3\z
+
+CkV0*6
+
+%cVzw|fJ
+
+lB2LP:
+
+eY'?9K
+
+v@@K0&pC
+
+PVZ-R<
+
+yfI-u]
+
+j$}8r<
+
+9EL2dg{
+
+I+)7<>
+
+Xol?ux
+
+cEGma:d:4
+
+QmaNdN4qb
+
+'6hwAxx
+
+W6|VnF
+
+>8DuhC"
+
+u&=u&=N
+
+$e2yIa#e}
+
+n]FmMPH3
+
+yvgvovg
+
+f}X1rK
+
+qB7fiAA
+
+MRkJci
+
+qqcG}.Z
+
+h3+=x"
+
+AUD9r2
+
+LLx0}P{
+
+MBj$HT
+
+:eek-1
+
+tjr:59
+
+,E:veP
+
+Y]/OVT
+
+uDOULi
+
+AE3g)TC
+
+08t'84
+
+51Z;5z
+
+xJ,U\d
+
+BV\ [L
+
+2pqqqqq]
+
+19XdhQLy`
+
+z3taV#
+
+m.olvT
+
+ua6@2z
+
+{\Ag|g
+
+}bp%} (
+
+VQ{U\[
+
+OOO0rF
+
+gm_Nl_Nn_
+
+k#zVf?d
+
+}bw2{n
+
+0d"tz5=E
+
+'V'd7dwZ
+
+Bb4$`8
+
+;!H~B&

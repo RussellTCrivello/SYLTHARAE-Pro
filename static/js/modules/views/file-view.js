@@ -337,7 +337,7 @@ export function renderFilesView(files, section, itemName, pagination) {
             const removeLabel = translations.removeCategoriesTitle || translations.removeCategories || 'Remove analyst categories from selection';
             html += `<button type="button" class="action-btn action-btn-icon-only fmas-analyst-categorize-btn" data-on-click="assignAnalystCategoriesToSelection?.()" ${tipAttrs(categorizeLabel)}>`;
             html += `<i class="bi bi-tag-fill" aria-hidden="true"></i>${hiddenLabel(translations.categorize || 'Categorize')}</button>`;
-            html += `<button type="button" class="action-btn action-btn-icon-only fmas-analyst-remove-btn" data-on-click="removeAnalystCategoriesFromSelection?.()" ${tipAttrs(removeLabel)}>`;
+            html += `<button type="button" class="action-btn action-btn-icon-only fmas-analyst-remove-btn" data-on-click="removeAnalystCategoriesFromSelectionShared?.()" ${tipAttrs(removeLabel)}>`;
             html += `<i class="bi bi-tag" aria-hidden="true"></i>${hiddenLabel(translations.removeCategories || 'Remove')}</button>`;
             html += '</div>';
         }
@@ -554,7 +554,7 @@ function buildFilesToolbar({ filters, currentPerPage, currentFileViewMode, typeO
     const selectLabel = translations.selectAll || 'Select All';
     const deselectLabel = translations.deselectAll || 'Select None';
     const toggleLabel = selectionActive ? deselectLabel : selectLabel;
-    html += `<button type="button" class="action-btn fmas-select-toggle action-btn-icon-only${selectionActive ? ' is-selected' : ''}" id="selectToggleBtn" data-on-click="toggleAllFilesSelection?.()" aria-pressed="${selectionActive ? 'true' : 'false'}" ${tipAttrs(toggleLabel)}>`;
+    html += `<button type="button" class="action-btn fmas-select-toggle action-btn-icon-only${selectionActive ? ' is-selected' : ''}" id="selectToggleBtn" data-on-click="toggleAllFilesSelectionShared?.()" aria-pressed="${selectionActive ? 'true' : 'false'}" ${tipAttrs(toggleLabel)}>`;
     html += `<i class="bi ${selectionActive ? 'bi-dash-square-fill' : 'bi-check-square-fill'} select-toggle-icon" aria-hidden="true"></i>`;
     html += hiddenLabel(toggleLabel);
     html += `<span class="select-toggle-count" id="selectToggleCount"${selectionActive ? '' : ' hidden'}>${selectedCount}</span>`;

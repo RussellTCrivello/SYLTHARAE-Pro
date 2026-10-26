@@ -1,0 +1,1318 @@
+Manuel d’utilisation de Koha
+
+Utilisation de ce document
+
+Copyright and License
+
+Copyright 2005 Boris Gapihan, Christelle Le Borgne, Fabien Malclès, Marie-France Palestro (élèves conservateurs à l'ENSSIB, promotion DCB14), sous la direction de Latifa Limam (membre associé à lUnité de recherche en Science de linformation et du document (URSIDOC), ENSSIB, Lyon I) et Paul Thirion (directeur général du Réseau des bibliothèques de lUniversité de Liège)
+
+Boris Gapihan, Christelle Le Borgne, Fabien Malclès, Marie-France Palestro (élèves conservateurs à l'ENSSIB, promotion DCB14), sous la direction de Latifa Limam (membre associé à lUnité de recherche en Science de linformation et du document (URSIDOC), ENSSIB, Lyon I) et Paul Thirion (directeur général du Réseau des bibliothèques de lUniversité de Liège)
+
+This document is related to Koha and is licensed to you under the GNU General Public License version 2 or later (http://www.gnu.org/licenses/gpl.html).
+
+Koha-related documents may be reproduced and distributed in whole or in part, in any medium physical or electronic, as long as this copyright notice is retained on all copies.
+
+You may create a derivative work and distribute it provided that you:
+
+License the derivative work with this same license, or the Linux Documentation Project License (http://www.tldp.org/COPYRIGHT.html). Include a copyright notice and at least a pointer to the license used.
+
+Give due credit to previous authors and major contributors.
+
+Commercial redistribution is allowed and encouraged; however, the author would like to be notified of any such distributions.
+
+Disclaimer
+
+No liability for the contents of this document can be accepted. Use the concepts, examples and information at your own risk. There may be errors and inaccuracies, that could be damaging to your system. Proceed with caution, and although this is highly unlikely, the author(s) do not take any responsibility.
+
+All copyrights are held by their by their respective owners, unless specifically noted otherwise. Use of a term in this document should not be regarded as affecting the validity of any trademark or service mark. Naming of particular products or brands should not be seen as endorsements.
+
+La page d’accueil de Koha
+
+Pour entrer dans Koha, il faut s’identifier et saisir un mot de passe. Cette procédure permet de gérer les droits des différents utilisateurs du logiciel.
+
+La page d’accueil de Koha présente les différents modules : « Acquisitions », « Catalogue », « Prêt », « Lecteurs », « Autorités », « Bilans », « Paramètres ». Voir l’écran suivant :
+
+Le module acquisitions
+
+Le module acquisitions permet de suivre les dépenses d’acquisition de la bibliothèque. Cependant, Koha n’est pas une application comptable, il ne bloque pas par conséquent les engagements financiers quand le solde est inférieur à zéro.
+
+Le paramétrage
+
+Avant toute utilisation du module des acquisitions, certains points sont à paramétrer :
+
+les lignes de crédits : segmentation du budget total en lignes budgétaires
+
+les devises : définir des taux de change
+
+Le paramétrage des lignes de crédit
+
+La définition des lignes de crédit s’effectue en fonction des « Types de document » définis (voir la description des modules de circulation). Il est possible de créer pour chaque type de document une ligne budgétaire. Chaque ligne de crédit a un code unique, limité à cinq caractères, qui l'identifie. Il faut choisir ses propres codes (par exemple LIVRE pour les monographies, REVUE pour les périodiques, AUDIO pour les documents audiovisuels, etc.). Le nombre des lignes budgétaires n’est pas limité. Les lignes de crédit qui ne correspondent plus aux besoins peuvent être détruites. Par ailleurs, les lignes de crédit peuvent être ignorées si les « Préférences Système » sont réglés sur acquisitions en mode « simple » (on a alors uniquement le budget total).Si la bibliothèque veut définir des lignes de crédit il faut choisir le mode « normal ».
+
+Cliquer sur le lien « Paramètres », l’écran suivant apparaît :
+
+Cliquer sur « Préférences Système ».
+
+Ensuite, choisir « Editer » en face de la variable acquisitions1 Si la variable acquisitions n’existe pas parmi les variables des préférences système, vous pouvez la créer en cliquant en bas de la fenêtre sur le bouton « Ajouter une variable ». Enfin, opter pour l’option « normal » ou « simple » que le système propose.
+
+1 Si la variable acquisitions n’existe pas parmi les variables des préférences système, vous pouvez la créer en cliquant en bas de la fenêtre sur le bouton « Ajouter une variable ».
+
+Si la variable acquisitions n’existe pas parmi les variables des préférences système, vous pouvez la créer en cliquant en bas de la fenêtre sur le bouton « Ajouter une variable ».
+
+Pour paramétrer les lignes de crédits, aller ensuite dans « Paramètres » cliquer sur « Lignes de crédits », une fenêtre de gestion de crédits s’affiche. La première fois qu’on accède à cette page, le logiciel demande d'ajouter la première ligne de crédit (écran de droite). En cliquant sur « Ajouter une ligne de crédit », l’écran de droite apparaît :
+
+Dans le champ « Ligne de crédit » saisir un code pour une ligne budgétaire et son nom complet dans le champ « Nom ». A titre d’exemple MONO pour les monographies, REV pour les périodiques, AUDIO pour les documents audiovisuels, etc. Lorsque les lignes de crédit sont créées, un lien vers une page permet de définir le budget de chaque ligne de crédit apparaît2 Il est également conseillé de paramétrer aussi les « Types de documents » auparavant si les lignes de crédits sont organisées en fonction du type de support. :
+
+2 Il est également conseillé de paramétrer aussi les « Types de documents » auparavant si les lignes de crédits sont organisées en fonction du type de support.
+
+Il est également conseillé de paramétrer aussi les « Types de documents » auparavant si les lignes de crédits sont organisées en fonction du type de support.
+
+Il est également conseillé de paramétrer aussi les « Types de documents » auparavant si les lignes de crédits sont organisées en fonction du type de support.
+
+Cliquer sur « Ajouter un budget » et entrer ici les dates de début et de fin de l’année budgétaire et le montant de la ligne budgétaire spécifique. Il est recommandé de n'utiliser aucune abréviation pour les devises ou virgule lors de la saisie les chiffres (les virgules seront en effet converties en chiffres décimaux). Remarque : les dates ne seront pas sauvegardées correctement le choix de la forme des dates dans la section « Préférences Système » du module « Paramètres » n’a pas été fait avant de créer les budgets.
+
+Dans la même ligne de crédit on peut définir plusieurs budgets. Ceci peut être intéressant pour pouvoir gérer et séparer des budgets supplémentaires du budget principal.
+
+On peut créer un nombre illimité des lignes de crédit puis les supprimer en cliquant sur l’icône poubelle qui est affichée en face.
+
+NB : le bouton « eff » en haut de la fenêtre est un bouton inutile.
+
+Le paramétrage des devises
+
+Ici, il faut au moins indiquer la devise nationale, en lui donnant un nom (comme US Dollar ou Euro par exemple) et en fixant le « taux » à 1 (la devise nationale servira alors d’étalon pour les autres monnaies :
+
+Remarque : les noms des devises sont limités à 10 caractères.
+
+Si la bibliothèque traite avec des fournisseurs qui facturent dans une autre devise, entrer le nom de la devise du fournisseur (par exemple PESO) et fixer le taux de change approximatif par rapport à la devise nationale. Le taux de change est utilisé pour calculer le solde des budgets d'acquisitions, lorsque la bibliothèque acquiert des documents en utilisant les acquisitions en mode « normal ».
+
+NB : La fenêtre « Filtre » a pour vocation de limiter le nombre de lignes affichées à l'écran. Il est rare d’utiliser plus de 4 ou 5 monnaies, donc limiter la liste est inutile. C’est pourquoi elle va disparaître dans la prochaine version.
+
+L’acquisition
+
+Pour commander, réceptionner, modifier une commande, voir les suggestions d’acquisition des lecteurs, le budget, etc., cliquer sur le module « Acquisitions » cette fenêtre s’affichera :
+
+Il faut savoir que Koha n’est pas une application comptable, il ne bloque pas les engagements d’achat si le solde est inférieur à zéro.
+
+La commande
+
+Le fournisseur
+
+Pour débuter une acquisition, que ce soit une commande, un achat direct ou un don, il faut d’abord rechercher un fournisseur dans la fenêtre précédente :
+
+Si le fournisseur n’existe pas (lors de la première utilisation), la fenêtre suivante apparaît :
+
+Cliquer simplement sur « Ajouter un fournisseur » : une fiche de renseignement (détails société, détails du contact, etc.) à remplir s’affiche :
+
+Dans la rubrique « Etat actuel » valider l’option « actif » pour pouvoir établir des commandes puis cliquer sur « Enregistrer » pour enregistrer la fiche du fournisseur.
+
+Effectuer la commande
+
+Avant de commander un document, il est possible de vérifier d’abord dans l’historique des commandes (sur la page d’accueil du module d’acquisition) si les titres voulus ont été déjà commandés. La recherche peut être effectuée par titre, par auteur ainsi que par fournisseur.
+
+Autrement vérifier dans les paniers de chaque fournisseur en saisissant le nom du fournisseur et en cliquant sur « OK ».
+
+Cliquer sur commande (l’enveloppe à l’écran). La rubrique « Information panier » s’affiche :
+
+Elle permet d’ajouter une ligne de commande soit à partir d’une notice existante en cherchant par titre soit à partir des suggestions des lecteurs soit en faisant une nouvelle notice.
+
+Exemple d’acquisition en recherchant une notice existante :
+
+Si le titre recherché n’existe pas la fenêtre suivante s’affiche :
+
+Le triangle permet de retourner dans la fenêtre « Information panier ».
+
+A partir de cette fenêtre il est possible d’insérer une commande en cliquant sur le signe « + » :
+
++
+
+A ce niveau, remplir le formulaire qui sera par la suite une notice primaire dans votre catalogue.
+
+En cliquant sur « OK » la fenêtre « Information Panier » s’affiche de nouveau. Elle permet de visualiser le récapitulatif de la commande.
+
+Il est possible de modifier certaines données (par exemple la quantité des documents) en cliquant sur le titre, trier l’ensemble des commandes effectuées chez le même fournisseur, les retirer (supprimer) et effectuer d’autres commandes. Sinon, cliquer sur « Fermer » dans l’écran « Information panier ».
+
+La réception
+
+Pour réceptionner une commande, recherche le fournisseur depuis la page d’accueil des acquisitions (voir le processus pour la commande).
+
+Cliquer sur réception pour enregistrer les documents reçus. Le bouton « Visualiser » signifie que la commande a déjà été réceptionnée.
+
+Remplir les données concernant la facture (écran de gauche) et enregistrer. L’écran de droite apparaît :
+
+Depuis l’écran de droite, saisir le titre ou l’ISBN du document reçu puis taper sur la touche « Entrée » du clavier.
+
+Le résumé de la commande apparaît.
+
+Cliquer sur « Enregistrer », la réception est enregistrée.
+
+Cliquer sur le menu acquisitions pour revenir sur votre menu de départ.
+
+Il est alors possible de faire le catalogage.
+
+Les modules catalogue et autorités
+
+Présentation du MARC21
+
+Le choix de travailler en MARC21 vient d’une demande de la CUD.
+
+Les notices bibliographiques en MARC21
+
+L'ensemble du détail des structures MARC21 est disponible sur le site Internet de la Bibliothèque du Congrès de Washington3Library of Congress. Marc Standards [en ligne]. Disponible sur <http://www.loc.gov/marc/> (consulté le 20.05.2005)..
+
+L'ensemble du détail des structures MARC21 est disponible sur le site Internet de la Bibliothèque du Congrès de Washington
+
+3Library of Congress. Marc Standards [en ligne]. Disponible sur <http://www.loc.gov/marc/> (consulté le 20.05.2005).
+
+Library of Congress. Marc Standards [en ligne]. Disponible sur <http://www.loc.gov/marc/> (consulté le 20.05.2005).
+
+Library of Congress
+
+.
+
+Marc Standards
+
+[
+
+en ligne
+
+]. Disponible sur <http://www.loc.gov/marc/> (consulté le 20.05.2005).
+
+.
+
+Koha gère les formats UNIMARC et MARC21. Dans le menu « Paramètres », « Préférences systèmes », on détermine le format de travail retenu.
+
+A l'installation de Koha, une grille UNIMARC ou, en l'occurrence MARC21 par défaut est installée. A partir de ces éléments, le groupe a déterminé un nombre de champs MARC21 indispensables récapitulés dans le tableau suivant4Cette proposition n'est là qu'à titre d'exemple. :
+
+A l'installation de Koha, une grille UNIMARC ou, en l'occurrence MARC21 par défaut est installée. A partir de ces éléments, le groupe a déterminé un nombre de champs MARC21 indispensables récapitulés dans le tableau suivant
+
+4Cette proposition n'est là qu'à titre d'exemple.
+
+Cette proposition n'est là qu'à titre d'exemple.
+
+:
+
+CHAMP MARC21
+
+LIBELLE
+
+FONCTION
+
+REPETABLE
+
+000
+
+Leader
+
+Informations codées sur 24 caractères sur les propriétés de la notice
+
+Non
+
+001
+
+Control number
+
+Numéro de contrôle
+
+Non
+
+003
+
+Control number identifier
+
+Agence de contrôle
+
+Non
+
+008
+
+Fixed-length data elements
+
+Données codées (notamment sur la date d’enregistrement, le type de document, le niveau bibliographique et la langue du document)
+
+Non
+
+020
+
+ISBN
+
+Numéro international normalisé du livre
+
+Non
+
+0 41
+
+Language codes
+
+Codes langues
+
+Non
+
+0 44
+
+Country of publishing
+
+Codes pays
+
+Non
+
+100
+
+Main entry – personal name
+
+Auteur principal
+
+Non
+
+110
+
+Main entry – corporate name
+
+Collectivité auteur principale
+
+Non
+
+111
+
+Main entry – meeting name
+
+Nom de congrès
+
+Non
+
+245
+
+Title statement
+
+Titre et mention de responsabilité
+
+Non
+
+250
+
+Edition area
+
+Mention d'édition
+
+Non
+
+260
+
+Imprint area
+
+Renseignement sur l'édition
+
+Oui
+
+300
+
+Physical description
+
+Collation : description physique du document
+
+Oui
+
+440
+
+Series, indexed
+
+Titre de collection indexé
+
+Oui
+
+500
+
+General note
+
+Notes générales
+
+Oui
+
+600
+
+Subject added entry – personal name
+
+Autorité sujet nom de personne
+
+Oui
+
+610
+
+Subject added entry – corporate name
+
+Autorité sujet nom de collectivité
+
+Oui
+
+611
+
+Subject added entry – meeting name
+
+Autorité sujet nom de congrès
+
+Oui
+
+650
+
+Subject added entry – topical term
+
+Autorité sujet nom commun
+
+Oui
+
+651
+
+Subject added entry – geographic name
+
+Autorité sujet nom géographique
+
+Oui
+
+700
+
+Added entry – personal name
+
+Auteur secondaire
+
+Oui
+
+710
+
+Added entry – corporate name
+
+Auteur collectivité secondaire
+
+Oui
+
+711
+
+Added entry – meeting name
+
+Auteur congrès secondaire
+
+Oui
+
+856
+
+Electronic location and adress
+
+Information de localisation de la ressource sur Internet, ou sur un réseau privé.
+
+Oui
+
+942
+
+Zones de données locales pour le type de document
+
+Non
+
+952
+
+Zones de données locales pour l'exemplaire
+
+Oui
+
+La grille par défaut permet de décliner à l'envie une grille pour chaque type de document. On peut aisément créer une grille pour les monographies, une pour les thèses, une pour les enregistrements sonores, les vidéogrammes, etc.
+
+Cependant la lecture des archives du site de Koha invite à ne pas trop développer des grilles différentes5 POULAIN Paul. Koha Documentation [en ligne]. Disponible sur <http://www.kohadocs.org/> (consulté le 31.05.2005).. Il est en effet plus facile de saisir une notice dans une grille complète et de laisser des champs vierges que de rajouter un champ en cours de catalogage dans une grille calibrée. D'autre part, la grille par défaut ne doit jamais être supprimée dans la mesure où elle sert de modèle.
+
+Cependant la lecture des archives du site de Koha invite à ne pas trop développer des grilles différentes
+
+5 POULAIN Paul. Koha Documentation [en ligne]. Disponible sur <http://www.kohadocs.org/> (consulté le 31.05.2005).
+
+POULAIN Paul. Koha Documentation [en ligne]. Disponible sur <http://www.kohadocs.org/> (consulté le 31.05.2005).
+
+POULAIN Paul.
+
+Koha Documentation
+
+en ligne
+
+. Il est en effet plus facile de saisir une notice dans une grille complète et de laisser des champs vierges que de rajouter un champ en cours de catalogage dans une grille calibrée. D'autre part, la grille par défaut ne doit jamais être supprimée dans la mesure où elle sert de modèle.
+
+Les notices autorité
+
+Elles sont paramétrables dans Koha dans le menu Paramètre, Structure des autorités.
+
+MARC21 structure les autorités selon le descriptif suivant :
+
+CHAMP MARC21
+
+Libellé
+
+Fonction
+
+100
+
+Heading – personnal name
+
+Création et contrôle des autorités auteur personne physique
+
+110
+
+Heading – Corporate name
+
+Création et contrôle des autorités collectivité auteur
+
+111
+
+Heading – Meeting name
+
+Création et contrôle des autorités congrès
+
+150
+
+Heading – Topical term
+
+Création et contrôle des autorités sujet
+
+151
+
+Heading – Geographical name
+
+Création et contrôle des autorités nom géographique
+
+155
+
+Heading – Genre/form term
+
+Création et contrôle des genres et formes
+
+180
+
+Heading – General subdivision
+
+Gestion des subdivisions
+
+181
+
+Heading – Geographic subdivision
+
+Gestion des subdivisions géographiques
+
+182
+
+Heading – Chronological subdivsion
+
+Gestion des subdivisions chronologiques
+
+185
+
+Heading – Form subdivision
+
+Gestion des subdivisions de formes
+
+Koha propose une grille autorité par défaut dans le menu « Paramètres » « Structure des autorités ». Selon le même principe que la grille de catalogage, on crée une nouvelle grille de saisie d'autorité en lui attribuant le libellé adéquat. Il faut ensuite dupliquer la structure MARC de la grille par défaut sur la nouvelle grille. On ne garde alors que l'étiquette MARC21 qui correspond au type d'autorité, tous les autres champs sont supprimés.
+
+A ce stade on dispose des éléments de base pour cataloguer. Il convient maintenant d'affiner le paramétrage pour optimiser le catalogage.
+
+Paramétrage6 POULAIN Paul. Paramétrer et migrer ses données vers Koha 2.2 [en ligne]. Disponible sur <http://www.kohadocs.org/migrer_ses_donnees.html> (consulté le 23.05.2005).
+
+Paramétrage
+
+6 POULAIN Paul. Paramétrer et migrer ses données vers Koha 2.2 [en ligne]. Disponible sur <http://www.kohadocs.org/migrer_ses_donnees.html> (consulté le 23.05.2005).
+
+POULAIN Paul. Paramétrer et migrer ses données vers Koha 2.2 [en ligne]. Disponible sur <http://www.kohadocs.org/migrer_ses_donnees.html> (consulté le 23.05.2005).
+
+POULAIN Paul
+
+Paramétrer et migrer ses données vers Koha 2.2
+
+en ligne
+
+Définir les types de documents
+
+L’information du type de document est saisie sur la notice bibliographique en champ 942 $c.
+
+Cette information est ensuite nécessaire pour paramétrer les autorisations de prêts par type de document. Si la zone n’est pas renseignée, le document ne peut pas être prêté.
+
+Les définitions des types de documents se font dans le menu « Paramètres », « Type de Document ».
+
+Paramétrer les grilles de catalogage
+
+Aller dans le menu « Paramètre », « Grille de catalogage », « choisir la grille ».
+
+Aller dans le menu « Paramètres », « Grilles de catalogage ».
+
+Cliquer sur « Structure MARC ».
+
+Pour chaque étiquette MARC21, les informations suivantes peuvent être définies (en mode édition de chaque champ en cliquant sur le symbole du dossier) :
+
+autoriser ou non la répétition d'un champ (un signe + apparaît à côté du champ en mode catalogage)
+
+un champ peut-être rendu obligatoire ou non. Si le champ est obligatoire, cela implique qu'au moins un des sous-champs doit être informé.
+
+le libellé de l'étiquette doit être défini.
+
+En choisissant l'option « Structure MARC » en regard de chaque étiquette, l'accès au paramétrage des sous-champs est activé.
+
+Il faut ensuite cliquer sur l'icône « Editer » (le dossier) situé en bas de la liste des sous-champs, pour ouvrir un formulaire de saisie.
+
+Il est possible d'activer chaque sous-champs en saisissant des valeurs supérieures à un dans l'onglet « activer ». Cela définit la position de chaque champ et sous champ dans la grille de catalogage. Tous les sous-champs d'une même étiquette que l'on souhaite activer doivent être localisés dans le même onglet.
+
+Un sous champ peut être rendu obligatoire. Il doit donc nécessairement comporter une valeur.
+
+Un sous-champ peut-être répétable ou non.
+
+Le paramétrage des sous-champs propose un onglet de lien entre un sous-champ MARC21 et un élément des tables de la base de données de Koha. Celui-ci dispose d'un ensemble de tables qui lui sont propres. Celles-ci contiennent les informations bibliographiques. Ce paramétrage permet d'apprendre à des champs et des sous-champs quelle type d'information ils contiennent et dans quelle partie des tables de Koha ces renseignements doivent être localisés. Par exemple, le sous-champ $a de l'étiquette 100 auteur personne physique du MARC21 doit avoir un lien Koha avec la table « biblio.auteur » de Koha. D'une manière générale, ce type de paramètre est proposé d'origine dans la grille par défaut en respectant les normes définies dans les formats MARC.
+
+Le champ de saisie « related fields », permet de définir pour un sous-champ donné une extension de la recherche publique et professionnelle vers d'autres sous-champs de même nature. Cela permet d'étendre une recherche auteur (champ 100) aux coauteurs (champ 700) et aux autres types d'autorités auteurs.
+
+La case à cocher « cacher » permet d'autoriser ou non l'affichage d'une valeur à l'OPAC. L'affichage reste cependant toujours actif en mode professionnel.
+
+La case à cocher « URL » active la valeur du sous champ en lien hypertexte.
+
+Enfin, il est possible d'octroyer à un sous-champ trois contraintes qui limitent la possibilité de saisie des valeurs.
+
+L'onglet « valeur autorisée » renvoie à des listes de termes autorisés pour certains types d'informations. Le sous-champ $a de l'étiquette langue 041, langue du document peut être lié ainsi à une table des codes langues. L'objectif étant de faciliter la saisie en la rendant semi-automatique. Les listes des valeurs autorisées doivent être au préalable définies dans le menu « Paramètres », « Valeurs autorisées ». A ce stade, il faut saisir manuellement l'ensemble des valeurs que l'on souhaite utiliser en catalogage.
+
+L'onglet « thésaurus » relie un sous-champ à une autorité préalablement définie (en mode Paramètres, Structure des autorités).
+
+L'onglet « module d'extension » permet d'allouer des plugins UNIMARC à un sous champ afin d'en faciliter la saisie en catalogage. On peut ainsi automatiser par un formulaire la saisie des données codées. L'utilisation de ces plugins est conseillée pour un travail en mode UNIMARC.
+
+plugins
+
+plugins
+
+Paramètres spécifiques
+
+Le paramétrage des grilles catalogages et autorités effectué, le système se retrouve avec deux ensembles de données séparées : les notices bibliographiques et les notices autorités. Pour que le système soit opérationnel, aussi bien en recherche documentaire qu'en catalogage, ces deux ensembles doivent être liés. D'une manière générale, les différents formats MARC ont prévu ce lien, mais dans le cas de Koha, il faut avoir recours à un paramétrage spécifique.
+
+Koha gère les liens entre les notices bibliographiques et les notices d'autorités par l'intermédiaire d'un sous champ $9.
+
+Dans chaque champ MARC21 de la notice bibliographique qui accueille une autorité, il faut rajouter un sous-champ $9 qu'il faut absolument nommer (Numéro d'autorité Koha par exemple), au risque de ne pouvoir enregistrer la création du champ. Ce sous-champ Koha, gère le lien entre la notice bibliographique et l'autorité en récupérant le numéro d'autorité. Le sous-champ $9 doit être nécessairement activé dans le même onglet que le sous-champ contenant l'autorité.
+
+Chaque sous-champ d’une étiquette liée à une autorité doit être paramétré pour pointer sur l’autorité adéquate. Par exemple, le sous champ $a de l’étiquette 100 nom de personne doit pointer l’autorité des noms de personnes physiques dans l’onglet autorité pour que le lien notice bibliographique/notice autorité soit opérationnel.
+
+L’exemplaire
+
+La cote du document n’apparaît pas d’emblée sur la notice d’exemplaire. Nous avons rajouté un sous champ $a dans le champ 952 du MARC21, étiquette qui permet de gérer l’exemplaire. Ce sous champ a été attaché au lien Koha « items.itemcallnumber » et est géré dans l’onglet 10.
+
+Quand une notice bibliographique est enregistrée, Koha propose un formulaire pour la saisie des informations d’exemplaire. Le paramétrage précédent permet d’afficher directement dans le champ cote l’indice Dewey de la notice bibliographique. Il suffit ensuite de compléter le champ par les premières lettres du nom de l'auteur ou du titre pour établir une cote. Il faut au préalable paramétrer la variable itemcallnumber (Paramètres, Préférences système, itemcallnumber) pour changer sa valeur initiale 676a (indice Dewey de l’UNIMARC) en 082a (indice Dewey du MARC21). On indique ainsi au système dans quel champ de la notice bibliographique il doit récupérer l’indice Dewey.
+
+itemcallnumber
+
+Le pavé ISBD
+
+Les différents modules de Koha proposent l’affichage des notices sous forme ISBD. Cependant le paramétrage permettant la correspondance des champs MARC21 avec les zones ISBD fait défaut. Il faut donc le paramétrer dans le menu « Paramètres », « Préférences système », « ISBD »7Les informations de paramétrage sont accessibles dans l’aide en ligne par le menu aide de Koha.. Dans la zone valeur de la variable, il faut saisir les informations que l’on souhaite voir à l’affichage ISBD. Nous proposons un schéma opérationnel pour l’ISDB :
+
+7Les informations de paramétrage sont accessibles dans l’aide en ligne par le menu aide de Koha.
+
+Les informations de paramétrage sont accessibles dans l’aide en ligne par le menu aide de Koha.
+
+#100||<br><b>{100a}</b></br>|
+
+#245||<br>{245a}{ : 245b}{[245h]}{/245c}|#260|.- |{ 260a}{ : 260b}{, 260c}|#300|.- |{300a}{ : 300b}{ ; 300c}{ + 300e}</br>|
+
+#500|<br>Notes : |{500a}</br>|
+
+#520|<br>Résumé : |{520a}</br>|
+
+#700|<br>Auteur secondaire |{700a}</br>|
+
+#600|<br>Sujet - Nom de personne : |{600a} {(600d)}{--600x}</br>|
+
+#610|<br>Sujet - Nom de collectivité: |{610a} {. 610d}{--610x}</br>|
+
+#650|<br>Sujet : |{650a} {--650x}{--650y}{--650z}</br>|
+
+#651|<br>Sujet géographique : |{651a} {651x}{--651y}{--651z}</br>|
+
+#952|<br><br></br>cote : |{952a}|
+
+Ce schéma fonctionne si la zone variable est renseignée avec la valeur « Textarea ».
+
+L’affichage ISBD selon ce paramétrage est le suivant :
+
+Fonctionnalités
+
+Catalogage
+
+Le module de catalogage propose un sous menu offrant la recherche professionnelle dans le catalogue, l'ajout de notice, le traitement des périodiques, et la gestion des étagères virtuelles.
+
+La recherche professionnelle permet d'identifier un document dans la base pour effectuer un travail de maintenance sur la notice bibliographique : correction, exemplarisation, suppression, contrôle des autorités.
+
+L'onglet ajout de notice est explicite, il permet d'accéder à la fenêtre suivante.
+
+Le logiciel propose une recherche préalable par ISBN ou par titre du document que l'on souhaite ajouter. Le document peut être soit :
+
+présent dans la base,
+
+présent dans un réservoir de notices en attente de validation,
+
+inexistant.
+
+En fonction du résultat de la recherche, les actions à mener diffèrent. Un document présent dans la base peut être ouvert pour modification ou dupliqué pour créer un nouveau document à partir de la notice trouvée. Un document signalé dans le réservoir de notice, c'est à dire provenant d'une importation d'un lot de notices au format ISO 2709, peut être ajouté dans la base. L'ajout ouvre la notice bibliographique dans la grille de catalogage par défaut pour modification, le contrôle des autorités et l'ajout d'exemplaires.
+
+Exemple d'une grille de catalogage ouverte pour modification.
+
+Exemple d'un d'enregistrement des données exemplaires après l’ajout de la notice dans la base de notices bibliographiques
+
+Si le document est inexistant, Koha propose l'ajout d'une nouvelle notice en autorisant le choix de la grille de catalogage.
+
+A ce stade deux options existent : soit le catalogueur saisit manuellement l'ensemble des données bibliographiques, soit il lance une requête sur les serveurs Z 3950 pour récupérer la notice bibliographique recherchée.
+
+Le module de catalogage est simple d'utilisation pour peu que l'on sache à quel type d'information bibliographique correspond un champ MARC21 ou UNIMARC. Pour faciliter le catalogage, les formats MARC peuvent être rendus transparents en affichant un masque de saisie en langage « humain ». Cette option est paramétrable dans le menu « Paramètres », « Gestion des préférences systèmes », « Marc », « option éditer ». La valeur choisie doit être « NON ».
+
+La grille de catalogage est alors visible sous la forme suivante :
+
+La gestion des autorités et leurs relations avec la notice bibliographique est facile si l’on sait devoir utiliser un sous champ $9 dans la notice bibliographique, ce paramétrage est spécifique à Koha. On notera que la création des autorités est grandement facilitée par la copie de la grille autorité par défaut.
+
+A ce stade, deux questions restent en suspens : comment utiliser deux fois le même type d’autorité sans en dupliquer la valeur ? Nous avons constaté qu’en dupliquant un champ d’autorité dans une notice bibliographique, la valeur de ce champ était également dupliquée. Si on modifie la valeur dans le champ dupliqué, la valeur du champ d’origine est également dupliquée. Il s’agit sans doute d’un paramétrage à approfondir.
+
+La seconde question concerne les notices importées qui n’ont pas leurs autorités automatiquement importées ou créées dans la base. Il faut dès lors les créer manuellement. Le problème est également rencontré en mode catalogage, puisque la saisie d’une autorité dans la notice bibliographique n’est autorisée qu’à la condition que l’autorité ait été préalablement créée. La fenêtre de gestion des autorités qui s’ouvre en mode catalogage ne permet pas la création mais uniquement la récupération. Cela implique que les autorités doivent être créées avant de cataloguer. L’importation de notices autorités n’est pas possible actuellement. Il existe cependant un outil pour créer les autorités à partir du catalogue. Il s’agit d’un script que l’on doit adapter à ses besoins8POULAIN, Paul. Courriel du 10 juin 2005. M Poulain mentionne un script dans le répertoire mist/migration_tools..
+
+8POULAIN, Paul. Courriel du 10 juin 2005. M Poulain mentionne un script dans le répertoire mist/migration_tools.
+
+POULAIN, Paul. Courriel du 10 juin 2005. M Poulain mentionne un script dans le répertoire mist/migration_tools.
+
+La gestion des abonnements
+
+Tout abonnement doit se faire à partir d'une notice bibliographique préalablement saisie en module catalogage. Le menu des périodiques permet de paramétrer l'abonnement : le fournisseur, la durée d'abonnement, la personne responsable des abonnements. La saisie des informations d'abonnement est extrêmement complexe mais permet d'établir des grilles de bulletinage selon un modèle prédictif. A ce sujet l'aide en ligne de Koha permet de paramétrer les données propres à chaque type d’abonnement.
+
+Ci-dessous, une copie de l’aide en ligne de Koha pour le paramétrage d’une grille de bulletinage:
+
+Aide de Abonnement Périodiques Ajouter et modifier
+
+Bloc d'information d'abonnement
+
+Comporte le nom du bibliothécaire qui a créé l'abonnement, le nom du fournisseur qui procure l'abonnement, le prix et le budget affecté. Comporte aussi le titre de la notice concernée par l'abonnement
+
+Bloc d'information sur le calendrier
+
+Contient des informations diverses pour calculer les dates d'arrivée
+
+Durée d'abonnement
+
+Un champ de ce bloc doit être rempli : la durée de l'abonnement peut être calculée en semaines, mois ou nombre de numéros à recevoir
+
+Calcul de la numérotation
+
+Le numéro des bulletins reçus peut être une formule complexe. La formule peut contenir n'importe quel texte et/ou chiffre. {X} {Y} et {Z} sont particuliers. Vous pouvez les utiliser pour définir une formule de calcul. Les valeurs de XYZ sont calculées de la manière suivante :
+
+Ajouter: ce nombre est ajouté à XYZ
+
+toutes les : le nombre avant peut être ajouter à chaque parution ou moins souvent
+
+Quand supérieur à : si le chiffre calculé est supérieur à la valeur ci
+
+Retourner à : si la condition précédente est validée, le numéro calculé est fixé à celui-ci à la place
+
+Dernière valeur/commence avec : la dernière valeur calculée ou la 1ère (quand on ajoute un abonnement)
+
+Exemple
+
+Etudier la formule N°{X}/{Y}.
+
+X ajouter 1 toutes les 4 fois. Quand supérieur à 9999999 Retourner à vide. Commence par 2004
+
+Y ajouter 1 toutes les 1 fois. Quand supérieur à 4 Retourner à 4. Commence par 1
+
+Donnera les numéros de parution suivants
+
+N°2004/1, N°2004/2, N°2004/3, N°2004/4, N°2005/1, N°2005/2, N°2005/3, N° 2005/4, N°2006/1
+
+Note : lorsque vous ajoutez un abonnement, Koha considère que vous avez déjà passé la commande où que vous allez le faire bientôt. Aussi, AUCUNE information n'est envoyée vers le module acquisition.Ca n'est pas le cas quand l'abonnement arrive à expiration.
+
+Importation
+
+Le menu des paramètres permet de configurer les serveurs Z 3950 pour la récupération des notices à la volée en mode catalogage. Les tests d'importation via un serveur Z 3950 ont été réussis avec succès, à l'exception des notices en UNIMARC provenant de la BnF. En effet Koha étant paramétré pour supporter le MARC21, il ne peut récupérer des notices dans un autre format. Toutefois, seul le serveur de l'Open University a été pleinement opérationnel. Celui de la Library of Congress a fonctionné épisodiquement. Celui de la Bibliothèque nationale de France fournit des notices en UNIMARC quand la connexion est établie et Koha ne peut gérer l'importation de l'UNIMARC vers le MARC21. Il n'y a pas de tables de correspondances.
+
+L'option import du module paramètre gère l'importation de notice selon la norme ISO 2709. Nous avons testé un import d'un lot de notices fournies par Electre. Le fichier Electre a été enregistré en MARC21 puis généré en format ISO 2709 pour l'import. Koha propose un système de chargement du fichier ISO de type upload (un champ de formulaire avec un bouton parcourir). Le fichier doit ensuite être nommé et on choisit le type de format MARC pour l'importation, en l'occurrence MARC21. La procédure est validée par le bouton import.
+
+upload
+
+Les notices bibliographiques importées sont stockées dans un réservoir. Ce réservoir n'est pas directement visible, il faut recourir à l'option d’ajout notice du module de catalogage pour rechercher les titres du réservoir et les ajouter dans le catalogue afin de les exemplariser.
+
+L'import d'un lot de notices provenant de WINISIS a échoué. Le système nous informe que les notices ne sont pas au format MARC ou qu'il manque l'ISBN. Pour résoudre cette difficulté, il faut étudier la structure de la base WINISIS d'origine et établir une table de correspondance entre les champs spécifiques à WINISIS et le MARC21. Certains travaux faisant état de ce problème sont répertoriés dans les listes de discussions de Koha9 BAIJU M. Migrating a CDS/ISIS based system to Koha [en ligne]. Disponible sur <http://www.kohadocs.org/CDS_ISIS_to_Koha.html#d0e103> (consulté en ligne le 20.05.2005).. Par contre il faut autant de tables de correspondances qu'il y a de pratiques différentes de catalogage avec WINISIS.
+
+9 BAIJU M. Migrating a CDS/ISIS based system to Koha [en ligne]. Disponible sur <http://www.kohadocs.org/CDS_ISIS_to_Koha.html#d0e103> (consulté en ligne le 20.05.2005).
+
+BAIJU M. Migrating a CDS/ISIS based system to Koha [en ligne]. Disponible sur <http://www.kohadocs.org/CDS_ISIS_to_Koha.html#d0e103> (consulté en ligne le 20.05.2005).
+
+BAIJU M
+
+.
+
+Migrating a CDS/ISIS based system to Koha
+
+[
+
+en ligne
+
+].
+
+Ci joint une copie d’un script pour basculer d’une base CDS/ISIS en MARC21 via du XML par M. Baiju.
+
+La circulation : les modules Prêt et Lecteurs
+
+Paramétrage
+
+Avant la première utilisation du module prêt, celui-ci doit être paramétré. Pour accéder aux Paramètres, cliquer sur le lien du même nom :
+
+Les paramètres qui nous intéressent ici sont « Types de document », « Catégorie de lecteur » et « Règles de prêt ».
+
+Types de document
+
+Cliquer d’abord sur « Types de document » dans l’écran des paramètres.
+
+L’écran suivant apparaît :
+
+Les types de document sont très importants pour contrôler le fonctionnement de Koha car :
+
+les lecteurs peuvent chercher par types de document,
+
+les règles de prêt sont établies par types de document, par types de lecteurs et par sites.
+
+Déterminer les types de document est l'une des premières choses à faire après l'installation du logiciel Koha.
+
+Il est possible de paramétrer autant de types de document (périodique, monographie, DVD, etc.) que souhaité. Pour cela il suffit de cliquer sur « Ajouter un type de document ». L’écran suivant apparaît :
+
+Il est alors possible de remplir 4 champs et une case à cocher :
+
+Le premier champ « Type de document » correspond au code du document (il s’agit de quatre lettres en majuscules correspondant au type de document. Exemple : pour les monographies, on peut écrire MONO)
+
+Le second, « Description », correspond à l’intitulé exact du type de document. Exemple : Monographie
+
+Les troisième et quatrième, facultatifs, permettent de mentionner le nombre de renouvellements autorisés et le coût du prêt (dans une devise prédéfinie) si celui-ci est payant
+
+La case à cocher « Exclu du prêt »  empêche le document d’être prêté.
+
+Une fois les données renseignées, cliquer sur « OK » pour valider.
+
+Pour modifier les paramètres d’un type de document (pour l’exclure du prêt, par exemple), cliquer sur le dossier dans la colonne « Editer » de la page « Gestion des types de documents ».
+
+Pour supprimer un type de document, cliquer sur la poubelle dans la colonne « Supprimer ».
+
+Catégories de lecteur
+
+Pour définir les différents types de lecteurs, cliquer d’abord sur « Catégories de lecteurs » dans l’écran des paramètres :
+
+Ce paramètre permet de créer autant de catégories de lecteurs que souhaitées. Les enfants et les collectivités disposent d’un symbole spécifique (C pour les enfants ; I pour les collectivités) à utiliser dans le champ code.
+
+Il faut impérativement créer en premier cette catégorie en tapant I ou C dans le premier cadre de recherche puis cliquer sur « OK »
+
+A partir de là, il est possible d’ajouter une catégorie collectivité ou enfant. Si ce n’est pas fait, lorsque l’on cherche à rajouter une collectivité dans le module lecteur, la validation ne se fera pas, le logiciel demandera le prénom et le sexe de la collectivité !
+
+Pour définir de nouvelles catégories de lecteurs, cliquer sur le bouton « Ajouter une catégorie ». Apparaissent alors 8 champs à remplir, ils permettent de définir différents droits pour différentes catégories de lecteurs. Seuls 3 d’entre eux sont obligatoires :
+
+Le « Code catégorie », obligatoire, comprend deux caractères à définir par le bibliothécaire (par exemple E1 pour les étudiants de 1er cycle)
+
+er
+
+Le champ « Description », obligatoire, correspond à l’intitulé complet de la catégorie (ex : Etudiants de 1er cycle)
+
+er
+
+Le champ « Durée d’inscription », facultatif, indique le nombre d’années durant lequel le lecteur est inscrit (exemple : 1 an pour un étudiant et 10 ans pour un enseignant)
+
+La « Limite d’âge supérieure », obligatoire, indique l’âge maximum pour emprunter (on peut indiquer 999 si on ne souhaite pas qu’il y ait de limite d’âge supérieure)
+
+L’« Age requis », facultatif, indique l’âge minimum pour emprunter un document
+
+Les « Frais d’inscription » à la Bibliothèque (facultatif)
+
+La « Note de retard demandée » (facultatif) : répondre par oui ou par non
+
+Les « Droits de réservation », facultatif, indiquent le montant à payer par réservation, si un tel droit est en vigueur dans la Bibliothèque
+
+Règles de prêt
+
+Cliquer d’abord sur « Règles de prêt » dans l’écran des paramètres :
+
+Cette rubrique permet de définir les règles de prêt, concernant à la fois la durée du prêt, la quantité d’ouvrages à emprunter et les pénalités de retard. Ces dernières peuvent être définies en fonction du type de document et du type de lecteur.
+
+Les types de document et les catégories d'emprunteurs doivent être définis avant de déterminer les règles de prêt. Les types de documents et de lecteurs sont alors affichés dans une grille sur cet écran. Attention, la rubrique avec une * qui se crée automatiquement doit être remplie sinon lorsque le lecteur voudra emprunter un document, Koha indiquera sur sa fiche qu’il a emprunté trop de documents même s’il n’en a aucun en cours.
+
+Pour paramétrer le prêt, il faut remplir chaque case avec la durée du prêt et le nombre maximum de prêts.
+
+Exemple : 21,7 signifie que l’on peut emprunter des cartes pendant 21 jours et que le prêt est limité à 7 documents. Si rien n’est défini la valeur par défaut est 21,5
+
+Chaque cellule doit être remplie avec l'amende, l'échéance et la durée des charges. Ainsi 1,7,7 signifie que l’utilisateur doit 1 Euro d'amende payable au bout de 7 jours, par tranches de 7 jours.
+
+Il est également possible de sélectionner une annexe ou une section si l’on ne souhaite pas appliquer les mêmes règles de prêt aux différentes annexes.
+
+Le module Prêt
+
+Lorsque un ouvrage est emprunté, cliquer sur l’onglet « Prêt » ou sur le module de prêt depuis la page d’accueil.
+
+La rubrique d’aide indique qu’« avant de commencer, il est très important de vérifier le site et l'imprimante choisis et les changer si nécessaire. Cela devra être fait seulement la première fois que vous ferez du prêt (ou des retours) à partir d'un poste de travail, ensuite un cookie du navigateur mémorisera le réglage correct. Si vous faites des prêts dans un mauvais site, alors Koha modifiera la localisation temporaire de tous les exemplaire scannés, et les statistiques seront erronées »10Extrait de l’aide de Koha..
+
+cookie
+
+10Extrait de l’aide de Koha.
+
+Extrait de l’aide de Koha.
+
+Le prêt est simple et peut être intégralement réalisé à l’aide d’une douchette, que ce soit pour les sorties ou les retours.
+
+Le module de prêt propose trois options : « Sorties », « Retours » et « Transferts ».
+
+Les sorties
+
+« Les sorties » permettent de prêter un document. Cliquer sur « Sorties » pour y accéder. La page des « Sorties » se présente ainsi :
+
+Taper le code à barres du lecteur ou son nom pour trouver son compte.
+
+Lorsque Koha a trouvé le lecteur, une nouvelle case permet de scanner ou de taper l’identifiant du document (en général un code à barres) :
+
+Si l’on souhaite que ce document et les documents suivants de cette transaction aient une date de retour autre que celle définie par défaut pour ce type de document, utiliser la case à cocher « Date de retour manuelle » pour choisir une date de retour définie par le bibliothécaire avant de douchetter le premier document.
+
+Les retards sont signalés en dessous de la rubrique « Catégorie » mais aucune typographie particulière ne les signale.
+
+Si le prêt se déroule normalement, l’emprunt apparaîtra immédiatement, en bas de la page, avec les autres emprunts du lecteur. Pour faire un autre prêt il suffit de douchetter le code à barres du nouvel ouvrage dans « Code à barres de l’exemplaire ».
+
+Si le prêt pose problème, alors un pavé rouge apparaît et le logiciel demande de confirmer le prêt :
+
+Si le prêt est possible mais nécessite confirmation (comme pour un document réservé), il est alors possible de confirmer ou infirmer le prêt. On peut donc forcer un prêt dans certain cas, mais pas en cas de dépassement du nombre de prêts.
+
+Pour accéder à la fiche du lecteur et la modifier, il faut cliquer sur « Détail » puis sur « modifier » dans la partie « Information lecteur »
+
+Les retours
+
+Pour enregistrer le retour d’un document à la bibliothèque, cliquer sur le bouton « Retours » :
+
+Pour effectuer le retour, entrer le code à barre du document et valider : le retour est alors effectué. La carte du lecteur n’est pas nécessaire (pour effectuer un nouveau retour, il suffit de répéter l’opération).
+
+L’écran qui apparaît permet d’accéder à la fiche du lecteur ou du document rendu en cliquant sur les liens bleus :
+
+En ce qui concerne la réservation d’un document, elle s’effectue à partir de l’OPAC par le lecteur (voir la description de l’OPAC dans ce manuel). Le personnel est informé lorsque l’ouvrage revient à la bibliothèque et la place dans la liste d’attente est spécifiée. Il est alors possible de cliquer sur la fiche du lecteur qui attend l’ouvrage et de mettre une note qui apparaît à l’écran lorsque celui-ci vient emprunter :
+
+Les transferts
+
+Les « Transferts » permettent de transférer un document d’une bibliothèque à une autre.
+
+Pour effectuer ce transfert, choisir la bibliothèque de destination, entrer le code à barre du document et valider.
+
+Le module « Lecteurs »
+
+Pour inscrire un nouveau lecteur à la Bibliothèque ou pour rechercher la fiche d’un lecteur, cliquer sur l’onglet « Lecteurs » en haut de l’écran ou choisir le module « Lecteurs » sur la page d’accueil. La page suivante apparaît :
+
+Koha propose 3 options dans la rubrique lecteurs : « Recherche lecteurs », « Ajout lecteur » et « Ajout collectivité ».
+
+« Recherche lecteurs »
+
+Cette fonctionnalité permet de rechercher un lecteur. Pour cela, saisir le nom du lecteur, une partie du nom, ou son numéro de carte et appuyer sur la touche « Entrée » du clavier. Il est également possible d’utiliser l’index alphabétique des noms des lecteurs. Dans ce cas, on obtient une liste de personnes dont le nom de famille commence par telle lettre avec les informations suivantes : numéro de carte, nom et prénom du lecteur, catégorie, adresse postale, nombre de retards et de prêts, frais d’inscription et des « notes » sur le lecteur.
+
+Une fois le lecteur sélectionné (en cliquant sur son nom), on obtient sa fiche qui peut être modifiée ou supprimée. Il est également possible de modifier le mot de passe du lecteur, ses prêts, d’ajouter un enfant, de définir ses droits (du simple lecteur à l’administrateur) ou d’imprimer la fiche du lecteur et ses retards.
+
+Exemple de fiche d’un lecteur :
+
+« Ajout lecteur »
+
+Cliquer sur « Ajout lecteurs ». La page suivante apparaît :
+
+Tous les champs avec astérisque (numéro de carte, nom, adresse, ville) doivent être obligatoirement remplis, sinon une erreur s’affichera et l'enregistrement ne pourra pas être effectué. On ne peut donc pas valider l’inscription.
+
+Deux lecteurs ne peuvent pas avoir le même numéro de carte et l’erreur est signalée lors de l’enregistrement.
+
+Outre les champs obligatoires, remplir les champs selon les besoins et faire les commentaires souhaités dans la partie « Utilisation de la bibliothèque ».
+
+Lorsque la fiche lecteurs est remplie cliquer sur le bouton « Enregistrer ».
+
+Dans la partie « Utilisation de la bibliothèque » tous les intitulés n’ont pas été traduits :
+
+Gone no adress = parti sans laisser d’adresse
+
+Gone no adress
+
+Debarred = exclu
+
+Debarred
+
+Lost = perte de la carte de lecteur
+
+Lost
+
+Les champs identifiant et mot de passe définissent les identifiants du lecteur dans l’OPAC qui lui permettent d’accéder à son dossier personnel. Ils ne sont communiqués au lecteur que si la Bibliothèque le souhaite (le lecteur pourra alors accéder ou non à son compte lecteur). Ils peuvent être créés ou modifiés seulement après que la fiche du lecteur ait été enregistrée.
+
+« Ajout collectivité »
+
+Pour inscrire une collectivité à la Bibliothèque (institution, entreprise, classe, etc.) cliquer sur « Ajout collectivité pour y accéder ».
+
+Les renseignements demandés sont identiques à ceux des lecteurs.
+
+Le module bilan
+
+Ce module est celui qui permet d’établir des statistiques.
+
+Pour accéder à ce module cliquer sur « Bilans » depuis la page d’accueil ou sur le bouton du même nom dans la barre en haut de l’écran présente sur toutes les pages du logiciel. L’écran suivant apparaît :
+
+4 pavés sont visibles à l’écran
+
+- Le premier permet de personnaliser ses calculs statistiques, de développer ses propres indicateurs :
+
+« Assistant de bilan »
+
+- Les trois suivants sont plus faciles à manipuler, ils proposent des indicateurs préétablis :
+
+« Les plus »
+
+« Les moins »
+
+« Autres bilans »
+
+« Assistant de bilan »
+
+L’assistant permet de faire ses propres tris et statistiques à partir de 4 modules de Koha : acquisitions, lecteurs, catalogue et prêts.
+
+Cliquer sur les liens en bleu pour y accéder.
+
+« Acquisitions »
+
+Il est possible de croiser deux données, l’une en ligne, l’autre en colonne, pour générer un tableau. Pour cela sélectionner deux données (définies dans la colonne « Titre ») en en cochant une dans « Ligne » et une dans « Colonne » :
+
+Les données qui peuvent être utilisées pour faire des tris croisés sont :
+
+La date de la commande du document (cliquer sur le calendrier pour définir la période de référence)
+
+La date de réception
+
+Le fournisseur
+
+Le budget
+
+S’ajoutent 2 clefs de tris qui permettent de sélectionner d’autres données
+
+Le pavé valeur de cellule permet de définir si le logiciel doit compter le nombre des documents ou leurs valeurs monétaires (« Montant »).
+
+Une fois les choix de tris effectués, cliquer sur « OK », le logiciel affiche un tableau présentant les données retenues et les totaux en ligne et en colonne.
+
+1.2. « Lecteurs »
+
+1.2.
+
+« Lecteurs »
+
+La procédure est la même que pour les acquisitions. Les données qui peuvent être triées sont :
+
+La catégorie des lecteurs
+
+Leur code postal
+
+« Catalogue »
+
+La procédure est la même que pour les acquisitions. Les données qui peuvent être triées sont :
+
+L’indice (Dewey, CDU, etc.)
+
+Le type de document
+
+L’éditeur
+
+L’année de publication
+
+Le site d’affectation
+
+La localisation
+
+« Prêt »
+
+La procédure est la même que pour les acquisitions. Les données qui peuvent être triées sont :
+
+La période du prêt
+
+La catégorie de lecteur
+
+Le type de document
+
+Le site de la Bibliothèque
+
+« Les plus »
+
+Cliquer sur les liens en bleu pour y accéder.
+
+« Plus gros usagers »
+
+« Plus gros usagers »
+
+Cet indicateur permet d’afficher entre les 5 et les 20 plus gros emprunteurs (choisir le nombre dans le menu déroulant « Limiter à »).
+
+Le menu déroulant dans la colonne « Par » permet de repérer les plus gros emprunteurs en fonction de la date du prêt, du retour, du site, du type de document, de la catégorie de lecteur et de la date. En cas de sélection d’un de ces critères, renseigner la colonne filtre correspondante.
+
+Pour avoir les plus gros lecteurs en général, laisser « Aucun » dans la colonne « Par ».
+
+Cliquer sur « OK », la page de résultat apparaît :
+
+« Documents les plus empruntés »
+
+Les statistiques sur les documents empruntés se renseignent exactement comme les plus gros usagers.
+
+« Les moins »
+
+Cliquer sur les liens en bleu pour y accéder.
+
+« Usagers sans prêt »
+
+La liste des usagers sans prêt peut se limiter entre 5 et tous les usagers n’ayant pas emprunté (choisir le nombre dans le menu déroulant).
+
+Il est possible d’affiner les résultats en choisissant :
+
+Les lecteurs n’ayant pas emprunté une certaine catégorie de documents11 Cette fonctionnalité n’est à l’heure actuelle pas disponible : il est impossible de la définir, le champ étant absent dans la colonne « Filtre ».
+
+11 Cette fonctionnalité n’est à l’heure actuelle pas disponible : il est impossible de la définir, le champ étant absent dans la colonne « Filtre ».
+
+Cette fonctionnalité n’est à l’heure actuelle pas disponible : il est impossible de la définir, le champ étant absent dans la colonne « Filtre ».
+
+Les lecteurs n’ayant pas emprunté appartenant à une certaine catégorie de lecteur
+
+Dans ce cas, choisir l’option retenue dans la colonne « Par » et indiquer le code correspondant (à telle catégorie d’emprunteur ou à telle catégorie de document) dans la colonne « Filtre ».
+
+Cliquer sur « OK » pour afficher les résultats
+
+« Documents non empruntés »
+
+La procédure est la même que pour les usagers sans prêt. Les seuls changements sont les critères d’affinement des résultats qui peuvent être le site de la Bibliothèque ou le type de document.
+
+« Autres bilans »
+
+« Sur le catalogue »
+
+Cliquer sur les liens en bleu pour y accéder.
+
+« Inventaire/récolement »
+
+Il est possible de dresser un inventaire des collections de la Bibliothèque par cote (entre les indices 000 et 999 de la classification Dewey par exemple) et de choisir le nombre d’exemplaires affichés.
+
+« Recherche par Type de document »
+
+Cet outil statistique permet d’afficher pour une annexe donnée (choisie dans le menu déroulant) le nombre de documents appartenant aux différentes catégories de documents existantes.
+
+La page de résultats apparaît en cliquant sur « OK » :
+
+Par exemple, ici, la Bibliothèque centrale comprend 12 monographies.
+
+« Sur les prêts »
+
+Cliquer sur les liens en bleu pour y accéder.
+
+« Cas réglés : Rapport quotidien (hier) »
+
+En cliquant sur ce lien on a directement accès au tableau des amendes payées la veille.
+
+« Cas réglés : Rapport quotidien (aujourd'hui) »
+
+Ici on a accès au récapitulatif des amendes payées le jour même.
+
+« Documents en retard »
+
+En cliquant sur ce lien, on obtient immédiatement la liste des lecteurs ayant des retards dans le retour des documents.
+
+« Prêts par catégorie de lecteur »
+
+Pour visualiser tous les prêts, ne pas renseigner les champs.
+
+Il est possible d’affiner les résultats par catégorie de lecteur ou par annexe.
+
+En cliquant sur « OK », les résultats apparaissent :
+
+« Durée moyenne du prêt »
+
+Cet outil statistique permet de connaître la durée moyenne des prêts en croisant deux données parmi les suivantes :
+
+La date du prêt (renseigner la période de référence et sélectionner l’affichage dans le menu déroulant « par » : jour, mois ou année)
+
+La date de retour (renseigner la période de référence et sélectionner l’affichage dans le menu déroulant « par » : jour, mois ou année)
+
+La catégorie de lecteurs
+
+Le type de document
+
+Le site
+
+Le format de sortie des résultats
+
+La sortie ou l’affichage des résultats peut se faire à l’écran, dans le navigateur, ou dans le tableur de la suite bureautique libre OpenOffice (cliquer dans le pavé la case à cocher « Sortie » pour faire le choix d’affichage des résultats)12 Cette exportation n’est pas possible pour tous les types de rapport. Quelques statistiques produites grâce au pavé « Autres bilans » ne peuvent par exemple pas être exportées vers Open Office.. Il est donc recommandé d’installer ce logiciel afin de pouvoir exploiter les résultats obtenus dans le tableur, élaborer des graphiques, etc.
+
+OpenOffice
+
+12 Cette exportation n’est pas possible pour tous les types de rapport. Quelques statistiques produites grâce au pavé « Autres bilans » ne peuvent par exemple pas être exportées vers Open Office.
+
+Cette exportation n’est pas possible pour tous les types de rapport. Quelques statistiques produites grâce au pavé « Autres bilans » ne peuvent par exemple pas être exportées vers Open Office.
+
+Open Office
+
+L’OPAC
+
+Paramétrage de l’OPAC
+
+L’OPAC n’est pas paramétrable depuis la page des « Paramètres ». Toutefois, comme il est expliqué sur le site Internet de Koha : « l’architecture de Koha découpe le logiciel en 3 couches différentes :
+
+la couche base de données, qui gère les accès SGBD
+
+la couche traitement, qui gère les traitements demandés par l’utilisateur
+
+la couche mise en forme, qui contient les modèles HTML de présentation.
+
+L’interface du logiciel est donc entièrement personnalisable. Plusieurs « thèmes » sont disponibles »13 POULAIN Paul. Personnalisation de l’interface [en ligne]. Disponible sur : <http://www.koha-fr.org/article.php3?id_article=52> (consulté le 24.05.05). comme l’illustre la page d’accueil de la Bibliothèque de Nelsonville (Ohio)14 Nelsonville Public Library. Library Catalog Search [en ligne]. Disponible sur : <http://search.athenscounty.lib.oh.us/> (consulté le 10.06.2005). :
+
+13 POULAIN Paul. Personnalisation de l’interface [en ligne]. Disponible sur : <http://www.koha-fr.org/article.php3?id_article=52> (consulté le 24.05.05).
+
+POULAIN Paul. Personnalisation de l’interface [en ligne]. Disponible sur : <http://www.koha-fr.org/article.php3?id_article=52> (consulté le 24.05.05).
+
+POULAIN Paul
+
+Personnalisation de l’interface
+
+en ligne
+
+http://www.koha-fr.org/article.php3?id_article=52> (
+
+14 Nelsonville Public Library. Library Catalog Search [en ligne]. Disponible sur : <http://search.athenscounty.lib.oh.us/> (consulté le 10.06.2005).
+
+Nelsonville Public Library. Library Catalog Search [en ligne]. Disponible sur : <http://search.athenscounty.lib.oh.us/> (consulté le 10.06.2005).
+
+Nelsonville Public Library
+
+.
+
+Library Catalog Search
+
+[
+
+en ligne
+
+].
+
+Disponible sur : <http://search.athenscounty.lib.oh.us/> (consulté le 10.06.2005).
+
+L’écran d’accueil pour la consultation du catalogue de la Bibliothèque
+
+La page d’accueil permet de faire une recherche simple, d’accéder à la page de recherche avancée, aux nouvelles acquisitions, aux informations personnelles du lecteur et de changer la langue de l’OPAC.
+
+Chercher
+
+Recherche simple
+
+Pour interroger le catalogue dans son intégralité, le lecteur peut taper la requête (un auteur, un titre ou un sujet par exemple) dans la zone située après « recherche simple : » puis cliquer sur « OK ». La page de réponse apparaît.
+
+L’opérateur booléen par défaut est le « ET ». La troncature est disponible En faisant suivre les termes de la requête des caractères « * » ou « % ».
+
+Recherche avancée
+
+Cliquer sur le bouton « Recherche Avancée, Plus d’Options ». La page de recherche avancée apparaît :
+
+La page de recherche avancée comprend deux pavés : « Chercher dans » et « Autres options ».
+
+- Le pavé « chercher dans » contient 7 champs de recherche :
+
+« N’importe où » qui permet de faire une recherche dans tous les autres champs
+
+« Titre »
+
+« Auteur »
+
+« Sujet »
+
+« Titre collection »
+
+Le menu déroulant « Type de document » (monographie, carte, etc.)
+
+Le menu déroulant « Site » qui permet de choisir un des sites de la Bibliothèque. Si la case n’est pas renseignée, Koha recherche dans l’intégralité du fonds
+
+- Le pavé « Autres options » permet d’effectuer une rechercher par :
+
+Code-barres
+
+Cote
+
+ISBN
+
+Editeur
+
+Date d’édition
+
+Ce deuxième pavé permet aussi de paramétrer l’affichage des résultats et le menu déroulant « Réponses par pages » permet de déterminer le nombre de résultats par pages (20, 50 ou 100). Les menus déroulant « Trier par » ménagent la possibilité d’effectuer des tris par titre, auteur, année de publication, etc. et de les ordonner par ordre croissant ou décroissant.
+
+L’opérateur par défaut est le « ET » et l’outil de recherche ignore les mots vides (comme le, la, les par exemple). Il n’est donc pas nécessaire de saisir un titre ou un nom d’auteur sous une forme normalisée (il est par exemple possible décrire « Balzac, Honoré » ou « Honoré de Balzac » ou « Balzac »).
+
+Quelques conseils rudimentaires apparaissent sur la page de recherche avancé mais il n’y a pas d’aide en ligne :
+
+Vous pouvez entrer un titre complet ou partiel. La recherche sera faite aussi sur les sous titre et les autres champs relatifs au titre
+
+Auteur
+
+Vous pouvez entrer un nom ou un prénom. La recherche est aussi faite sur les co-auteurs et les autres champs en relation (traducteur, illustrateur...)
+
+N'oubliez pas qu'un auteur peut concerner un auteur physique (Victor Hugo) ou moral (CNRS...)
+
+Sites
+
+Sélectionnez une annexe si vous voulez limiter votre recherche à un site en particulier. Par défaut, la recherche sera faite sur tous les sites de la bibliothèque
+
+Recherche avec troncature
+
+Une recherche est faite sur tous les mots que vous entrez. Les mots vides sont ignorés. Si vous entrez, par exemple "les deux tours" dans le titre, la liste de réponses contiendra tous les documents avec deux ET tours dans le titre. "Les" sera exclu.
+
+Si vous voulez entrer une partie de mot, mettez une * ou un % à la fin du mot. Par exemple, "deux tours*" donnera "Les deux tours" mais aussi "Une tour et deux maisons".
+
+Pour lancer la recherche, appuyer sur le bouton du même nom.
+
+La page de résultats
+
+La page de résultat apparaît15 L’exemple est extrait de la Bibliothèque de l’IRCOM : Bibliothèque du Centre Roland Mousnier et de l’IRCOM. Bibliothèque du Centre Roland Mousnier et de l’IRCOM [en ligne]. Disponible sur : <http://catalogue.crm.paris4.sorbonne.fr/cgi-bin/koha/opac-main.pl> (consulté le 10.06.2005). :
+
+15 L’exemple est extrait de la Bibliothèque de l’IRCOM : Bibliothèque du Centre Roland Mousnier et de l’IRCOM. Bibliothèque du Centre Roland Mousnier et de l’IRCOM [en ligne]. Disponible sur : <http://catalogue.crm.paris4.sorbonne.fr/cgi-bin/koha/opac-main.pl> (consulté le 10.06.2005).
+
+L’exemple est extrait de la Bibliothèque de l’IRCOM : Bibliothèque du Centre Roland Mousnier et de l’IRCOM. Bibliothèque du Centre Roland Mousnier et de l’IRCOM [en ligne]. Disponible sur : <http://catalogue.crm.paris4.sorbonne.fr/cgi-bin/koha/opac-main.pl> (consulté le 10.06.2005).
+
+L’exemple est extrait de la Bibliothèque de l’IRCOM :
+
+Bibliothèque du Centre Roland Mousnier et de l’IRCOM
+
+.
+
+Bibliothèque du Centre Roland Mousnier et de l’IRCOM
+
+[
+
+en ligne
+
+]. Disponible sur : <http://catalogue.crm.paris4.sorbonne.fr/cgi-bin/koha/opac-main.pl> (consulté le 10.06.2005)
+
+.
+
+Elle compte 4 colonnes :
+
+Le « Sommaire » qui donne des informations bibliographiques
+
+Le « Nombre d’exemplaires » qui indique le nombre d’exemplaires possédés par la Bibliothèque
+
+La « Localisation » avec le lieu où se trouve le document et sa cote
+
+L’état du document (en prêt, non réservable, etc.)
+
+Cliquer sur le titre pour avoir le détail de la notice :
+
+Il est possible d’afficher la notice sous forme simple (selon le modèle ci-dessus), MARC ou ISBD en cliquant sur les boutons situés en haut de l’écran. Grâce à la visualisation MARC, toutes les informations présentes sur la notice sont disponibles.
+
+Il est possible de mémoriser les notices souhaitées dans un panier en cliquant sur « Ajouter au panier ». Pour visualiser le contenu du panier, appuyer sur le bouton « Panier de notices ».
+
+Acquisitions récentes
+
+A partir de la page d’accueil, il est possible d’afficher les acquisitions récentes en choisissant le support du document (dans un menu déroulant) puis en cliquant sur OK.
+
+Autres options
+
+Accéder à son dossier personnel « S’identifier »
+
+A partir de la page d’accueil, l’usager peut cliquer sur « S’identifier ».
+
+Il doit alors saisir son identifiant et son mot de passe afin d’accéder à son dossier personnel (pour voir les documents qu’il a emprunté, consulter son panier, suggérer une acquisition à la Bibliothèque16Les suggestions apparaissent alors dans le module acquisition. ou modifier ses coordonnées en cliquant sur « Mettre à jour »).
+
+16Les suggestions apparaissent alors dans le module acquisition.
+
+Les suggestions apparaissent alors dans le module acquisition.
+
+Important : après avoir consulté son dossier, l’utilisateur devra penser à cliquer sur « déconnexion ». Sans cela, l’utilisateur de l’OPAC suivant aura accès au dossier.
+
+Important
+
+Changer la langue
+
+Ce menu déroulant disponible sur la page d’accueil permet de choisir la langue de l’OPAC (l’anglais, le français et l’italien sont installés par défaut).
+
+http://catalogue.crm.paris4.sorbonne.fr/cgi-bin/koha/opac-main.pl
+Bibliothèque du Centre Roland Mousnier et de l’IRCOM
+.
+[
+en ligne
+]. Disponible sur : <http://catalogue.crm.paris4.sorbonne.fr/cgi-bin/koha/opac-main.pl> (consulté le 10.06.2005)

@@ -1,0 +1,166 @@
+Sheet: Sheet 1
+Rows: 163
+Columns: 12
+Table 10 -- Examination Coverage:  Recommended and Average Recommended Additional Tax After											
+Examination, by Type and Size of Return  											
+[Money amounts are in thousands of dollars, except as indicated]											
+											
+									Percentage of		
+		Returns examined							non-CEP returns		
+									examined with no change		
+Type and size of return	Returns filed			Revenue agent							
+	in Calendar		Percentage		Non-	Tax	Tax	Compliance	Revenue	Tax	Compliance
+	Year 2000 [1,2]	Total	covered	CEP [3]	CEP [3,4]	auditor [3,4]	examiner [3]	center [3]	agent	auditor [3,4]	center [3]
+	(1)	2.0	3.0	4.0	5.0	6.0	7.0	8.0	(9)	(10)	(11)
+											
+United States, total [2]	168184400.0	815057.0	0.48462104689852326	6373.0	144992.0	119962.0	8784.0	534946.0	[5]	[5]	[5]
+											
+Income, estate, and gift tax, total: [6]	138465300.0	789319.0	0.5700482359118133	3344.0	126733.0	115939.0	8626.0	534677.0	19.0	17.0	19.0
+Taxable returns											
+Individual income tax returns, total	127097400.0	731756.0	0.5757442717160225	151.0	77835.0	115935.0	8594.0	529241.0	14.0	17.0	19.0
+Nonbusiness returns:											
+Forms 1040A with TPI under $25,000 [7,8]	41716800.0	357954.0	0.858057185594293	3.0	8866.0	21818.0	1826.0	325441.0	17.0	15.0	15.0
+All other returns by size of TPI: [8]											
+Under $25,000	13948800.0	55624.0	0.3987726542785042	1.0	4767.0	9540.0	727.0	40589.0	13.0	12.0	22.0
+$25,000 under $50,000 	30108900.0	67109.0	0.22288758473408193	2.0	8449.0	23805.0	1308.0	33545.0	16.0	16.0	27.0
+$50,000 under $100,000	23377600.0	53433.0	0.22856495106426664	0.0	9846.0	18665.0	1584.0	23338.0	16.0	17.0	33.0
+$100,000 or more   	9326300.0	64259.0	0.6890085028360657	118.0	19978.0	13853.0	1224.0	29086.0	12.0	31.0	36.0
+Business returns:											
+Schedule C returns by size of TGR: [9]											
+Under $25,000	2553300.0	69332.0	2.715387929346336	0.0	3174.0	10631.0	1211.0	54316.0	13.0	11.0	16.0
+$25,000 under $100,000	3399400.0	34650.0	1.0192975230923103	2.0	6945.0	11749.0	519.0	15435.0	15.0	16.0	30.0
+$100,000 or more   	2012200.0	24080.0	1.196700129211808	14.0	12898.0	5435.0	177.0	5556.0	15.0	21.0	36.0
+Schedule F returns by size of TGR: [9]											
+Under $100,000	382100.0	2104.0	0.5506411934048678	0.0	944.0	278.0	11.0	871.0	5.0	32.0	23.0
+$100,000 or more	272000.0	3211.0	1.1805147058823529	11.0	1968.0	161.0	7.0	1064.0	6.0	17.0	18.0
+											
+Corporation income tax returns, except											
+Form 1120S, total [10]	2453000.0	23268.0	0.948552792498981	2550.0	19271.0	2.0	3.0	1442.0	25.0	50.0	64.0
+Returns other than Form 1120F: [11]											
+No balance sheet returns	294600.0	1935.0	0.6568228105906314	74.0	1136.0	1.0	0.0	724.0	29.0	100.0	70.0
+Balance sheet returns by size of 											
+total assets:											
+Under $250,000                	1432500.0	3576.0	0.24963350785340313	4.0	3409.0	N/A	0.0	163.0	29.0	N/A	65.0
+$250,000 under $1,000,000        	424200.0	3314.0	0.7812352663837813	8.0	3209.0	1.0	1.0	95.0	30.0	N/A	61.0
+$1,000,000 under $5,000,000	191700.0	3912.0	2.0406885758998436	17.0	3773.0	N/A	1.0	121.0	31.0	N/A	53.0
+$5,000,000 under $10,000,000               	29900.0	1595.0	5.334448160535117	24.0	1511.0	N/A	0.0	60.0	32.0	N/A	52.0
+$10,000,000 under $50,000,000            	31800.0	3071.0	9.657232704402515	127.0	2824.0	N/A	1.0	119.0	29.0	N/A	53.0
+$50,000,000 under $100,000,000             	7900.0	973.0	12.316455696202532	82.0	862.0	N/A	0.0	29.0	20.0	N/A	55.0
+$100,000,000 under $250,000,000            	7800.0	1369.0	17.55128205128205	184.0	1152.0	N/A	0.0	33.0	14.0	N/A	64.0
+$250,000,000 or more	10300.0	3305.0	32.0873786407767	1992.0	1241.0	N/A	0.0	72.0	6.0	N/A	51.0
+Form 1120F returns [11]	22300.0	218.0	0.9775784753363228	38.0	154.0	N/A	0.0	26.0	19.0	N/A	81.0
+											
+Estate and trust income tax returns	3528900.0	7070.0	0.20034571679560204	97.0	5015.0	1.0	0.0	1957.0	27.0	N/A	73.0
+											
+Estate tax returns:											
+   Total	123500.0	7707.0	6.240485829959514	1.0	7550.0	N/A	0.0	156.0	13.0	N/A	3.0
+   Size of gross estate:											
+Under $1,000,000	60200.0	1623.0	2.696013289036545	1.0	1572.0	N/A	0.0	50.0	17.0	N/A	0.0
+$1,000,000 under $5,000,000	57800.0	4496.0	7.778546712802768	0.0	4404.0	N/A	0.0	92.0	12.0	N/A	5.0
+$5,000,000 or more	5500.0	1588.0	28.87272727272727	0.0	1574.0	N/A	0.0	14.0	14.0	N/A	0.0
+											
+Gift tax returns	308600.0	2005.0	0.6497083603370059	0.0	2003.0	N/A	0.0	2.0	20.0	N/A	50.0
+											
+Employment tax returns	28866600.0	13978.0	0.04842274462527627	1735.0	11226.0	737.0	27.0	253.0	16.0	9.0	14.0
+Employment revenue officer examiners [12]	N/A	3185.0	N/A	N/A	3.0	3182.0	N/A	N/A	N/A	10.0	N/A
+Excise tax returns [2]	852500.0	8169.0	0.9582404692082112	1063.0	6858.0	104.0	131.0	13.0	15.0	0.0	100.0
+Other taxable returns [10,13]	[1]	406.0	[1]	231.0	172.0	0.0	0.0	3.0	12.0	0.0	100.0
+											
+Nontaxable returns: [14]											
+Partnership returns, Form 1065	2066800.0	5070.0	0.24530675440294175	511.0	3307.0	N/A	5.0	1247.0	40.0	N/A	46.0
+S corporation returns, Form 1120S [10,15]	2887100.0	12437.0	0.430778289633196	34.0	11746.0	1.0	24.0	632.0	38.0	N/A	49.0
+Other nontaxable returns [14]	[1]	6.0	[1]	0.0	6.0	N/A	0.0	0.0	3.0	N/A	0.0
+See notes and footnotes at end of table.											
+Table 10 -- Examination Coverage:  Recommended and Average Recommended Additional Tax After											
+Examination, by Type and Size of Return--Continued  											
+[Money amounts are in thousands of dollars, except as indicated]											
+											
+	Recommended additional tax 						Average recommended additional 				
+                      							tax per return (dollars)				
+Type and size of return		Revenue agent		Tax	Tax	Compliance	Revenue agent		Tax	Compliance	
+	Total	CEP [3]	Non-CEP [3,4]	auditor [3,4]	examiner [3]	center [3]	CEP [3]	Non-CEP [3]	auditor [3,4]	center [3]	
+	12.0	13.0	14.0	15.0	16.0	17.0	18.0	19.0	20.0	21.0	
+											
+United States, total [2]	19761366.0	12704558.0	5201672.0	431267.0	42429.0	1381444.0	[5]	[5]	[5]	[5]	
+											
+Income, estate, and gift tax, total: [6]	18869499.0	12212273.0	4840375.0	393661.0	42401.0	1380789.0	3651995.0	38193.0	3395.0	2582.0	
+Taxable returns											
+Individual income tax returns, total	3301860.0	12147.0	1521787.0	393657.0	42396.0	1331873.0	80439.0	19551.0	3396.0	2517.0	
+Nonbusiness returns:											
+Form 1040A with TPI under $25,000 [7,8]	1019820.0	76.0	123248.0	52522.0	5409.0	838565.0	25344.0	13901.0	2407.0	2577.0	
+All other returns by size of TPI: [8]											
+Under $25,000	234520.0	0.0	73213.0	39695.0	2496.0	119116.0	211.0	15358.0	4161.0	2935.0	
+$25,000 under $50,000 	176578.0	1.0	72841.0	42825.0	4212.0	56699.0	322.0	8621.0	1799.0	1690.0	
+$50,000 under $100,000	193062.0	0.0	88568.0	53745.0	8030.0	42719.0	0.0	8995.0	2879.0	1830.0	
+$100,000 or more   	897326.0	10855.0	657280.0	86730.0	9618.0	132843.0	91989.0	32900.0	6261.0	4567.0	
+Business returns:											
+Schedule C returns by size of TGR: [9]											
+Under $25,000	189315.0	0.0	68112.0	24266.0	3335.0	93602.0	0.0	21459.0	2283.0	1723.0	
+$25,000 under $100,000	149351.0	0.0	69961.0	48495.0	5296.0	25599.0	1.0	10074.0	4128.0	1658.0	
+$100,000 or more   	403782.0	910.0	334337.0	43423.0	3921.0	21191.0	64991.0	25922.0	7989.0	3814.0	
+Schedule F returns by size of TGR: [9]											
+Under $100,000	3173.0	0.0	2163.0	528.0	61.0	421.0	0.0	2291.0	1900.0	483.0	
+$100,000 or more	34933.0	305.0	32064.0	1428.0	18.0	1118.0	27711.0	16293.0	8867.0	1050.0	
+											
+Corporation income tax returns, except											
+   Form 1120S, total [10]	14235711.0	12183886.0	2029122.0	4.0	5.0	22694.0	4777994.0	105294.0	2156.0	15738.0	
+Returns other than Form 1120F: [11]											
+No balance sheet returns	436834.0	314375.0	106381.0	N/A	0.0	16078.0	4248311.0	93645.0	N/A	22207.0	
+Balance sheet returns by size of 											
+total assets:											
+Under $250,000                	59156.0	101.0	58665.0	N/A	0.0	390.0	25205.0	17209.0	N/A	2393.0	
+$250,000 under $1,000,000        	71031.0	80.0	70617.0	4.0	0.0	330.0	9999.0	22006.0	4312.0	3472.0	
+$1,000,000 under $5,000,000	108357.0	17846.0	89794.0	N/A	5.0	712.0	1049758.0	23799.0	N/A	5888.0	
+$5,000,000 under $10,000,000               	53122.0	233.0	52672.0	N/A	0.0	217.0	9693.0	34859.0	N/A	3616.0	
+$10,000,000 under $50,000,000            	240213.0	22400.0	215886.0	N/A	0.0	1927.0	176374.0	76447.0	N/A	16195.0	
+$50,000,000 under $100,000,000             	93216.0	16556.0	75986.0	N/A	0.0	674.0	201897.0	88151.0	N/A	23238.0	
+$100,000,000 under $250,000,000            	203829.0	46626.0	156338.0	N/A	0.0	865.0	253403.0	135710.0	N/A	26218.0	
+$250,000,000 or more	12773013.0	11743477.0	1028089.0	N/A	0.0	1447.0	5895320.0	828436.0	N/A	20094.0	
+Form 1120F returns [11]	196940.0	22192.0	174694.0	N/A	0.0	54.0	584007.0	1134378.0	N/A	2071.0	
+											
+Estate and trust income tax returns	159495.0	15032.0	119810.0	N/A	0.0	24653.0	154972.0	23890.0	N/A	12597.0	
+											
+Estate tax returns:											
+   Total	829154.0	1208.0	826377.0	N/A	0.0	1569.0	1207553.0	109454.0	N/A	10058.0	
+   Size of gross estate:											
+Under $1,000,000	122518.0	1208.0	121098.0	N/A	0.0	212.0	1207553.0	77034.0	N/A	4243.0	
+$1,000,000 under $5,000,000	238855.0	0.0	238076.0	N/A	0.0	779.0	0.0	54059.0	N/A	8470.0	
+$5,000,000 or more	467781.0	0.0	467203.0	N/A	0.0	578.0	0.0	296825.0	N/A	41255.0	
+											
+Gift tax returns	343279.0	0.0	343279.0	N/A	0.0	0.0	0.0	171382.0	N/A	0.0	
+											
+Employment tax returns	491501.0	276738.0	209884.0	4196.0	28.0	655.0	159503.0	18696.0	5694.0	2587.0	
+Employment revenue officer examiners [12]	33405.0	N/A	N/A	33405.0	N/A	N/A	N/A	1.0	10498.0	N/A	
+Excise tax returns [2]	206854.0	74262.0	132591.0	1.0	0.0	0.0	69861.0	19334.0	8.0	0.0	
+Other taxable returns [10,13]	160107.0	141285.0	18822.0	0.0	0.0	0.0	611622.0	109429.0	0.0	0.0	
+											
+Nontaxable returns: [14]											
+Partnership returns, Form 1065	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	
+S corporation returns, Form 1120S [10,15]	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	
+Other nontaxable returns [14]	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	
+N/A - Not applicable.											
+[1] In general, examination activity may be associated with returns filed in the previous calendar year.  However, this relationship is only approximate.  Therefore, for some categories, there are either 											
+no returns or a smaller number of returns filed in Calendar Year 2000, compared to the number with examination activity in Fiscal Year 2001 (as indicated by data in other columns).											
+[2] Excludes excise tax returns filed with the Customs Service and Bureau of Alcohol, Tobacco and Firearms and tax-exempt/government entity organizations and employee plans.											
+[3] CEP (Coordinated Examination Program) covers “a taxpayer, and its effectively controlled entities, that warrants application of ‘team examination’ procedures.”  Tax auditors are Compliance personnel 											
+who are required to have 9 semester hours of accounting and who perform examinations on selected individual, employment, and excise returns.  Tax examiners for field operations and Compliance Centers perform 											
+examinations on correspondence.											
+[4] Data reported under the heading "Tax auditor" for corporations, trusts, and 1120S returns reflect incorrect coding of these few returns for Fiscal Year 2001.  This is also true for the data shown under the heading 											
+"Revenue agent Non-CEP" for employment revenue officer examiners.  These data are included as coded in order to preserve the integrity of the overall totals.											
+[5] Not computed.											
+[6] Comprises all returns except returns shown as employment, employment revenue officer examiners, excise, and other taxable returns.											
+[7] Form 1040A is one of the two IRS individual income tax return “short forms.”											
+[8] TPI (total positive income) is, in general, the sum of all positive amounts shown for the various sources of income reported on the individual income tax return, and, thus, excludes net losses.  For example, it includes											
+ “business or profession net income,” but not “business or profession net loss.”											
+[9] Schedule C returns are filed by nonfarm sole proprietors.  Schedule F returns are filed by farm sole proprietors.  TGR stands for “total gross receipts.”											
+[10] Forms 1120S are returns filed by qualifying corporations electing to be taxed through shareholders.  Under certain conditions, some of these corporations are subject to tax and are included in “other taxable returns” 											
+in this table.  Otherwise, they are included in “nontaxable returns.”  Total for corporations also excludes certain other types of corporations, which are also included in “other taxable returns” described in footnote 13, below.											
+[11] Forms 1120F are returns filed by foreign corporations with U.S. income, other than foreign life insurance companies and foreign sales corporations.											
+[12] Comprises work performed by a revenue officer examiner.  Revenue officer examiners are employees who have been trained to do certain employment tax returns.  Data are collected for these individuals and shown separately from employment returns.											
+[13] Includes Forms 1120S (for S corporations reporting a tax; see also footnote 10); 1120-FSC (foreign sales corporations); 8288 (withholding tax returns for disposition by foreign persons of U.S. property interests); and certain other returns.											
+[14] Includes Form 1120-DISC (domestic international sales corporations); Form 1120-IC-DISC (interest-charge domestic international sales corporations); Form 1066 (real estate mortgage investment conduits); and 											
+certain other returns filed by “flow through” entities, such as partnerships (Form 1065), S corporations (Form 1120S), except as noted in footnote 10, and certain others, that have tax consequences applicable to the partners, 											
+shareholders, or other owners, as well as certain other returns.  											
+[15] Includes most Form 1120S returns (S corporations that are nontaxable; see also footnotes 10 and 13).											
+NOTE: Detail may not add to totals because of rounding. 											
+SOURCE: IRS Data Book, FY 2001, Publication 55b. Also, Small Business/Self-Employed, Compliance Policy, Centralized Workload Selection and Delivery, Examination Management Information, System and Automation  S:C:CP:CW:EMIS											

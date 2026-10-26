@@ -159,10 +159,11 @@
                 <div class="signals-field">
                     <label class="signals-label" for="fPlaceKeys">{{ _('Place keys') }}</label>
                     <input type="text" class="form-control form-control-sm" id="fPlaceKeys" name="place_key"
-                           placeholder="wikidata:Q3579, geonames:123"
+                           placeholder="place:12, place:40"
                            aria-label="{{ _('Place keys') }}">
                     <div class="form-text">{{ _('Comma-separated gazetteer keys (multi-select)') }}</div>
                 </div>
+                <input type="hidden" id="fIdentifierKind" name="identifier_kind" value="">
                 <div class="signals-field">
                     <label class="signals-label" for="fCategory">{{ _('Category IDs') }}</label>
                     <input type="text" class="form-control form-control-sm" id="fCategory" name="category_id" inputmode="numeric" placeholder="12, 40">

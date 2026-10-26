@@ -1,0 +1,27 @@
+  /files                       checks   4  failed 1
+  /keywords                    checks   9  failed 2
+  /words                       checks   9  failed 2
+  /sources                     checks   6  failed 0
+  /sides                       checks   4  failed 0
+  /categories                  checks   4  failed 1
+  /search/advanced             checks   4  failed 2
+  /dashboard/charts            checks   4  failed 0
+  /dashboard/comprehensive     checks   4  failed 0
+  /analyst/categorization      checks   2  failed 0
+  /analysis/batch              checks   2  failed 0
+  /                            checks   4  failed 0
+  /notifications               checks   2  failed 0
+  /reports/dashboard           checks   2  failed 0
+  /retention                   checks   2  failed 0
+  /schedules                   checks   2  failed 0
+  /email-words                 checks   2  failed 0
+  /categories/3/words          checks   4  failed 0
+checks: 70  failed: 8  unexpected: 0
+  FAIL [FIXTURE-LIMIT] /files bulkDelete: issues /files/bulk-delete -> []
+  FAIL [DEFECT-OPEN] /keywords bulkDelete: issues /api/keywords/bulk-delete -> []
+  FAIL [DEFECT-OPEN] /keywords bulkDelete: element found -> no element / no control carries data-on-click for this name
+  FAIL [DEFECT-OPEN] /words bulkDelete: issues /api/words/bulk-delete -> []
+  FAIL [DEFECT-OPEN] /words bulkDelete: element found -> no element / no control carries data-on-click for this name
+  FAIL [FIXTURE-LIMIT] /categories saveWordToCategory: issues /api/words-categorys/add -> ["GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.2
+  FAIL [FIXTURE-LIMIT] /search/advanced exportSelectedFiles: issues /files/export|/api/files/names/export -> ["GET data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.2
+  FAIL [FIXTURE-LIMIT] /search/advanced removeAnalystCategoriesFromSelection: issues /api/analyst/remove -> []

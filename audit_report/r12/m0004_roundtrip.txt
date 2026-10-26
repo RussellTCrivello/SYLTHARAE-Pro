@@ -1,0 +1,34 @@
+database: syltharae_app
+postgres: PostgreSQL 16.2 on x86_64-pc-linux-gnu
+applied: ['0001', '0002', '0003', '0004']
+
+fingerprint before: 40 tables, 208838 rows, 038b99bd053ee639
+  categorys      rows= 101150 sum=000000000000000000000c689e3014789ac5da14
+  words          rows= 101491 sum=000000000000000000000c5d642945ff41a6d31f
+  geo_places     rows=      0 sum=0000000000000000000000000000000000000000
+  users          rows=      2 sum=000000000000000000000000152843ef59cb37fa
+
+populated tree: 101150 categories, level-3 node = 36
+
+[1] downgrade m0004
+  ok   downgrade restored the two-level function body
+  ok   the restored body carries the old message
+  depth-3 insert after downgrade: refused -> A subcategory's parent must be a main category (no parent)
+  ok   downgrade: depth-3 insert is refused again
+  ok   downgrade changed no row in any table
+  fingerprint after downgrade: 038b99bd053ee639
+
+[2] upgrade m0004
+  ok   upgrade installed the cycle guard
+  depth-3 insert after upgrade: accepted
+  ok   upgrade: depth-3 insert is accepted
+  self-parent after upgrade: refused -> A category cannot be its own parent (cycle)
+  ok   upgrade: a category cannot be its own parent
+  root ancestor of 36 = 34
+  cycle (root 34 moved under its descendant 36): refused -> A category cannot be moved under its own descendant (cycle)
+  ok   upgrade: moving an ancestor under its descendant is refused
+  ok   upgrade changed no row in any table
+  fingerprint after upgrade: 038b99bd053ee639
+  ok   schema_migrations still records the whole chain: ['0001', '0002', '0003', '0004']
+
+RESULT: PASS

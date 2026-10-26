@@ -106,11 +106,23 @@ def register_scenario_routes(app):
     from Api.utils.utils import get_connection
     from services.detection.signal_query import SignalQueryError, _page, _positive_int
     from services.monitoring import scenarios as store
+    from services.monitoring.rule_model import RuleDefinitionError
     from services.monitoring.rules import RuleError
     from services.monitoring.scenario_model import ScenarioDefinitionError, parse_definition
 
     def err(exc: RuleError):
         return _error(exc.code, exc.message, exc.status)
+
+    @app.errorhandler(RuleDefinitionError)
+    def _rule_definition_error(exc: RuleDefinitionError):
+        """A definition the model refuses is a 400, not a collapsed request.
+
+        ``validate_name``/``parse_definition`` raise ``RuleDefinitionError``
+        (a ``ValueError``), which is not the ``RuleError`` the handlers catch.
+        Without this registration an empty or invalid body escaped as an
+        unhandled exception and the client saw 500 instead of the reason.
+        """
+        return _error("VALIDATION_FAILED", str(exc), 400)
 
     def with_conn(fn):
         with get_connection() as conn:

@@ -1,0 +1,21 @@
+Title: None
+Links (2 total):
+Copyright notice -> /META-INF/NOTICE
+License terms -> /META-INF/LICENSE
+Images (1 total):
+Image: No alt -> tika.png
+
+--- Content ---
+
+
+
+
+
+Apache Tika™ ${project.version} is a toolkit for
+      detecting and extracting metadata and structured text content
+      from various documents using existing parser libraries.
+Copyright notice
+      - License terms
+
+
+

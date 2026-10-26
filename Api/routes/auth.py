@@ -47,6 +47,7 @@ from core.security.service import (
     AccountDisabled, AccountLocked, AuthError, InvalidCredentials, InvalidCurrentPassword,
 )
 from core.errors import client_error
+from core.validation import PayloadError, text_field
 from core.security.rate_limit import limiter
 
 logger = logging.getLogger(__name__)
@@ -90,8 +91,13 @@ def _login_rate_limit() -> str:
 @limiter.limit(lambda: _login_rate_limit())
 def login():
     data = request.get_json(silent=True) or request.form or {}
-    username = (data.get("username") or "").strip()
-    password = data.get("password") or ""
+    try:
+        # A list or a number where a name belongs used to reach ``.strip()``
+        # and answer 500 on an endpoint anyone can call.
+        username = text_field(data, "username", max_length=150, trim=True)
+        password = text_field(data, "password", max_length=256)
+    except PayloadError as exc:
+        return jsonify(exc.to_dict()), 400
     if not username or not password:
         return jsonify({"error": "Username and password are required"}), 400
 
@@ -156,8 +162,11 @@ def change_password():
     if not is_authenticated():
         return jsonify({"error": "Authentication required"}), 401
     data = request.get_json(silent=True) or request.form or {}
-    current_password = data.get("current_password") or ""
-    new_password = data.get("new_password") or ""
+    try:
+        current_password = text_field(data, "current_password", max_length=256)
+        new_password = text_field(data, "new_password", max_length=256)
+    except PayloadError as exc:
+        return jsonify(exc.to_dict()), 400
     user = current_user()
     if not current_password:
         return jsonify({"error": "Enter your current password",
@@ -245,10 +254,16 @@ def api_create_user():
         return jsonify({"error": "Insufficient permissions"}), 403
     data = request.get_json(silent=True) or {}
     try:
+        username = text_field(data, "username", max_length=150, trim=True)
+        password = text_field(data, "password", max_length=256)
+        role = text_field(data, "role", default="analyst", max_length=32) or "analyst"
+    except PayloadError as exc:
+        return jsonify(exc.to_dict()), 400
+    try:
         user = get_auth_service().create_user(
-            username=data.get("username") or "",
-            password=data.get("password") or "",
-            role=data.get("role", "analyst"),
+            username=username,
+            password=password,
+            role=role,
             must_change_password=bool(data.get("must_change_password", True)),
         )
     except AuthError as exc:

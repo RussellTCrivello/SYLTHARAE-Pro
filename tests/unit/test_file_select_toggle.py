@@ -73,8 +73,22 @@ class TestTheWiring:
         assert "FileManagement.toggleAllFilesSelection" in source
 
     def test_the_function_manager_exposes_the_module_function(self):
+        # Round 14 gave every action name one owner per page: the files list page
+        # publishes ``toggleAllFilesSelection`` itself (asserted above), so the
+        # shared module export carries a suffix. The guard below is the ownership
+        # rule itself - the manager must NOT take the name the page owns - which
+        # is what the old assertion was really protecting, and it cannot be
+        # satisfied by an assignment that the loader order makes ambiguous.
         source = FUNCTION_MANAGER.read_text(encoding="utf-8")
-        assert "window.toggleAllFilesSelection = fileSelection.toggleAllFilesSelection;" in source
+        assert ("window.toggleAllFilesSelectionShared = "
+                "fileSelection.toggleAllFilesSelection;") in source
+        assert "window.toggleAllFilesSelection = " not in source, (
+            "the shared export must not claim the name the files page publishes")
+        # And the control that uses the shared copy names it explicitly, so the
+        # suffix cannot quietly turn into a dead button.
+        view = (PROJECT_ROOT / "static" / "js" / "modules" / "views"
+                / "file-view.js").read_text(encoding="utf-8")
+        assert 'data-on-click="toggleAllFilesSelectionShared?.()"' in view
 
     def test_the_style_exists_and_covers_both_states(self):
         css = PAGE_CSS.read_text(encoding="utf-8")

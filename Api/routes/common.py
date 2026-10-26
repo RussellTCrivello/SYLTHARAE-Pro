@@ -158,6 +158,17 @@ def resolve_interface_language(app):
     return app.config['BABEL_DEFAULT_LOCALE']
 
 
+#: Endpoints that answer with a machine-readable body and never render a
+#: template. They must not wait on the database before answering, because
+#: reporting an outage is what they are for.
+_MACHINE_ONLY_ENDPOINTS = ("health.",)
+
+
+def _answers_without_templates(endpoint) -> bool:
+    """Does ``endpoint`` answer without rendering anything to translate?"""
+    return bool(endpoint) and str(endpoint).startswith(_MACHINE_ONLY_ENDPOINTS)
+
+
 def register_common_routes(app, babel_instance):
     """Register common routes and context processors with the Flask app"""
     
@@ -446,7 +457,13 @@ def register_common_routes(app, babel_instance):
             # source of truth for every screen. Overlay only this request's
             # Babel catalog so server-rendered labels and the public JS catalog
             # observe the same saved translation.
-            if request.endpoint != 'static':
+            # The liveness probe is exempt: it returns JSON with no user-facing
+            # string to translate, and the overlay reads the database - so with
+            # the database down the probe waited out the 30 s pool timeout
+            # before the route that reports the outage could run. Measured on
+            # the running application: 30.0 s per /health with PostgreSQL
+            # stopped (tests/unit/test_health_probe_not_blocked.py).
+            if request.endpoint != 'static' and not _answers_without_templates(request.endpoint):
                 try:
                     from Api.services.translation_management import apply_runtime_translation_overrides
                     apply_runtime_translation_overrides(locale)

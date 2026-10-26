@@ -1,0 +1,22 @@
+Y
+
+Total Slides: 1
+
+Slide 1
+
+[Image: slide_1_shape_3]
+
+[Image: slide_1_shape_2]
+
+The quick brown fox jumps over the lazy dog
+
+[Image: slide_1_shape_4]
+
+The quick brown fox jumps over the lazy dog
+ppt/media/image3.emf
+ppt/media/image4.png
+ppt/media/image5.gif
+ppt/media/image6.png
+ppt/media/image2.emf
+ppt/media/image1.emf
+1

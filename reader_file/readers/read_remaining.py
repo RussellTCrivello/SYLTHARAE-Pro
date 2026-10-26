@@ -551,8 +551,38 @@ class RemainingFileReader(BaseReader):
             # Use streaming for files larger than 100MB to conserve memory
             use_streaming = file_size > 100 * 1024 * 1024  # 100MB threshold
             
-            # Try different encodings if default fails
-            encodings = [encoding, 'utf-8', 'latin-1', 'cp1252']
+            # Try different encodings if default fails. A decode that
+            # succeeds is not a decode that is right - cp1252 reads cp866
+            # Cyrillic as printable nonsense and raises nothing - so a small
+            # file is sniffed first and the sniffed encoding goes to the front.
+            # Everything after it stays, so a wrong guess still ends somewhere.
+            preferred: Optional[str] = None
+            if not use_streaming and file_size <= 20 * 1024 * 1024:
+                try:
+                    from core.text_encoding import decode_bytes
+
+                    with open(filepath, 'rb') as probe:
+                        _, preferred = decode_bytes(probe.read(), declared=encoding)
+                except Exception:
+                    preferred = None
+            # decode_bytes answers "empty" for a zero-byte file, which is a
+            # fact about the file and not a codec name; only names Python can
+            # open a stream with are allowed into the chain.
+            import codecs
+
+            def _usable(name: Optional[str]) -> bool:
+                if not name:
+                    return False
+                try:
+                    codecs.lookup(name)
+                except LookupError:
+                    return False
+                return True
+
+            encodings = []
+            for candidate in [preferred, encoding, 'utf-8', 'latin-1', 'cp1252']:
+                if _usable(candidate) and candidate not in encodings:
+                    encodings.append(candidate)
             content = None
             encoding_used = None
             chunk_size = 10 * 1024 * 1024  # 10MB chunks for streaming
@@ -790,6 +820,33 @@ class RemainingFileReader(BaseReader):
             parts[label] = text
         return parts["script"], parts["style"], truncated
 
+    #: Elements that begin or end a run of text in a browser. A newline is
+    #: inserted at each boundary before the text is taken, because
+    #: ``get_text()`` concatenates everything: two adjacent cells became the
+    #: single token "Тверская10" and the words inside it were unsearchable.
+    HTML_BLOCK_TAGS = (
+        "address", "article", "aside", "blockquote", "br", "dd", "div", "dl",
+        "dt", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2",
+        "h3", "h4", "h5", "h6", "header", "hr", "li", "main", "nav", "ol", "p",
+        "pre", "section", "table", "tbody", "td", "tfoot", "th", "thead", "tr",
+        "ul", "option", "optgroup", "select", "textarea", "button", "label",
+        "caption", "legend", "summary", "details",
+    )
+
+    @classmethod
+    def _html_visible_text(cls, soup) -> str:
+        """The page's visible text with block boundaries preserved."""
+        from copy import copy
+
+        working = copy(soup)
+        for tag in working.find_all(cls.HTML_BLOCK_TAGS):
+            tag.insert_after("\n")
+        text = working.get_text()
+        # Collapse the runs of blank lines the inserted boundaries create,
+        # keeping a single line break where a boundary was.
+        lines = [" ".join(line.split()) for line in text.splitlines()]
+        return "\n".join(line for line in lines if line)
+
     @staticmethod
     def _decode_html_file_bytes(raw: bytes) -> str:
         """Decode HTML bytes using declared charset meta tags, then heuristics."""
@@ -805,21 +862,16 @@ class RemainingFileReader(BaseReader):
             if match:
                 declared = match.group(1).decode("ascii", errors="ignore").strip()
                 break
-        candidates = []
-        if declared:
-            candidates.append(declared)
-        candidates.extend(["utf-8", "cp1252", "iso-8859-1", "latin-1"])
-        seen = set()
-        for enc in candidates:
-            key = enc.lower()
-            if key in seen:
-                continue
-            seen.add(key)
-            try:
-                return raw.decode(enc)
-            except (UnicodeDecodeError, LookupError):
-                continue
-        return raw.decode("utf-8", errors="replace")
+        # The declaration is a claim, not evidence: the corpus has a page that
+        # declares UTF-8 and is windows-1256 Arabic, and the old chain then
+        # fell through to cp1252 and stored the page as mojibake - lossless in
+        # bytes, useless as text. core.text_encoding decides between the
+        # claim, a detector and a candidate chain, and reports which it used.
+        from core.text_encoding import decode_bytes
+
+        text, encoding_used = decode_bytes(raw, declared=declared)
+        RemainingFileReader.last_html_encoding = encoding_used
+        return text
 
     def read_html_file(self, filepath, encoding='utf-8'):
         """Read an HTML file: visible text, structure, and inline code.
@@ -871,10 +923,12 @@ class RemainingFileReader(BaseReader):
             if style_text.strip():
                 forensic_parts.append("--- Inline style ---\n" + style_text)
 
+            visible_text = self._html_visible_text(soup)
+
             result = {
                 "filepath": filepath,
                 "title": soup.title.string if soup.title else None,
-                "text_content": soup.get_text(),
+                "text_content": visible_text,
                 "script_text": script_text,
                 "style_text": style_text,
                 "links": [{"href": a.get('href'), "text": a.get_text()} for a in soup.find_all('a', href=True)],
@@ -888,7 +942,7 @@ class RemainingFileReader(BaseReader):
                 "image_count": len(soup.find_all('img')),
                 "forensic_text": "\n\n".join(forensic_parts),
                 "extraction_info": {
-                    "visible_text_chars": len(soup.get_text()),
+                    "visible_text_chars": len(visible_text),
                     "script_chars": len(script_text),
                     "style_chars": len(style_text),
                     "comment_chars_excluded": comment_chars,

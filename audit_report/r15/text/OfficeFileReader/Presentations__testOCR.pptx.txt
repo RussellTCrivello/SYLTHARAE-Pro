@@ -1,0 +1,12 @@
+Happy New Year 2003!
+
+Total Slides: 1
+
+Slide 1
+
+This is some text
+
+[Image: slide_1_shape_1]
+
+This is some text
+ppt/media/image1.png

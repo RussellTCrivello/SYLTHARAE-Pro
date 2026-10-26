@@ -16,6 +16,28 @@ from core.table_paging import DEFAULT_PAGE_SIZE, fetch_page, read_page_request
 
 logger = logging.getLogger(__name__)
 
+def _parent_names_for(categories):
+    """{parent_id: name} for the parents of ``categories`` that are missing.
+
+    Only the ids that are *not* in the page are looked up: a parent that is
+    already rendered does not need a second query, and the template falls back
+    to the row it has.
+    """
+    try:
+        have = {row['id'] for row in categories if row.get('id') is not None}
+        wanted = {row['parent_id'] for row in categories
+                  if row.get('parent_id') is not None} - have
+        if not wanted:
+            return {}
+        rows = execute_query(
+            "SELECT c.id, w.word FROM categorys c JOIN words w ON c.word_id = w.id "
+            "WHERE c.id = ANY(%s)", (list(wanted),), fetch="all")
+        return {row[0]: row[1] for row in rows or []}
+    except Exception:  # the page must render even if this nicety fails
+        logger.warning("could not resolve parent names for the category list",
+                       exc_info=True)
+        return {}
+
 def register_categories_routes(app):
     """Register category routes with the Flask app"""
 
@@ -48,8 +70,16 @@ def register_categories_routes(app):
             categories, total_categories = result.rows, result.total
             page, per_page, total_pages = result.page, result.size, result.total_pages
 
+            # The Parent cell links to a search for the parent's *name*, and a
+            # parent is often on another page (a subcategory shown by a search,
+            # or simply page 2). Looking the names up for the rows on this page
+            # is one query and stops the cell from rendering ``?search=`` with
+            # nothing after it.
+            parent_names = _parent_names_for(categories)
+
             return render_template('Category/categories_list.html',
                                  categories=categories,
+                                 parent_names=parent_names,
                                  page=page,
                                  per_page=per_page,
                                  total_pages=total_pages,
@@ -63,6 +93,7 @@ def register_categories_routes(app):
             logger.error(traceback.format_exc())
             return render_template('Category/categories_list.html',
                                  categories=[],
+                                 parent_names={},
                                  page=1,
                                  per_page=DEFAULT_PAGE_SIZE,
                                  total_pages=1,

@@ -27,6 +27,8 @@ from typing import Any, Dict, Optional
 from urllib.parse import urlencode
 
 from core.errors import client_error
+from core.validation import query_int
+from core.validation import PayloadError, int_field, text_field
 from core.search.cursor import parse_relevance_cursor, parse_relevance_cursor_tiebreak
 from core.search.metrics import STORE as search_metrics_store
 from core.search.slow_capture import SLOW as slow_search_capture
@@ -338,14 +340,26 @@ def register_search_routes(app):
             if not criteria:
                 return jsonify({'error': 'No search criteria provided'}), 400
             
-            # Extract search parameters
-            query = criteria.get('query', '')
-            file_type = criteria.get('file_type', '')
-            source_id = criteria.get('source_id', '')
-            side_id = criteria.get('side_id', '')
-            date_from = criteria.get('date_from', '')
-            date_to = criteria.get('date_to', '')
-            category_id = criteria.get('category_id', '')
+            # Extract search parameters. ``source_id`` and ``category_id``
+            # arrive as text, a number or nothing depending on the client; the
+            # query builder needs one of the first two, so normalise here
+            # instead of raising inside it.
+            try:
+                query = text_field(criteria, 'query', max_length=8192)
+                file_type = text_field(criteria, 'file_type', max_length=32)
+                date_from = text_field(criteria, 'date_from', max_length=32)
+                date_to = text_field(criteria, 'date_to', max_length=32)
+                source_id = criteria.get('source_id', '')
+                side_id = criteria.get('side_id', '')
+                category_id = criteria.get('category_id', '')
+            except PayloadError as exc:
+                return jsonify(exc.to_dict()), 400
+            for field, value in (('source_id', source_id), ('side_id', side_id),
+                                 ('category_id', category_id)):
+                if value not in ('', None) and not isinstance(value, (int, str)):
+                    return jsonify({'error': f'{field} must be an id',
+                                    'code': 'VALIDATION_FAILED',
+                                    'field': field}), 400
 
             # Analyst-categorization search scope (FR-2.x)
             analyst_scope = resolve_request_scope()
@@ -913,7 +927,7 @@ def register_search_routes(app):
         """
         try:
             query = request.args.get('query', '').strip()
-            limit = int(request.args.get('limit', 10))
+            limit = query_int("limit", 10, minimum=1, maximum=50)
             
             if not query or len(query) < 2:
                 return jsonify({
@@ -944,7 +958,7 @@ def register_search_routes(app):
         """
         try:
             query = request.args.get('query', '').strip()
-            limit = int(request.args.get('limit', 5))
+            limit = query_int("limit", 5, minimum=1, maximum=50)
             
             if not query or len(query) < 2:
                 return jsonify({
@@ -979,10 +993,18 @@ def register_search_routes(app):
         try:
             if request.method == 'POST':
                 # Add search to history
-                data = request.get_json() or {}
-                query = data.get('query', '').strip()
-                filters = data.get('filters', {})
-                result_count = data.get('result_count', 0)
+                data = request.get_json(silent=True) or {}
+                try:
+                    query = text_field(data, 'query', max_length=8192, trim=True)
+                    result_count = int_field(data, 'result_count', default=0,
+                                             minimum=0)
+                except PayloadError as exc:
+                    return jsonify(exc.to_dict()), 400
+                filters = data.get('filters') or {}
+                if not isinstance(filters, dict):
+                    return jsonify({'error': 'filters must be an object',
+                                    'code': 'VALIDATION_FAILED',
+                                    'field': 'filters'}), 400
                 user_id = _current_user_id()
                 
                 if query:
@@ -1003,7 +1025,7 @@ def register_search_routes(app):
                     }), 400
             else:
                 # GET - retrieve search history
-                limit = int(request.args.get('limit', 20))
+                limit = query_int("limit", 20, minimum=1, maximum=200)
                 user_id = _current_user_id()
                 
                 history = SearchHistoryService.get_history(limit=limit, user_id=user_id)
@@ -1082,13 +1104,18 @@ def register_search_routes(app):
             data = request.get_json(silent=True)
             if not data or not isinstance(data, dict):
                 return jsonify({'error': 'No data provided'}), 400
-            name = (data.get('name') or '').strip()
-            query = data.get('query') or ''
-            if not isinstance(query, str):
-                return jsonify({'error': 'query must be text'}), 400
-            filters = data.get('filters') or {}
-            if not name:
-                return jsonify({'error': 'Name is required'}), 400
+            try:
+                name = text_field(data, 'name', required=True, max_length=255,
+                                  trim=True)
+                query = text_field(data, 'query', max_length=8192)
+            except PayloadError as exc:
+                return jsonify(exc.to_dict()), 400
+            filters = data.get('filters')
+            if filters is None or filters == '':
+                filters = {}
+            if not isinstance(filters, dict):
+                return jsonify({'error': 'filters must be an object',
+                                'code': 'VALIDATION_FAILED', 'field': 'filters'}), 400
             row = _saved_search_repo().create(_current_user_id(), name, query.strip(), filters)
             return jsonify({
                 'success': True,

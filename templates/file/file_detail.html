@@ -153,7 +153,11 @@
                             {% set file_path = file[2] if file|length > 2 else '' %}
                             {% set file_id = file[0] if file|length > 0 else 0 %}
                             {% if content_length > 0 %}
+                            {#- data-translatable: the reader may select any part of
+                                this text and ask for a translation; the panel
+                                below the viewer renders it side by side. -#}
                             <div class="content-viewer" id="contentViewer" 
+                                 data-translatable
                                  data-file-type="{{ file_type }}" 
                                  data-file-path="{{ file_path }}"
                                  data-file-id="{{ file_id }}"
@@ -308,6 +312,11 @@
             </div>
         </section>
     </div>
+
+    {#- Manual translation of a selection: below the two panes, full width. It
+        cannot live inside the content pane - that pane is a fixed-height
+        scroll box, and the panel would be clipped. -#}
+    {% include 'Translation/_selection_panel.html' %}
 
     {{ file_nav_dock(nav) }}
 </div>

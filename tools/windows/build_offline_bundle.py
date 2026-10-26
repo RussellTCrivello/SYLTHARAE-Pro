@@ -123,8 +123,12 @@ def sha256_of(path: Path) -> str:
 
 
 # Development-only packages: never downloaded into the shipped wheelhouse
-# (the "Development-only" class of the dependency inventory).
-DEV_ONLY_PACKAGES = {"pytest", "pytest-cov", "ruff", "bandit"}
+# (the "Development-only" class of the dependency inventory). The list mirrors
+# tools/windows/inventory_dependencies.py's dev-only set: pyzipper is there
+# because tests/unit/test_archive_formats.py imports it to *build* an
+# AES-encrypted ZIP fixture - no product module imports it - so it belongs in
+# requirements.txt's test section but never in the offline bundle.
+DEV_ONLY_PACKAGES = {"pytest", "pytest-cov", "ruff", "bandit", "pyzipper"}
 
 
 def _req_name(requirement: str) -> str:

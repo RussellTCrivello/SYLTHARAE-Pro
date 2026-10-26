@@ -23,6 +23,7 @@ from __future__ import annotations
 import logging
 
 from flask import jsonify, request
+from core.validation import query_int
 from flask_babel import gettext as _
 from flask_babel import get_locale
 
@@ -130,7 +131,7 @@ def register_experience_routes(app) -> None:
             wanted = declared.lower() in ("1", "true", "yes")
             items = [item for item in items if item["screen"]["declared"] is wanted]
 
-        limit = min(int(request.args.get("limit", DEFAULT_LIMIT)), 500)
+        limit = query_int("limit", DEFAULT_LIMIT, minimum=1, maximum=500)
         counts = contract_counts()
         return jsonify({
             "success": True,
@@ -186,7 +187,7 @@ def register_experience_routes(app) -> None:
             items = [item for item in items if interface_id in item["interfaces"]]
         if scope:
             items = [item for item in items if item["scope"] == scope]
-        limit = min(int(request.args.get("limit", DEFAULT_LIMIT)), 500)
+        limit = query_int("limit", DEFAULT_LIMIT, minimum=1, maximum=500)
         return jsonify({
             "success": True,
             "counts": counts(),

@@ -65,30 +65,31 @@ def format_title_message(notification: Notification, _=None) -> tuple[str, str]:
         msg = meta.get('message', 'A future event was detected.')
         return title, msg
 
+    # Generic types: the stored text is what the writer chose to say, so it is
+    # shown verbatim. The label is a fallback for a row that carries none -
+    # replacing a real title with "Information" hid the message that was sent.
     if t == NotificationType.PROCESSING_COMPLETE:
-        title = "Processing Complete"
-        msg = meta.get('message', 'File processing has completed.')
-        return title, msg
+        return (notification.title or "Processing Complete",
+                notification.message or meta.get('message', 'File processing has completed.'))
 
     if t == NotificationType.BATCH_COMPLETE:
-        title = "Batch Processing Complete"
-        msg = meta.get('message', 'Batch processing has completed.')
-        return title, msg
+        # The counts are computed when the batch finishes and carried in
+        # metadata; that sentence is richer than the row's stored message.
+        return (notification.title or "Batch Processing Complete",
+                meta.get('message') or notification.message
+                or 'Batch processing has completed.')
 
     if t == NotificationType.ERROR:
-        title = "Error"
-        msg = meta.get('message', 'An error occurred.')
-        return title, msg
+        return (notification.title or "Error",
+                notification.message or meta.get('message', 'An error occurred.'))
 
     if t == NotificationType.WARNING:
-        title = "Warning"
-        msg = meta.get('message', 'A warning was issued.')
-        return title, msg
+        return (notification.title or "Warning",
+                notification.message or meta.get('message', 'A warning was issued.'))
 
     if t == NotificationType.INFO:
-        title = "Information"
-        msg = meta.get('message', 'An informational message.')
-        return title, msg
+        return (notification.title or "Information",
+                notification.message or meta.get('message', 'An informational message.'))
 
     if t == NotificationType.SCENARIO_OUTCOME:
         title = meta.get('title', 'Scenario Outcome')
@@ -104,9 +105,41 @@ def format_title_message(notification: Notification, _=None) -> tuple[str, str]:
     return notification.title, notification.message
 
 
-def display_payload(notification: Notification, _=None) -> dict:
-    """The complete JSON payload the UI expects for a notification."""
+def path_names(file_ids) -> dict:
+    """``{file_id: (file_name, file_path)}`` for the referenced paths.
+
+    ``alerts`` stores only ``file_id``; the name and path belong to ``paths``
+    and are read with one join-equivalent query for the whole page rather than
+    one query per row. Rows whose path is gone simply have no entry.
+    """
+    ids = sorted({int(i) for i in file_ids if i is not None})
+    if not ids:
+        return {}
+    try:
+        from Api.utils import execute_query
+
+        rows = execute_query(
+            "SELECT p.id, p.file_name, p.file_path FROM paths p"
+            " WHERE p.id = ANY(%s)",
+            (ids,),
+            fetch="all",
+        ) or []
+    except Exception:  # pragma: no cover - display must never fail the list
+        return {}
+    return {r[0]: (r[1], r[2]) for r in rows}
+
+
+def display_payload(notification: Notification, _=None, names=None) -> dict:
+    """The complete JSON payload the UI expects for a notification.
+
+    ``names`` is the result of :func:`path_names`; the metadata copy is a
+    fallback for rows written before the read joined ``paths``.
+    """
     title, message = format_title_message(notification, _)
+    file_name, file_path = (names or {}).get(
+        notification.file_id,
+        (notification.metadata.get('file_name'),
+         notification.metadata.get('file_path')))
     return {
         'id': notification.id,
         'type': notification.type.value,
@@ -114,8 +147,8 @@ def display_payload(notification: Notification, _=None) -> dict:
         'title': title,
         'message': message,
         'file_id': notification.file_id,
-        'file_name': notification.metadata.get('file_name'),
-        'file_path': notification.metadata.get('file_path'),
+        'file_name': file_name,
+        'file_path': file_path,
         'event_date': notification.event_date.isoformat() if notification.event_date else None,
         'metadata': notification.metadata,
         'created_at': notification.created_at.isoformat() if notification.created_at else None,

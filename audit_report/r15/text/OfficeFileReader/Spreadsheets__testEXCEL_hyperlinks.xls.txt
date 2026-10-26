@@ -1,0 +1,4 @@
+Sheet: Sheet1
+Rows: 1
+Columns: 5
+this is a 	http_tika_link	Sheet1!C2	mailto:user@tika.apache.org?subject=help	C:\data\linked_file.txt.htm

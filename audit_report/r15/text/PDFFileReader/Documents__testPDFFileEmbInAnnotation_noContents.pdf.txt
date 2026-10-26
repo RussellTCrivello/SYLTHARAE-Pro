@@ -1,0 +1,14 @@
+Total Pages: 1
+OCR Used: Yes
+OCR Languages: heb, eng, ara
+Title: This is a pdf document
+Author: Administrator
+Creator: Microsoft® PowerPoint® 2010
+Producer: Microsoft® PowerPoint® 2010
+
+Page 1 | Method: ocr_rapidocr | Length: 1 chars
+β
+
+Excel.xlsx
+Administrator
+文件附件

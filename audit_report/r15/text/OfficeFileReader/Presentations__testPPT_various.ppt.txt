@@ -1,0 +1,251 @@
+Total Slides: 1
+
+Slide 1
+
+#_ftn10
+
+_ftn1
+
+http://tika.apache.org/
+
+#_ftnref10
+
+_ftnref1
+
+MS Mincho
+
+Roman
+
+MS Gothic
+
+Title Placeholder 1
+
+Text Placeholder 2
+
+Date Placeholder 3
+
+Footer Placeholder 4
+
+Slide Number Placeholder 5
+
+Office Theme
+
+Header Placeholder 1
+
+Date Placeholder 2
+
+Slide Image Placeholder 3
+
+Notes Placeholder 4
+
+Footer Placeholder 5
+
+Slide Number Placeholder 6
+
+Footer Placeholder 3
+
+Slide Number Placeholder 4
+
+Title 1
+
+Subtitle 2
+
+Table 3
+
+Rectangle 2
+
+Text Box 1
+
+Rectangle 3
+
+Footnote appears here[1]
+
+Bold italic underline superscript subscript
+
+Here is a list:
+
+Bullet 1
+
+Bullet 2
+
+Bullet 3
+
+Here is a numbered list:
+
+Number bullet 1
+
+Number bullet 2
+
+Number bullet 3
+
+Keyword1 Keyword2
+
+This is a hyperlink
+
+Subject is here
+
+Suddenly some Japanese text:
+
+And then some Gothic text:
+
+Here is a citation:
+
+(Kramer)
+
+Figure 1 This is a caption for Figure 1
+
+Row 1 column 1
+
+Row 2 column 1
+
+Row 1 column 2
+
+Row 2 column 2
+
+Rectangle 4
+
+Rectangle 5
+
+Slide Image Placeholder 1
+
+Notes Placeholder 2
+
+Slide Number Placeholder 3
+
+Header Placeholder 5
+
+^k2#z
+
+tableStyles.xml
+
+_rels/.relsPK
+
+drs/slideMasters/slideMaster1.xml
+
+Click to edit Master title style
+
+Click to edit Master text styles
+
+drs/shapexml.xml
+
+drs/downrev.xmlD
+
+V9'#@A
+
+\b<vc0
+
+_#D.jw
+
+drs/downrev.xmlL
+
+theme/theme/themeManager.xml
+
+theme/theme/theme1.xml
+
+w toc'v
+
+)V+qki
+
+Yi+hei
+
+<{2Eah
+
+theme/theme/_rels/themeManager.xml.rels
+
+K(M&$R(.1
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<a:clrMap xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>
+
+[Content_Types].xml|
+
+drs/slideLayouts/slideLayout1.xml
+
+w!/G!_
+
+#[E"-l
+
+${\k<nK.
+
+\gdEKc
+
+`?9K4l
+
+i+ L$2
+
+L8MX&y
+
+rmdYtv
+
+[M"$mMO,
+
+M/y!N>
+
+#KO8;!\$
+
+This is the header text.
+
+qXsPEf?
+
+vq|ZN1
+
+I+u{3m
+
+B_L&^mtG
+
+@byu_:
+
+Jd|-,?
+
+6,tyso
+
+FN,dKn
+
+>6,Al(P
+
+This is the footer text.
+
+\iYPD0
+
+Pm:6*K
+
+E'WQ!+
+
+0MBO>wM
+
+<,M\&tmm
+
+d8D0.|
+
+0|Vs#@R
+
+&([FcX>
+
+drs/e2oDoc.xml
+
+YsmJ%S
+
+Xv(f,XT
+
+_rels/.relsl
+
+9Vp;)@
+
+Z*u}5>?
+
+Row 1 Col 1
+
+Row 1 Col 2
+
+Row 1 Col 3
+
+Row 2 Col 1
+
+Row 2 Col 2
+
+Row 2 Col 3
+
+Here is a text box
+
+[1] This is a footnote.

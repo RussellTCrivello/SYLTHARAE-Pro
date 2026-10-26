@@ -1,0 +1,10 @@
+O
+O
+
+[Style: P1] Hello dear user,
+
+[Style: P1] Click the smiley
+
+[Style: P1] Just one little click…
+
+[Style: P1] - hacker

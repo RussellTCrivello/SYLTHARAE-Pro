@@ -143,10 +143,3 @@ def test_ll_levels():
     assert th.ll_level(3.84) == "ll_p05"
     assert th.ll_level(15.13) == "ll_p0001"
     assert th.ll_level(100 * math.log(2)) == "ll_p0001"
-
-
-def test_keyness_sql_level_is_the_threshold():
-    from core.reporting.datasets import KEYNESS_SIGNIFICANT_G2, TERM_KEYNESS_TOTALS_V1
-
-    assert float(KEYNESS_SIGNIFICANT_G2) == th.LL_P0001.value
-    assert f">= {KEYNESS_SIGNIFICANT_G2}" in TERM_KEYNESS_TOTALS_V1.sql

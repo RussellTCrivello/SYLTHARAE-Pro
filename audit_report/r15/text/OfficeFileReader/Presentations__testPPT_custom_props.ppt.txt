@@ -1,0 +1,139 @@
+Total Slides: 1
+
+Slide 1
+
+Espace r
+
+serv
+
+du titre 1
+
+du texte 2
+
+de la date 3
+
+du pied de page 4
+
+du num
+
+ro de diapositive 5
+
+me Office
+
+Titre 1
+
+Sous-titre 2
+
+^k2#z
+
+tableStyles.xml
+
+_rels/.relsPK
+
+drs/slideMasters/slideMaster1.xml
+
+9J7foa*
+
+Cliquez pour modifier le style du titre
+
+Cliquez pour modifier les styles du texte du masque
+
+me niveau
+
+Troisi
+
+Quatri
+
+Cinqui
+
+drs/shapexml.xml
+
+drs/downrev.xmlD
+
+6Qli[|
+
+4j6e-c
+
+>P"?)W
+
+0y|!-9
+
+drs/downrev.xmlL
+
+theme/theme/themeManager.xml
+
+theme/theme/theme1.xml
+
+F{om'v
+
+k%i#@P
+
+26T3FnJ
+
+theme/theme/_rels/themeManager.xml.rels
+
+K(M&$R(.1
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<a:clrMap xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>
+
+[Content_Types].xml|
+
+drs/slideLayouts/slideLayout1.xml
+
+oEA$+q
+
+yAJw]^
+
+-a>1}U
+
+}[VRc/+M
+
+rg$K7V
+
+o+.$3_
+
+ottrM0
+
+u@,L6X
+
+}x+l-_
+
+sZT?|I
+
+-octeQ
+
+*w@q?#
+
+;Bp'ZB>M
+
+;4P~I?
+
+96NX9#q!
+
+FlfH\o
+
+^NIC|f8kp
+
+Z,?< [,
+
+eS|6L5
+
+mVh\QXj1
+
+r)K>2eS
+
+PUgJp=5
+
+>@K4}4
+
+h$[D;f
+
+`[KJ?Y
+
+4wm1<`
+
+Test extraction properties
+
+&([FcX>

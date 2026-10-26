@@ -31,8 +31,85 @@ TEXT = (
 
 
 @pytest.fixture(scope="module")
-def tenant(pg_db):
-    conn = connect(pg_db)
+def private_db(pg_db):
+    """A database of this module's own, built from the frozen chain.
+
+    Two claims in this module are about a *freshly migrated* database:
+
+    * ``test_migration_created_gazetteer_tables`` asserts the baseline loads no
+      seed data (``current_fingerprint`` is ``None``);
+    * ``test_sync_seed_loads_gazetteer`` asserts the loaded place and name
+      counts equal the seed's exactly (223 places).
+
+    The shared session database is not fresh when this module runs. The places
+    CRUD module creates places through the API, and the API commits; its
+    autouse cleanup only removes labels starting ``Test``/``Updated``, so a
+    committed ``New Metropolis <uuid>`` is still there. Measured in the full
+    run: ``test_migration_created_gazetteer_tables`` failed with ``assert
+    'e341b364…' is None`` ("Seed data not loaded by baseline migration") and
+    ``test_sync_seed_loads_gazetteer`` with ``assert 226 == 223`` - purely
+    because another module ran first.
+
+    A database this module builds itself makes both claims true whatever ran
+    before. Same pattern as ``test_startup_upgrade_path.private_db``; created
+    empty and migrated here (never cloned with ``TEMPLATE``, which is refused
+    while another session holds the source database). Test isolation - the
+    frozen migrations, the schema and the product code are untouched.
+
+    The gazetteer keeps a process-global fingerprint/index cache, so it is
+    invalidated when this module switches databases and again afterwards,
+    otherwise ``current_fingerprint`` would answer with a value computed
+    against another database (or a database that has been dropped).
+    """
+    from services.geo.gazetteer import _invalidate_cache
+
+    name = f"{pg_db['database']}_places_pg"
+    admin = psycopg2.connect(
+        host=pg_db["host"], port=pg_db["port"], user=pg_db["user"],
+        password=pg_db["password"], dbname="postgres",
+    )
+    admin.autocommit = True
+    try:
+        with admin.cursor() as cur:
+            cur.execute("SELECT pg_terminate_backend(pid) FROM pg_stat_activity"
+                        " WHERE datname = %s AND pid <> pg_backend_pid()", (name,))
+            cur.execute(f'DROP DATABASE IF EXISTS "{name}"')
+            cur.execute(f'CREATE DATABASE "{name}"')
+    finally:
+        admin.close()
+
+    cfg = dict(pg_db, database=name)
+    from database.bootstrap import bootstrap_database
+    from database.migration_runner import discover_migrations
+
+    report = bootstrap_database({k: cfg[k] for k in
+                                 ("host", "port", "user", "password", "database")})
+    # The tip of the chain, not a literal: the chain grew by one authorised
+    # migration (m0004, category hierarchy) and a hard-coded "0003" turned a
+    # correct bootstrap into a failure. What this fixture needs is "bootstrap
+    # applied the whole chain", which is what the last discovered version says.
+    assert report["current_version"] == discover_migrations()[-1].version, report
+    _invalidate_cache()
+    yield cfg
+    _invalidate_cache()
+
+    admin = psycopg2.connect(
+        host=pg_db["host"], port=pg_db["port"], user=pg_db["user"],
+        password=pg_db["password"], dbname="postgres",
+    )
+    admin.autocommit = True
+    try:
+        with admin.cursor() as cur:
+            cur.execute("SELECT pg_terminate_backend(pid) FROM pg_stat_activity"
+                        " WHERE datname = %s AND pid <> pg_backend_pid()", (name,))
+            cur.execute(f'DROP DATABASE IF EXISTS "{name}"')
+    finally:
+        admin.close()
+
+
+@pytest.fixture(scope="module")
+def tenant(private_db):
+    conn = connect(private_db)
     with conn, conn.cursor() as cur:
         cur.execute("INSERT INTO sides (name, importance, date_creation) VALUES (%s, 0.5,"
                     " CURRENT_DATE) RETURNING id", (f"geo_side_{_U}",))
@@ -47,7 +124,7 @@ def tenant(pg_db):
 _N = iter(range(10_000))
 
 
-def _store(pg_db, tenant, raw_text=TEXT):
+def _store(private_db, tenant, raw_text=TEXT):
     """Insert a document directly via SQL. Place detection is tested separately."""
     import hashlib
     import psycopg2
@@ -57,9 +134,9 @@ def _store(pg_db, tenant, raw_text=TEXT):
     digest = hashlib.sha256(f"{raw_text}:{n}".encode()).hexdigest()
 
     conn = psycopg2.connect(
-        host=pg_db["host"], port=pg_db["port"],
-        user=pg_db["user"], password=pg_db["password"],
-        dbname=pg_db["database"]
+        host=private_db["host"], port=private_db["port"],
+        user=private_db["user"], password=private_db["password"],
+        dbname=private_db["database"]
     )
     try:
         with conn, conn.cursor(cursor_factory=RealDictCursor) as cur:
@@ -85,8 +162,8 @@ def _store(pg_db, tenant, raw_text=TEXT):
         conn.close()
 
 
-def _rows(pg_db, sql, params):
-    conn = connect(pg_db)
+def _rows(private_db, sql, params):
+    conn = connect(private_db)
     with conn, conn.cursor() as cur:
         cur.execute(sql, params)
         return cur.fetchall()
@@ -119,11 +196,11 @@ def _get_category_id(cur, feature_type: str) -> int:
 
 # --- gazetteer tables --------------------------------------------------------
 
-def test_migration_created_gazetteer_tables(pg_db):
+def test_migration_created_gazetteer_tables(private_db):
     """Baseline migration creates gazetteer tables but does not load seed data.
     Seed data is loaded separately via sync_seed().
     """
-    conn = connect(pg_db)
+    conn = connect(private_db)
     try:
         with conn.cursor() as cur:
             # Tables exist
@@ -145,12 +222,12 @@ def test_migration_created_gazetteer_tables(pg_db):
         conn.close()
 
 
-def test_sync_seed_loads_gazetteer(pg_db):
+def test_sync_seed_loads_gazetteer(private_db):
     """sync_seed loads the gazetteer seed data idempotently."""
     from services.geo.gazetteer import compute_fingerprint, current_fingerprint, load_seed_file, sync_seed
 
     seed = load_seed_file()
-    conn = connect(pg_db)
+    conn = connect(private_db)
     try:
         with conn.cursor() as cur:
             _ensure_categories(cur)
@@ -178,12 +255,12 @@ def test_sync_seed_loads_gazetteer(pg_db):
         conn.close()
 
 
-def test_sync_seed_idempotent_and_curated_places_survive(pg_db):
+def test_sync_seed_idempotent_and_curated_places_survive(private_db):
     """sync_seed is idempotent; curated places survive a seed reload with changes."""
     from services.geo.gazetteer import current_detector_version, current_fingerprint, load_seed_file, sync_seed
 
     seed = load_seed_file()
-    conn = connect(pg_db)
+    conn = connect(private_db)
     try:
         with conn.cursor() as cur:
             _ensure_categories(cur)
@@ -265,8 +342,8 @@ def test_sync_seed_idempotent_and_curated_places_survive(pg_db):
 ])
 
 
-def test_gazetteer_constraints_fire_by_name(pg_db, sql, params, expected_exception, constraint):
-    conn = connect(pg_db)
+def test_gazetteer_constraints_fire_by_name(private_db, sql, params, expected_exception, constraint):
+    conn = connect(private_db)
     try:
         with conn.cursor() as cur:
             _ensure_categories(cur)
@@ -280,12 +357,12 @@ def test_gazetteer_constraints_fire_by_name(pg_db, sql, params, expected_excepti
         conn.close()
 
 
-def test_duplicate_name_for_a_place_is_rejected(pg_db):
+def test_duplicate_name_for_a_place_is_rejected(private_db):
     """UNIQUE (place_id, language, match_key, name_type) prevents duplicate names."""
     from services.geo.gazetteer import load_seed_file, sync_seed
 
     seed = load_seed_file()
-    conn = connect(pg_db)
+    conn = connect(private_db)
     try:
         with conn.cursor() as cur:
             _ensure_categories(cur)
@@ -301,12 +378,12 @@ def test_duplicate_name_for_a_place_is_rejected(pg_db):
         conn.close()
 
 
-def test_natural_uniqueness_of_places(pg_db):
+def test_natural_uniqueness_of_places(private_db):
     """Natural uniqueness on (label, category_id, country_codes) prevents duplicates."""
     from services.geo.gazetteer import load_seed_file, sync_seed
 
     seed = load_seed_file()
-    conn = connect(pg_db)
+    conn = connect(private_db)
     try:
         with conn.cursor() as cur:
             _ensure_categories(cur)
@@ -329,16 +406,16 @@ def test_natural_uniqueness_of_places(pg_db):
 
 # --- ingestion ---------------------------------------------------------------
 
-def test_ingestion_stores_place_signals_with_candidates_and_offsets(pg_db, tenant):
+def test_ingestion_stores_place_signals_with_candidates_and_offsets(private_db, tenant):
     """This test requires the full ingestion pipeline with place detection.
     Skipped for Part 1 (schema consolidation); will be updated in Part 2.
     """
     pytest.skip("Requires full ingestion pipeline - Part 2")
 
 
-def test_place_signal_constraints_and_provenance_protection(pg_db):
+def test_place_signal_constraints_and_provenance_protection(private_db):
     """Invalid signal rows and orphaned place links are rejected by constraints."""
-    conn = connect(pg_db)
+    conn = connect(private_db)
     try:
         with conn.cursor() as cur:
             # resolution='absolute' requires date_from (content_signals_check3)
@@ -356,9 +433,9 @@ def test_place_signal_constraints_and_provenance_protection(pg_db):
         conn.close()
 
 
-def test_place_signal_fk_restrict(pg_db):
+def test_place_signal_fk_restrict(private_db):
     """content_signal_places FK to geo_places (RESTRICT) rejects invalid place_id."""
-    conn = connect(pg_db)
+    conn = connect(private_db)
     try:
         with conn.cursor() as cur:
             with pytest.raises(psycopg2.errors.ForeignKeyViolation):

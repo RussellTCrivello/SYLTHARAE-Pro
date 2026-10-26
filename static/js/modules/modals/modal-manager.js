@@ -1347,9 +1347,15 @@ export function openAddCategoryModal() {
 }
 
 /**
- * Save Category function
+ * Save the word-as-category form in ``#addCategoryModal`` (FMAS page).
+ *
+ * Named apart from the Categories page's own ``saveCategory``: both used to
+ * publish ``window.saveCategory``, and the last module to load won. On
+ * ``/categories`` that was this one, which looks for ``#categoryWordInput`` -
+ * the dialog there has no such input - so the Save button answered
+ * "Form elements not found" and never issued a request.
  */
-export async function saveCategory() {
+export async function saveAddCategoryModal() {
     const wordInput = document.getElementById('categoryWordInput');
     const selectedWordIdInput = document.getElementById('selectedCategoryWordId');
     
@@ -2047,7 +2053,7 @@ export async function saveWordsCategorys() {
     try {
         showToastForModal('Adding relationship...', 'info');
         const csrfToken = getCSRFTokenForModal() || await getCSRFTokenAsyncForModal();
-        const response = await fetch('/api/words-categorys', {
+        const response = await fetch('/api/words-categorys/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -2859,7 +2865,7 @@ export async function saveKeywordFromArchives() {
 // Make functions available globally
 if (typeof window !== 'undefined') {
     window.openAddCategoryModal = openAddCategoryModal;
-    window.saveCategory = saveCategory;
+    window.saveAddCategoryModal = saveAddCategoryModal;
     window.openAddWordsCategorysModal = openAddWordsCategorysModal;
     window.saveWordsCategorys = saveWordsCategorys;
     window.openAddKeywordModalFromArchives = openAddKeywordModalFromArchives;

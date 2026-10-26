@@ -1,0 +1,13 @@
+Total Pages: 1
+OCR Used: No
+Title: Note
+Author: BORIES Damien (BPCE-SI - EXT)
+Creator: Microsoft® Word pour Microsoft 365
+Producer: Microsoft® Word pour Microsoft 365
+
+Page 1 | Method: direct_extraction | Length: 155 chars
+ 
+Ce document est la propriété de BPCE. Ne peut être communiqué à des tiers sans son autorisation écrite. 
+1/1 
+ 
+Hello, this is a PDF, not a Matlab file 

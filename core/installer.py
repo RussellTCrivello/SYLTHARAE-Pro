@@ -576,7 +576,15 @@ def run_installation(config: Dict[str, str], client_ip: str = "") -> Dict[str, A
                        "detail": f"'{admin_user}' created" if result["created"]
                                  else "Admin already exists"})
     except Exception as e:
+        # The one step whose failure leaves the system unusable: without an
+        # account nobody can log in, and once the marker below is written
+        # /setup refuses to run again. Stop here and leave the system
+        # uninitialized so the installer (or the wizard) can be re-run.
         steps.append({"name": "Administrator", "ok": False, "detail": str(e)})
+        return {"ok": False, "steps": steps,
+                "error": f"Administrator account was not created: {e}. "
+                         f"The system is left uninitialized so the installer "
+                         f"or the /setup wizard can be run again."}
 
     # D: Runtime directories
     try:

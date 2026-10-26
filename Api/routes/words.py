@@ -4,9 +4,10 @@ Words routes
 
 from flask import render_template, request, redirect, url_for, flash, jsonify
 
+from core.validation import PayloadError, text_field
 from Api.utils import (
     select_info_categories, get_query_cache, get_words_with_usage,
-    word_exists, create_word, get_word_detail, update_word_query,
+    word_exists, get_word_id, create_word, get_word_detail, update_word_query,
     delete_word, get_words_usage_by_ids, bulk_delete_words
 )
 from datetime import datetime
@@ -75,9 +76,11 @@ def register_words_routes(app):
                 if not data:
                     return jsonify({'success': False, 'error': 'Data is required'}), 400
                 
-                word_text = data.get('word', '').strip()
-                if not word_text:
-                    return jsonify({'success': False, 'error': 'Word is required'}), 400
+                try:
+                    word_text = text_field(data, 'word', required=True,
+                                           max_length=255, trim=True)
+                except PayloadError as exc:
+                    return jsonify({'success': False, **exc.to_dict()}), 400
                 
                 existing = word_exists(word_text)
                 if existing:
@@ -181,18 +184,23 @@ def register_words_routes(app):
             if not data:
                 return jsonify({'success': False, 'error': 'JSON data is required'}), 400
             
-            word_text = data.get('word', '').strip()
-            if not word_text:
-                return jsonify({'success': False, 'error': 'Word is required'}), 400
+            try:
+                word_text = text_field(data, 'word', required=True,
+                                       max_length=255, trim=True)
+            except PayloadError as exc:
+                return jsonify({'success': False, **exc.to_dict()}), 400
             
             # Check if word already exists
-            existing = word_exists(word_text)
-            if existing:
-                # Return existing word ID instead of error
-                logger.info(f"Word already exists: {word_text} (id: {existing})")
+            if word_exists(word_text):
+                # "Create or get": answer with the id of the row that is
+                # already there. ``word_exists`` answers True/False, and this
+                # used to return that boolean as ``id`` - clients doing
+                # ``data.id`` got ``true``.
+                existing_id = get_word_id(word_text)
+                logger.info(f"Word already exists: {word_text} (id: {existing_id})")
                 return jsonify({
-                    'success': True, 
-                    'id': existing, 
+                    'success': True,
+                    'id': existing_id,
                     'message': 'Word already exists',
                     'already_exists': True
                 }), 200
@@ -241,9 +249,11 @@ def register_words_routes(app):
             if not data:
                 return jsonify({'success': False, 'error': 'JSON data is required'}), 400
             
-            word_text = data.get('word', '').strip()
-            if not word_text:
-                return jsonify({'success': False, 'error': 'Word is required'}), 400
+            try:
+                word_text = text_field(data, 'word', required=True,
+                                       max_length=255, trim=True)
+            except PayloadError as exc:
+                return jsonify({'success': False, **exc.to_dict()}), 400
             
             existing = word_exists(word_text)
             if existing and existing != word_id:

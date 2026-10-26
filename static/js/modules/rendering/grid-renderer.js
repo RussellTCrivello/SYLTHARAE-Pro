@@ -398,7 +398,7 @@ function getAddButtonHtml(section) {
                     <i class="bi bi-key"></i>
                     <span>${translations.addKeyword || 'Add Keyword'}</span>
                 </button>
-                <button class="add-item-btn" data-on-click="updateKeywordAssociations?.()" id="updateKeywordsBtn" title="${translations.updateKeywordAssociations || 'Update keyword associations for all files'}" aria-label="${translations.updateKeywordAssociations || 'Update keyword associations for all files'}" style="background-color: #10b981;">
+                <button class="add-item-btn" data-on-click="updateKeywordAssociationsShared?.()" id="updateKeywordsBtn" title="${translations.updateKeywordAssociations || 'Update keyword associations for all files'}" aria-label="${translations.updateKeywordAssociations || 'Update keyword associations for all files'}" style="background-color: #10b981;">
                     <i class="bi bi-arrow-repeat"></i>
                     <span>${translations.updateKeywords || 'Update Keywords'}</span>
                 </button>

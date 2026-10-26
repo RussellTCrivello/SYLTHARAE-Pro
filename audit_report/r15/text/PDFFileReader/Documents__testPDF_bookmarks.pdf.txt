@@ -1,0 +1,14 @@
+Total Pages: 2
+OCR Used: Yes
+OCR Languages: heb, eng, ara
+Producer: PDFlib 4.0.1 (PHP/Linux 2.2.16)
+
+Page 1 | Method: ocr_rapidocr | Length: 27 chars
+This is a page about France
+
+Page 2 | Method: ocr_rapidocr | Length: 28 chars
+This is a page about Denmark
+
+Countries
+France
+Denmark bookmark is here

@@ -27,6 +27,9 @@
             <i class="bi bi-plus-circle me-2"></i>
             {{ _('Add Category') }}
         </button>
+        <a href="{{ url_for('categories_tree_page') }}" class="btn btn-outline-primary">
+            <i class="bi bi-diagram-3 me-1"></i> {{ _('Hierarchy') }}
+        </a>
         <button type="button" class="btn btn-warning" data-on-click="findDuplicates()">
             <i class="bi bi-exclamation-triangle me-2"></i>
             {{ _('Find Duplicates') }}
@@ -170,7 +173,7 @@
         append=True,
         pager=True) %}
     {% for category in categories %}
-    <tr class="category-item {% if category.parent_id %}subcategory{% endif %}"
+    <tr class="category-item{% if category.parent_id %} subcategory{% endif %}"
         data-category-id="{{ category.id }}"
         data-name="{{ category.name|lower }}"
         data-parent-id="{{ category.parent_id or '' }}">
@@ -185,12 +188,24 @@
         </td>
         <td data-ut-value="{{ category.parent_id or '' }}">
             {% if category.parent_id %}
-                <a href="{{ url_for('categories_list') }}?search={{ categories|selectattr('id', 'equalto', category.parent_id)|first.name if categories|selectattr('id', 'equalto', category.parent_id)|first else '' }}" class="text-muted small">
-                    <i class="bi bi-tag"></i> Parent
+                {#- ``selectattr(...)|first.name`` is not a filter chain Jinja
+                    understands: it looks for a filter called ``first.name`` and
+                    raised TemplateRuntimeError, which the route turned into an
+                    empty table. A ``set`` names the row first. -#}
+                {%- set parent_row = categories|selectattr('id', 'equalto', category.parent_id)|first -%}
+                {%- set parent_name = parent_row.name if parent_row
+                                        else (parent_names or {}).get(category.parent_id, '') -%}
+                {% if parent_name %}
+                <a href="{{ url_for('categories_list') }}?search={{ parent_name }}" class="text-muted small">
+                    <i class="bi bi-tag"></i> {{ parent_name }}
+                </a>
                 {% else %}
-                    <span class="text-muted small">{{ _('Main Category') }}</span>
+                {#- A parent outside the page and unknown to the name lookup:
+                    say the id rather than render a search with no term. -#}
+                <span class="text-muted small">
+                    <i class="bi bi-tag"></i> {{ _('Parent') }} #{{ category.parent_id }}
+                </span>
                 {% endif %}
-            </a>
             {% else %}
                 <span class="text-muted small">{{ _('Main Category') }}</span>
             {% endif %}
@@ -256,9 +271,51 @@
             <div class="modal-body">
                 <form id="categoryForm">
                     <input type="hidden" id="categoryId" name="category_id">
+                    <div class="mb-3" id="categoryModeGroup">
+                        <label class="form-label d-block">{{ _('Placement') }}</label>
+                        <div role="radiogroup" aria-label="{{ _('Placement') }}">
+                            <label class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="categoryMode"
+                                       id="categoryModeRoot" value="root" checked>
+                                <span class="form-check-label">{{ _('Top level') }}</span>
+                            </label>
+                            <label class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="categoryMode"
+                                       id="categoryModeChild" value="child">
+                                <span class="form-check-label">{{ _('Inside another category') }}</span>
+                            </label>
+                            <label class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="categoryMode"
+                                       id="categoryModeAbove" value="parent-above">
+                                <span class="form-check-label">{{ _('As a new parent above existing categories') }}</span>
+                            </label>
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">{{ _('Category Name') }}</label>
-                        <input type="text" class="form-control" id="categoryName" name="category_name" required>
+                        <input type="text" class="form-control" id="categoryName" name="category_name"
+                               required maxlength="255">
+                    </div>
+                    <div class="mb-3" id="categoryParentGroup" style="display:none;">
+                        <label for="categoryParentSelect" class="form-label">{{ _('Parent Category') }}</label>
+                        <select class="form-select" id="categoryParentSelect"></select>
+                        <div class="form-text">{{ _('Type to search the tree; the indent shows the level.') }}</div>
+                    </div>
+                    <div class="mb-3" id="categoryChildrenGroup">
+                        <label for="categoryChildren" class="form-label">
+                            {{ _('Child categories (one per line)') }}
+                        </label>
+                        <textarea class="form-control" id="categoryChildren" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3" id="categoryAdoptGroup" style="display:none;">
+                        <label for="categoryAdoptSelect" class="form-label">
+                            {{ _('Categories on this page to move under the new parent') }}
+                        </label>
+                        <select class="form-select" id="categoryAdoptSelect" multiple size="6"></select>
+                        <div class="form-text">
+                            <a href="{{ url_for('categories_tree_page') }}">{{ _('Open the hierarchy view') }}</a>
+                            {{ _('to group categories from anywhere in the tree.') }}
+                        </div>
                     </div>
                 </form>
             </div>
@@ -380,7 +437,17 @@
         "totalToRemove": _('Total to Remove'),
         "confirmRemoveDuplicates": _('Are you sure you want to remove all duplicate categories? This action cannot be undone.'),
         "removing": _('Removing...'),
-        "merged": _('merged')
+        "merged": _('merged'),
+        "placement": _('Placement'),
+        "topLevel": _('Top level'),
+        "insideAnother": _('Inside another category'),
+        "asNewParent": _('As a new parent above existing categories'),
+        "parentCategory": _('Parent Category'),
+        "parentRequired": _('Choose a parent category'),
+        "adoptRequired": _('Choose at least one category to move'),
+        "childrenLines": _('Child categories (one per line)'),
+        "hierarchy": _('Hierarchy'),
+        "none": _('None')
     }
 }|tojson }}</script>
 <script src="{{ url_for('static', filename='js/modules/core/select2-loader.js') }}"

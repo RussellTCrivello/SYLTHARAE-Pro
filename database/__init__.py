@@ -209,12 +209,24 @@ class EnhancedQueryCache:
             self._cache.clear()
     
     def get_stats(self):
-        """Get cache statistics"""
+        """Get cache statistics.
+
+        The keys are SQL statements - the query cache is keyed by the text it
+        caches - and returning them handed every caller of
+        ``/api/performance/cache/stats`` the project's SQL, table and column
+        names included. They are reported as short digests instead: enough to
+        tell two entries apart in a support conversation, nothing to read out
+        of the endpoint.
+        """
+        import hashlib
         with self._lock:
+            sample = list(self._cache.keys())[:10]
             return {
                 'size': len(self._cache),
                 'max_size': self.max_size,
-                'keys': list(self._cache.keys())[:10]
+                'key_count': len(self._cache),
+                'key_digests': [hashlib.sha1(str(key).encode('utf-8')).hexdigest()[:12]
+                                for key in sample],
             }
 
 # Backward compatibility: ConnectionPool (wrapper around Database)

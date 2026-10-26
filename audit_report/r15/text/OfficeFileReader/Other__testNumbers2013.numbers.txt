@@ -1,0 +1,509 @@
+en_GB:
+
+iso-a4b
+
+Checking
+
+=33s?@
+
+1W\ Account: 300545668*
+
+Try adding your own aI?
+
+transactions to this table. To automatically
+
+a	&D, drag an OFX file
+
+(. Most bank
+
+land credit card websites let
+
+download
+
+Second sheet
+
+Blank"A
+
+Custom Format 1
+
+M/d/yy
+
+Y
+
+Custom Format
+
+M/d/yy h:mm a
+
+en_GB0
+
+AR
+
+Europe/London
+
+?
+
+;
+
+9F
+
+@
+
+<
+
+:F
+
+$792589BF-218C-4549-835B-1EFEEC41C851
+
+Table 1H
+
+$CBF3A300-A02A-4419-B603-C80E0DD402E4
+
+TransactionsH
+
+(
+
+(	0	0
+
+$B038FD03-5528-4270-859A-5B60720DDFE:M
+
+Account CategoriesH
+
+Credit Card
+
+Entertainment
+
+(
+
+$1D70A25E-2D05-402A-A116-2055D4047D4A
+
+(
+
+$F8ABF13E-98CB-4063-B58F-68E56365756D
+
+T,E01C430A-DFD
+
+T55-887E-2A7931450674
+
+56680E99-C8F5-4D3D-AE47-F876B1B3CFDA
+
+2D0A5C3-C381-4A2C-B9F1-10F4B8AEC9BF
+
+(
+
+$7022EDC1-94A1-44EF-9157-23AE0BB752D3
+
+$B97D6500-2D7D-48FC-A739-41B345A0C58C
+
+E(ADA$
+
+Author
+
+r
+
+dd/MM/y HH:mm
+
+Value Title
+
+Category
+
+Expenditure by
+
+Night on the town
+
+Security deposit return
+
+Credit card payment
+
+Fill up SUV again
+
+Paycheck
+
+Insurance refund
+
+Movies
+
+Dinner with Paul and Jane
+
+Groceries
+
+Fill up SUV for camping trip
+
+Debit Card
+
+Utilities
+
+Balance
+
+Amount
+
+Description
+
+Beginning Balance
+
+table-2-
+
+chart-0-series_3
+
+4(2-paragraph
+
+h(Name-4-shap
+
+<Cell-1-footerRow
+
+D5-valueaxis_1
+
+5-head2<
+
+T4-referenceLine_0
+
+Column1
+
++
+
+$text-2=
+
+acter-	& null
+
+,stickyCommenA
+
+image-0-
+
+4-body1
+
+Caption
+
+-list	#
+
+0Numbered
+
+Harvar!
+
+:$5-category
+
+0hyperlink
+
+(
+
+!%
+
+Bz
+
+5-legen
+
+defaul
+
+@A*	Helvetica:
+
+-Light
+
+Formal Shadow
+
+'?-7Wz
+
+Blue Paper
+
+MF>lG%@
+
+"
+
+V"
+
+8
+
+G.UV)J
+
+eP&;).N
+
+@A*
+
+"O6
+
+Fill Center
+
+al Key
+
+Medium
+
+-fffj4
+
+SoftM+
+
+b5vb5J
+
+b5fb5Z
+
+#BV#B(
+
+Green*FOF
+
+JOvJOJ
+
+&D1:v8
+
+z,vz,J
+
+L?5333
+
+tableCell-4-bodyStyle*
+
+chart-0-paragraphS
+
+_8	R`4Z
+
+@A*	Helvetica:Z
+
+*?%R
+
+*?-R
+
+(3-footerRow*
+
+series_1E
+
+>5333?bb
+
+2	 -5-shapes
+
+Z
+
+$1-valueaxi*]
+
+*Y
+
+B%$
+
+Default
+
+9(Name-5-text*y!
+
+&R#40-headerColumn2
+
+Bright
+
+]DV]D$
+
+movie-3-
+
+Gray Paper
+
+#
+
+f#
+
+Z
+
+#
+
+"#
+
+Jm
+
+#
+
+&#
+
+09
+
+y	fy	Z
+
+y	"y	Jm
+
+y	*y	&
+
+~	v~	J
+
+~	f~	Z
+
+~	"~	Jm
+
+80-referenceLine&Q3
+
+1-legend
+
+category
+
+Lettered
+
+-4-list
+
+pIn(
+
+Z
+
+c)f$lJ4
+
+$lv$lJ
+
+Directional Key
+
+Top Lr
+
+0p]>?%
+
+@?-U-@
+
+Helvetica
+
+chart-2-paragraphStyle_3*
+
+.)#t^
+
+$
+
+tableCell-3-headerColumnS!))'
+
+)Q$2-series_5%H4
+
+Green Paper
+
+Heading
+
+-Bold:
+
+$valueaxis_
+
+)Z<5-referenceLine_
+
+Blue"g
+
+legend
+
+Ej,P
+
+Z
+
+n Fn *
+
+-"r
+
+.
+
+Bullet Big
+
+-list)j
+
+$0-category
+
+D(4-footerRow%'
+
+3**+"<
+
+_?.$+J
+
+$+v$+J
+
+$+f$+Z
+
+$+"$+Jm
+
+c! F
+
+&
+
+acter-
+
+hyperlink
+
+">5333
+
+N6.!4B
+
+-Oblique:
+
+I4r5I?%
+
+yfryf*
+
+"eq"O<
+
+.>%LY9
+
+>%A| ?-
+
+Nk[.bs
+
+Chalk2
+
+Subtitle
+
+1-body
+
+Harvard
+
+g@0stickyComment
+
+&m^J'F
+
++
+
+Table Default
+
+tableName-1-textStyle*
+
+,Cell-5-bodyS9
+
+line-0-shapes
+
+chart-3-paragraph%1
+
+(4-valueaxism
+
+2-legend%
+
+)$$4-series_0El4
+
+(1-footerRow
+
+Cochinb
+
+Green All Caps
+
+Strikethrough
+
+,-Boldb
+
+AcademyEngravedLetPlainh
+
+Italic"
+
+Emphasi
+
+4r5I?%
+
+Deposit
+
+Credit Car
+
+Entertainment
+
+Credit Card
+
+$C5ED6463-575C-43B9-8FDA-1957B186C422
+
+DocumentMetadata"
+
+Tables/DataList
+
+Tables/DataList-29:8
+
+PHeaderStorageBucket
+
+ObjectContainer.\
+
+ViewStat=
+
+AnnotationAutho
+
+w
+
+Styleshee=
+
+Calcula
+
+Engin*
+
+simple_noise_2x.jpeg*
+
+ginger/00_theme/s6&
+
+hardcover_bullet_black.png*&g:W

@@ -1,0 +1,13 @@
+Sheet: Feuil1
+Rows: 1
+Columns: 1
+Fichier test pour propriétés sur xls
+
+Sheet: Feuil2
+Rows: 0
+Columns: 0
+
+
+Sheet: Feuil3
+Rows: 0
+Columns: 0

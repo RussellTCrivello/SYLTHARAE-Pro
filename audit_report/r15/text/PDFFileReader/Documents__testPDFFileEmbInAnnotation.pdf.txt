@@ -1,0 +1,16 @@
+Total Pages: 1
+OCR Used: No
+OCR Languages: heb, eng, ara
+Title: This is a pdf document
+Author: Administrator
+Creator: Microsoft® PowerPoint® 2010
+Producer: Microsoft® PowerPoint® 2010
+
+Page 1 | Method: direct_extraction | Length: 52 chars
+This is a pdf document 
+This is embeded with Excel 
+
+
+Excel.xlsx
+Administrator
+文件附件

@@ -66,6 +66,8 @@ SORT_KEYS = ("hits", "date", "name", "type")
 SORT_DIRECTIONS = ("asc", "desc")
 LENSES = ("words", "keywords")
 MAX_PAGE_SIZE = 500
+#: Farthest page the offset query will look at (see core.table_paging.MAX_PAGE).
+MAX_PAGE_PAGES = 1_000_000
 MAX_FILES_PER_TERM_NODE = 250
 MAX_BASKET_TERMS = 400
 
@@ -660,7 +662,11 @@ class LexisCosmosService:
             })
             rows = self._read(Q.Q4_3_SEARCH_KEYSET, params)
         else:
-            params["offset"] = max(0, (max(1, int(page)) - 1) * size)
+            # A page number is an OFFSET multiplier and PostgreSQL's bigint
+            # refuses anything past 2**63: ?page=99999999999999999999 raised
+            # "bigint out of range" and answered 500. No list has a million
+            # pages; clamp instead of failing.
+            params["offset"] = max(0, (min(max(1, int(page)), MAX_PAGE_PAGES) - 1) * size)
             rows = self._read(Q.Q4_2_SEARCH_OFFSET, params)
             if rows:
                 total = int(rows[0].get("total_count") or 0)

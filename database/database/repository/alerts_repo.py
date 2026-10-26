@@ -22,13 +22,23 @@ class AlertsRepository(BaseRepository):
         read: bool = False,
         dismissed: bool = False
     ):
-        """Insert a new alert and return its ID"""
-        # Convert metadata dict to JSON string if provided
-        metadata_json = json.dumps(metadata) if metadata else None
-        
+        """Insert a new alert and return its ID.
+
+        ``alerts`` has no name/path columns: the file is referenced by
+        ``file_id`` (the path id). Display names supplied by a caller are kept
+        in ``metadata`` so a row written before the join existed still renders,
+        while readers derive them from ``paths``.
+        """
+        payload = dict(metadata or {})
+        if file_name is not None:
+            payload.setdefault("file_name", file_name)
+        if file_path is not None:
+            payload.setdefault("file_path", file_path)
+        metadata_json = json.dumps(payload) if payload else None
+
         params = (
-            type, priority, title, message, file_id, file_name, 
-            file_path, event_date, metadata_json, read, dismissed
+            type, priority, title, message, file_id,
+            event_date, metadata_json, read, dismissed
         )
         
         return self.execute(
@@ -70,11 +80,16 @@ class AlertsRepository(BaseRepository):
         read = read if read is not None else existing[10]
         dismissed = dismissed if dismissed is not None else existing[11]
         
-        metadata_json = json.dumps(metadata) if metadata else None
-        
+        payload = dict(metadata or {})
+        if file_name is not None:
+            payload.setdefault("file_name", file_name)
+        if file_path is not None:
+            payload.setdefault("file_path", file_path)
+        metadata_json = json.dumps(payload) if payload else None
+
         params = (
-            type, priority, title, message, file_id, file_name, 
-            file_path, event_date, metadata_json, read, dismissed, alert_id
+            type, priority, title, message, file_id,
+            event_date, metadata_json, read, dismissed, alert_id
         )
         
         return self.execute(

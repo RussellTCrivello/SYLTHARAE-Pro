@@ -1,0 +1,3 @@
+Checking Account: 300545668
+
+Try adding your own account transactions to this table. To automatically add data to a table, drag an OFX file to the table. Most banking and credit card websites let you download OFX files for your accounts.

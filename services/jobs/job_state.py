@@ -9,6 +9,12 @@ from typing import Optional
 QUEUED = "QUEUED"
 RUNNING = "RUNNING"
 PAUSED = "PAUSED"
+#: A *phase*, not a stored status: ``jobs.status`` (ck_jobs_status) admits
+#: QUEUED/RUNNING/COMPLETED/COMPLETED_WITH_WARNINGS/FAILED/CANCELLED/PAUSED
+#: only. A cancellation request sets ``jobs.cancellation_requested`` while the
+#: job is still RUNNING, and the worker moves it to CANCELLED at the next safe
+#: boundary. The constant stays because the transitions below - and the UI's
+#: "cancelling" presentation - are expressed in terms of it.
 CANCELLING = "CANCELLING"
 CANCELLED = "CANCELLED"
 COMPLETED = "COMPLETED"

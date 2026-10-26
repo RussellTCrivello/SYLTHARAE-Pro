@@ -27,10 +27,11 @@ POLICIES: Dict[str, Dict[str, Any]] = {
     "jobs": {
         "table": "jobs",
         "age_column": "created_at",
-        # A queued, running, paused or cancelling job is live work: it is
-        # never pruned, whatever its age.
-        "status_guard": ("status NOT IN ('QUEUED', 'RUNNING', 'PAUSED',"
-                         " 'CANCELLING')"),
+        # A queued, running or paused job is live work: it is never pruned,
+        # whatever its age. A cancellation request is a flag on a running job
+        # (there is no CANCELLING status in the schema), so the guard above
+        # covers it.
+        "status_guard": ("status NOT IN ('QUEUED', 'RUNNING', 'PAUSED')"),
         "default_days": 90,
         "deletes": "finished jobs and their events (job_events cascade)",
         "description": "Finished JobManager jobs and their event streams.",

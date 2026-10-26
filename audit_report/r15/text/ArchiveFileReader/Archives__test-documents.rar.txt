@@ -1,0 +1,31 @@
+RAR archive: test-documents.rar
+Members: 9
+Members read: 0
+Members that could not be read: 9 need an external decoder
+Note: 9 member(s) need an external RAR decoder (no RAR decoder installed)
+Members not extracted:
+  test-documents/testEXCEL.xls (need an external decoder)
+  test-documents/testHTML.html (need an external decoder)
+  test-documents/testOpenOffice2.odt (need an external decoder)
+  test-documents/testPDF.pdf (need an external decoder)
+  test-documents/testPPT.ppt (need an external decoder)
+  test-documents/testRTF.rtf (need an external decoder)
+  test-documents/testTXT.txt (need an external decoder)
+  test-documents/testWORD.doc (need an external decoder)
+  test-documents/testXML.xml (need an external decoder)
+
+RAR archive: test-documents.rar
+Members: 9
+Members read: 0
+Members that could not be read: 9 need an external decoder
+Note: 9 member(s) need an external RAR decoder (no RAR decoder installed)
+Members not extracted:
+  test-documents/testEXCEL.xls (need an external decoder)
+  test-documents/testHTML.html (need an external decoder)
+  test-documents/testOpenOffice2.odt (need an external decoder)
+  test-documents/testPDF.pdf (need an external decoder)
+  test-documents/testPPT.ppt (need an external decoder)
+  test-documents/testRTF.rtf (need an external decoder)
+  test-documents/testTXT.txt (need an external decoder)
+  test-documents/testWORD.doc (need an external decoder)
+  test-documents/testXML.xml (need an external decoder)

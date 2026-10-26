@@ -1,0 +1,38 @@
+Sheet: Feuil1
+Rows: 22
+Columns: 4
+Sample Excel Worksheet - Numbers and their Squares			
+			
+			
+	Number	Square	
+			
+	1	1	
+	2	4	
+	3	9	
+	4	16	
+	5	25	
+	6	36	
+	7	49	
+	8	64	
+	9	81	
+	10	100	
+	11	121	
+	12	144	
+	13	169	
+	14	196	
+	15	225	
+			
+Written and saved in Microsoft Excel X for Mac Service Release 1. 			
+
+Sheet: Feuil2
+Rows: 1
+Columns: 1
+
+
+Sheet: Feuil3
+Rows: 1
+Columns: 1
+
+
++B6*B6
++B6+1

@@ -184,7 +184,12 @@ REGISTRY: Tuple[Interface, ...] = (
         "categories", "Categories",
         "Categories and the words assigned to them.",
         Domain.DISCOVER, "categories_list", "bi-tags",
-        aliases=("category_words", "category_add", "category_documents"),
+        # ``categories_tree_page`` is the hierarchy view of the same interface:
+        # it reads the same taxonomy and writes through the same rules, so
+        # switching Categories off must hide it too (an unregistered page
+        # endpoint is refused outright by the request gate).
+        aliases=("category_words", "category_add", "category_documents",
+                 "categories_tree_page"),
         help_topic="discover/categories",
     ),
     _if(

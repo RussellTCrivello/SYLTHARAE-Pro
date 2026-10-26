@@ -888,7 +888,12 @@ class RapidOcrEngine(BaseOcrEngine):
                          self._quad_to_bbox(quad))
             )
 
-        text = "\n".join(b.text for b in blocks)
+        # Engine order is detection order, not reading order: the boxes have
+        # to be assembled into lines. See core.ocr.layout for the measured
+        # failures (a curved title split mid-word, table cells separated).
+        from .layout import reconstruct_lines
+
+        text = reconstruct_lines(blocks)
         return self._result(text=text, blocks=blocks, language="latn+chi")
 
     @staticmethod

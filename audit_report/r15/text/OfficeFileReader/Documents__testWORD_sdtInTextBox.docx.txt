@@ -1,0 +1,11 @@
+simple-text
+
+
+
+[Style: Text Box] r ich-text-content- control_inside -text- box
+
+rich-text-content-control
+
+fefweefwe
+fldChar
+TITLE  \* Lower  \* MERGEFORMAT

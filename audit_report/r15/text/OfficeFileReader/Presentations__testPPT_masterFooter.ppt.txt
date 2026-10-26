@@ -1,0 +1,167 @@
+Total Slides: 1
+
+Slide 1
+
+Title Placeholder 1
+
+Text Placeholder 2
+
+Date Placeholder 3
+
+Footer Placeholder 4
+
+Slide Number Placeholder 5
+
+Office Theme
+
+1_Office Theme
+
+Header Placeholder 1
+
+Date Placeholder 2
+
+Slide Image Placeholder 3
+
+Notes Placeholder 4
+
+Footer Placeholder 5
+
+Slide Number Placeholder 6
+
+Title 1
+
+Subtitle 2
+
+Footer Placeholder 3
+
+^k2#z
+
+tableStyles.xml
+
+_rels/.relsPK
+
+drs/slideMasters/slideMaster1.xml
+
+40xg,Y
+
+PX*=E%
+
+_*.Gwg
+
+}e530V
+
+Click to edit Master title style
+
+Click to edit Master text styles
+
+drs/shapexml.xml
+
+N4U)s)
+
+u-(b>9'"
+
+|p!ykX
+
+{av1zo
+
+drs/downrev.xmlD
+
+=2$`1h
+
+Master footer is here
+
+U( _4.j
+
+w4`771
+
+drs/downrev.xmlL
+
+theme/theme/themeManager.xml
+
+theme/theme/theme1.xml
+
+w toc'v
+
+)V+qki
+
+Yi+hei
+
+<{2Eah
+
+theme/theme/_rels/themeManager.xml.rels
+
+K(M&$R(.1
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<a:clrMap xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>
+
+[Content_Types].xml|
+
+drs/slideLayouts/slideLayout1.xml
+
+w!/G!_
+
+76{7P<
+
+zpoMGtOb
+
+\gdEKc
+
+`?9K4l
+
+i+ L$2
+
+L8MX&y
+
+rmdYtv
+
+[M"$mMO,
+
+3lWPj>
+
+]/gJ=I
+
+??MO.8s
+
+1^Z6W
+
+F{oc'v
+
+M/y!N>
+
+#KO8;!\$
+
+P!d;CR4
+
+}u[[2^Z)Gw!
+
+B_L&^mtG
+
+@byu_:
+
+Jd|-,?
+
+6,tyso
+
+pTRHa=
+
+|%W]S7
+
+pr=ZNf
+
+Pm:6*K
+
+E'WQ!+
+
+h+E(bS
+
+Y@05hkd
+
+u~>%Hc
+
+J!!+Dx
+
+&([FcX>
+
+=/po"{

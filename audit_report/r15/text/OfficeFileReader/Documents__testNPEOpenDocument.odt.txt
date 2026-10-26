@@ -1,0 +1,217 @@
+[Style: Text_20_body] Traducción al castellano de la Práctica sobre GnuPG, vista en Bulma escrita por Leopoldo Palomo para sus alumnos universitarios para que conozcan el GnuPg, y basada en el artículo de Introducción al GnuPg de René Merou.
+
+[Style: Text_20_body] Práctica GnuPG
+
+[Style: P1] Enunciado de la práctica
+
+[Style: P1] Generar la clave
+
+[Style: P1] Generar el certificado de revocación
+
+[Style: P1] Enviar y recibir claves al servidor de claves
+
+[Style: P1] ¿Y ahora, qué?
+
+[Style: P2] Fuentes de información
+
+[Style: Text_20_body] 1. Enunciado de la práctica
+
+[Style: Text_20_body] La práctica consiste en enviar un mensaje criptografiado (cifrado) y firmado. Para poder realizarla, primero hay que generar un par de claves (privada y pública), configurar el gestor de correo. Por último, hay que enviar un correo al profesor, firmado y cifrado. Para hacerlo tendreis que comprobar las respectivas claves públicas e identidades.
+
+[Style: Text_20_body] 2. Generar la clave
+
+[Style: Text_20_body] En el servidor hay instalado el programa GnuPG. Desde un terminal seguid los siguientes pasos:
+
+[Style: Quotations] leo@ranganathan:~$ gpg –gen-key
+
+[Style: Quotations] gpg (GnuPG) 1.4.3; Copyright (C) 2006 Free Software Foundation, Inc.
+
+[Style: Quotations] This program comes with ABSOLUTELY NO WARRANTY.
+
+[Style: Quotations] This is free software, and you are welcome to redistribute it under certain conditions. See the file COPYING for details.
+
+[Style: Text_20_body] Entonces nos hará una serie de preguntas que tendremos que responder:
+
+[Style: P3] ¿Tipo de clave? seleccionar la opción predeterminada: 1
+
+[Style: Quotations] Seleccionar que tipo de clave quereis:
+
+[Style: Quotations] (1) DSA and Elgamal (default)
+
+[Style: Quotations] (2) DSA (sólo firmar)
+
+[Style: Quotations] (5) RSA (sólo firmar)
+
+[Style: Quotations] ¿Vuestra selección?
+
+[Style: P4] ¿Medida de la clave? Aceptar el valor por defecto: 2048
+
+[Style: Quotations] DSA keypair will have 1024 bits.
+
+[Style: Quotations] ELG-E keys may be between 1024 and 4096 bits long.
+
+[Style: Quotations] What keysize do you want? (2048)
+
+[Style: Quotations] La medida solicitada es 2048 bits
+
+[Style: P5] ¿Tiempo de validez? Inroducir 1m, que quiere decir 1 mes, y ratificarlo.
+
+[Style: Quotations] Especificad el tiempo de validez de la clave.
+
+[Style: Quotations] 0 = la clave no caduca
+
+[Style: Quotations] < n > = la clave caduca a los n dias
+
+[Style: Quotations] < n >w = la clave caduca a las n semanas
+
+[Style: Quotations] < n >m = la clave caduca a los n meses
+
+[Style: Quotations] < n >y = la clave caduca a los n años
+
+[Style: Quotations] Indicad la validez de la clave (0) 1m
+
+[Style: Quotations] Key expires at dl 19 jun 2006 12:26:54 CEST
+
+[Style: Quotations] Is this correct? (y/N) y
+
+[Style: P6] ¿Nombre y apellidos? Pon tus datos:
+
+[Style: Quotations] You need a user ID to identify your key; the software constructs the user ID from the Real Name, Comment and Email Address in this form:
+
+[Style: Quotations] “Heinrich Heine (Der Dichter) ”
+
+[Style: Quotations] Nombre y apellidos: Shiyali Ramamrita Ranganathan
+
+[Style: P7] ¿Dirección electrónica? Poned la de ranganathan o alguna vuestra:
+
+[Style: Quotations] Dirección electrónica: shiyalirr@ranganathan.ub.es
+
+[Style: P8] ¿Comentario? Poned algún comentario que os identifique esa dirección o lo que creais conveniente
+
+[Style: Quotations] Comentario: Dirección Documentación
+
+[Style: P9] A partir de ahí sólo falta seguir la confirmación de todos los pasos. Para terminar pulsar la letra ‘o’
+
+[Style: Quotations] Está usando el juego de caracteres `utf-8′.
+
+[Style: Quotations] Ha elegido el identificador de usuario:
+
+[Style: Quotations] “Shiyali Ramamrita Ranganathan (Dirección Documentación) ”
+
+[Style: Quotations] Cambiar (N)ombre, (C)omentario, (E)mail o (O) de acuerdo / (X) ixo
+
+[Style: P10] Hace falta una contraseña para proteger la clave secreta. Es importante que podais recordar esta contraseña, pero no es recomendable escribirla en ningún sitio.
+
+[Style: Quotations] Introducid la contraseña:
+
+[Style: Quotations] Han de generarse muchos bits aleatóriamente. Es buena idea hacer alguna otra cosa (teclear, mover el ratón, usar los discos) durante la generación de números; esto da oportunidad al generador de números aleatorios de conseguir suficiente entropia.
+
+[Style: Quotations] +++++++++++++++++++++++++.+++++.++++++++++..++++++++++++++++++++++++++++ ++.+++++.+++++..++++++++++….+++++..++++++++++.+++++.+++++.+++++++++++ +++++++++>+++++>…+++++….
+
+[Style: P11] Finalmente, después de generar algo de entropía, obtendremos nuestra clave
+
+[Style: P12] gpg: key 70EDBB59 marked as ultimately trusted
+se han creado y firmado las claves y firmado las claves pública y secreta
+
+[Style: P12] gpg: se está comprobando la base de datos de confianza
+
+[Style: P12] gpg: 3 marginal(s) needed, 1 complete(s) needed, PGP trust model gpg: depth: 0 valid: 3 signed: 0 trust: 0-, 0q, 0n, 0m, 0f, 3u
+
+[Style: P12] gpg: la próxima comprobación de la base de datos de confianza será el 2006-06-09
+
+[Style: P12] pub 1024D/70EDBB59 2006-05-20 [expires: 2006-06-19] Key fingerprint = E555 61C8 0914 490A C525 6AF8 358E 895D 70ED BB59
+
+[Style: P12] uid Shiyali Ramamrita Ranganathan (Dirección Documentación)
+sub 2048g/2E182CC0 2006-05-20 [expires: 2006-06-19]
+
+[Style: Text_20_body] 3. Generar el certificado de revocación
+
+[Style: Text_20_body] Un certificado de revocación sirve por si un dia se pierde la clave, no la utilizamos, etc. Para crearlo hacemos:
+
+[Style: Quotations] gpg –output cert_revoc_arch.asc –gen-revoke -armor 70EDBB59
+
+[Style: Quotations] sec 1024D/70EDBB59 2006-05-20 Shiyali Ramamrita Ranganathan (Dirección Documentación)
+
+[Style: Quotations] Create a revocation certificate for this key? (y/N)
+
+[Style: Text_20_body] Ahora hay que responder algunas preguntas:
+
+[Style: Quotations] Seleccionad la razón de la revocación:
+
+[Style: Quotations] 0 = No se ha especificado ninguna razón
+
+[Style: Quotations] 1 = La clave ha estado comprometida
+
+[Style: Quotations] 2 = La clave ha estado substituida
+
+[Style: Quotations] 3 = La clave ya no se usa
+
+[Style: Quotations] Q = Cancela
+
+[Style: Quotations] (Seguramente quereis seleccionar 1 aquí)
+
+[Style: Quotations] ¿Vuestra decisión?
+
+[Style: Text_20_body] Podemos poner 3, ya que no la usamos, y en el texto Certificado por si perdemos la clave o la contraseña
+
+[Style: Quotations] ¿Vuestra decisión? 3
+
+[Style: Quotations] Introducid una descripción opcional; finalizad con una línea en blanco:
+
+[Style: Quotations] > certificado por si perdemos la clave o el password
+
+[Style: Quotations] >
+
+[Style: Quotations] Razón de la revocación: La clave ya no se usa certificado por si perdemos la clave o el password
+
+[Style: Quotations] Is this okay? (y/N) y
+
+[Style: Quotations] You need a passphrase to unlock the secret key for user: “Shiyali Ramamrita Ranganathan (Adreça Documentació) ” 1024-bit DSA key, ID 70EDBB59, created 2006-05-20
+
+[Style: Text_20_body] Y vemos el resultado final:
+
+[Style: Quotations] Se ha creado un certificado de revocación. Por favor, guardarlo en un medio que podais esconder; si Mallory consigue acceso a ete certificado puede utilizarlo para hacer vuestra clave inservible. Es inteligente imprimir este certificado y esconderlo, por si el vuestro medio se vuelve ilegible. Pero ir con cuidado: el sistema de impresión de vuestra máquina podria almacenar los datos y hacerlos accesibles a otros.
+
+[Style: Text_20_body] Si hace falta más adelante activar definitivamente la revocación, sólo hará falta importar este (cert-revoc-arch.asc) y después mandarlo al servidor.
+
+[Style: Quotations] $gpg –import cert-revoc-arch.asc
+
+[Style: Quotations] $gpg –send-keys 70EDBB59
+
+[Style: Text_20_body] 4. Enviar y recibir claves al sertvidor de claves
+
+[Style: Text_20_body] Si no tenemos ningún problema de configuración, solo falta enviar la clave al servidor por defecto (en el nuestro caso hkp://subkeys.pgp.net) utilizando el comando:
+
+[Style: Quotations] gpg –send-keys 70EDBB59
+
+[Style: Text_20_body] donde 70EDBB59 es el ID de nuestra clave. Para acabar, si queremos mostrar la imprenta ce la clave (fingerprint), sólo falta:
+
+[Style: Quotations] gpg –fingerprint 70EDBB59
+
+[Style: Text_20_body] 5. ¿Y ahora, qué?
+
+[Style: Text_20_body] Una vez tenemos nuestra clave generada podemos configurar el gestor de correo para firmar y/o encriptar nuestros mensajes. Se ha de tener en cuenta que:
+
+[Style: P13] Firmar un correo es poner unas marcas de forma que, cualquier persona que tenga la parte pública con la que se ha firmado ese mensaje, pueda verificarlo.
+
+[Style: P14] Cifrar un mensaje es un proceso donde el emisor codifica el mensaje a través de la clave pública del destinatario y solamente se puede descifrar con la clave privada del destinatario.
+
+[Style: P15] Disponer de la clave pública de una persona no quiere decir nada en especial. Para asegurarnos que es esa persona la que ha emitido el mensaje, hemos de verificar con un documentos de identidad que esa persona es quien dice que es y que esa es su clave pública.
+
+[Style: P16] Una vez verificada la autentificación de la persona, entonces podemos firmar la clave de esa persona.
+
+[Style: Text_20_body] 6. Fuentes de información
+
+[Style: Text_20_body] Fuente original del documento: http://bulma.net/body.phtml?nIdNoticia=1684
+
+http://ceugenio.wordpress.com/2006/08/14/practica-de-gnupg/
+Práctica de GnuPG
+http://bulma.net/body.phtml?nIdNoticia=2331
+Práctica sobre GnuPG
+http://bulma.net/
+Bulma
+http://bulma.net/body.phtml?nIdNoticia=1684
+Introducción al GnuPg
+http://h.says.it/
+René Merou
+post-8

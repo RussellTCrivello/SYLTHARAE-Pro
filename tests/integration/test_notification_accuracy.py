@@ -143,8 +143,6 @@ def test_flush_stats_and_pages_agree_with_the_database(admin_client, pg_db):
                 title=f"{_ACC_TITLE} #{i}",
                 message=f"accuracy probe {i}",
                 file_id=None,
-                file_name=None,
-                file_path=None,
                 event_date=None,
                 metadata={"probe": _UNIQUE},
                 created_at=datetime.now(),
@@ -386,18 +384,41 @@ def test_per_page_is_clamped_to_the_frontend_page_size(admin_client):
 
 
 def test_alert_indexes_exist(pg_db):
+    """The notification read paths are indexed - on the frozen index names.
+
+    BEFORE this asserted ``idx_alerts_dismissed_created``, an index that the
+    frozen baseline does not declare: m0001_baseline.py creates
+    ``idx_alerts_recipient_dismissed_created`` (recipient_user_id, dismissed,
+    created_at DESC) instead, which covers the paginated per-recipient query
+    the route actually runs. The other three names are unchanged and still
+    asserted. The replacement is stricter where it matters: the column list of
+    each index is checked, not just its name, so an index cannot keep its name
+    while losing the columns the query needs.
+    """
+    expected = {
+        # name -> leading columns the index must cover
+        "idx_alerts_metadata_hash": ["metadata"],
+        "idx_alerts_recipient_dismissed_created": ["recipient_user_id", "dismissed", "created_at"],
+        "idx_alerts_type_dismissed_created": ["type", "dismissed", "created_at"],
+        "idx_alerts_type_event_date": ["type", "event_date"],
+    }
     conn = _connect(pg_db)
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "SELECT indexname FROM pg_indexes WHERE tablename = 'alerts'"
+                "SELECT indexname, indexdef FROM pg_indexes WHERE tablename = 'alerts'"
             )
-            names = {r[0] for r in cur.fetchall()}
+            defs = {name: definition for name, definition in cur.fetchall()}
     finally:
         conn.close()
-    assert {
-        "idx_alerts_metadata_hash",
-        "idx_alerts_dismissed_created",
-        "idx_alerts_type_dismissed_created",
-        "idx_alerts_type_event_date",
-    } <= names
+
+    missing = {name for name in expected if name not in defs}
+    assert not missing, f"missing alert indexes: {sorted(missing)}"
+    for name, columns in expected.items():
+        definition = defs[name]
+        position = -1
+        for column in columns:
+            found = definition.find(column, position + 1)
+            assert found > position, (
+                f"{name} does not cover {column!r} in order: {definition}")
+            position = found

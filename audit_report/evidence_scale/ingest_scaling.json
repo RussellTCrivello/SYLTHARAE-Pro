@@ -1,0 +1,1309 @@
+{
+  "base_url": "http://127.0.0.1:5055",
+  "cap_seconds": 700,
+  "note": "the 4 MB run used a 700 s cap; the others 240 s",
+  "runs": [
+    {
+      "bytes": 131172,
+      "submit_status": 200,
+      "submit_body": "{\"accepted\":1,\"queued\":1,\"rejected\":0,\"results\":[{\"path\":\"/tmp/inject_corpus/scaling/scaling_131072.txt\",\"resolved_path\":\"/tmp/inject_corpus/scaling/scaling_131072.txt\",\"status\":\"queued\",\"task_id\":\"0f8c455c-5df9-4df1-9729-c33cf388f56e\"}],\"success\":true,\"total\":1,\"valid\":true}\n",
+      "paths_before": 10,
+      "phases": [
+        {
+          "t": 2.0,
+          "paths": 11,
+          "signals": 4635,
+          "task": null
+        }
+      ],
+      "signals_written": 4522,
+      "seconds_until_row": 2.0,
+      "timed_out": false
+    },
+    {
+      "bytes": 262310,
+      "submit_status": 200,
+      "submit_body": "{\"accepted\":1,\"queued\":1,\"rejected\":0,\"results\":[{\"path\":\"/tmp/inject_corpus/scaling/scaling_262144.txt\",\"resolved_path\":\"/tmp/inject_corpus/scaling/scaling_262144.txt\",\"status\":\"queued\",\"task_id\":\"df19ba6e-c669-4596-9037-2595aa7966f2\"}],\"success\":true,\"total\":1,\"valid\":true}\n",
+      "paths_before": 11,
+      "phases": [
+        {
+          "t": 2.1,
+          "paths": 11,
+          "signals": 4635,
+          "task": "running"
+        },
+        {
+          "t": 4.1,
+          "paths": 12,
+          "signals": 13679,
+          "task": null
+        }
+      ],
+      "signals_written": 9044,
+      "seconds_until_row": 4.1,
+      "timed_out": false
+    },
+    {
+      "bytes": 524383,
+      "submit_status": 200,
+      "submit_body": "{\"accepted\":1,\"queued\":1,\"rejected\":0,\"results\":[{\"path\":\"/tmp/inject_corpus/scaling/scaling_524288.txt\",\"resolved_path\":\"/tmp/inject_corpus/scaling/scaling_524288.txt\",\"status\":\"queued\",\"task_id\":\"a50ca349-6d74-4037-94e3-bd233ca6465e\"}],\"success\":true,\"total\":1,\"valid\":true}\n",
+      "paths_before": 12,
+      "phases": [
+        {
+          "t": 2.1,
+          "paths": 12,
+          "signals": 13679,
+          "task": "running"
+        },
+        {
+          "t": 4.2,
+          "paths": 12,
+          "signals": 13679,
+          "task": "running"
+        },
+        {
+          "t": 6.3,
+          "paths": 12,
+          "signals": 13679,
+          "task": "running"
+        },
+        {
+          "t": 8.3,
+          "paths": 13,
+          "signals": 31760,
+          "task": null
+        }
+      ],
+      "signals_written": 18081,
+      "seconds_until_row": 8.3,
+      "timed_out": false
+    },
+    {
+      "bytes": 1048733,
+      "submit_status": 200,
+      "submit_body": "{\"accepted\":1,\"queued\":1,\"rejected\":0,\"results\":[{\"path\":\"/tmp/inject_corpus/scaling/scaling_1048576.txt\",\"resolved_path\":\"/tmp/inject_corpus/scaling/scaling_1048576.txt\",\"status\":\"queued\",\"task_id\":\"5a8c7e76-66dc-46ba-a360-a6864b7c389d\"}],\"success\":true,\"total\":1,\"valid\":true}\n",
+      "paths_before": 13,
+      "phases": [
+        {
+          "t": 2.2,
+          "paths": 13,
+          "signals": 31760,
+          "task": "running"
+        },
+        {
+          "t": 4.3,
+          "paths": 13,
+          "signals": 31760,
+          "task": "running"
+        },
+        {
+          "t": 6.4,
+          "paths": 13,
+          "signals": 31760,
+          "task": "running"
+        },
+        {
+          "t": 8.5,
+          "paths": 13,
+          "signals": 31760,
+          "task": "running"
+        },
+        {
+          "t": 10.6,
+          "paths": 13,
+          "signals": 31760,
+          "task": "running"
+        },
+        {
+          "t": 12.7,
+          "paths": 13,
+          "signals": 31760,
+          "task": "running"
+        },
+        {
+          "t": 14.8,
+          "paths": 13,
+          "signals": 31760,
+          "task": "running"
+        },
+        {
+          "t": 16.9,
+          "paths": 13,
+          "signals": 31760,
+          "task": "running"
+        },
+        {
+          "t": 19.0,
+          "paths": 13,
+          "signals": 31760,
+          "task": "running"
+        },
+        {
+          "t": 21.1,
+          "paths": 13,
+          "signals": 31760,
+          "task": "running"
+        },
+        {
+          "t": 23.1,
+          "paths": 13,
+          "signals": 31760,
+          "task": "running"
+        },
+        {
+          "t": 25.1,
+          "paths": 14,
+          "signals": 67923,
+          "task": null
+        }
+      ],
+      "signals_written": 36163,
+      "seconds_until_row": 25.1,
+      "timed_out": false
+    },
+    {
+      "bytes": 2097228,
+      "submit_status": 200,
+      "submit_body": "{\"accepted\":1,\"queued\":1,\"rejected\":0,\"results\":[{\"path\":\"/tmp/inject_corpus/scaling/scaling_2097152.txt\",\"resolved_path\":\"/tmp/inject_corpus/scaling/scaling_2097152.txt\",\"status\":\"queued\",\"task_id\":\"47534dfd-b96d-440c-b25e-e02f574b6b62\"}],\"success\":true,\"total\":1,\"valid\":true}\n",
+      "paths_before": 14,
+      "phases": [
+        {
+          "t": 2.2,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 4.6,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 6.7,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 8.8,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 10.9,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 13.0,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 15.1,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 17.2,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 19.2,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 21.3,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 23.4,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 25.5,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 27.6,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 29.7,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 31.8,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 33.9,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 36.0,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 38.2,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 40.3,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 42.4,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 44.5,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 46.6,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 48.7,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 50.8,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 52.9,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 55.0,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 57.1,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 59.2,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 61.3,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 63.4,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 65.5,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 67.6,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 69.7,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 71.8,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 73.9,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 76.0,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 78.1,
+          "paths": 14,
+          "signals": 67923,
+          "task": "running"
+        },
+        {
+          "t": 80.1,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        }
+      ],
+      "signals_written": 72318,
+      "seconds_until_row": 80.1,
+      "timed_out": false
+    },
+    {
+      "bytes": 4194421,
+      "submit_status": 200,
+      "submit_body": "{\"accepted\":1,\"queued\":1,\"rejected\":0,\"results\":[{\"path\":\"/tmp/inject_corpus/scaling/scaling_4194304.txt\",\"resolved_path\":\"/tmp/inject_corpus/scaling/scaling_4194304.txt\",\"status\":\"queued\",\"task_id\":\"80b41999-c566-4a71-b702-55a7afb79391\"}],\"success\":true,\"total\":1,\"valid\":true}\n",
+      "paths_before": 15,
+      "phases": [
+        {
+          "t": 2.1,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 4.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 6.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 8.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 10.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 12.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 14.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 17.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 19.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 21.6,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 23.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 25.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 27.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 30.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 32.1,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 34.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 36.3,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 38.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 40.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 42.6,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 44.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 46.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 48.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 51.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 53.1,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 55.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 57.3,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 59.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 61.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 63.6,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 65.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 67.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 69.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 71.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 74.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 76.1,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 78.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 80.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 82.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 84.6,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 86.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 88.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 90.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 93.1,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 95.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 97.3,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 99.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 101.6,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 103.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 105.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 108.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 110.1,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 112.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 114.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 116.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 118.6,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 120.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 122.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 125.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 127.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 129.3,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 131.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 133.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 135.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 137.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 139.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 142.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 144.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 146.3,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 148.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 150.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 152.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 154.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 156.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 159.1,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 161.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 163.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": "running"
+        },
+        {
+          "t": 165.6,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 167.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 170.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 172.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 174.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 176.6,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 178.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 181.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 183.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 185.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 187.6,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 189.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 192.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 194.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 196.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 198.6,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 200.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 203.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 205.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 207.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 209.6,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 211.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 214.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 216.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 218.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 220.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 222.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 224.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 227.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 229.3,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 231.6,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 233.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 236.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 238.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 240.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 242.6,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 244.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 247.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 249.1,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 251.3,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 253.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 255.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 257.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 260.1,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 262.3,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 264.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 266.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 269.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 271.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 273.4,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 275.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 277.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 280.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 282.2,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 284.3,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 286.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 288.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 290.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 293.1,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 295.3,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 297.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 299.7,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 301.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 304.1,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 306.3,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 308.5,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 310.8,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 312.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 314.9,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 317.0,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 319.1,
+          "paths": 15,
+          "signals": 140241,
+          "task": null
+        },
+        {
+          "t": 321.2,
+          "paths": 16,
+          "signals": 284876,
+          "task": null
+        }
+      ],
+      "signals_written": 144635,
+      "seconds_until_row": 321.2,
+      "timed_out": false
+    }
+  ]
+}

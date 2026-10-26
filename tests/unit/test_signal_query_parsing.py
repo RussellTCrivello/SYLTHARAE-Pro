@@ -232,3 +232,42 @@ def test_invalid_criteria_values_become_400s():
 def test_paging_is_bounded(limit, offset):
     with pytest.raises(SignalQueryError):
         sq._page(limit, offset)
+
+
+# --- identifier kinds -----------------------------------------------------------
+
+def test_every_identifier_signal_is_stored_as_one_signal_type():
+    """``content_signals.signal_type`` admits 'identifier' for this detector.
+
+    The frozen baseline's CHECK is
+    ('date_reference', 'place_mention', 'relative_reference', 'orientation',
+    'identifier'): there is no 'email'/'phone'/'ipv4'/'ipv6'/'url' value, so a
+    detector that emitted those would have its rows rejected at the driver.
+    The kind travels in ``evidence.kind`` instead.
+    """
+    from core.detection import identifiers_intel
+
+    assert identifiers_intel.SIGNAL_TYPES == ("identifier",)
+    assert set(identifiers_intel.KINDS) == {"email", "phone", "ipv4", "ipv6", "url"}
+
+
+def test_identifier_kind_is_a_filter():
+    parsed = parse(identifier_kind="email")
+    assert parsed.identifier_kinds == ("email",)
+    assert parse(identifier_kind=["ipv4", "ipv6"]).identifier_kinds == ("ipv4", "ipv6")
+
+
+def test_unknown_identifier_kind_is_refused():
+    with pytest.raises(SignalQueryError):
+        parse(identifier_kind="fax")
+
+
+def test_explorer_presets_split_signal_type_from_identifier_kind():
+    presets = {p["id"]: p for p in sq.EXPLORER_KIND_PRESETS}
+    for preset_id in ("email", "phone", "ip", "url"):
+        assert presets[preset_id]["signal_types"] == ("identifier",)
+        assert presets[preset_id]["identifier_kinds"], preset_id
+    assert presets["ip"]["identifier_kinds"] == ("ipv4", "ipv6")
+    # dates and places keep their own signal types and carry no kinds
+    assert presets["dates"]["signal_types"] == ("date_reference", "relative_reference")
+    assert not presets["dates"].get("identifier_kinds")

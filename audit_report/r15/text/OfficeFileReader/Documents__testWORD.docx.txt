@@ -1,0 +1,59 @@
+[Style: Title] Sample Word Document Title
+
+[Style: Subtitle] And now for a subtitle
+
+[Style: Heading] Main Heading
+
+[Style: Heading 1] Heading Level 1
+
+[Style: Heading 2] Heading Level 2
+
+[Style: Heading 3] Heading Level 3
+
+[Style: Default] 
+
+[Style: Default] This is a sample Microsoft Word Document.
+
+[Style: Default] 
+
+[Style: Default] This document includes text that is BOLD and ITALIC.
+
+[Style: Default] 
+
+Table 1
+This is a table	
+	Nested table More of our nested table
+The table has things in it	
+
+[Style: Default] 
+
+[Style: Default] 
+
+[Style: Default] Apache Tika: http://tika.apache.org/ Tika
+
+[Style: Default] Apache POI: http://poi.apache.org/ POI
+
+[Style: Default] 
+
+[Style: Default] This paragraph is in the default text style
+
+[Style: Default] 
+
+[Style: Signature] This one is in a different one, the Signature style
+
+[Style: Default] 
+
+[Style: Default] This is back to the default again
+
+[Style: Default] This links to The Main Heading Bookmark and The Level 3 Bookmark. That’s it!
+
+http://tika.apache.org/
+Tika
+http://poi.apache.org/
+POI
+The Main Heading Bookmark
+The Level 3 Bookmark
+OnMainHeading
+OnLevel3
+This is the footer for our document
+This is the header for our document

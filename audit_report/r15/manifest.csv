@@ -1,0 +1,699 @@
+path,family,ext,bytes,reader,verdict,recall,oracle_tokens,missing_tokens,stored_chars,units,unit_kinds,elapsed_ms,lone_surrogates,error,sha256
+Archives/asf-tika-logos.zip,Archive,.zip,446228,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,5.4,0,,bb39805cb471565dc9f242e1c2d11096dab0fbde8e1556fea8ff1b550b66b212
+Archives/bob.gz,Archive,.gz,41,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,b87e91b5b1b465a1c91e7250ac1bd2da8305174156919aa40adbfe8a2cc26983
+Archives/bzip2-8-file.txt.bz2,Archive,.bz2,42,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,1e1467c3efad7181b36968457ddf624310091bbafd024ac4efa3cf1c36f9df3a
+Archives/cc.warc.gz,Archive,.gz,5392,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,68ecb486138ac84a95a0ab543a3895e13987004a478a3a4dd0cedfcf1440bdae
+Archives/droste.zip,Archive,.zip,28809,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.2,0,,983613c84c7b8a1189fe8984d2764fba1b54c205907b9789778db18a2222803c
+Archives/embedded_to_parent_metadata.xml.gz,Archive,.gz,701,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,6aafda530315b62ece8b10797723985dd4286c7f203f8731b7eb7019a13504fa
+Archives/empty-file.txt.bz2,Archive,.bz2,14,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,d3dda84eb03b9738d118eb2be78e246106900493c0ae07819ad60815134a8058
+Archives/example.arc.gz,Archive,.gz,1027,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,d6d0d772521e89dc461235ddbefae4888a20a47b1c0a45e69ec8ec086f4d3c7c
+Archives/full_encrypted.7z,Archive,.7z,198,ArchiveFileReader,ERROR,,,,0,0,,40.6,0,Extraction failed,cf9ac3031dd8efd204f8409ee5943b0e231ed6cb9687280319a49e36e06db204
+Archives/gbk.zip,Archive,.zip,432,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.1,0,,61db1066ccd94728197b510511752f802062a9ffa298f160ac14376989a31a6f
+Archives/gzip_extra_sl.warc.gz,Archive,.gz,459,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,22888c49a56ccb945bdac28d1b3298c79926c86321798e5c71f1f2d03fdf12c2
+Archives/lbzip2-8-file.txt.bz2,Archive,.bz2,41,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,6cec802738484531b514af6873cbaafffb893db831d70d8b32e8dd0d81f43eef
+Archives/moby.zip,Archive,.zip,606033,ArchiveFileReader,ERROR,,,,0,0,,3.0,0,That compression method is not supported,9e94eb0ac97d8efa9ae4d3aae71a1a225c944511145a929302a825fa8d3afc49
+Archives/multiple.gz,Archive,.gz,46,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,142241cbab40b40f6a7eed3351d330c315120af2d2229ae2eb37ceaaea0ad8db
+Archives/null_pointer.xml.gz,Archive,.gz,651,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,ab42633ddfae772605530e6d060d7723a94e2fb1b0e115f848cdff47f69c7c14
+Archives/quine.gz,Archive,.gz,204,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,74d8c6721497c7103c082d489ed913d5cf509ed44520f0e15a55302e1faacb8f
+Archives/small-file.txt.bz2,Archive,.bz2,42,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,562698e3ca70b53e140a9b914d6208bbd38e04b211fc9eaaa6d76cf1a3b84d7f
+Archives/test-bz2.txt.bz2,Archive,.bz2,56,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,484aedc04288b02f69eee1c20e98c588125fa960b43e5e129d5d36b93bb62072
+Archives/test-documents-enc.rar,Archive,.rar,68636,ArchiveFileReader,ERROR,,,,0,0,,9.6,0,Archive headers are encrypted and no password was supplied,b6e9e0b9e02fd8be1e149f366b1d5303d9ed6708bf7812d6c0dff5a4b15f363c
+Archives/test-documents-spanned.zip,Archive,.zip,3488,ArchiveFileReader,ERROR,,,,0,0,,1.0,0,Bad magic number for file header,0fefa4cd993278c2d5433d0fcfc9146e51098eff429c0b61da161c3ee76789f0
+Archives/test-documents.7z,Archive,.7z,66817,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,13.3,0,,fd6542643633e6b7c6fb3a4eecb8701cd458589649c56bf201f86f190313e96b
+Archives/test-documents.rar,Archive,.rar,67945,ArchiveFileReader,OK-NO-ORACLE,,,,1464,1,document:1,15.5,0,,466e4703e8505ccdaaa8fda233c84ce0de7fbdd7e4ec041af45b1e06e5621330
+Archives/test-documents.tar,Archive,.tar,133120,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,3.5,0,,eb1b4b338227e34dec416de239ec1d271bf740085239118d24b745fed2b48c70
+Archives/test-documents.zip,Archive,.zip,354909,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,7.1,0,,bafc0f88cc72ecb7c2943ce57326648cc0f71245fb62e6490498c560702bfac1
+Archives/test-file-1.csv.bz2,Archive,.bz2,299,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,3c97d0d9c3dd6e8f95933e3f49f54e1a8b49437de310fa72fbb254356146109c
+Archives/test-file-2.csv.bz2,Archive,.bz2,296,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,4623a6b478349d1f3295d29f9997011ddb6e5498cbdaa4af5aa14ee2bfe294e3
+Archives/test-nested-tarball.tar,Archive,.tar,3072,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.2,0,,047a2ab5492d461131507b759a99cc0fa7a0a72689c2057d7e1a8cfc66297d04
+Archives/test-zip-of-zip.zip,Archive,.zip,299,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,efc39b575b2e92388a39da8f7ef5c280b153f68473d1ede6ec1e8cdb0b1ec11c
+Archives/test7Z_protected_passTika.7z,Archive,.7z,260,ArchiveFileReader,ERROR,,,,0,0,,0.8,0,Archive is password-protected and no password was supplied,c961f9be08859299ec2a46f9c53545108a39e2e227c5212e0a122de7b81ca66f
+Archives/testEmbedded.zip,Archive,.zip,340,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.8,0,,af075282de577f8f70bc1eb433c7d5a49ecd582bfd71d7302935ec816c9f3748
+Archives/testIWorksNPEDetector.zip,Archive,.zip,204,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.8,0,,72a5b58da36af5f6496e5a05608f90d455c929a7b5d26b6374a3f317048a179b
+Archives/testODTBodyListOpenClose.xml.gz,Archive,.gz,6490,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.7,0,,b49d470536b2c51bed9d437341384be6582e361c6d2fa8e8e2c507e07f28ebde
+Archives/testOpenOfficeInAZip.zip,Archive,.zip,10706,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.0,0,,e1e3c4c29e66c8fbca679e9a36e2ead180aa2302a27ac846bd98bd5060a7b902
+Archives/testTAR_no_magic.tar,Archive,.tar,156160,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.5,0,,7a739e0036fcb4e5a0a8c787e61c94460c03f9ce7ebbeeb35e1735689531bcbe
+Archives/testTika4424.zip,Archive,.zip,33043,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,2.3,0,,a87d280a8fa508bfecdfc6cb34b1c3b8d041514f15e6c4e2f44953e8c03f6c83
+Archives/testWARC_multiple.warc.gz,Archive,.gz,5907,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,a02c429d1a9a455bbe3a0240006d38cc20d32e4784229d10890fd5857802d319
+Archives/testWithSubdirs.zip,Archive,.zip,130,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,f1181eb8924192ea9f41f936163bfa830d69e9ef1f2a76f4b13e1f4baac7e4b1
+Archives/testZIP_corrupted_oom.zip,Archive,.zip,181,ArchiveFileReader,ERROR,,,,0,0,,0.8,0,Bad magic number for central directory,ce0467bce29e2e97633b26d4d856f3bc127114a27986246e39b56bfe6b85fbb9
+Archives/testZipEncrypted.zip,Archive,.zip,391,ArchiveFileReader,ERROR,,,,0,0,,0.6,0,Archive is password-protected and no password was supplied,736014bc1c8d66ed10cd9fe6e96b8e9256bb59779770bd49b154d01c336bbd7c
+Archives/testZipEntryNameCharsetShiftSJIS.zip,Archive,.zip,330,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.8,0,,96b36eb813d5bae650d2e9b09387725d3f1e084603dff8772b668553d2939259
+Archives/testZip_absolutePath.zip,Archive,.zip,334,ArchiveFileReader,ERROR,,,,0,0,,0.7,0,Absolute or drive-qualified path in archive: 'C:/dangerous/dont/touch.pl',e2fbef5fc4105e83380d65781027d6dc352d942085e037c55f26c5e1006f7ae1
+Archives/testZip_overlappingNames.zip,Archive,.zip,276,ArchiveFileReader,ERROR,,,,0,0,,0.9,0,Path traversal in archive member: '../../../f1.txt',5128729b31db74c802ac86976256adfe4b0c461fbc3632e46a66503b547415e7
+Archives/testZip_relative.zip,Archive,.zip,192,ArchiveFileReader,ERROR,,,,0,0,,0.6,0,Path traversal in archive member: '../../../dangerous/dont/touch.pl',7e422bf598a8d95d7f3867c44a345f8d45a36055d5643f5505c2fcf742eec1cf
+Archives/testZip_with_DataDescriptor.zip,Archive,.zip,484,ArchiveFileReader,ERROR,,,,0,0,,0.8,0,Bad magic number for file header,477c14a130e044e643d252b5c7c377f405275f85187eb35ab4b4b3c6e50f8fdb
+Archives/testZip_with_DataDescriptor2.zip,Archive,.zip,1987,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.4,0,,a4e4645a8d455317f8219b90c128df77b1d32e5dd72cea4eca656865e71d1b1d
+Archives/testZip_zeroByte.zip,Archive,.zip,154,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,f90a7ff592a748e683280e4bf3466de7d28ee62dd63f35888865f3f3b24ebb72
+Audio/ShortAudioSampleFrench.mp3,Audio,.mp3,25861,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,16.9,0,,7be8ec540eb26410cfa3fd3b081888504087f2801780cf2309528b3608f75fe0
+Audio/de-DE_(We_Are_At_School_x2).mp3,Audio,.mp3,38547,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,99048c9cedd7a156fe47272ba65d70b7e6e2350ed610c006a20204c65de0fb0c
+Audio/en-AU_(A_Little_Bottle_Of_Water).mp3,Audio,.mp3,33365,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,c53de699fd87de1162f95449a0e3201e7bfa7dac4e0f3ffba27e027b9e06b0ee
+Audio/en-GB_(A_Little_Bottle_Of_Water).mp3,Audio,.mp3,35872,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,8239c1e2038a926ef4fa10c01e26ae290bf2d563f4eff6becbe61a46eff5f224
+Audio/en-US_(A_Little_Bottle_Of_Water).mp3,Audio,.mp3,29603,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,f3cb0e5f24e7d2a9ae2af504bd9899e4a4131cdcf4db8915c39d929f8613441b
+Audio/it-IT_(We_Are_Having_Class_x2).mp3,Audio,.mp3,42219,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,65ff8307feceb4d3430b8537c6aab7a75aa75706e7df84a5673a93f53c9ce5f8
+Audio/ja-JP_(We_Are_At_School).mp3,Audio,.mp3,21699,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,b5fc709c3e7d80d2d01b080f5980b48ed45c9d017599362dbec996b30a7ea9ec
+Audio/ko-KR_(We_Are_Having_Class_x2).mp3,Audio,.mp3,66843,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,ee000d4a2186ea280da26507c80f88d2d723ef2baaf40b2a6b01175b2cfd268f
+Audio/pt-BR_(We_Are_At_School).mp3,Audio,.mp3,29043,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,38770cbf648e879442616cbba477c74ff49f856192f40d69e01358282d97d4ae
+Audio/test2.mp3,Audio,.mp3,2668637,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.1,0,,e97ffe69598f467b8ee606b290ced0ac27ca907e429ad70c83cdd117385e0bc0
+Audio/testAAC.aac,Audio,.aac,779,AudioFileReader,ERROR,,,,0,0,,1.3,0,Error reading audio file: sync not found,b14fadd1cfcf8b9d086834623f0c35c575d9ed81c52af946cae4a8c42bd25aa3
+Audio/testAACid3.aac,Audio,.aac,2176,AudioFileReader,ERROR,,,,0,0,,1.5,0,Error reading audio file: can't sync to MPEG frame,fdf0fabdce21349b8da4fe2cc684043b78a2493fcda442f01d3c230b3e602a75
+Audio/testFLAC.flac,Audio,.flac,10604,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,26dd856f96ff30caa92c0dfb3a3b39a0ccb78e37dc2e31aa8153df183327a2c7
+Audio/testFLAC_commentAndNativePicture.flac,Audio,.flac,10833,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,678aabab81b5fd375837b6c463fb011cbcf5e8158b2316eccf272eda4e464fa2
+Audio/testFLAC_coverArt.flac,Audio,.flac,10726,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.3,0,,92b59048f3858ca76a641951747c3aae07078923fc6cfb74bdafc8e226850c08
+Audio/testFLAC_twoCovers.flac,Audio,.flac,10988,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.3,0,,0e92b41e8c19a1502858fb7aef9b68bdcbda07a6e143bd32888204f9508aec29
+Audio/testMP3_coverArt.mp3,Audio,.mp3,39611,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,bdf74b3cfe19f7f04683c52a4e03729b6836e43a19f8a7ee3245c47bf7cab7fc
+Audio/testMP3_id3_false_aac.mp3,Audio,.mp3,1024,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.0,0,,3927ed2177de3ad394c0d794ffcf886e1729d39202eaac76e36db619574fdd75
+Audio/testMP3_twoCovers.mp3,Audio,.mp3,40065,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,67971de572b4383bc789ef0ae5ee29992de2aabb4d622755ae7c3e8c3dd1f258
+Audio/testMP3cbrInfoTag.mp3,Audio,.mp3,6681,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.2,0,,05348c6e487518db8f075e77ef5a083303afa74615c2478f1165c3398a577af1
+Audio/testMP3i18n.mp3,Audio,.mp3,40832,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,5fafede9480da839030e4e2bbcbd42bcfb54a3851297ef5cd12f09aea001259e
+Audio/testMP3i18n_truncated.mp3,Audio,.mp3,40672,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,9d69f94e3c5b492777e9d3696dfb63965eba858e8e5b424bc9b0133084a8e8ef
+Audio/testMP3id3v1.mp3,Audio,.mp3,39416,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,5c19eafe0846f5d074a840dc9e4a8800d7062ec87b59ad0efcd00d383328e213
+Audio/testMP3id3v1_v2.mp3,Audio,.mp3,40960,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.0,0,,42f2d12951efce1422e2e61a3540626a7667d8e2afc0caef6e5999b725aa5bf5
+Audio/testMP3id3v2.mp3,Audio,.mp3,39602,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.1,0,,6f25bc242de92342048a6972cfb2bf4cbe63e82e69fa3e3d9584e25969cdf472
+Audio/testMP3id3v24.mp3,Audio,.mp3,39511,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,472f116c13a7a70f9565bbaba6d2bdc5f9c5fde2f67429e916f6224e49f8da15
+Audio/testMP3lyrics.mp3,Audio,.mp3,34688,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,e2067a2f13e5bf5528a129ead5f6d0fd7e4f507a7af54a3746e8084aa4603df4
+Audio/testMP3mpeg2.mp3,Audio,.mp3,8255,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.3,0,,4bc8f31335e06413202cbd7b8fbc2bcf8ea5c26e3819f9c3b2005bde886c02c6
+Audio/testMP3noid3.mp3,Audio,.mp3,39288,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,ad66cddafb9623c2f1f8783e86fa18e344e3f97f38309e40aeb52152a187bf31
+Audio/testMP3truncated.mp3,Audio,.mp3,65536,AudioFileReader,ERROR,,,,0,0,,1.8,0,Error reading audio file: ,9ce5e93c64d1d1cd977ac2a65f97b9533e042194d06668ebf9db144c2ad0406e
+Audio/testMP3v23_twoCovers.mp3,Audio,.mp3,40065,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,6c1b88897d1f438dd95c0c4b19aa1ae3be45ccc13261584fcff5d067102d9278
+Audio/testMP3vbr.mp3,Audio,.mp3,3129,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,1babbe9d9a50e37fdbe7ee64feaf5eae75a23848713accfec03d6c038c8dcefb
+Audio/testMP4.m4a,Audio,.m4a,4770,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.9,0,,722b8649c2880d9ef296269560ca5f7398afa4dfe0094e53ec3c09fa7530fc10
+Audio/testMP4_coverArt.m4a,Audio,.m4a,4861,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,f4119c6a60fa887e1afeabe1ff57f625266c78b99bd8742fd21e14535d3408bf
+Audio/testMP4_drm.m4a,Audio,.m4a,464,AudioFileReader,ERROR,,,,0,0,,1.3,0,Error reading audio file: truncated data,72a0055774ca9550225c3305aee3a49fe9ed01fc0d170c7d2fd54ffd69f25671
+Audio/testMP4_drm_frma.m4a,Audio,.m4a,664,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.3,0,,44f7f209a312071df44cb17c2bd75302eb93afa573fb9c16691c3d652cfae76b
+Audio/testMP4_esdsFlags.m4a,Audio,.m4a,512,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.3,0,,41ab7f9510b397a2e68970ee029e9714141d923932c5ad66a8b3191f4190cfe6
+Audio/testMP4_truncated.m4a,Audio,.m4a,74,AudioFileReader,ERROR,,,,0,0,,1.1,0,Error reading audio file: truncated data,d0fcb20d3f052a747e160dee90d51d59062c376e37061b97fb0d7667c34e7e85
+Audio/testMP4_twoCovers.m4a,Audio,.m4a,5186,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,90879363c36c109e43e89019df7d7d4f4bb0cb5a6e48ea292b9b9c06ff5b4059
+Audio/testMP4_twoSampleEntries.m4a,Audio,.m4a,550,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.3,0,,784bfb4d9028993f8c8e51601ffc14c6882d93362d35ce2d9d7c31b757a7591c
+Audio/testNakedUTF16BOM.mp3,Audio,.mp3,2625,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,7424b59f9c1ec2764501890e55587fcf7cf21297f0551ca2146091107a5cb325
+Audio/testVORBIS.ogg,Audio,.ogg,4241,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.3,0,,9c5c118e4f639df407dc61e3b79eef1dbdfea5f7647623061d1c9ebe5e96c249
+Audio/testVORBIS_coverArt.ogg,Audio,.ogg,4429,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,898a223560b24961f700c3592a9d2d64aa565f1ea9a5f562480db5e05890e3d7
+Audio/testVORBIS_twoCovers.ogg,Audio,.ogg,4802,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,f0c11bde134aaa625559848e942e3afab71ce600c9f46fe5f334b939f426a4ac
+Audio/testWAV.wav,Audio,.wav,3884,AudioFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.3,0,,be314759f29249b0ad5fb0437fa099d9820da65efc055397ffc8a552325ae9b5
+Audio/testWMA.wma,Audio,.wma,27747,VideoFileReader,ERROR,,,,0,0,,70.2,0,No video library installed. Install with: pip install opencv-python or pip install moviepy,b28457a4cb0515c9a0c9815a6b1ec4642cb67c8b97d16c796e82f090d6ea1aeb
+Design/testAI_PS.ai,Design,.ai,755,RemainingFileReader,OK-NO-ORACLE,,,,755,1,document:1,0.2,0,,0a9eb7c8b16e3017bc0061be4a43dc1b4235ea8685f7e77be72b18c803387036
+Design/testPSD.psd,Design,.psd,69410,,ERROR,,,,0,0,,0.2,0,Unsupported file type: .psd,53277dbfc70635b72d918b851b1fccba3715b3217764c781160bd93a7bfe7b6e
+Design/testPSD2.psd,Design,.psd,31315,,ERROR,,,,0,0,,0.1,0,Unsupported file type: .psd,0541e32bf3bb28755a0bbebb0a756ff85f429ba6ebd8d79bbb5d08c3df49f831
+Design/testPSD_xmp.psd,Design,.psd,114796,,ERROR,,,,0,0,,0.1,0,Unsupported file type: .psd,69ea01bf88cb85c48d3a78c3bb9e06ae141c9c9fc6a88267eae95c315e16180e
+Documents/014760.docx,Word,.docx,39631,OfficeFileReader,NEAR-COMPLETE,0.9818,1210,22,9777,107,paragraph:5;table-row:102,123.2,0,,f538e934e60c77ff561cbf91876dc2a252da283d2fe83b5fe620268fe27dcce6
+Documents/017091.docx,Word,.docx,37440,OfficeFileReader,NEAR-COMPLETE,0.9931,5235,36,34986,465,paragraph:462;table-row:3,201.3,0,,6a41ce073ac8fa7f7a03e2d80224b7e34a5b53064733b937f14f43ba1314e368
+Documents/017097.docx,Word,.docx,64325,OfficeFileReader,COMPLETE,0.999,5218,5,34324,4,table-row:4,3495.7,0,,9d261a88188744a3006314966f6e5c45ce38c8235341854fb6ffca64fa2c565c
+Documents/018367.docx,Word,.docx,203043,OfficeFileReader,NEAR-COMPLETE,0.9726,2697,74,18009,116,paragraph:85;table-row:31,2121.6,0,,fc72225c1f6185a1f62772e208c8e06827371c8ba1460013011017873a6f46ba
+Documents/2exe.docx,Word,.docx,715333,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,17.0,0,,2adbe75ad93300a8b4c5a8ffa95d6510ec3a97d8d0f5279e704f6133026a44e2
+Documents/2pic.doc,Word (.doc),.doc,4339712,OfficeFileReader,OK-NO-ORACLE,,,,4,1,paragraph:1,4.0,0,,e9b1b4f84a75589354d2e278ff51ec7a04a8348203b74c01186e302f1ac6725e
+Documents/2pic.docx,Word,.docx,883427,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,4242.7,0,,f6816eedde86726eb912fcc6ec35220f0d7af7ac79faf59408e446d06b468cf3
+Documents/Doc1_ole.doc,Word (.doc),.doc,89600,OfficeFileReader,OK-NO-ORACLE,,,,43,1,paragraph:1,2.8,0,,880b15cbec25f290ac44548a11349577e334bd1d9292e4ecb260bc1603dde1aa
+Documents/EmbeddedDocument.docx,Word,.docx,13219,OfficeFileReader,COMPLETE,1.0,10,0,52,1,paragraph:1,4.1,0,,4aaabe19c2c4e30db9f13aa32bc3c35e913867c64627c574d5e6152b4c635115
+Documents/EmbeddedOutlook.docx,Word,.docx,113242,OfficeFileReader,COMPLETE,1.0,8,0,49,1,paragraph:1,4.4,0,,45d84c0cbf2bc695588dca1364dba224158f5a7acd1e92d1b732b94ba6cdbe06
+Documents/EmbeddedPDF.docx,Word,.docx,99389,OfficeFileReader,COMPLETE,1.0,6,0,36,1,paragraph:1,4.8,0,,f39a3ab2ce59d9b363d05831d75efae2a6d18309d752696854bdcc28674244c7
+Documents/LibreOfficeWriter_odt_1.3.odt,OpenDocument,.odt,9683,OfficeFileReader,COMPLETE,1.0,5,0,39,1,paragraph:1,21.8,0,,3f0241958a222058664cf981f7cc1565a22dce01a8b6b8102c6aa4ea3352c8c0
+Documents/NullHeader.docx,Word,.docx,4355,OfficeFileReader,COMPLETE,1.0,697,0,4006,32,paragraph:32,10.6,0,,4878c775336eb563fd88ca13adc134aed9203d8b3d73cdd0eef904a0354b6d56
+Documents/embedded.docx,Word,.docx,99389,OfficeFileReader,COMPLETE,1.0,6,0,36,1,paragraph:1,4.1,0,,f39a3ab2ce59d9b363d05831d75efae2a6d18309d752696854bdcc28674244c7
+Documents/file1.pdf,PDF,.pdf,543,RemainingFileReader,OK-NO-ORACLE,,,,543,1,document:1,0.2,0,,be665e40974379b6504635031a1babf96bfbad3c01d5fd52ffe007e08ac899e6
+Documents/file13_attachANotB.doc,Word (.doc),.doc,452,RemainingFileReader,OK-NO-ORACLE,,,,304,1,document:1,0.2,0,,7f2c42ea85fd18a05df5d46d2f24d5a77060fb0b7dea44c81a73f28a546c601a
+Documents/file2_attachANotB.doc,Word (.doc),.doc,543,RemainingFileReader,OK-NO-ORACLE,,,,543,1,document:1,0.2,0,,be665e40974379b6504635031a1babf96bfbad3c01d5fd52ffe007e08ac899e6
+Documents/file3_attachBNotA.doc,Word (.doc),.doc,543,RemainingFileReader,OK-NO-ORACLE,,,,543,1,document:1,0.2,0,,be665e40974379b6504635031a1babf96bfbad3c01d5fd52ffe007e08ac899e6
+Documents/file4_emptyB.pdf,PDF,.pdf,543,RemainingFileReader,OK-NO-ORACLE,,,,543,1,document:1,0.2,0,,be665e40974379b6504635031a1babf96bfbad3c01d5fd52ffe007e08ac899e6
+Documents/file5_emptyA.pdf,PDF,.pdf,543,RemainingFileReader,OK-NO-ORACLE,,,,543,1,document:1,0.2,0,,be665e40974379b6504635031a1babf96bfbad3c01d5fd52ffe007e08ac899e6
+Documents/file6_accessEx.pdf,PDF,.pdf,543,RemainingFileReader,OK-NO-ORACLE,,,,543,1,document:1,0.2,0,,be665e40974379b6504635031a1babf96bfbad3c01d5fd52ffe007e08ac899e6
+Documents/file7_badJson.pdf,PDF,.pdf,543,RemainingFileReader,OK-NO-ORACLE,,,,543,1,document:1,0.2,0,,be665e40974379b6504635031a1babf96bfbad3c01d5fd52ffe007e08ac899e6
+Documents/file8_IOEx.pdf,PDF,.pdf,543,RemainingFileReader,OK-NO-ORACLE,,,,543,1,document:1,0.2,0,,be665e40974379b6504635031a1babf96bfbad3c01d5fd52ffe007e08ac899e6
+Documents/footnotes.docx,Word,.docx,12823,OfficeFileReader,COMPLETE,1.0,7,0,41,1,paragraph:1,3.9,0,,9070094b27ff5201477f4de4b2c027730c66cb889106a1609c5adeed207a59c1
+Documents/headerPic.docx,Word,.docx,16206,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,462.9,0,,50d9b17f7575c8a91129fd8a3e6a70feec886480ab9f089e29a7f8ac7e5ed51a
+Documents/protected_normal_case.docx,Word,.docx,17920,OfficeFileReader,ERROR,,,,0,0,,1.7,0,Package not found at 'test-doc/Documents/protected_normal_case.docx',254d301a6ee3248248a6de921c5af8baf8eb0d7cd27af349e4539a227fc8d1ff
+Documents/protected_upper_case.docx,Word,.docx,17920,OfficeFileReader,ERROR,,,,0,0,,2.3,0,Package not found at 'test-doc/Documents/protected_upper_case.docx',e57ddbf2d16a9a1cc3eb8bb485aeb002f00b0082430d2e286e0085b87ddf5759
+Documents/simple_lower_case.doc,Word (.doc),.doc,27136,OfficeFileReader,OK-NO-ORACLE,,,,54,1,paragraph:1,2.0,0,,e7efecd456de7ed610a333beb4b6870a9e3a4fe234e68d7bb611d189497f5e22
+Documents/simple_normal_case.doc,Word (.doc),.doc,27136,OfficeFileReader,OK-NO-ORACLE,,,,54,1,paragraph:1,1.9,0,,62366d1126bb3fef1a9ed6589dd2512fbfd23d3b7f6d129f57ffba9a48e6cef5
+Documents/simple_upper_case.doc,Word (.doc),.doc,27136,OfficeFileReader,OK-NO-ORACLE,,,,54,1,paragraph:1,2.0,0,,3ce5c7cf1a9718f6b7bb9393f2c4cb70e0bcc3eff308509173572aa9291d38e9
+Documents/test-pdf-with-print-ticket-header.pdf,PDF,.pdf,36766,PDFFileReader,COMPLETE,1.0,29,0,378,1,page:1,8.0,0,,d53035f5ea1aae5580250101a3c08db1fe8b7f258b9bce9bc9ae2b404ab87627
+Documents/test.doc,Word (.doc),.doc,9216,OfficeFileReader,OK-NO-ORACLE,,,,8,1,paragraph:1,1.8,0,,c1a64465a40dc19cfe5854e59a2da043e06019c810d9b91167ea7c5a7221de1a
+Documents/test2.doc,Word (.doc),.doc,10752,OfficeFileReader,OK-NO-ORACLE,,,,8,1,paragraph:1,1.6,0,,bc38e6031943ec3e47b463e11ffc2d2a63aa670ee44894a74912bc0afcc54fcc
+Documents/testAltChunkHTML.docx,Word,.docx,2631,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.9,0,,4e69425bf505c9b439be04f6cbb10271e5ea8ec2fbec820fe459a0f74db2fb7b
+Documents/testAltChunkMHT.docx,Word,.docx,3070,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.8,0,,e1669cb83f3042413a84593814f529db9cc19dd29ba52906a29d90d29c43b2af
+Documents/testAnnotations.pdf,PDF,.pdf,18580,PDFFileReader,COMPLETE,1.0,8,0,301,1,page:1,8.5,0,,9ded4c4df46c85b51af002ed484765603c46c95d81c8e14a2fbb47a6539e2e51
+Documents/testAppleSingleFile.pdf,PDF,.pdf,1893,PDFFileReader,COMPLETE,1.0,2,0,119,1,page:1,2517.5,0,,f50a85432544cbb5fc76b332b057c1529b20145693ff1191177d28b670fd23c1
+Documents/testAttachedTemplate.docx,Word,.docx,2284,OfficeFileReader,COMPLETE,1.0,5,0,40,1,paragraph:1,2.4,0,,4565fda29525e369c6949437893f75c2548e16735e99a14e9586984aed718fc2
+Documents/testBinControlWord.rtf,RTF,.rtf,4075,RemainingFileReader,EMPTY-PLAUSIBLE,,,,0,0,,5.4,0,,f2653872bdc25640cd5083881ce7bf668ef7353b12b299446b5b3596e5ffffdb
+Documents/testColorRendering.pdf,PDF,.pdf,1794,PDFFileReader,OK-NO-ORACLE,,,,130,0,,2908.6,0,,9d28fd146aa3d94ee81e630268eb5bf14be72ba162884af3dc44016f80a99b66
+Documents/testComment.doc,Word (.doc),.doc,22528,OfficeFileReader,OK-NO-ORACLE,,,,48,1,paragraph:1,2.8,0,,132a7833d2f1686b7bbcf05bb59b9a97184a4fbedacc6a640a623bd79dcac545
+Documents/testComment.docx,Word,.docx,11019,OfficeFileReader,COMPLETE,1.0,8,0,37,1,paragraph:1,3.5,0,,740337ba9a0f0c9dd4cc0ea07b6a7b413c7b67ee28ec4b430a1a242c688fe5b5
+Documents/testComment.pdf,PDF,.pdf,68398,PDFFileReader,COMPLETE,1.0,10,0,239,1,page:1,3.2,0,,4b3ca29653a45df68b01e60a688c45bf3fe8389ab712f2168cad354872378cb3
+Documents/testComment.rtf,RTF,.rtf,33481,RemainingFileReader,COMPLETE,1.0,4,0,19,1,document:1,6.3,0,,742ec05361e5c9bfc128ae3f1885acd558ef1a48a9b3a92bb843d7d54cfc3844
+Documents/testContentStreamSpaceGlyphs.pdf,PDF,.pdf,805,PDFFileReader,COMPLETE,1.0,1,0,161,1,page:1,3.3,0,,8efce06b2659092c7c445c0f2da2486a9999c89b7596791da1766713bbe55a77
+Documents/testControlCharacters.doc,Word (.doc),.doc,448000,OfficeFileReader,OK-NO-ORACLE,,,,8000,1,paragraph:1,10.2,0,,b4cd7937aecf63a0a2e4dd80949e726c854e49e770f351c4af1a0f0a3906a075
+Documents/testDOCX_Thumbnail.docx,Word,.docx,13810,OfficeFileReader,COMPLETE,1.0,5,0,30,1,paragraph:1,4.5,0,,28e77040dc0b1df9cde900f2a125051b5d9d21b9f90e40569d9127160b04c4f8
+Documents/testDocumentLink.doc,Word (.doc),.doc,812032,OfficeFileReader,OK-NO-ORACLE,,,,178,1,paragraph:1,2.1,0,,0c7092c09279f10763f258d26d1a076fd19d5366811219c4e4921e26510e4d62
+Documents/testException1.doc,Word (.doc),.doc,49152,OfficeFileReader,OK-NO-ORACLE,,,,7484,1,paragraph:1,2.5,0,,2f6152a79832bc165167a9d6cafdda8e616625e607526db24276c7e058985484
+Documents/testException2.doc,Word (.doc),.doc,58368,OfficeFileReader,OK-NO-ORACLE,,,,6907,1,paragraph:1,5.9,0,,cecacf88f03237b59e187cce039522ede4e1013a7dead9e9f28c5d24ef4903c6
+Documents/testExternalRefs.docx,Word,.docx,2125,OfficeFileReader,COMPLETE,1.0,16,0,349,4,paragraph:4,5.0,0,,7447372cdbd43edeba1fcfe316154e3ba5153a623cad7acb1e3a9131ddc966ee
+Documents/testExtraSpaces.pdf,PDF,.pdf,20743,PDFFileReader,COMPLETE,1.0,5,0,174,1,page:1,2415.4,0,,b471f64746c4d916351223b3990812cf73f1cc56a5ce3e3349a2c05b0e92c3b4
+Documents/testFlashInPDF.pdf,PDF,.pdf,161445,PDFFileReader,OK-NO-ORACLE,,,,200,1,page:1,2724.8,0,,b39db8542746952a4ca1fd8ce7f71ebcabea2256c0a7b956b7d72ae9c46b8b79
+Documents/testFontAfterBufferedText.rtf,RTF,.rtf,210,RemainingFileReader,COMPLETE,1.0,2,0,19,1,document:1,0.5,0,,e9127c2424b358bfb6f0eaede9e326926762715dea0d201bb7010d5e32e6731a
+Documents/testFooter.odt,OpenDocument,.odt,8381,OfficeFileReader,COMPLETE,1.0,11,0,122,3,paragraph:3,39.7,0,,bb7618380607111c7181867aaf6e9568f490ba0a62a2308e78f120a268d96188
+Documents/testFrameset.docx,Word,.docx,2328,OfficeFileReader,COMPLETE,1.0,3,0,22,1,paragraph:1,3.2,0,,d5c60722ba6c3cf9db497efc3812236e91d0b13f635db520f72c18a4962a778c
+Documents/testHoverAndVml.docx,Word,.docx,2270,OfficeFileReader,COMPLETE,1.0,10,0,87,3,paragraph:3,3.6,0,,7ff4f180062462af9e9e6adf403d9fed8dd373195b9cfecf58a85944557770eb
+Documents/testInstrLink.docx,Word,.docx,14464,OfficeFileReader,COMPLETE,1.0,30,0,313,1,table-row:1,14.2,0,,4f96a04634eceebda4249a8204e7f632cd6ad2067154984a578c097b241bf3ce
+Documents/testJournalParser.pdf,PDF,.pdf,985125,PDFFileReader,COMPLETE,1.0,6481,0,43540,10,page:10,65.5,0,,105f9d5fa72021d79c8382de941f3ac42cced7758735b276cc401eb451b7d515
+Documents/testLargeOLEDoc.doc,Word (.doc),.doc,2077696,OfficeFileReader,OK-NO-ORACLE,,,,42,1,paragraph:1,2.4,0,,ca25e3451b9cb521670bda677fd6f82786b4d45dfd6c5bc9d32a1bc6e28d4259
+Documents/testLinkAnnotationsButNoContents.pdf,PDF,.pdf,1236,PDFFileReader,OK-NO-ORACLE,,,,88,0,,2875.8,0,,61f083d476e58afe06369f0efe7d5f3069fd8a5e313a209f060082694bf9e48d
+Documents/testMSEquation-govdocs-863534.doc,Word (.doc),.doc,30720,OfficeFileReader,OK-NO-ORACLE,,,,8674,1,paragraph:1,2.9,0,,88619cf1ad37819c2eda2ab13be06a0f377c574e8cf3a3346dbe5af33fd0e704
+Documents/testMailMerge.docx,Word,.docx,2306,OfficeFileReader,COMPLETE,1.0,4,0,24,1,paragraph:1,2.5,0,,e388dda2c53b8e1ac3b6904a2c32cedcfcf3b8c60a4af97771bb14737958678d
+Documents/testMicrosoftIRMServices.pdf,PDF,.pdf,290327,PDFFileReader,COMPLETE,1.0,42,0,447,1,page:1,8.1,0,,d2ff3a8cc84e0387792b86e490823851115387ffab340f599cc5ced338228fdc
+Documents/testNPEOpenDocument.odt,OpenDocument,.odt,18304,OfficeFileReader,NEAR-COMPLETE,0.99,1206,12,9600,102,paragraph:102,21.8,0,,4a9bea2bd669d76756c0e4e81cb0b1a1d888b3469144901e23d45fe9bd4f7ccc
+Documents/testOCR.docx,Word,.docx,62041,OfficeFileReader,COMPLETE,1.0,9,0,74,2,paragraph:2,1321.7,0,,9bbac8ae8790581133abd2570c6ce4cc831216dc9030d9b16801a24ff393905f
+Documents/testOCR.pdf,PDF,.pdf,41936,PDFFileReader,OK-NO-ORACLE,,,,236,1,page:1,1997.7,0,,ca4e1851095ea410a7c5dbbfa064fef7c4b36da3ef0d49bddf29619e88b301de
+Documents/testODFwithOOo3.odt,OpenDocument,.odt,24286,OfficeFileReader,INCOMPLETE,0.717,106,30,682,16,paragraph:16,30.5,0,,b6cd74b570a98fcb6d838dd85ab869604e0711812d9533d5ecde0000b24ba7ef
+Documents/testODT-TIKA-6000.odt,OpenDocument,.odt,3888830,OfficeFileReader,NEAR-COMPLETE,0.9766,9347,219,63211,656,paragraph:656,19.5,0,,69afeb988fa86b967bd24d1ec1b9d693943c2007d2771be799142f681b3c064a
+Documents/testODTEmbedded.odt,OpenDocument,.odt,9936,OfficeFileReader,COMPLETE,1.0,7,0,60,1,paragraph:1,8.8,0,,11cc856e16049cf46b5a036cb724c0ec1b397649529ced727fcc5dbd65f401df
+Documents/testODTEmbeddedImageLink.odt,OpenDocument,.odt,32873,OfficeFileReader,COMPLETE,1.0,2,0,35,1,paragraph:1,2026.4,0,,247eb4787c97d5d23a16e785bd5d7de6d72941a57793472037dcc7d981acbd6b
+Documents/testODTEncrypted.odt,OpenDocument,.odt,12714,OfficeFileReader,ERROR,0.0,238,238,0,0,,3.5,0,'utf-8' codec can't decode byte 0x85 in position 3: invalid start byte,93bc474db83b18ac77226265f12d82f94bc0c39a83f37d71e7dad0d8f57030b0
+Documents/testODTMacro.odt,OpenDocument,.odt,30809,OfficeFileReader,COMPLETE,1.0,11,0,121,4,paragraph:4,779.5,0,,97a3253daa7d164369bb383e1e9412870fadeaa166c36356718c0c6a4d266601
+Documents/testODTNoMeta.odt,OpenDocument,.odt,5847,OfficeFileReader,COMPLETE,1.0,2,0,9,1,paragraph:1,6.2,0,,65f41de9496d3f4e394f82f998df7395f881279aed4209d0160a1665a1c6c415
+Documents/testODTStyles2.odt,OpenDocument,.odt,17383,OfficeFileReader,COMPLETE,1.0,143,0,1696,30,paragraph:23;table-row:7,12.0,0,,eaa2f7d3fa686751699227a06b24e9e2b587da9db15d838ff93af8c5b14fabb8
+Documents/testODTStyles3.odt,OpenDocument,.odt,17140,ArchiveFileReader,INCOMPLETE,0.0,172,172,0,0,,4.7,0,,5a3cef66f7cea05b589632b31038303767014f34e697979006facba9f441c84d
+Documents/testODT_svgTitleInStyledSpan.odt,OpenDocument,.odt,6820,OfficeFileReader,OK-NO-ORACLE,,0,0,275,9,paragraph:7;table-row:2,8.8,0,,23ddd40c93d029cdb8ecef8b4e5b6efd09f1d711b82caaa508e4eff393ec97f3
+Documents/testODTnotaZipFile.odt,OpenDocument,.odt,24,RemainingFileReader,OK-NO-ORACLE,,,,24,1,document:1,0.1,0,,4b7cbd32a251475097b417f66ee3d3777c666586d59004d0f5be9feeb0e98876
+Documents/testOpenOffice2.odt,OpenDocument,.odt,26460,OfficeFileReader,COMPLETE,1.0,16,0,96,1,paragraph:1,6.2,0,,daee7b62602780f2599c19b3593a1e455a21e041959416304c112bdb136640bb
+Documents/testOptionalHyphen.doc,Word (.doc),.doc,22016,OfficeFileReader,OK-NO-ORACLE,,,,26,1,paragraph:1,2.1,0,,a033be4d6f83322060bb052ebaa8b202181657243234cbb2643641ee339dfaf4
+Documents/testOptionalHyphen.docx,Word,.docx,10382,OfficeFileReader,COMPLETE,1.0,1,0,14,1,paragraph:1,3.5,0,,647cb4fae2d7bf7d209c1b33c98f1d72363798289e9fb37eede118dd3a45e110
+Documents/testOptionalHyphen.pdf,PDF,.pdf,44954,PDFFileReader,COMPLETE,1.0,1,0,224,1,page:1,1984.5,0,,336be0fb3c30d93a6f625c120f7e00b9419bccc2cc09a74a222f2c3f5869af7c
+Documents/testOptionalHyphen.rtf,RTF,.rtf,30842,RemainingFileReader,COMPLETE,1.0,2,0,16,1,document:1,6.3,0,,55efd4086da22fd712b71a5f8b78ff0aafa0d03891fb94cda8e3dd360c53ab43
+Documents/testOverlappingText.pdf,PDF,.pdf,899,PDFFileReader,COMPLETE,1.0,8,0,153,1,page:1,2.9,0,,906bfbc390a95b09417abf33c6ef2bf7c9190cbf9787996bcfa5c0bc17b8bde1
+Documents/testPDF-TIKA-4444.pdf,PDF,.pdf,103951,PDFFileReader,COMPLETE,1.0,8895,0,61696,13,page:13,34.3,0,,c99b9de35d6f6135028665007f2319790c7c01de20687b645dbfe435d19457a6
+Documents/testPDF-custommetadata.pdf,PDF,.pdf,7495,PDFFileReader,COMPLETE,1.0,2,0,266,1,page:1,2413.8,0,,c6f5d857a87d8b8f2265265a1fb650df57b6fdad4d3b58cafefe6f42aaba4391
+Documents/testPDF.pdf,PDF,.pdf,34824,PDFFileReader,COMPLETE,1.0,163,0,1257,1,page:1,11.0,0,,8035bc3f748d8b97b8a9978bd812197bf40cf2b294a7e9b30e39d7167ddc720e
+Documents/testPDFEmbeddingAndEmbedded.docx,Word,.docx,34139,OfficeFileReader,COMPLETE,1.0,10,0,86,5,paragraph:5,6.9,0,,908d3fdd5b961c3bb2c837acee609b5e4396e97945d1f5bd993619df1bf7ca53
+Documents/testPDFFileEmbInAnnotation.pdf,PDF,.pdf,97211,PDFFileReader,COMPLETE,1.0,10,0,322,1,page:1,4.4,0,,9825311c6eba48b5c6612a50c654458282075fdac9fa6a78a0d4030ccc0a3413
+Documents/testPDFFileEmbInAnnotation_noContents.pdf,PDF,.pdf,198342,PDFFileReader,OK-NO-ORACLE,,,,266,1,page:1,2657.6,0,,a667c1515735cabccb2d0edeee6cc47b037f8a2dc26a02a8486e02b229e800fa
+Documents/testPDFPackage.pdf,PDF,.pdf,92359,PDFFileReader,COMPLETE,1.0,86,0,675,1,page:1,10.5,0,,9676f28b3a11d339309f5d18eb1aaf51458c3cbf422183650d577b74bd8e823c
+Documents/testPDFTripleLangTitle.pdf,PDF,.pdf,1719,PDFFileReader,COMPLETE,1.0,2,0,119,1,page:1,1897.9,0,,c3c1a90cf6745f1a01f91b329373bb147d766bda43cae32116cea9ff34f6ac97
+Documents/testPDFTwoTextBoxes.pdf,PDF,.pdf,57100,PDFFileReader,COMPLETE,1.0,16,0,269,1,page:1,2.7,0,,b61a9f3ebbd959518c1b07e27ff89f8530f4671824ac2b6071d051d0d2a300d5
+Documents/testPDFVarious.pdf,PDF,.pdf,205491,PDFFileReader,COMPLETE,1.0,137,0,1077,2,page:2,7.5,0,,704c9a0c82e239286dff72aab34bab968dd9ba0083e407ec78960a5fb016e833
+Documents/testPDF_AdobeIllustrator.pdf,PDF,.pdf,491520,PDFFileReader,OK-NO-ORACLE,,,,211,1,page:1,1983.4,0,,10d2fe976d01fea4bcdaa3c1953c182841a653907bc18d8a7e03e127ea1c0e50
+Documents/testPDF_JBIG2.pdf,PDF,.pdf,23945,PDFFileReader,COMPLETE,1.0,11,0,263,1,page:1,3.0,0,,a12b12ce2593ec4f04c8b6043ebca1ed588537323a3f43dd2ec48c7ae44f8495
+Documents/testPDF_PDFEncodedStringInXMP.pdf,PDF,.pdf,7210,PDFFileReader,COMPLETE,1.0,14,0,156,1,page:1,2.2,0,,382b386aee18b0407c000b017e66206fe3cb82c5b747a5a6169117688901408f
+Documents/testPDF_Version.10.x.pdf,PDF,.pdf,5811,PDFFileReader,OK-NO-ORACLE,,,,229,0,,2819.7,0,,978d4a5c17033345332eba430313a006d9bb68b5efc5e81713d24240ee8666a6
+Documents/testPDF_Version.11.x.PDFA-1b.pdf,PDF,.pdf,23081,PDFFileReader,OK-NO-ORACLE,,,,195,0,,3145.3,0,,960385281c54d25372d6bd02ddecfabe743e13b66c6161b099ab2d7c195da39c
+Documents/testPDF_Version.4.x.pdf,PDF,.pdf,10007,PDFFileReader,OK-NO-ORACLE,,,,207,0,,2818.5,0,,21bb5cce1cbad0923b453d7007d35374a16d62f41eb85df5c8f51e7d1e25deea
+Documents/testPDF_Version.5.x.pdf,PDF,.pdf,5953,PDFFileReader,OK-NO-ORACLE,,,,207,0,,2899.4,0,,f8d03526aeb8281ce1a50b5ad2aa3e1a87a5ce7f4d8967bccfa55a19d86c448b
+Documents/testPDF_Version.6.x.pdf,PDF,.pdf,5903,PDFFileReader,OK-NO-ORACLE,,,,207,0,,2835.3,0,,0db7698592230e53c08c8952ec7b473919faa67a085d8fec91a8da004b38b54c
+Documents/testPDF_Version.7.x.pdf,PDF,.pdf,5903,PDFFileReader,OK-NO-ORACLE,,,,207,0,,2973.1,0,,8dcad6c4b9699a92dc1c14a172c4502904cbd8b72ec03c6d541b186a44c7ad84
+Documents/testPDF_Version.8.x.pdf,PDF,.pdf,5903,PDFFileReader,OK-NO-ORACLE,,,,207,0,,3217.0,0,,eee04f51eedc1b32ae09ead62521d56b18c957b4396eb1897c2c60925c3edbc2
+Documents/testPDF_Version.9.x.pdf,PDF,.pdf,5998,PDFFileReader,OK-NO-ORACLE,,,,231,0,,2884.6,0,,b751de695055ff5f1b5e6632448a28755e985265382e46f1ac96d1196775107c
+Documents/testPDF_XFA_govdocs1_258578.pdf,PDF,.pdf,168176,PDFFileReader,COMPLETE,1.0,210,0,3118,1,page:1,15.7,0,,b6a6c30d4b78c01364eb04be9003001425895b374fd51e99d3d08584806f70b6
+Documents/testPDF_XMPBasicSchema.pdf,PDF,.pdf,1577,PDFFileReader,COMPLETE,1.0,4,0,137,1,page:1,1938.7,0,,6b622fa8e0c5d46ef34b0099c1976e19e047526e28cbe1ae338a4aacad075028
+Documents/testPDF_acroform3.pdf,PDF,.pdf,26746,PDFFileReader,COMPLETE,1.0,62,0,774,1,page:1,12.1,0,,cc0cff1b91879bebb339b687b7efdb228c40154800ece83f2b1dad7134ee7ce4
+Documents/testPDF_angles.pdf,PDF,.pdf,797493,PDFFileReader,COMPLETE,1.0,293,0,2023,1,page:1,8.6,0,,7d77795cc2269e5324af4a281bb9378c03dd475d4baaa3bd0819cc1700364e08
+Documents/testPDF_bad_page_303226.pdf,PDF,.pdf,138027,PDFFileReader,COMPLETE,1.0,12389,0,90681,19,page:19,45.0,0,,da14d24dd22effebec987312abf0312750bdbbaf93f54c9aef3b9ec7041e40ba
+Documents/testPDF_bom.pdf,PDF,.pdf,7645,PDFFileReader,COMPLETE,1.0,2,0,198,1,page:1,2118.6,0,,dcc4d2767fa7ff00d871589b925168c30fb60d9949876e4b050c4f7492d0a482
+Documents/testPDF_bookmarks.pdf,PDF,.pdf,9487,PDFFileReader,COMPLETE,1.0,12,0,299,2,page:2,3375.1,0,,10099e31d2b398fb9694ec1e6f70ad988199aeba6d69c8b840144a2852eb31a6
+Documents/testPDF_childAttachments.pdf,PDF,.pdf,2318262,PDFFileReader,COMPLETE,1.0,57132,0,289748,67,page:67,375.4,0,,9396d203b78cc367d8879c867f45de0f8ea16e15ecd5831e570240aba081083e
+Documents/testPDF_deeplyEmbeddedAttachments.pdf,PDF,.pdf,122221,PDFFileReader,COMPLETE,1.0,1,0,147,1,page:1,2025.8,0,,7b6675ce19020d706bf3c4e8bc12c3d176009d730012804f8aaebe0f457832ff
+Documents/testPDF_diffTitles.pdf,PDF,.pdf,8703,PDFFileReader,OK-NO-ORACLE,,,,214,0,,2789.9,0,,1c38825b892ffdfb5395d7de1d8d3db50a8e586d45b8539738d606a6fa93582c
+Documents/testPDF_incrementalUpdates.pdf,PDF,.pdf,64872,PDFFileReader,COMPLETE,1.0,3,0,228,1,page:1,1971.7,0,,3e795587a3430b8fe4ed30c98065a00a8b09129247dfc70766e1b59ce07ec67c
+Documents/testPDF_jpeg2000.pdf,PDF,.pdf,168163,PDFFileReader,OK-NO-ORACLE,,,,4886,1,page:1,21180.7,0,,9a47629bd9dc969a191134416298c11ab92e993acb304a1a14771d96b0807c50
+Documents/testPDF_jsActionOnPage.pdf,PDF,.pdf,456,PDFFileReader,OK-NO-ORACLE,,,,88,0,,2965.3,0,,2cce43b1bc86e84b31cbfb9b0ab780aa11a91450d1d1ca1e7e4e6086e7c96140
+Documents/testPDF_malformedXFA.pdf,PDF,.pdf,461,PDFFileReader,OK-NO-ORACLE,,,,88,0,,445.7,0,,8bdadcb02cc954f1dd63a0f56de8ede8ec5ca7682cd835c0d7ab06c33baf55fd
+Documents/testPDF_multiFormatEmbFiles.pdf,PDF,.pdf,2662,PDFFileReader,COMPLETE,1.0,9,0,139,1,page:1,3.1,0,,5a72046defac7b5718dd499bcce6911c712878e0fcd3263477f8d893aea30d03
+Documents/testPDF_no_extract_no_accessibility_owner_empty.pdf,PDF,.pdf,1111,PDFFileReader,COMPLETE,1.0,2,0,119,1,page:1,1960.5,0,,843e6a37068ca14626ca773afd1486e2e72c10915cef182157c6673f2594cb69
+Documents/testPDF_no_extract_no_accessibility_owner_user.pdf,PDF,.pdf,1099,PDFFileReader,ERROR,,,,14,0,,0.7,0,PDF is encrypted and cannot be decrypted,acb6e5aca960bddb99bb7f1814a636da97d7ceb1d6fe31a576ad65bd8e829ac8
+Documents/testPDF_no_extract_yes_accessibility_owner_empty.pdf,PDF,.pdf,1098,PDFFileReader,COMPLETE,1.0,2,0,119,1,page:1,1931.2,0,,e9f0fe1a748f14686cea284361fcac09b54ae3bf98811765b46fca13708586b3
+Documents/testPDF_no_extract_yes_accessibility_owner_user.pdf,PDF,.pdf,1098,PDFFileReader,ERROR,,,,14,0,,0.6,0,PDF is encrypted and cannot be decrypted,d29d65708e196439ead18c0a4e9cdae7f0ac8d9db8d640142e5bb3b434b7f989
+Documents/testPDF_protected.pdf,PDF,.pdf,506064,PDFFileReader,COMPLETE,1.0,11890,0,81379,41,page:41,67.5,0,,ff4f3a11b2ae08e8a38cd026317a4aac84cd489ebc5a4015f51503c99711f729
+Documents/testPDF_rotated.pdf,PDF,.pdf,38309,PDFFileReader,COMPLETE,1.0,163,0,1257,1,page:1,5.1,0,,24c68daac94b1f935cf1b1c08bb64f66098e596046ac62fea49e904a7551894e
+Documents/testPDF_sigflags.pdf,PDF,.pdf,659,PDFFileReader,COMPLETE,1.0,1,0,123,1,page:1,1980.7,0,,97f743d23e476037a9f4f819beeca1057f4718071c0ab0246700ceb400a541fb
+Documents/testPDF_twoAuthors.pdf,PDF,.pdf,12628,PDFFileReader,OK-NO-ORACLE,,,,207,0,,2850.5,0,,0418910f5fb1d78cc4e619850a230ee2a37f3b61808d37f6cfe482f4ec8a456e
+Documents/testPageNumber.pdf,PDF,.pdf,52020,PDFFileReader,COMPLETE,1.0,5,0,229,1,page:1,2048.3,0,,f7a769a35ba90077d9e96c5bc3847b55235e70fe3e943a4d5aa84f26958598aa
+Documents/testPassword4Spaces.pdf,PDF,.pdf,18285,PDFFileReader,ERROR,,,,14,0,,0.7,0,PDF is encrypted and cannot be decrypted,d5a2e3fd2aaa7a94b7c2e1bb28f64c01d34ce416654b67d45a66e57c8bf6412d
+Documents/testPhoneNumberExtractor.odt,OpenDocument,.odt,15244,OfficeFileReader,COMPLETE,1.0,47,0,322,8,paragraph:8,9.0,0,,4440a929524b14a4f029c008a6d98a2046a66abe36c89b5102b6ab8bdc6710a3
+Documents/testPopupAnnotation.pdf,PDF,.pdf,9081,PDFFileReader,OK-NO-ORACLE,,,,233,1,page:1,1876.5,0,,2b12f42f044fd4f1968265ffe71ed0a82ffbc9a7c7a8c68ca3932c374ccf3d33
+Documents/testRTF-ms932.rtf,RTF,.rtf,5204,RemainingFileReader,COMPLETE,1.0,2,0,23,1,document:1,0.9,0,,9706f43dd9dbf017813e61fe302baee5875568e59613d506538b5fdacfcb6e96
+Documents/testRTF.rtf,RTF,.rtf,3410,RemainingFileReader,COMPLETE,1.0,4,0,24,1,document:1,0.5,0,,c0f8456daa73640c7c9aeda5c7c2c70284ece2bc1df3ff902f8dc07f0f6ab465
+Documents/testRTFBoldItalic.rtf,RTF,.rtf,31872,RemainingFileReader,COMPLETE,1.0,18,0,101,1,document:1,5.7,0,,1298d7e5bd4a6a22fcebf525aa3c20a7ab33083ede784544103d6fb69b08f7fe
+Documents/testRTFBoldPlain.rtf,RTF,.rtf,1197,RemainingFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,dc320c16b49f2142fa614b0ad8b42a1a5a2d6e14ec52c10ad5606b75adb10b89
+Documents/testRTFControls.rtf,RTF,.rtf,31241,RemainingFileReader,COMPLETE,1.0,20,0,202,1,document:1,5.8,0,,272d5554bf3564d0535f8b5564b1c5820925d31464c2fefa078dc458344806a7
+Documents/testRTFCorruptListOverride.rtf,RTF,.rtf,7671,RemainingFileReader,COMPLETE,1.0,80,0,464,1,document:1,1.2,0,,d593e0753bff236787114fb25ca665d50a43fd6472a32c1b5c7aca0372cc22bd
+Documents/testRTFEmbeddedFiles.rtf,RTF,.rtf,1234084,RemainingFileReader,EMPTY-PLAUSIBLE,,,,0,0,,388.0,0,,98c43e4364197125640bdfff5ca8bf56a7bdec42cfd0e8883632bca583345a8e
+Documents/testRTFEmbeddedLink.rtf,RTF,.rtf,196851,RemainingFileReader,EMPTY-PLAUSIBLE,,,,0,0,,53.0,0,,c63b1a9ac3fc2af9a2a92aae5ae633b92f5dd7ddc73aef8bb8d4272130a0d28c
+Documents/testRTFHexEscapeInsideWord.rtf,RTF,.rtf,192,RemainingFileReader,COMPLETE,1.0,6,0,36,1,document:1,0.2,0,,ca28443674b9032df1ecffeac11dc33e93d17bf2fee8fde590d1527f96d6ab3a
+Documents/testRTFHyperlink.rtf,RTF,.rtf,29577,RemainingFileReader,COMPLETE,1.0,1269,0,7372,1,document:1,6.4,0,,c826803b9800b636c213dcf11a28e081e27e328fb44044f166d779b52a74b4c5
+Documents/testRTFHyperlinkAndStyles.rtf,RTF,.rtf,1793,RemainingFileReader,COMPLETE,1.0,32,0,249,1,document:1,0.6,0,,2596ff8161679b8d36032ff12684bd053ab73f87f522e1e9dff9ca4f0ec02882
+Documents/testRTFIgnoredControlWord.rtf,RTF,.rtf,2235,RemainingFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,1aae10f9ae8fdfdfddae338dec7f4a40cf9fc7d0c254af32e742dbd227f9399b
+Documents/testRTFInvalidUnicode.rtf,RTF,.rtf,343,RemainingFileReader,COMPLETE,1.0,9,0,62,1,document:1,0.2,4,,62edff75ec50f4a5133fd88f7bb294a6a244c030953ca6be034dd717d69bf50e
+Documents/testRTFJapanese.rtf,RTF,.rtf,24956,RemainingFileReader,COMPLETE,1.0,8,0,1072,1,document:1,2.9,0,,99dc05c1bcbddf00e3421b04fabd6014c62194ea4fe82b67b25045667a90669b
+Documents/testRTFListLibreOffice.rtf,RTF,.rtf,7337,RemainingFileReader,OK-NO-ORACLE,,,,7337,1,document:1,0.8,0,,e537545d53983fc66306a70d1738fe00d026eee7bdb0e62c972cee08a69f98a7
+Documents/testRTFListMicrosoftWord.rtf,RTF,.rtf,45942,RemainingFileReader,COMPLETE,1.0,28,0,137,1,document:1,7.0,0,,e57b9bfba4d11d1b8b15dd347ed514beab04ccb54146a882e9398ca843afb43d
+Documents/testRTFListOverride.rtf,RTF,.rtf,31369,RemainingFileReader,COMPLETE,1.0,1,0,98,1,document:1,3.4,0,,03afaba2289bbb86c226a82164bf0894a2e16e1e386b15541f07bb1da44c887c
+Documents/testRTFNewlines.rtf,RTF,.rtf,3444,RemainingFileReader,COMPLETE,1.0,4,0,25,1,document:1,0.9,0,,57cf405ff6de9348e08a7d0cc8160aaf312d39279795d0fce957392ba0fd7ceb
+Documents/testRTFRegularImages.rtf,RTF,.rtf,172843,RemainingFileReader,COMPLETE,1.0,2,0,12,1,document:1,87.2,0,,72e21862e0d72073f6c0678edb7af8a9b82d4b1e785705a3f6ba589fb1961152
+Documents/testRTFTIKA_1713.rtf,RTF,.rtf,2209,RemainingFileReader,COMPLETE,1.0,20,0,138,1,document:1,0.7,0,,b1d9d07392b016c2196448bb23acd67c13085ba5a7a42f13b43c9cfe3a7beafd
+Documents/testRTFTIKA_2150.rtf,RTF,.rtf,173,RemainingFileReader,COMPLETE,1.0,7,0,28,1,document:1,0.1,0,,0d3702738b62b5a0f20e08b3cdcb50fd2446a2d3b211e1e3bb19b962cb16b6be
+Documents/testRTFTIKA_2500.rtf,RTF,.rtf,428,RemainingFileReader,COMPLETE,1.0,38,0,251,1,document:1,0.2,0,,11baa281c9f4f2b96e03c8324734f8a3364fee83cd65b21011a8659e96fe974e
+Documents/testRTFTIKA_2883.rtf,RTF,.rtf,1526,RemainingFileReader,COMPLETE,1.0,34,0,324,1,document:1,0.5,0,,f9614b5a78db2046f9efe9bcb9166dd36a1c5fcb6bd3afa1f23be60abf452c5c
+Documents/testRTFTIKA_2899.rtf,RTF,.rtf,169374,RemainingFileReader,COMPLETE,1.0,3922,0,24110,1,document:1,26.4,0,,220f7c25a1bb7d92ecf13c0b5f4de91b66052e03be694aba429feeddcbed38cd
+Documents/testRTFTableCellSeparation.rtf,RTF,.rtf,1820,RemainingFileReader,COMPLETE,1.0,8,0,21,1,document:1,0.3,0,,87eeb5be0d8fa43514279e83a31cf80df3077e5f725747f151b4469e53813047
+Documents/testRTFTableCellSeparation2.rtf,RTF,.rtf,238,RemainingFileReader,COMPLETE,1.0,5,0,34,1,document:1,0.1,0,,a318ec4e22d0ec73e5c4a339db587f404033c56f50668360a4c055cc13adb7b1
+Documents/testRTFUmlautSpaces.rtf,RTF,.rtf,190,RemainingFileReader,COMPLETE,1.0,1,0,10,1,document:1,0.1,0,,0b7355dd7983516ab84b340370c71e36852e9e7958b5200ef86ef6fcd72d3ee7
+Documents/testRTFUmlautSpaces2.rtf,RTF,.rtf,256,RemainingFileReader,COMPLETE,1.0,1,0,9,1,document:1,0.1,0,,416f7e58f295d502e56106c0df92df30408b6442087ec675dc141fa9ee9abf52
+Documents/testRTFUnicodeGothic.rtf,RTF,.rtf,256,RemainingFileReader,OK-NO-ORACLE,,0,0,13,1,document:1,0.1,12,,90e8e8bec9200c0cb55efac015a116e8007454a1942c244aa1165071e902bc6a
+Documents/testRTFUnicodeUCNControlWordCharacterDoubling.rtf,RTF,.rtf,580,RemainingFileReader,COMPLETE,1.0,2,0,9,1,document:1,0.2,0,,08c000ec87405a08309b82abc0db85c1c6efa356e33f9ad0bb764646f8c68eef
+Documents/testRTFVarious.rtf,RTF,.rtf,65517,RemainingFileReader,COMPLETE,1.0,107,0,560,1,document:1,9.7,12,,cf00c56fe7099d14b820a0d751324e415f2c09af580f2c96f08614a2aec42c1e
+Documents/testRTFWindowsCodepage1250.rtf,RTF,.rtf,272,RemainingFileReader,COMPLETE,1.0,6,0,37,1,document:1,6.5,0,,68e99ef61b508e905fe5dc85aeeedcac76af8572d492ad4a1f47430c6e2f1c0e
+Documents/testRTFWithCurlyBraces.rtf,RTF,.rtf,8815,RemainingFileReader,COMPLETE,1.0,5,0,44,1,document:1,1.1,0,,c6e311021d1152b11aa50ed7c098bd3e5c668e98dc3e8c79346014d5be13a54a
+Documents/testRTFWord2010CzechCharacters.rtf,RTF,.rtf,36701,RemainingFileReader,COMPLETE,1.0,68,0,471,1,document:1,6.2,0,,8b29de22ed7f53ad264c2dd12c3af5a43a26df37dade8ca03325b14c07447cfd
+Documents/testRTFWordPadCzechCharacters.rtf,RTF,.rtf,871,RemainingFileReader,COMPLETE,1.0,68,0,470,1,document:1,0.4,0,,c91abe67c6d86049b023e8238b13cc02c87f2478c68964de7e8caa68431f3870
+Documents/testRTF_annotation_spacing.rtf,RTF,.rtf,44410,RemainingFileReader,COMPLETE,1.0,3,0,29,1,document:1,7.7,0,,26eb3d0a89ed9ab3d030aba5302fb804902207e5c5d4530d4d17b84c5cd5bf4a
+Documents/testRTF_nestedHyperlinkPageRef.rtf,RTF,.rtf,188,RemainingFileReader,COMPLETE,1.0,3,0,17,1,document:1,0.2,0,,8b1a7c3d89b27abe9ef022e8cb4d649a4390e9943fe40e37aeb2604dd0d0a562
+Documents/testRTF_npeFromWMFInTikaServer.rtf,RTF,.rtf,44288,RemainingFileReader,COMPLETE,1.0,6,0,43,1,document:1,7.3,0,,efcb8295ccd5c2b6e3d841cd8240710585fdccbe48f240be3427359d4ff79355
+Documents/testRTF_parInsideHyperlink.rtf,RTF,.rtf,153,RemainingFileReader,COMPLETE,1.0,4,0,26,1,document:1,0.2,0,,4cf8c333c0eac3d303dbad83ba97601de1d3c1a22cbddb47d97c1499d65d69e9
+Documents/testStyles.odt,OpenDocument,.odt,11663,OfficeFileReader,COMPLETE,1.0,16,0,182,8,paragraph:8,10.6,0,,b70625835f2c1fe8fd4c3b625bb51b0b10e323b1a92d3c338c3be4e2cf16a766
+Documents/testSubdocument.docx,Word,.docx,1980,OfficeFileReader,COMPLETE,1.0,4,0,33,1,paragraph:1,2.1,0,,8355ed73c6d7cfd11e72188ca320095054be49a10027589e30d5864092b9335a
+Documents/testUnicodePassword.pdf,PDF,.pdf,18849,PDFFileReader,ERROR,,,,14,0,,31.6,0,PDF is encrypted and cannot be decrypted,7824e7215ffeb8a54b089290340c38cdf62500fa627fab72fc24803eecfa0262
+Documents/testWORD.doc,Word (.doc),.doc,32768,OfficeFileReader,OK-NO-ORACLE,,,,927,1,paragraph:1,2.7,0,,5ca19b67876f284a0e04ed06df44a004f850629a871fe522d014e1fdff912799
+Documents/testWORD.docx,Word,.docx,13436,OfficeFileReader,COMPLETE,1.0,121,0,1195,17,paragraph:14;table-row:3,11.7,0,,67797f5691cb5346201f1c40000a959f9f08d05d0b4493b4291e8d5f16e81e65
+Documents/testWORD6.doc,Word (.doc),.doc,6656,OfficeFileReader,OK-NO-ORACLE,,,,190,1,paragraph:1,1.5,0,,58ea3347378e85e7c8d19ad64e74ad533b2f51b30f047594b434f380712f8b50
+Documents/testWORDML_tableInsideParagraph.doc,Word (.doc),.doc,35185,OfficeFileReader,ERROR,,,,0,0,,0.4,0,File is not a valid OLE2 format .doc file,8b2fd1269898c195da52512bd18a5d3aeed167269b896fe6b3fce39a967c927f
+Documents/testWORD_1img.doc,Word (.doc),.doc,14848,OfficeFileReader,OK-NO-ORACLE,,,,364,1,paragraph:1,1.9,0,,6c94d2c13ebed034f3046969761e6f2a2acf361baf73a8f5086f1453a366e88a
+Documents/testWORD_1img.docx,Word,.docx,8325,OfficeFileReader,COMPLETE,1.0,9,0,82,1,paragraph:1,1185.0,0,,d9dbb66913b6af41e7e5ef6fb969eb60d1ee49f4350bd649168225e15709ad0d
+Documents/testWORD_2006ml.doc,Word (.doc),.doc,265728,OfficeFileReader,OK-NO-ORACLE,,,,2135,1,paragraph:1,9.2,0,,06b4d4ea1ad7dfb75024ccd956ebc316d8d32361e3e5c7617678a0b4a9343f72
+Documents/testWORD_2006ml.docx,Word,.docx,151733,OfficeFileReader,PARTIAL,0.9258,229,17,2289,47,paragraph:42;table-row:5,714.3,0,,a27f2b9244f5147cce25a05d4cddb1eec9c72259a41d52a7bf5eb3806b28207c
+Documents/testWORD_3imgs.doc,Word (.doc),.doc,36352,OfficeFileReader,OK-NO-ORACLE,,,,1989,1,paragraph:1,3.9,0,,5ceb1e33c8a5fa1bcd7ebe8202efc8061dd6dd4dc138c1e15091471438ab7254
+Documents/testWORD_3imgs.docx,Word,.docx,31303,OfficeFileReader,COMPLETE,1.0,20,0,318,4,paragraph:4,2196.0,0,,3c7d3114d21dae635e2e3dfb742d3cb5737ef957be5548a3c8a787cf9e4cdd2c
+Documents/testWORD_EMFAndAttachments.docx,Word,.docx,61769,OfficeFileReader,COMPLETE,1.0,7,0,38,1,paragraph:1,4.7,0,,9b4ee4a8dad5dab45aa291a33842c7d5d71988c5e83f460adf263f73c3c96773
+Documents/testWORD_boldHyperlink.doc,Word (.doc),.doc,27136,OfficeFileReader,OK-NO-ORACLE,,,,183,1,paragraph:1,6.2,0,,ad9890445a2b6d6ce5259748c49923a0fd13768f95b67abaee2b22afe86bc4f7
+Documents/testWORD_boldHyperlink.docx,Word,.docx,12382,OfficeFileReader,COMPLETE,1.0,14,0,79,1,paragraph:1,5.5,0,,dead3afa9ff59b827cea3e9c5e73a9d018d3eadd9c1c51ea63dd19db6edd9060
+Documents/testWORD_bold_character_runs.doc,Word (.doc),.doc,22016,OfficeFileReader,OK-NO-ORACLE,,,,17,1,paragraph:1,2.1,0,,ceef10bcf49319a0ed608144cc66bd429cb601cec227fac8fdaf6329121c91c1
+Documents/testWORD_bold_character_runs.docx,Word,.docx,12912,OfficeFileReader,COMPLETE,1.0,1,0,6,1,paragraph:1,3.4,0,,a4a0603c0151d0813cc840e3a3dba5ab436a9ac5edba00118aa6277db6a6a2e8
+Documents/testWORD_bold_character_runs2.doc,Word (.doc),.doc,22016,OfficeFileReader,OK-NO-ORACLE,,,,11,1,paragraph:1,2.1,0,,16b1b2e99dc5facd3a254d711c796d5934b38ef5a7393ad9b12af11d2cbeda11
+Documents/testWORD_bold_character_runs2.docx,Word,.docx,12863,OfficeFileReader,COMPLETE,1.0,1,0,6,1,paragraph:1,3.4,0,,6b19e83626f763ee96245f027b2514ef5859e2eb4b72ac9902753f702d7d78c3
+Documents/testWORD_charts.docx,Word,.docx,15586,OfficeFileReader,EMPTY-PLAUSIBLE,,,,0,0,,3.6,0,,04580520e7577ab4cdf08d289d5c03d6a1b942dd261f4101de53124334a500cd
+Documents/testWORD_closingSmartQInHyperLink.doc,Word (.doc),.doc,26624,OfficeFileReader,OK-NO-ORACLE,,,,75,1,paragraph:1,2.3,0,,3536a1e171981a55f9811c5440029004d610c54c7cc72adcc9d30a636b377b99
+Documents/testWORD_custom_props.doc,Word (.doc),.doc,22528,OfficeFileReader,OK-NO-ORACLE,,,,21,1,paragraph:1,1.9,0,,0954ac51bbf4a478e322c29a81b2d735c513f3faca0cf7641c753d9e622bec29
+Documents/testWORD_custom_props.docx,Word,.docx,13942,OfficeFileReader,COMPLETE,1.0,2,0,80,1,paragraph:1,3.4,0,,6ccf04f70122b1c32b3623c739b2b8a4d2d7795968b8e2939e665319bf482787
+Documents/testWORD_diagramData.docx,Word,.docx,49860,OfficeFileReader,COMPLETE,1.0,8,0,46,1,paragraph:1,6.8,0,,c4c3f15c28df87ffb1c062e489a8b22bf72ef22df5bdb8020e48f26dd3b7a57e
+Documents/testWORD_docSecurity.docx,Word,.docx,12861,OfficeFileReader,COMPLETE,1.0,1,0,135,1,paragraph:1,3.5,0,,52049d0938d54fc4edbdd27ea7a97629572c498dc5125ea45df9713ac5504dfe
+Documents/testWORD_embedded_pdf.doc,Word (.doc),.doc,1491456,OfficeFileReader,OK-NO-ORACLE,,,,70,1,paragraph:1,2.6,0,,1979c16391c17f5ca2c3d40008b10e8649dce4f9a8dd30b2432fe9416c201952
+Documents/testWORD_embedded_pdf.docx,Word,.docx,63294,OfficeFileReader,COMPLETE,1.0,10,0,215,3,paragraph:3,7.4,0,,8af6790699d2bea7b91720b6ecda45f30c0bdffa43300924447bba32b2571401
+Documents/testWORD_embedded_pics.docx,Word,.docx,52399,OfficeFileReader,PARTIAL,0.9259,27,2,295,5,paragraph:5,1478.0,0,,416b7f04fc83bf3d393924f1e1aa49e6bf7cda06fa1559a0e23b889e0cb6205d
+Documents/testWORD_embedded_rtf.doc,Word (.doc),.doc,16384,OfficeFileReader,OK-NO-ORACLE,,,,71,1,paragraph:1,2.0,0,,6c66cbe7708d3dfa78dd36fe15eb04b7dd69539ea61e1935b914112320ea2dcc
+Documents/testWORD_embeded.doc,Word (.doc),.doc,319488,OfficeFileReader,OK-NO-ORACLE,,,,2201,1,paragraph:1,5.5,0,,032d225f3437e8c3f126b45869056b603292cbb9d077ead55b312293e8e829c5
+Documents/testWORD_embeded.docx,Word,.docx,157830,OfficeFileReader,COMPLETE,1.0,20,0,432,4,paragraph:4,2278.9,0,,0bbd355e6d3d3caa816b8913cd955a7bf4f167bce142d8c49998bb764ed79e71
+Documents/testWORD_emptyParaInTextbox.docx,Word,.docx,15982,OfficeFileReader,PARTIAL,0.9398,166,10,1628,24,paragraph:10;table-row:14,18.9,0,,28a372a0932d7d5ec5032094130200124fb8c3126d2dfaa3cc63312f5d92a36e
+Documents/testWORD_endnote_table.docx,Word,.docx,18504,OfficeFileReader,COMPLETE,0.9999,10737,1,73892,33,paragraph:33,19.5,0,,105709ab279ee6d5642edddf8b5e32257ff9b9cf54c2e886d7d251cb29e39c34
+Documents/testWORD_features.doc,Word (.doc),.doc,11264,OfficeFileReader,OK-NO-ORACLE,,,,13,1,paragraph:1,1.7,0,,ea797cd1488187880e153c51e889d8835ac525c08db83dd486165cd6d2d23422
+Documents/testWORD_features.docx,Word,.docx,8169,OfficeFileReader,INCOMPLETE,0.4785,163,85,642,2,paragraph:2,5.8,0,,b0920ec3e38521c02ca75ef0b1ed1b2b19fabcd701b75366e89b818228094e25
+Documents/testWORD_formattingFlipUnderlineOrder.docx,Word,.docx,18506,OfficeFileReader,COMPLETE,0.9985,1358,2,10197,72,paragraph:72,58.0,0,,d717b9d30f3a4bd19d91840ede952a0af88dfe7d51698652acba2eef399bbcc5
+Documents/testWORD_header_hyperlink.doc,Word (.doc),.doc,22528,OfficeFileReader,OK-NO-ORACLE,,,,135,1,paragraph:1,2.1,0,,1dbf0873c9dd8d62ae2359ed3dbeae7a0d8aada3abac042ba4acd25242ea792d
+Documents/testWORD_italicsSurroundingHyperlink.doc,Word (.doc),.doc,26624,OfficeFileReader,OK-NO-ORACLE,,,,129,1,paragraph:1,2.0,0,,c3339d6335588c11fa7815c835c872e2346bf5bcda9df2420b37da5ed2b18d88
+Documents/testWORD_macros.doc,Word (.doc),.doc,38400,OfficeFileReader,OK-NO-ORACLE,,,,969,1,paragraph:1,168.2,0,,5bf327a892944e5ed1dbcc0db2b332aba6ec17b0f8bcde9f86f691216b44d5c9
+Documents/testWORD_missing_ooxml_bean1.docx,Word,.docx,17913,OfficeFileReader,INCOMPLETE,0.0,1,1,10,0,,5.4,0,,95de9f3b655bfec5b619ee31d1319e5a9a6ce4f253a9738898876640a2969665
+Documents/testWORD_missing_text.docx,Word,.docx,31592,OfficeFileReader,INCOMPLETE,0.4286,14,8,161,3,table-row:3,12.1,0,,85265e95dddecd8dfbf3fe70d27cbc8dd5e83d238b2c10abd8014f1d8d74268e
+Documents/testWORD_multi_authors.doc,Word (.doc),.doc,22528,OfficeFileReader,OK-NO-ORACLE,,,,4,1,paragraph:1,2.4,0,,91cdb6173904530195ca983bea25c1c0bc61dd16ffa4c22f0fb87b0d82514190
+Documents/testWORD_multi_authors.docx,Word,.docx,12054,OfficeFileReader,OK-NO-ORACLE,,,,19,0,,3.4,0,,8435a0e087a5452b0418ba860136683e95ba17ba3be8e22ec21d678b5db1f1b9
+Documents/testWORD_no_format.doc,Word (.doc),.doc,74752,OfficeFileReader,OK-NO-ORACLE,,,,432,1,paragraph:1,9.6,0,,2345333163a5b9b6233d82a40022660dcca833d661c2fa80b5274be47672f56c
+Documents/testWORD_no_format.docx,Word,.docx,37018,OfficeFileReader,COMPLETE,1.0,13,0,84,1,paragraph:1,9.2,0,,1cdbf5dc2b9e8a1e2d5307e3b6d49b9afd0268dacd3975e176fbc9fd9e5805f3
+Documents/testWORD_null_style.docx,Word,.docx,29018,OfficeFileReader,NEAR-COMPLETE,0.9937,158,1,1568,6,paragraph:6,7.3,0,,c8bd6f119d65896b2ec8e34ce56cb532b7358173efb9d41af6abb389ac71176e
+Documents/testWORD_numbered_list.doc,Word (.doc),.doc,44032,OfficeFileReader,OK-NO-ORACLE,,,,943,1,paragraph:1,3.1,0,,4854e5fea6b92c2b99b418df5d12113cb2e35f2208784c7a59f3c1f9b3e6dea9
+Documents/testWORD_numbered_list.docx,Word,.docx,24696,OfficeFileReader,PARTIAL,0.9281,167,12,1850,44,paragraph:43;table-row:1,28.7,0,,3e500410c6ce4f56f871bd55beff2476152fc3d0b7049cf5a93781ae7946ff5b
+Documents/testWORD_override_list_numbering.doc,Word (.doc),.doc,56320,OfficeFileReader,OK-NO-ORACLE,,,,580,1,paragraph:1,2.3,0,,7e4d98a6230b59f46c1761c0146449fffb0d5ffd00bca14a6a76d8829ebe7ccb
+Documents/testWORD_override_list_numbering.docx,Word,.docx,15746,OfficeFileReader,PARTIAL,0.888,125,14,560,49,paragraph:49,23.2,0,,2d88b75145043fb8eef1d851e595b1d0f01d5a342552919fe3af22b36b57d086
+Documents/testWORD_phonetic.doc,Word (.doc),.doc,27136,OfficeFileReader,OK-NO-ORACLE,,,,20,1,paragraph:1,2.5,0,,d802dd16c86a2faf5ed2cb04d7493ab0183b5213bf5b954f49fe24c3a24c2961
+Documents/testWORD_phonetic.docx,Word,.docx,12523,OfficeFileReader,EMPTY-AGREED,,0,0,0,0,,3.8,0,,abda850b3685027eef32a4c583b2b5f7f20f243026d8c453cdb3315348ed6ff0
+Documents/testWORD_protected_drm.doc,Word (.doc),.doc,72192,OfficeFileReader,OK-NO-ORACLE,,,,271,1,paragraph:1,2.2,0,,6f8b55671b60f80f71a8466a041b1afb8189c67c08d0602507eaac6e46d9a91f
+Documents/testWORD_protected_passtika.doc,Word (.doc),.doc,22016,OfficeFileReader,OK-NO-ORACLE,,,,236,1,paragraph:1,2.0,0,,9231e724bb17a2e5f74815728d90b06e15684cf5fb2443a6fa24deebd33be952
+Documents/testWORD_protected_passtika.docx,Word,.docx,14336,OfficeFileReader,ERROR,,,,0,0,,1.1,0,Package not found at 'test-doc/Documents/testWORD_protected_passtika.docx',09b941cabd222172dfd0b213a6a3fd404348b930ca285fa951bad14afb0fdf5c
+Documents/testWORD_sdtInTextBox.docx,Word,.docx,21117,OfficeFileReader,COMPLETE,1.0,14,0,156,3,paragraph:3,6.1,0,,c2f5b10e5850b081c62f7ff3fde05587836f13ccbc0e19bcb4544b8763c5b0c1
+Documents/testWORD_signed.docx,Word,.docx,18245,OfficeFileReader,COMPLETE,1.0,1,0,6,1,paragraph:1,3.6,0,,40bd97185ad6203230c439694a55eada99db48f5fc023f04dc1969ba462c73cb
+Documents/testWORD_specialControlCharacter1415.doc,Word (.doc),.doc,25600,OfficeFileReader,OK-NO-ORACLE,,,,195,1,paragraph:1,2.0,0,,8f203e199a34e2beee0c59f320de98a7ff4765c19282ba1c9dec7a55c6c46121
+Documents/testWORD_tableInRunInsideParagraph.docx,Word,.docx,18606,OfficeFileReader,COMPLETE,1.0,141,0,906,5,paragraph:2;table-row:3,10.2,0,,11cdfd70ce1d984fa6c28d278cd516ce5b7573331d84ffbb58f0c8c8c170550f
+Documents/testWORD_tabular_symbol.doc,Word (.doc),.doc,10240,OfficeFileReader,OK-NO-ORACLE,,,,8,1,paragraph:1,1.7,0,,48dfcb2d8fdb247d65a8029940bf47d0ad2b1b85283a461b3369ce1df8f5ba17
+Documents/testWORD_template.docx,Word,.docx,44942,OfficeFileReader,NEAR-COMPLETE,0.9855,138,2,1150,18,paragraph:18,19.2,0,,b05df2e299e825b5b25b34ff5af63f3c309bf6afcd94b3dd8fab224ac507f163
+Documents/testWORD_text_box.docx,Word,.docx,25271,OfficeFileReader,COMPLETE,1.0,52,0,391,2,paragraph:2,5.7,0,,82d4d863c5e8c1ed0137587323d85f3c66f1c16bbaf0ee69e4806b0bd802b73a
+Documents/testWORD_totalTimeOutOfRange.docx,Word,.docx,11047,OfficeFileReader,COMPLETE,1.0,14,0,79,1,paragraph:1,4.1,0,,a97effd80acf1e4ae1ec8d96af35954858ea031cc71014a1d5de2bd3ff842cb3
+Documents/testWORD_truncated.docx,Word,.docx,763,OfficeFileReader,ERROR,,,,0,0,,0.4,0,Package not found at 'test-doc/Documents/testWORD_truncated.docx',8bb91125cc08ec4a5a771e86ff20cfd0646998b2c1da4361e0241036816a471f
+Documents/testWORD_various.doc,Word (.doc),.doc,17408,OfficeFileReader,OK-NO-ORACLE,,,,14,1,paragraph:1,2.1,0,,87a69bd33b7d6134f802b54d95ae0cadb7a9f4bda0d8bab96daa9abde42be180
+Documents/testWORD_various.docx,Word,.docx,14470,OfficeFileReader,PARTIAL,0.9254,134,10,951,31,paragraph:29;table-row:2,20.6,0,,f7761e3893d795ed09f12f89a16d3265c3919da549adf00127b0f7094bccd0ee
+Documents/testWPSAttachment.doc,Word (.doc),.doc,222720,OfficeFileReader,OK-NO-ORACLE,,,,72,1,paragraph:1,5.9,0,,f59f67ea70ed5565211e5bfc4deeb75d1481837f38a76bae212a905c32b19591
+Documents/testWPSAttachment.docx,Word,.docx,130189,OfficeFileReader,OK-NO-ORACLE,,,,50,0,,7.3,0,,f9373ab9c763603ce72e4a5490c727be745bf48a98d703bab1c9f98ff9cc8a36
+Documents/testWordPerfect_42.doc,Word (.doc),.doc,725,OfficeFileReader,ERROR,,,,0,0,,0.3,0,File is not a valid OLE2 format .doc file,eaf0c297a08d0be2f9aca0a022136f2c3f5a8d4097c9e0d49bfb77b92690bb96
+Documents/test_TIKA-1251.doc,Word (.doc),.doc,50688,OfficeFileReader,OK-NO-ORACLE,,,,3734,1,paragraph:1,2.4,0,,0f2419a0fadc0acf266d300ac8bb9eb980067ffad4f47d22c947ebbfde541310
+Documents/test_list_override.rtf,RTF,.rtf,1250,RemainingFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.2,0,,95b9fce362bebb837100280562981a6fa130a9b5676f9a3f63be1a6fa657ba84
+Documents/test_recursive_embedded.doc,Word (.doc),.doc,31744,OfficeFileReader,OK-NO-ORACLE,,,,65,1,paragraph:1,2.9,0,,01dea6383aa123ecfc6c970faa9b7b922792f718d3715a1aa1f3b1a6a3f3a81b
+Documents/test_recursive_embedded.docx,Word,.docx,27082,OfficeFileReader,COMPLETE,1.0,2,0,11,1,paragraph:1,6.0,0,,c4b7fab030a8b6a9d6691f6699ac8e6f82bc53764a0f1430d134ae3b70c32654
+Documents/test_recursive_embedded_npe.docx,Word,.docx,27817,OfficeFileReader,COMPLETE,1.0,2,0,11,1,paragraph:1,6.0,0,,f3ff590386f645943719622badc7a16a578c3cd1fea2fdb433d25bab0f12f721
+Executables/testAPK.apk,Executable,.apk,11740,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,3.0,0,,c1b43cd0eed5e6576b2fbb38144f7aa065d38e2ed828553806dc623534e2f9a2
+Executables/testTinyPE.exe,Executable,.exe,1024,,ERROR,,,,0,0,,0.1,0,Unsupported file type: .exe,3aac3c2e03600fd7dbedac01eb42b8565d5265ddb06623ac66e62e997c81ced0
+Executables/testWindows-x86-32-icons.exe,Executable,.exe,32768,,ERROR,,,,0,0,,0.1,0,Unsupported file type: .exe,595c230fddca24d569d3c3ffcdd0df7647a048789b50285196756ff622e089e4
+Executables/testWindows-x86-32.exe,Executable,.exe,11723,,ERROR,,,,0,0,,0.1,0,Unsupported file type: .exe,416c543a7d59cd97812575fbb6d92c7712081f2287f60cc0da60a7d204ff52c8
+Images/ASF_Tika-colour.png,Image,.png,30720,ImageFileReader,OK-NO-ORACLE,,,,96,15,ocr-word:15,1420.6,0,,f809ff9ac4e38a37eff66354c20541558edbd9a62761cc7e08af887fce0151a4
+Images/ASF_Tika-colour.svg,Image,.svg,33205,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.3,0,,f3a8db135f32d1762417bbf038271f15893bffb10e5520939b41f0c00b9ff011
+Images/IMG_1034.heic,Image,.heic,1499892,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,36.4,0,,f40b97f76a281c56e90b502762ef66ff9d34ea61696c8350257b5dc6a8797e0d
+Images/baseball.gif,Image,.gif,582196,ImageFileReader,OK-NO-ORACLE,,,,6,1,ocr-word:1,706.9,0,,c89a09f0ea94bf33680615fb9107efa1f5b0042a69ae7e430e61bfed66ff42a1
+Images/baseball.jpg,Image,.jpg,38474,ImageFileReader,OK-NO-ORACLE,,,,26,2,ocr-word:2,924.6,0,,f03eb71065ce5de3e546e05c9426c947b8c0431251ed6b9b3e1d1507b2a1cddc
+Images/baseball.png,Image,.png,263301,ImageFileReader,OK-NO-ORACLE,,,,22,2,ocr-word:2,957.1,0,,c32ebd117ffafa9ff7465632df139b549a7d70f7f7649b055b6938e8489aad02
+Images/circles-with-prefix.svg,Image,.svg,486,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.2,0,,39aa33cfee5557da858e53863d4066fa3491326d338bbe629ccd7a0372211213
+Images/circles.svg,Image,.svg,454,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.2,0,,8cdd4fd9511411d83588879799aed860b73281966b7243c4da4ea02711a23d8f
+Images/datamatrix.png,Image,.png,204,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,496.2,0,,9b0bd957c56e1983024da7975632447d7744a4fe2360f66c7912cd640e3648fc
+Images/testAVIF.avif,Image,.avif,185,ImageFileReader,ERROR,,,,0,0,,0.3,0,Unsupported image file type: .avif,087f05ae245b1659a4178fe2c0b772dabc7cb02f8123ee525b876d2a6b882a66
+Images/testAVIF_XMP.avif,Image,.avif,1053,ImageFileReader,ERROR,,,,0,0,,0.2,0,Unsupported image file type: .avif,e2738ddd1bead2b2c6c9c229ca565c965903fb7714b522f0496a789c4248c701
+Images/testBMP.bmp,Image,.bmp,22554,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,767.9,0,,38cf86894695693e9b2aef817ea0abc74b7e605f0c1d3993b07725838c840c67
+Images/testGIF.gif,Image,.gif,8495,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,701.2,0,,be7640cdd892bd7b00e1627a8149fc72e7b46bd196802f5938ebe7773c61fa3a
+Images/testHEIC_livePhoto.heic,Image,.heic,3203,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,2aa7014bfc13602ac95d357156d05b1e8c5aedd882f1ae976e6c04f5b15c3ee4
+Images/testHEIF.heic,Image,.heic,13706,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.3,0,,4e5f21ca074c4c981c0f9d94786263fc374dd8412a643355a01bed62fad43d80
+Images/testICO.ico,Image,.ico,7065,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,503.8,0,,09d694c4b70338caa1063a7c4e710a8a7934ecf8a94ff9b2d6483a075b285485
+Images/testICO_bmpOnly.ico,Image,.ico,10806,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,b68593eb2118079e268e7d5e3327b53fe3d11245899d3f8eeea57d397f051c11
+Images/testJPEG.jpg,Image,.jpg,7686,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,669.6,0,,643dbb91a62b47947d320a588aa9d837640cc9baf3fe00010c9fe52b3fef8a1a
+Images/testJPEG_EXIF.jpg,Image,.jpg,16357,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,709.7,0,,29c928f48b6e5c40be18f43c0116c377ad378a046c937ed571bfdad9c9d903f7
+Images/testJPEG_EXIF_emptyDateTime.jpg,Image,.jpg,24597,ImageFileReader,OK-NO-ORACLE,,,,8,2,ocr-word:2,638.4,0,,8672c46308dfca1687addc60cbd429b3cf4b3331a96d20a8cde8c532d92d4987
+Images/testJPEG_GEO.jpg,Image,.jpg,16482,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,732.5,0,,f3eb7a20006417b6a07cec1a03333b9571aa45ed1cee0fc4a558ad9ca5515b18
+Images/testJPEG_GEO_2.jpg,Image,.jpg,20844,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,696.6,0,,385765e0b2c5846b950c7aff8c4aad38b47193f6e90042f933025e6b07665c34
+Images/testJPEG_MicroVideo.jpg,Image,.jpg,2662,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.2,0,,54f01b8dcdde43e0b2395dd5429b73f85a4db59dde921d58c906b6fe15293142
+Images/testJPEG_MotionPhoto.jpg,Image,.jpg,3040,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.2,0,,3bed560da99169cc5bafd8d0852d244152d6b933dde2eb6274a17fb2536d151e
+Images/testJPEG_MotionPhoto_noVideo.jpg,Image,.jpg,1211,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.2,0,,e025d8788be951637a70415135c3f02036ef1dbc451636a238722fe1b8cf99e9
+Images/testJPEG_commented.jpg,Image,.jpg,13325,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,745.8,0,,d66c76902f67a5f1253b6bed4fa5271b6f3c1355a90790318e3bef494f7cd81e
+Images/testJPEG_commented_pspcs2mac.jpg,Image,.jpg,26173,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,676.3,0,,8ad432c048de4fa01a6e15181e3951d352cf71d2d53ee681793ba8b2db6c8749
+Images/testJPEG_commented_xnviewmp026.jpg,Image,.jpg,13910,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,683.7,0,,2c0c71da2f067d8f4efdc8c5e00a4fb2c98a6be531e5b1055f286aa333ff8046
+Images/testJPEG_oddTagComponent.jpg,Image,.jpg,8330,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,875.1,0,,c71e01c35a559df18f50be0b900e7df67f577c387faa505890b788ac399542ea
+Images/testOCR.jpg,Image,.jpg,3408,ImageFileReader,OK-NO-ORACLE,,,,48,2,ocr-word:2,584.7,0,,4663ae52f0508d4ea47736459672b974493ea494a3cacdc6746ac7278dd5c5d0
+Images/testOCR.png,Image,.png,28245,ImageFileReader,OK-NO-ORACLE,,,,62,1,ocr-word:1,743.8,0,,e83cdf28f8db7eb3b3f5a59fcef9d7ab89ad0e22bfeae285d52fa5fa4ae22c1e
+Images/testOCR_encode.jpg,Image,.jpg,284,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.2,0,,c29c93cbc17a303db93dd50d2fde48c24818d36dc79a519363519bba5d7a0bde
+Images/testOCR_encode.png,Image,.png,70,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.2,0,,6b7fa434f92a8b80aab02d9bf1a12e49ffcae424e4013a1c4f68b67e3d2bbcd0
+Images/testOCR_spacing.png,Image,.png,7232,ImageFileReader,OK-NO-ORACLE,,,,40,4,ocr-word:4,1822.1,0,,17abe1efa2ac03d6ad7de3ebebf25e101866b434e7058ea4aaec16a514b84848
+Images/testPNG.png,Image,.png,17041,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,751.4,0,,2c2e204a9e7434d22d906e5b82b9ee93a1f2480b87f9be572fcd7adb0cb59244
+Images/testRotated+10.png,Image,.png,653855,ImageFileReader,OK-NO-ORACLE,,,,4998,35,ocr-word:35,10363.1,0,,b8ef9dee62e853432869f6960ed628e21a2f4a8126d5ca5aa4745de05823e7e3
+Images/testRotated-10.png,Image,.png,674259,ImageFileReader,OK-NO-ORACLE,,,,5364,38,ocr-word:38,10122.0,0,,3c206b15ce91c6ff8a78416c610d2ccb7f84211966c7cce1d6544ffb5b73ce47
+Images/testSVG.svg,Image,.svg,308,ImageFileReader,OK-NO-ORACLE,,,,30,1,document:1,0.3,0,,dcec12bfcf033616c9c87de1b1a7a3bf2c9c94cd447ba932200436f5f523e7e7
+Images/testSVG_no_xml_header.svg,Image,.svg,179,ImageFileReader,OK-NO-ORACLE,,,,30,1,document:1,0.2,0,,b36e910a6266f20f04390de46785fa1af31651ba6aa7b890804c79ddf20ddf87
+Images/testTIFF.tif,Image,.tif,25584,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,751.0,0,,04c72da5af0ec9e3f2e96d70cf674f0c42255aeacd3fd23243010a7c208d11bc
+Images/testTIFF_multipage.tif,Image,.tif,156867,ImageFileReader,OK-NO-ORACLE,,,,60,4,ocr-word:4,717.7,0,,3e425e4682be75c2a0ebb2f4168f9782df3da1580e7e72b00140b228110fdd90
+Images/testWEBP.webp,Image,.webp,3442,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,498.8,0,,e554463b318059f0ab529b4f23a36106e71a34b8dc490d5b6de00dc3e6268d24
+Images/testWebp_Alpha_Lossless.webp,Image,.webp,92312,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,754.2,0,,8ce2a4fb305a0f9639d5083a35c89ae0cc5f568d9e5a03df1f175fdc37080460
+Images/testWebp_Alpha_Lossy.webp,Image,.webp,23404,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,766.2,0,,a954bc006a5d2cec3ac1db2f2d065778e21ae17d5552ca253f6d3a911f6c3730
+Images/testWindows-icons-app-rebuilt.ico,Image,.ico,7065,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,521.7,0,,282749aa2c2f2857b6b6255e9cf40d19c5158b93e9c86a5e6533fb6e3a95ba35
+Images/testWindows-icons-app.ico,Image,.ico,7065,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,511.0,0,,09d694c4b70338caa1063a7c4e710a8a7934ecf8a94ff9b2d6483a075b285485
+Images/testWindows-icons-doc-rebuilt.ico,Image,.ico,10806,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,fc2db45a1d38c00e3e167e595942ee10c3069392c7e932e7fa59255f7f8fa12c
+Images/testWindows-icons-doc.ico,Image,.ico,10806,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.2,0,,b68593eb2118079e268e7d5e3327b53fe3d11245899d3f8eeea57d397f051c11
+Images/tika.png,Image,.png,22216,ImageFileReader,OK-NO-ORACLE,,,,206,10,ocr-word:10,1299.6,0,,3342d8f887cb86334e922d919ee1072ee6b79a8bbd3442b57b4aa361d8b235f0
+Other/tableHeaders.numbers,iWork,.numbers,89554,OfficeFileReader,ERROR,,,,0,0,,88.4,0,No extractable text from iWork package (index.xml / IWA / QuickLook / LibreOffice paths exhausted),98b7abc1a129c66550c12ff02fcbe9af1058de36b392cceed9fc1989510c5650
+Other/tableNames.numbers,iWork,.numbers,88246,OfficeFileReader,ERROR,,,,0,0,,35.7,0,No extractable text from iWork package (index.xml / IWA / QuickLook / LibreOffice paths exhausted),959fdeb02af097133103cf4a5afd9c9579a6de1f2ef523d1f4ff8534367c9f7c
+Other/test-columnar.xlsb,Excel (.xlsb),.xlsb,9691,OfficeFileReader,OK-NO-ORACLE,,,,1306,95,cell:95,8.7,0,,653e17a2a9e77eda56aaeadcd164ed1eae0ae8897dbefecfb8d96d97878af74e
+Other/test-documents.dmg,Executable,.dmg,524288,,ERROR,,,,0,0,,0.3,0,Unsupported file type: .bin,b4ae1c0ec4a743cc08046009a0c3e8518501e7ef6bb108dd32f37637d63f975f
+Other/testARW.arw,Camera raw,.arw,1769,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,25b7343cab2c8613d2197a1de85c3e6e9e09285d55db2193911572edb1663741
+Other/testCR2.cr2,Camera raw,.cr2,1673,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,f933251bbea4abbc75f66fc4b3d2dbe210378fd3c2d4ba7510c801ba22fe9a68
+Other/testDNG.dng,Camera raw,.dng,1820,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.3,0,,d32229fcc346458f29ce18f65161140249306b957003b6058755ed37ad6d8230
+Other/testDNG_bigtiff.dng,Camera raw,.dng,2111,,ERROR,,,,0,0,,0.1,0,Unsupported file type: .bin,94a9b0da261d61ea47a3dd022c40e4c182e6859dba86eac5d77008cb1606a1b2
+Other/testEXCEL.xlsb,Excel (.xlsb),.xlsb,9161,OfficeFileReader,ERROR,,,,0,0,,2.3,0,Could not read .xlsb: pyxlsb failed (KeyError: '\x04') and no LibreOffice conversion was available. Install LibreOffice (soffice) to read this workbook.,41b0c82bfa682f968d69e05e23137232d6c89ea4f24439786f0b779be319929b
+Other/testEXCEL_charts.xlsb,Excel (.xlsb),.xlsb,12835,OfficeFileReader,OK-NO-ORACLE,,,,140,19,cell:19,2.6,0,,0ced9718b14d223f4801ca99166e00ef75f1a8cea972dcbe2607414879cb8b32
+Other/testEXCEL_diagramData.xlsb,Excel (.xlsb),.xlsb,16287,OfficeFileReader,OK-NO-ORACLE,,,,33,0,,2.2,0,,1da9907d533b0eccf6b970cac44e851001c20a434f354cfc489d16cd2a0e3149
+Other/testEXCEL_template.xlt,Excel,.xlt,25600,OfficeFileReader,OK-NO-ORACLE,,,,51,1,cell:1,6.9,0,,3c29b13c2daee129ca6222253c12838ef38767faedeb4306b419d62cdaf09eef
+Other/testEXCEL_template.xltx,Excel,.xltx,8589,OfficeFileReader,COMPLETE,1.0,4,0,51,1,cell:1,63.6,0,,124ba0a3e3d613fd64808fa9a70efa6b8eacd128727cbb365b678ee2d7e772fb
+Other/testEXCEL_various.xlsb,Excel (.xlsb),.xlsb,22715,OfficeFileReader,OK-NO-ORACLE,,,,2184,48,cell:48,8.9,0,,8c600e97d719b0266dcfb49c1872feb8d10c6ed12bc768ff16ace7dae555ebfc
+Other/testGRAPHVIZd.dot,Word (.doc),.dot,128,RemainingFileReader,OK-NO-ORACLE,,,,128,1,document:1,0.1,0,,86923de79704c4b20877d6016f3b9e1712e7e81320f4b202aab038c48ee14180
+Other/testGRAPHVIZdc.dot,Word (.doc),.dot,213,RemainingFileReader,OK-NO-ORACLE,,,,213,1,document:1,0.2,0,,4567021b464cdfc1a0cc2ba40899212e5a85f767f347c3485b511fcac1a8dc6a
+Other/testGRAPHVIZg.dot,Word (.doc),.dot,168,RemainingFileReader,OK-NO-ORACLE,,,,168,1,document:1,0.1,0,,eb1930315b5a1d61070eed02e5bb69ab4b32fbda15cb77be9e3d4d22cc6f8303
+Other/testIPA.ipa,Executable,.ipa,163803,ArchiveFileReader,EMPTY-PLAUSIBLE,,,,0,0,,11.0,0,,e1e3d690ece2a5483d38fea44902da5f212923973d21c9a0b66b3d16cfcd9621
+Other/testMultipleSheets.numbers,iWork,.numbers,116754,OfficeFileReader,OK-NO-ORACLE,,,,80,2,paragraph:2,102.3,0,,7851b2bac687debeb3ef05fca0579a6b0ee86babd09193be81f813deae04b438
+Other/testNEF.nef,Camera raw,.nef,1986,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,98e65ef234d33e2a3be6f5c9aa5030a0ce9cc23c599c28de4dffcec3c6c0d249
+Other/testNEF_dup.nef,Camera raw,.nef,828,ImageFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.5,0,,74ddbfecd4c83c50af6f705260ba0eaf03d90ea69620ab863bfbc7a7f5303422
+Other/testNumbers.numbers,iWork,.numbers,134571,OfficeFileReader,OK-NO-ORACLE,,,,237,2,paragraph:2,69.6,0,,6fb57a2fc3cfc532713ac3e58d2b7e9de93342f7d84cf76599901281a26d56cc
+Other/testNumbers2013.numbers,iWork,.numbers,179147,OfficeFileReader,OK-NO-ORACLE,,,,3145,255,paragraph:255,4.4,0,,74a834857c02d06dbc399aff8ba475f7708092e42501cc665d7fa489f385831f
+Other/testNumbersCharts.numbers,iWork,.numbers,104547,OfficeFileReader,OK-NO-ORACLE,,,,80,2,paragraph:2,90.7,0,,f4430f2aa0ddab186e7e32f15552b58b7b03abada7a978dfbcd51e5548757789
+Other/testPPT.ppsx,PowerPoint,.ppsx,36521,OfficeFileReader,ERROR,1.0,37,0,272,0,,47.1,0,"file 'test-doc/Other/testPPT.ppsx' is not a PowerPoint file, content type is 'application/vnd.openxmlformats-officedocument.presentationml.slideshow.main+xml'",82dcd905dfeb155d8ffea9d4f7e69d03a39895148407c32fa971a1addbea5656
+Other/testPPT.pptm,PowerPoint,.pptm,36541,OfficeFileReader,COMPLETE,1.0,37,0,601,4,shape:4,17.1,0,,d8c6e14116eafecc8c6efa30aa40d755729d4cd3d97550dc9f77fa3c1562eb5b
+Other/testPPT_macros.pptm,PowerPoint,.pptm,32824,OfficeFileReader,COMPLETE,1.0,2,0,377,1,shape:1,12.4,0,,eb1fa9f03d20e99ab6f5760c30c2d9f8fa8aac73dc7a5e932b9e6a70749f45d5
+Other/testPages.pages,iWork,.pages,134152,OfficeFileReader,OK-NO-ORACLE,,,,5493,20,paragraph:20,13.4,0,,a276a2784a9ce6ea4aba7fe2cbfd555fe2edecf4db7dbe1f0998c803a150f446
+Other/testPages2013.pages,iWork,.pages,237567,OfficeFileReader,OK-NO-ORACLE,,,,3037,251,paragraph:251,2.6,0,,1819dd1f4a04fd22018afcaa3743802f891e092c0974a4193498fb4a1173f2ee
+Other/testPagesComments.pages,iWork,.pages,154546,OfficeFileReader,OK-NO-ORACLE,,,,6927,35,paragraph:35,11.7,0,,b6faecca227e13fc705a35332dda005242ae1b1a1dde4939470730fb4dc68efa
+Other/testPagesHeadersFootersAlphaLower.pages,iWork,.pages,168501,OfficeFileReader,OK-NO-ORACLE,,,,7026,37,paragraph:37,11.9,0,,dd6782cd124201783f0e4103a0860ca6202f07fd86b939f02e3694600f12cbdd
+Other/testPagesHeadersFootersAlphaUpper.pages,iWork,.pages,168995,OfficeFileReader,OK-NO-ORACLE,,,,7024,36,paragraph:36,12.0,0,,f1652c7d3c38e737e74066d9403c3a64660e71dfe37ce494bcd1351b92619059
+Other/testPagesHeadersFootersFootnotes.pages,iWork,.pages,177328,OfficeFileReader,OK-NO-ORACLE,,,,7026,37,paragraph:37,64.5,0,,99d50cc7c6eaa14bb3c3b87c8163134673268da22846b1832674f40a54041dc8
+Other/testPagesHeadersFootersRomanLower.pages,iWork,.pages,103923,OfficeFileReader,OK-NO-ORACLE,,,,7026,37,paragraph:37,11.5,0,,b631ff2c6bd44bd227ce077113d800ea578927fb52de1b3c265d9b36e4fde917
+Other/testPagesHeadersFootersRomanUpper.pages,iWork,.pages,174197,OfficeFileReader,OK-NO-ORACLE,,,,7026,37,paragraph:37,11.3,0,,703a25faf3e75076aad4116abceab45c4f50af426077cbc823644fbe66aca424
+Other/testPagesLayout.pages,iWork,.pages,66480,OfficeFileReader,OK-NO-ORACLE,,,,3294,12,paragraph:12,10.7,0,,6157fe7a95f7bc7d42251872f990d2f2d589f7f5e25a52b58e25c14cc447a4b2
+Other/testPagesPwdProtected.pages,iWork,.pages,33166,OfficeFileReader,ERROR,,,,0,0,,0.6,0,That compression method is not supported,19f6aa69facc4d20abe7ee21fcf1d7cf695b41135dc0d803aa2621f94b30ee81
+Other/testWORD_macros.docm,Word,.docm,17322,OfficeFileReader,ERROR,0.0,4,4,967,0,,59.0,0,"file 'test-doc/Other/testWORD_macros.docm' is not a Word file, content type is 'application/vnd.ms-word.document.macroEnabled.main+xml'",8c30f81956e2f8c9e243bab09038fadb1cce36b593540484e5edcbcc1b56c1d3
+Other/testWORD_template.dotx,Word,.dotx,59583,OfficeFileReader,ERROR,0.0201,149,146,12,0,,11.2,0,"file 'test-doc/Other/testWORD_template.dotx' is not a Word file, content type is 'application/vnd.openxmlformats-officedocument.wordprocessingml.template.main+xml'",e21a1c1e7c1f30176bf03e5228282750afd6a6708f6706eb9906c6254c08fbae
+Presentations/LibreOfficeImpress_odp_1.3.odp,OpenDocument,.odp,24035,OfficeFileReader,COMPLETE,1.0,6,0,99,2,shape:2,77.2,0,,ecc8129a5b22c77b378504d87774ef26245d9e4146e8b15ec30a2f58fd0ebb93
+Presentations/pictures.ppt,PowerPoint (.ppt),.ppt,75776,OfficeFileReader,OK-NO-ORACLE,,,,108,3,shape:3,2.6,0,,5318e8486f47c7d9e838eaa4edfe385ba27d7d0ce145364792df53488430e98c
+Presentations/testComment.ppt,PowerPoint (.ppt),.ppt,101376,OfficeFileReader,OK-NO-ORACLE,,,,1133,55,shape:55,5.9,0,,9d1d7001c4e0fbbbe89ea9e603f5dd99d7642507da6a8091ad615776def94cf5
+Presentations/testComment.pptx,PowerPoint,.pptx,34979,OfficeFileReader,COMPLETE,1.0,4,0,80,1,shape:1,9.2,0,,2bffe1e73e6b9e57cf07307f3e959f730c057ae3b9e498f1a6b362df83ca4676
+Presentations/testMSChart-govdocs-428996.ppt,PowerPoint (.ppt),.ppt,41472,OfficeFileReader,OK-NO-ORACLE,,,,324,14,shape:14,2.4,0,,6c44c2fad90688a99d45f806db9c34fb04dfe60368bfd966656f0f7cf18c10cc
+Presentations/testMSChart-govdocs-428996.pptx,PowerPoint,.pptx,56224,OfficeFileReader,COMPLETE,1.0,19,0,313,2,shape:2,11.1,0,,4eef2f71094586d84e8b37a07d9d6b6b981d0532a2d1d5a217d3734abff77b91
+Presentations/testMasterFooter.odp,OpenDocument,.odp,13975,OfficeFileReader,OK-NO-ORACLE,,,,24,0,,15.3,0,,c786aecfc72a2ff55ede5a21c4dfda14af298cebf1e788da685262da7025c833
+Presentations/testOCR.pptx,PowerPoint,.pptx,78550,OfficeFileReader,COMPLETE,1.0,4,0,131,1,shape:1,1108.1,0,,d70b17a89e1ccc536ca02263b20d4326d3ce0b732551fb968c1111456c1055ff
+Presentations/testODPMacro.odp,OpenDocument,.odp,14505,OfficeFileReader,OK-NO-ORACLE,,,,24,0,,20.4,0,,9132f1a2a5193fe415a9542f096ed705d008d69577f0ba1fab5ba83cd4e3e3f0
+Presentations/testODP_NPE.odp,OpenDocument,.odp,431290,OfficeFileReader,INCOMPLETE,0.0311,1767,1712,1728,4,shape:4,11720.4,0,,1fbb574d53faa5b7f5a9ddc139ce770441b321536d57ba03edb196ff9aed7de4
+Presentations/testOptionalHyphen.ppt,PowerPoint (.ppt),.ppt,100864,OfficeFileReader,OK-NO-ORACLE,,,,1060,50,shape:50,5.9,0,,4cc11cd69e90576f3cc443ea3f2723e1b485460c5f8036815d19c2aa3ccff53c
+Presentations/testOptionalHyphen.pptx,PowerPoint,.pptx,33173,OfficeFileReader,COMPLETE,1.0,2,0,58,1,shape:1,9.8,0,,7f43cb534623ae5ac6579954ed664ca53be23526c45d7f73ca2323abe1476a24
+Presentations/testPPT.ppt,PowerPoint (.ppt),.ppt,16384,OfficeFileReader,OK-NO-ORACLE,,,,182,6,shape:6,1.9,0,,499ccd0de7c0778afa4f6ed08793afd2406b62547373a619a5a78658ae65c4b7
+Presentations/testPPT.pptx,PowerPoint,.pptx,36518,OfficeFileReader,COMPLETE,1.0,37,0,601,4,shape:4,15.6,0,,730a6ade20208eaad375160949db37b2ffb52af4d3704b51976ff45564bff83b
+Presentations/testPPTX_Thumbnail.pptx,PowerPoint,.pptx,42580,OfficeFileReader,COMPLETE,1.0,8,0,142,2,shape:2,8.3,0,,68b45f3d6150a630b8e3979dbd19a843fdedee75b2c3430c6f4ba75b8d24156d
+Presentations/testPPTX_overlappingRelations.pptx,PowerPoint,.pptx,38135,OfficeFileReader,COMPLETE,1.0,22,0,285,4,shape:4,18.6,0,,1ea1c979983ddafa798da32f7fd12a72b6262478aae1c7e021354226e0a8790f
+Presentations/testPPT_2imgs.ppt,PowerPoint (.ppt),.ppt,124928,OfficeFileReader,OK-NO-ORACLE,,,,1236,62,shape:62,5.8,0,,761184c9e17d320c1d43882726825396753b9020cc067ac8b281306825f18710
+Presentations/testPPT_2imgs.pptx,PowerPoint,.pptx,59246,OfficeFileReader,COMPLETE,1.0,9,0,260,1,shape:1,1841.5,0,,a5ec2ad60eebe2d7b82ec6747618302df7b4fc99cde73b5fd03bbec9e2b37ebc
+Presentations/testPPT_EmbeddedPDF.ppt,PowerPoint (.ppt),.ppt,187392,OfficeFileReader,OK-NO-ORACLE,,,,1581,106,shape:106,9.1,0,,dbdc3a4bb57dc0afd495edf5134760fdcf345b2e86ceb020495eba689fe29a97
+Presentations/testPPT_EmbeddedPDF.pptx,PowerPoint,.pptx,108637,OfficeFileReader,OK-NO-ORACLE,,,,114,0,,756.6,0,,93bdfb75c6331c57b0b099e6d5f714e9217b3d8d23e9f3a9d9bea8b3c6081472
+Presentations/testPPT_autodate.ppt,PowerPoint (.ppt),.ppt,148992,OfficeFileReader,OK-NO-ORACLE,,,,1587,91,shape:91,10.5,0,,6ce1d3db26b2c4e9e03efcaa80bdc32aa55547184df50acd41b19ab06e0e83cb
+Presentations/testPPT_autodate.pptx,PowerPoint,.pptx,47707,OfficeFileReader,COMPLETE,1.0,20,0,150,3,shape:3,13.2,0,,b6887b096ed51cfb0fa06b4c2cdd6210035f954899dc88ca68937153eeb23d32
+Presentations/testPPT_charts.pptx,PowerPoint,.pptx,34766,OfficeFileReader,OK-NO-ORACLE,,,,24,0,,8.9,0,,a6763b16b4bdc36751eacdd8f07547a1d9725905d1c977355e618adb3322b53a
+Presentations/testPPT_comment.ppt,PowerPoint (.ppt),.ppt,86016,OfficeFileReader,OK-NO-ORACLE,,,,1171,52,shape:52,5.7,0,,c90dea3b2f5e883f3c48b8d8a1c71c38720add8336bdcf217c029728878eb890
+Presentations/testPPT_comment.pptx,PowerPoint,.pptx,30939,OfficeFileReader,COMPLETE,1.0,1,0,133,2,shape:2,9.2,0,,d06691124f53492224bf366f7cf086edbd33d79eccdbfbfdbe56c5c6b9b14954
+Presentations/testPPT_custom_props.ppt,PowerPoint (.ppt),.ppt,104960,OfficeFileReader,OK-NO-ORACLE,,,,1221,68,shape:68,5.9,0,,800e2d63a6f80e39c2a8e336da39d6c21eb7ab994c205ec01d34cf66c8c4cd32
+Presentations/testPPT_custom_props.pptx,PowerPoint,.pptx,37864,OfficeFileReader,COMPLETE,1.0,3,0,152,1,shape:1,8.6,0,,26b89f3792617fedbdeca25e7624482f7d6521edb76224b95ebefa18eb3e9688
+Presentations/testPPT_diagramData.pptx,PowerPoint,.pptx,48793,OfficeFileReader,COMPLETE,1.0,1,0,27,0,,8.4,0,,69a19e17398a1a5c8f3bd7c0d70a3afee9654a3e8e92aec61cc6054417c5c5ab
+Presentations/testPPT_embedded2.ppt,PowerPoint (.ppt),.ppt,92160,OfficeFileReader,OK-NO-ORACLE,,,,368,21,shape:21,2.7,0,,a77966b619f2c54653383038cdcf388db7e66ed42a87b899e479d0c8104e7265
+Presentations/testPPT_embeddedMP3.pptx,PowerPoint,.pptx,84434,OfficeFileReader,OK-NO-ORACLE,,,,93,0,,526.1,0,,375f54146ddecfc4172a03920262b946900ebd1559eadbee5ffc133f01168ead
+Presentations/testPPT_embedded_two_slides.pptx,PowerPoint,.pptx,255364,OfficeFileReader,COMPLETE,1.0,18,0,455,2,shape:2,1791.5,0,,250e1bfacf29eeeda665611bfb57039969b68f497aee87d4a176ecaf896a7cd7
+Presentations/testPPT_embeded.ppt,PowerPoint (.ppt),.ppt,224768,OfficeFileReader,OK-NO-ORACLE,,,,2068,148,shape:148,9.6,0,,b45d23e75ba0c8a1608f6784f2a412bf98203bbcd1340cc7f0fdaca5c3b9e541
+Presentations/testPPT_embeded.pptx,PowerPoint,.pptx,202969,OfficeFileReader,COMPLETE,1.0,9,0,323,1,shape:1,1799.6,0,,6b71dc4ae527638a71315e60bdac48265ee30eb517a7db26e76783c4d29ba6f7
+Presentations/testPPT_groups.ppt,PowerPoint (.ppt),.ppt,161792,OfficeFileReader,OK-NO-ORACLE,,,,1778,106,shape:106,10.7,0,,86f640fd8ff9a74a540ef262e540cba8559a4012c1f9b013e673ba2a9d5624b3
+Presentations/testPPT_groups.pptx,PowerPoint,.pptx,59888,OfficeFileReader,COMPLETE,1.0,10,0,202,2,shape:2,770.1,0,,e8d4cd55569be22849a584bff949d07e8c16abbd00b59feedc43f17c33b4061f
+Presentations/testPPT_macros.ppt,PowerPoint (.ppt),.ppt,88064,OfficeFileReader,OK-NO-ORACLE,,,,1087,53,shape:53,6.1,0,,faa438447d932770bf49a16856cf23c7f98be47f94d96030f294859595d87a3b
+Presentations/testPPT_masterFooter.ppt,PowerPoint (.ppt),.ppt,139776,OfficeFileReader,OK-NO-ORACLE,,,,1450,82,shape:82,9.9,0,,52c57f5bb8294daf234c62730d0fa97589a872d29bb936cc24a2d83b3fd5e1aa
+Presentations/testPPT_masterFooter.pptx,PowerPoint,.pptx,35128,OfficeFileReader,COMPLETE,1.0,4,0,70,1,shape:1,11.8,0,,968d057f3271cd0e7aa2c1d9a2083e9e8f171393854e94926b6b08ebfd8cfd47
+Presentations/testPPT_masterText.ppt,PowerPoint (.ppt),.ppt,117760,OfficeFileReader,OK-NO-ORACLE,,,,1167,58,shape:58,7.6,0,,3bdbec2f6bf97dca00538173196153c8d8138203cadc483be7ccd5c1719a2c68
+Presentations/testPPT_masterText.pptx,PowerPoint,.pptx,32270,OfficeFileReader,OK-NO-ORACLE,,,,24,0,,8.3,0,,4c8cabe8c8b068e22eab34b568516b0e9a52be72ed470bc115772dab0ccbab36
+Presentations/testPPT_masterText2.ppt,PowerPoint (.ppt),.ppt,102912,OfficeFileReader,OK-NO-ORACLE,,,,1091,50,shape:50,6.6,0,,d6562bf5295e32ab39e8846658903eb2a6ef31092ee0fa4570a82769b756f2dc
+Presentations/testPPT_masterText2.pptx,PowerPoint,.pptx,32291,OfficeFileReader,OK-NO-ORACLE,,,,24,0,,7.9,0,,c5fbe0eb5cb94d651fdf02d7e68f185b4785e75f73cdd1e9f0dd37fab56024b5
+Presentations/testPPT_oleWorkbook.ppt,PowerPoint (.ppt),.ppt,98304,OfficeFileReader,OK-NO-ORACLE,,,,1280,74,shape:74,6.8,0,,b5c19872ad7b0417c4c601f97bc0f8ee855fd7bbe9c196ab9dbad8316a71f44c
+Presentations/testPPT_oleWorkbook.pptx,PowerPoint,.pptx,44001,OfficeFileReader,COMPLETE,1.0,1,0,64,1,shape:1,18.7,0,,9f079067f8b693a24b36f0b541d48625f13f468932f9a9af4f3192271ecc8749
+Presentations/testPPT_protected_passtika.ppt,PowerPoint (.ppt),.ppt,43008,OfficeFileReader,OK-NO-ORACLE,,,,620,65,shape:65,5.5,0,,152e2429873512d3e3719889a5db2aac3496d5c80e01acedf13e0a6c3cc7e59b
+Presentations/testPPT_protected_passtika.pptx,PowerPoint,.pptx,41472,OfficeFileReader,ERROR,,,,0,0,,1.3,0,Package not found at 'test-doc/Presentations/testPPT_protected_passtika.pptx',c06c45e88ab3dcb17ae2c662085be504cad48c836c245367491c448b96c1c02a
+Presentations/testPPT_signed.pptx,PowerPoint,.pptx,39761,OfficeFileReader,COMPLETE,1.0,1,0,36,1,shape:1,8.8,0,,429eb4255ab47e6efec780c15d40cd8f887fefba9bdee34cbcb868b424ea4750
+Presentations/testPPT_skipBadCompressedObject.ppt,PowerPoint (.ppt),.ppt,228352,OfficeFileReader,OK-NO-ORACLE,,,,7787,314,shape:314,18.8,0,,a066ef34216c1a2694c356d87e305d237d7f0eefb022a0333f8a957f48a9e01a
+Presentations/testPPT_various.ppt,PowerPoint (.ppt),.ppt,160768,OfficeFileReader,OK-NO-ORACLE,,,,2279,124,shape:124,12.0,0,,54790b849e108dca237b44ebffc53dcc3920e159e84f6d590bff2db906412687
+Presentations/testPPT_various.pptx,PowerPoint,.pptx,56659,OfficeFileReader,COMPLETE,1.0,106,0,1187,3,shape:3,14.3,0,,73e19e877797b9deb87f1d242c3d7aa6edb383258ca90054f9a912d3adb26a73
+Presentations/testPPT_various2.pptx,PowerPoint,.pptx,248937,OfficeFileReader,COMPLETE,1.0,54,0,1389,31,shape:29;slide-notes:2,3132.0,0,,24f56e909a0597264ca77e340c291382530f08b17bf03ead33e8c17b389a7938
+Presentations/testWPSAttachment.ppt,PowerPoint (.ppt),.ppt,269312,OfficeFileReader,OK-NO-ORACLE,,,,3000,241,shape:241,23.3,0,,5a40e78b18aa6692676c494c74376076c895427789b51047d8cb722d79f68163
+Presentations/testWPSAttachment.pptx,PowerPoint,.pptx,151705,OfficeFileReader,OK-NO-ORACLE,,,,276,0,,13.0,0,,5d0174fe36842e2ffca3b244ae0c57decaa05dd5bf25183873777ec18c112c81
+Presentations/testWordArt.pptx,PowerPoint,.pptx,37792,OfficeFileReader,COMPLETE,1.0,6,0,78,1,shape:1,8.6,0,,8b0abc3e867ede7adbe3d879e475e60e3c66f9a1fb810ee2a35cced6c46ab73b
+Presentations/test_embedded_zip.pptx,PowerPoint,.pptx,345027,OfficeFileReader,NEAR-COMPLETE,0.9524,168,8,2541,6,shape:6,6561.9,0,,30df64ea3fb5ab87c19db626cf45003fa3c909127517b98ab05052bd7093a242
+Programming/about.html,HTML,.html,1227,RemainingFileReader,COMPLETE,1.0,27,0,388,0,,72.4,0,,6729aeeceac7417319c6da00525c7863ff90794a60b300fbf6c74df028b98743
+Programming/big-preamble.html,HTML,.html,47050,RemainingFileReader,PARTIAL,0.8,40,8,19948,0,,28.7,0,,130cc20ffeff180a65485ad23b70d81658b17b910dbb3d9c5f2fea3cdfd059ce
+Programming/boilerplate-whitespace.html,HTML,.html,764,RemainingFileReader,NEAR-COMPLETE,0.9556,45,2,352,0,,0.9,0,,a0d2dd746430e0071bfc3626d0bf2721500ada50cfa8169247971303ac6f34ec
+Programming/boilerplate.html,HTML,.html,865,RemainingFileReader,COMPLETE,1.0,57,0,417,0,,0.9,0,,c0c2c465707091c3936f19a75188ff8952831e29179dff6731f73a23d771bdd1
+Programming/file15_tags.html,HTML,.html,7253,RemainingFileReader,COMPLETE,1.0,163,0,1279,0,,2.4,0,,bf1662201ddc2777a6cc34a8cd8759b3149f48043ef240fd1a710cc284945dc5
+Programming/file16_badTags.html,HTML,.html,7273,RemainingFileReader,COMPLETE,1.0,164,0,1285,0,,3.6,0,,819bd8f8137b8219fc6d9f985fbab27a30d93880cf40c050a1dde4ad3b21ef9b
+Programming/overview.html,HTML,.html,1564,RemainingFileReader,COMPLETE,1.0,104,0,693,0,,0.9,0,,0e6c313715972f0fee3e198de4b0bab8026f010a4666198dae84492a9cc0efa2
+Programming/resume.html,HTML,.html,17114,RemainingFileReader,COMPLETE,1.0,261,0,13348,0,,3.6,0,,835d012cc14d8aad5aeadf5436ad9a203fcfaa1c62b224a746ebae03db71237f
+Programming/sample.html,HTML,.html,192,RemainingFileReader,COMPLETE,1.0,20,0,176,0,,0.5,0,,c931f91ea1e8ce9ada7cf73d913f45a4b1903a481d498d545c8bf29f8a9ea94f
+Programming/test-tika-327.html,HTML,.html,1035,RemainingFileReader,COMPLETE,1.0,9,0,271,0,,2.3,0,,5199771b52e96dfcea58e60e3df922956d15b9eb25df3d11041edfaa91ad99b1
+Programming/test.html,HTML,.html,269,RemainingFileReader,COMPLETE,1.0,4,0,68,0,,0.6,0,,d440a81f3b3d03503432d0cf6e7a744cc3e0589ada2fbded84a54eeb7c3aebe9
+Programming/testArabicMisleadingCharset.html,HTML,.html,739,RemainingFileReader,COMPLETE,1.0,2,0,633,0,,0.6,0,,9c2fcdef6c46bcf490c2f4790691c663b26252bfa37939be32f6da6944c912de
+Programming/testBoilerplateMissingSpace.html,HTML,.html,2606,RemainingFileReader,COMPLETE,1.0,208,0,1909,0,,1.6,0,,2d14c3ac0e148b20c9dfe30e2ca1ce619b84524a35b935205ccd26c55f2195b0
+Programming/testBrokenHTMLContainingRFC822.html,HTML,.html,435,RemainingFileReader,COMPLETE,1.0,30,0,235,0,,0.7,0,,91bb8494e5b2a96387e579dd739547e022c924a3116eb0cf066a1996cda283d7
+Programming/testHTML.html,HTML,.html,1136,RemainingFileReader,COMPLETE,1.0,10,0,214,0,,0.8,0,,6bee159456678f5b11e925ccb3e57c55004880c6e69516bde2eb547f9c060a5c
+Programming/testHTMLBadScript.html,HTML,.html,230,RemainingFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.4,0,,af42976f6bf4df35fbcadf48f2401db72673efc9cf25efe027b942f1821a1a3d
+Programming/testHTMLGoodScript.html,HTML,.html,221,RemainingFileReader,COMPLETE,1.0,4,0,87,0,,0.4,0,,ed6e7b0b511fc0c34f5904392356aabdf7d5e0e671961d2ed5062e1fa7c652a7
+Programming/testHTMLNoisyMetaEncoding_1.html,HTML,.html,2385,RemainingFileReader,OK-NO-ORACLE,,0,0,1177,0,,1.7,0,,b3048e341959fcdabdaa63cf06ebad1147248265eb722897d20ece59af025243
+Programming/testHTMLNoisyMetaEncoding_2.html,HTML,.html,2385,RemainingFileReader,OK-NO-ORACLE,,0,0,1177,0,,1.0,0,,b3048e341959fcdabdaa63cf06ebad1147248265eb722897d20ece59af025243
+Programming/testHTMLNoisyMetaEncoding_3.html,HTML,.html,2385,RemainingFileReader,OK-NO-ORACLE,,0,0,1177,0,,0.9,0,,69ec5d1c6f3e396b7db4b52acb5ea206ba7cdf3a0eabb75a943cb4e99b72f0d9
+Programming/testHTMLNoisyMetaEncoding_4.html,HTML,.html,2385,RemainingFileReader,OK-NO-ORACLE,,0,0,1177,0,,0.9,0,,69ec5d1c6f3e396b7db4b52acb5ea206ba7cdf3a0eabb75a943cb4e99b72f0d9
+Programming/testHTML_charset_utf16le.html,HTML,.html,380,RemainingFileReader,COMPLETE,1.0,119,0,409,0,,0.5,0,,8fd342ded1aa4b88b7babd8c675c4dedab1bc1f160708c5115b7338605a946e9
+Programming/testHTML_charset_utf8.html,HTML,.html,189,RemainingFileReader,COMPLETE,1.0,6,0,63,0,,0.5,0,,eaa04e14c52095a821391f0d5e2dd7f18d37961fb0b15c5a6973c5fcb12f0bf5
+Programming/testHTML_embedded_data_uri_js.html,HTML,.html,251,RemainingFileReader,COMPLETE,1.0,3,0,57,0,,0.7,0,,3f7265bda6ff9eb86ce34e0c894ca8377c7df9607a20e0a524d0a2cb761b2a3c
+Programming/testHTML_embedded_img.html,HTML,.html,22358,RemainingFileReader,COMPLETE,1.0,6,0,22289,0,,0.6,0,,c97a3dd5de2f42255d8d36e156060c732941bb0aa36b7cff2dd3ac2a5492c703
+Programming/testHTML_embedded_img_in_js.html,HTML,.html,22343,RemainingFileReader,COMPLETE,1.0,3,0,22267,0,,0.5,0,,346080ced91c9e5966e6b80882d237d113adbca2deae94a2cab827641202d19b
+Programming/testHTML_head.html,HTML,.html,1670,RemainingFileReader,COMPLETE,1.0,2,0,79,0,,1.4,0,,8707c7b222a52464ddb338a3ebe8ef71509a9c478e489f869934164c99350714
+Programming/testHTML_metadata.html,HTML,.html,432,RemainingFileReader,COMPLETE,1.0,8,0,91,0,,0.7,0,,54b6e00d0906f055bffa218e4efddacdcb1afc079f43c0b701ebee807284afc3
+Programming/testHTML_metadata_two_titles.html,HTML,.html,463,RemainingFileReader,COMPLETE,1.0,9,0,110,0,,0.8,0,,4ebfa8c7eb58c07b75c3500a59a6a6941e1b7e00ef653238ae54065c6fc8cdb0
+Programming/testHTML_script_in_body.html,HTML,.html,202,RemainingFileReader,COMPLETE,1.0,4,0,85,0,,0.5,0,,e2b215d88ac22579731f3cc4486f15e1f33384991e3a66ad007245cbb256bb22
+Programming/testHTML_utf8.html,HTML,.html,933,RemainingFileReader,COMPLETE,1.0,13,0,158,0,,0.6,0,,a7a009727d73c5617d38addf843b08337b90bdd907d7ba23c98fc4996c107eb4
+Programming/testJsonMultipleInts.html,HTML,.html,129,RemainingFileReader,COMPLETE,1.0,5,0,67,0,,0.5,0,,ee5b32b5f2b4b3905648d126731dbabc504dbadaa1e122ed50e871532e05fb8f
+Programming/testSrcDoc.html,HTML,.html,874,RemainingFileReader,COMPLETE,1.0,1,0,42,0,,0.5,0,,d843ad3cb4f334e0e67efd0db0b5f88afa6c688c0417e64509de7bd8717c5eb6
+Programming/testXHTML.html,HTML,.html,1091,RemainingFileReader,COMPLETE,1.0,7,0,172,0,,0.7,0,,4a748fad3ecbb8ea2d22a754cdef8c3e24cd8aa2b9b4900dae5018bd10120c2f
+Programming/test_ignore_IBM420.html,HTML,.html,1869,RemainingFileReader,PARTIAL,0.907,86,8,530,0,,1.9,0,,f38195f5fde7bc710ba2be60f16516d89eca99dba0849173fb3c33cf80c3f4e3
+Programming/testlargerbuffer.html,HTML,.html,47050,RemainingFileReader,PARTIAL,0.8,40,8,19948,0,,28.3,0,,130cc20ffeff180a65485ad23b70d81658b17b910dbb3d9c5f2fea3cdfd059ce
+Programming/tika434.html,HTML,.html,45982,RemainingFileReader,COMPLETE,0.999,1000,1,12072,0,,28.2,0,,8a8867f6cedbc2c4121965dd34f06ca52b207eeec8d41c2bef9586899c094c72
+Programming/tikaserver-template.html,HTML,.html,1124,RemainingFileReader,COMPLETE,1.0,3,0,92,0,,0.7,0,,4e82e602317c4b6f75731fb26f0943e0d1cf32b83a2defec4b319acd11901dbe
+Programming/welcome.html,HTML,.html,1111,RemainingFileReader,COMPLETE,1.0,30,0,246,0,,0.8,0,,519c3eebc8da3c2dc9931044563f5400269d5cc518c50c2dc2fdbdd95085f7d9
+Python/organize_files.py,Plain text,.py,5606,RemainingFileReader,COMPLETE,1.0,596,0,5606,1,document:1,0.6,0,,73d0b725f645c3f01b0fadeb38e7e748869ab3b23812f9809192084e492f5056
+Spreadsheets/CVLKRA-KYC_Download_File_Structure_V3.1.xlsx,Excel,.xlsx,204480,OfficeFileReader,COMPLETE,1.0,6442,0,417299,2987,cell:2987,1435.4,0,,a6a7bf557df8048108502973ecedc31d96f27d09ac166eedeae32fc96c13e8db
+Spreadsheets/LibreOfficeCalc_ods_1.3.ods,OpenDocument,.ods,8812,OfficeFileReader,COMPLETE,1.0,10,0,73,10,cell:10,6.5,0,,f75caa9ca8d088f4875b38dfc2f6f6e408e13ee8b3d0d8b7130a99c5a2cb7f84
+Spreadsheets/coffee.xls,Excel (.xls),.xls,115712,OfficeFileReader,COMPLETE,1.0,67,0,677,9,cell:9,3.1,0,,1a0527ca82389dd27aae22a17d61427c20c6a6837331edc73f9e4eded8b8a640
+Spreadsheets/foo.csv,Delimited text,.csv,78,OfficeFileReader,COMPLETE,1.0,14,0,71,0,,0.2,0,,41ae3bbb42db8ceffa3f1cfec0f33acb62cbbebc4a479397a7e98c86ab339377
+Spreadsheets/jxl.xls,Excel (.xls),.xls,614912,OfficeFileReader,COMPLETE,1.0,165259,0,783941,82586,cell:82586,78.6,0,,5f25e6782386acd7c3b737ec0860a76ab487fe46e2c611b78e52e61d8d1bc30d
+Spreadsheets/migration-overlay.tsv,Delimited text,.tsv,15985,OfficeFileReader,COMPLETE,1.0,2264,0,15984,0,,2.9,0,,3bd31ae5f074e59260b697243919b9d7c767a6d225289b2a833cdae491460bf0
+Spreadsheets/password.xls,Excel (.xls),.xls,22528,OfficeFileReader,ERROR,,,,0,0,,1.3,0,Workbook is encrypted,3ad12a829132d9c157d213c623af9c534b1449c42e93ab39b17ca53c909ac412
+Spreadsheets/pic.xls,Excel (.xls),.xls,593920,OfficeFileReader,OK-NO-ORACLE,,,,100,0,,5.3,0,,8fb45ccb850257acd24dbcd64f7f018c127d625b575dea8bcd8fbd87fd141580
+Spreadsheets/pic.xlsx,Excel,.xlsx,580188,OfficeFileReader,OK-NO-ORACLE,,,,116,0,,1419.5,0,,c370c2b4d16ba28a2a3f1906d37911632fb58cea3cea7904c62ee74648be6cb5
+Spreadsheets/protect.xlsx,Excel,.xlsx,12968,OfficeFileReader,ERROR,,,,0,0,,1.2,0,File is not a zip file,b0b9fc98374334f39f3ebde005894ae9be69bbaed11788b54ae1dafb954e980d
+Spreadsheets/protectedFile.xlsx,Excel,.xlsx,12968,OfficeFileReader,ERROR,,,,0,0,,1.4,0,File is not a zip file,b0b9fc98374334f39f3ebde005894ae9be69bbaed11788b54ae1dafb954e980d
+Spreadsheets/protectedSheets.xlsx,Excel,.xlsx,11236,OfficeFileReader,COMPLETE,1.0,11,0,161,6,cell:6,6.2,0,,f206f1a7b00d9e539c9d063590039870dafd45c280a2cb2949eeb6785786d7f7
+Spreadsheets/sample.csv,Delimited text,.csv,83,OfficeFileReader,COMPLETE,1.0,15,0,82,0,,0.4,0,,500f6ebb4a9cb64c06cc25695c94020ccbf09f9ea8c6e9c407ad9aaff0d24539
+Spreadsheets/test-columnar.csv,Delimited text,.csv,1137,OfficeFileReader,COMPLETE,1.0,248,0,1120,0,,0.7,0,,37a7bb0f1306ccbf1a974f26855474ac986066db5f10bac9ff1894ab88d5d3b0
+Spreadsheets/test-columnar.ods,OpenDocument,.ods,12854,OfficeFileReader,PARTIAL,0.8632,234,32,833,93,cell:93,24.9,0,,12f39e34411b0d760a3e3db962ca669f621309d289cca54c6634cd5b12c1a8b1
+Spreadsheets/test-columnar.xls,Excel (.xls),.xls,32768,OfficeFileReader,COMPLETE,1.0,238,0,1306,95,cell:95,3.9,0,,e035f3afafd2b04232ea38b6625003f584b93315d593fbc7506d679330899cfb
+Spreadsheets/test-columnar.xlsx,Excel,.xlsx,10556,OfficeFileReader,COMPLETE,1.0,310,0,1334,62,cell:62,9.5,0,,6a8b40b4fd15e3b7baf9821d805805a2bda2ef82f76b6a9809886831ada69fd0
+Spreadsheets/test-reserved-header.csv,Delimited text,.csv,79,OfficeFileReader,COMPLETE,1.0,12,0,78,0,,0.4,0,,673dcbead505d704461f44a630ae3f9f26773313732b102d5f002884ddb47fb2
+Spreadsheets/test-simple.csv,Delimited text,.csv,160,OfficeFileReader,COMPLETE,1.0,33,0,159,0,,0.4,0,,f106d1c3170925437faeb5b510f5e457306acf4b51020032e4c2a215cc618210
+Spreadsheets/test.xls,Excel (.xls),.xls,13824,OfficeFileReader,COMPLETE,1.0,81,0,411,34,cell:34,2.0,0,,8f279fb44b131070347d82320c5e7900b0e4d77ead38371b1f26ce95092b211b
+Spreadsheets/testCSV.csv,Delimited text,.csv,217,OfficeFileReader,COMPLETE,1.0,45,0,214,0,,0.3,0,,4e73e64a48d176abb8f697fa716bf52cd4d74b8a5ad5e62148923800140e1ef9
+Spreadsheets/testComment.xls,Excel (.xls),.xls,23040,OfficeFileReader,COMPLETE,1.0,4,0,50,1,cell:1,1.9,0,,0d87908acdca3bb81261d434bf776ed6710bae1f5ec558e6cf1b1a98a24e8fca
+Spreadsheets/testComment.xlsx,Excel,.xlsx,9692,OfficeFileReader,COMPLETE,1.0,4,0,77,1,cell:1,5.3,0,,9f37032b3666fc72af84edb20cbdc311c31aeb1ca04d5fa0fe7e125c340c6f63
+Spreadsheets/testDataConnections.xlsx,Excel,.xlsx,2967,OfficeFileReader,COMPLETE,1.0,3,0,54,1,cell:1,2.8,0,,a76c4795876768b9f2191b9b7d079e3c7250972912f3e48e3334ed0590169f15
+Spreadsheets/testDdeLink.xlsx,Excel,.xlsx,3030,OfficeFileReader,OK-NO-ORACLE,,,,34,1,cell:1,2.9,0,,99e35606ced8985ded26a7203a821de9bdac77c3e75f51b55ef90d0fc06eaf60
+Spreadsheets/testEXCEL-charts.xls,Excel (.xls),.xls,15360,OfficeFileReader,COMPLETE,1.0,21,0,185,12,cell:12,3.1,0,,33f08ed32503437615af7ca8d5413ffa22df33ceb6765c51e200039f71452f6a
+Spreadsheets/testEXCEL-formats.xls,Excel (.xls),.xls,13824,OfficeFileReader,COMPLETE,1.0,82,0,569,42,cell:42,1.8,0,,54b63031a0728f5f422496c044accdd3a7878e911b869902ac6686cb274f8a51
+Spreadsheets/testEXCEL-formats.xlsx,Excel,.xlsx,8303,OfficeFileReader,COMPLETE,1.0,120,0,632,34,cell:34,5.4,0,,c56368f9a09166eabe373042afefb651341b4d2f9e1fe779148218f93190a2d2
+Spreadsheets/testEXCEL.strict.xlsx,Excel,.xlsx,10006,OfficeFileReader,OK-NO-ORACLE,,,,10,0,,9.4,0,,cbfff2096b33055de1686ae99ff649f78f3cc97d7271c242840be6b40837f6e6
+Spreadsheets/testEXCEL.xls,Excel (.xls),.xls,13824,OfficeFileReader,COMPLETE,1.0,81,0,411,34,cell:34,1.9,0,,8f279fb44b131070347d82320c5e7900b0e4d77ead38371b1f26ce95092b211b
+Spreadsheets/testEXCEL.xlsx,Excel,.xlsx,9453,OfficeFileReader,COMPLETE,1.0,51,0,387,34,cell:34,6.6,0,,960ba8f1cfa5838b563c369d281babe4ac0219100e00cecc93147fad22c549c3
+Spreadsheets/testEXCEL_1img.xls,Excel (.xls),.xls,20992,OfficeFileReader,COMPLETE,1.0,49,0,393,29,cell:29,2.3,0,,8f370fc03672eafa10eb2eed026b1c6e05464e27849076cf0b6d95d167c9a732
+Spreadsheets/testEXCEL_1img.xlsx,Excel,.xlsx,14552,OfficeFileReader,COMPLETE,1.0,46,0,416,29,cell:29,1057.7,0,,d9798b18a15e8f19af9cdcdb1788ba6eaa16e12fafa29efa63e8298b4a39cee4
+Spreadsheets/testEXCEL_4.xls,Excel (.xls),.xls,39942,OfficeFileReader,COMPLETE,1.0,2836,0,14376,979,cell:979,4.3,0,,97bc2987cdca76eabff155566db9c9a1b474b1e8803ef8c4f97faa758310bccf
+Spreadsheets/testEXCEL_5.xls,Excel (.xls),.xls,7168,OfficeFileReader,COMPLETE,1.0,81,0,411,34,cell:34,1.9,0,,5f3f309a41e3998d6e292db59bc566fbf1c46e40db182b92ccbb199a2add391c
+Spreadsheets/testEXCEL_95.xls,Excel (.xls),.xls,20992,OfficeFileReader,OK-NO-ORACLE,,,,34,0,,1.9,0,,08d3b02a0c9c80332ae75d98a9a76b65cb5c798630df6b1ea34dab5b387249d0
+Spreadsheets/testEXCEL_WORKBOOK_in_capitals.xls,Excel (.xls),.xls,64512,OfficeFileReader,COMPLETE,1.0,3779,0,21105,1947,cell:1947,4.3,0,,1bfdb1a50e01b0552687ffa99be56d5947819c22f4dd0695c8e581f6b21a5c8e
+Spreadsheets/testEXCEL_big_numbers.xls,Excel (.xls),.xls,26112,OfficeFileReader,COMPLETE,1.0,8,0,106,4,cell:4,2.5,0,,9ca5cbf77b71c2a6e22f7d40269b861726f2cf06b8884a3afa47d48c13ab6445
+Spreadsheets/testEXCEL_big_numbers.xlsx,Excel,.xlsx,8396,OfficeFileReader,COMPLETE,1.0,4,0,111,4,cell:4,4.9,0,,459c2e2e3486b67fb3ee5783cacd642b0d61e57b0f0d4538bcdaadb1a6cca2ec
+Spreadsheets/testEXCEL_charts.xlsx,Excel,.xlsx,31677,OfficeFileReader,COMPLETE,1.0,21,0,124,19,cell:19,8.8,0,,2c1a8bb222e6f4b03e4a6593c654151143231993d6fcda27d812bcf1a3fb90cd
+Spreadsheets/testEXCEL_custom_props.xls,Excel (.xls),.xls,17408,OfficeFileReader,COMPLETE,1.0,6,0,139,1,cell:1,2.3,0,,fff0cbf96e178190c6d749d4894cc62b6d6feadc2d85f9758b3b936ff24ef4a0
+Spreadsheets/testEXCEL_custom_props.xlsx,Excel,.xlsx,9230,OfficeFileReader,COMPLETE,1.0,8,0,216,2,cell:2,5.7,0,,0509234592dacacbcd9268a13750edce881aca3a6a9002ac6cc7f526ada9f983
+Spreadsheets/testEXCEL_dateFormats.xls,Excel (.xls),.xls,6144,OfficeFileReader,COMPLETE,1.0,5,0,53,3,cell:3,1.7,0,,263b6be7f66a069992a383d7fb9ea0c0b342e59cbe04206758eb4374f7c8b74b
+Spreadsheets/testEXCEL_dateFormats.xlsx,Excel,.xlsx,8766,OfficeFileReader,COMPLETE,1.0,13,0,78,1,cell:1,5.7,0,,5ccc02513433b1a86253306fc096817633204b835e19855b8c0dceda32caeb2b
+Spreadsheets/testEXCEL_diagramData.xlsx,Excel,.xlsx,16654,OfficeFileReader,OK-NO-ORACLE,,,,33,0,,4.7,0,,01b0caaeb55e32dc1bdf384e2752351e2d651a259f65dbfcbddf30b52f42ced1
+Spreadsheets/testEXCEL_embeddedPDF_mac.xls,Excel (.xls),.xls,69632,OfficeFileReader,OK-NO-ORACLE,,,,33,0,,2.9,0,,6cf496703dfcd836fc71b214042a57cc6446df68a2cda7f29720170351d0eb50
+Spreadsheets/testEXCEL_embeddedPDF_mac.xlsx,Excel,.xlsx,80578,OfficeFileReader,OK-NO-ORACLE,,,,33,0,,6.3,0,,538071a073562fb8a650e9a67fca8c7164a8c2d02a3463cd5ee986dccec39b2f
+Spreadsheets/testEXCEL_embeddedPDF_windows.xls,Excel (.xls),.xls,61952,OfficeFileReader,OK-NO-ORACLE,,,,33,0,,2.8,0,,fee22ff555abf884a52abb489f1d8f8e0e3c5a9618d8b0843acde620e560339e
+Spreadsheets/testEXCEL_embeddedPDF_windows.xlsx,Excel,.xlsx,49843,OfficeFileReader,OK-NO-ORACLE,,,,33,0,,5.0,0,,69e0e99dea07ced9fa5561407aeebb9892063ce737745d330af2c8a04ee1952f
+Spreadsheets/testEXCEL_embeded.xls,Excel (.xls),.xls,303104,OfficeFileReader,COMPLETE,1.0,49,0,393,29,cell:29,3.8,0,,373d3d9301394c0ec88b9ee12cfc525f72d0c77ccca721b2c417bbff3cc110d0
+Spreadsheets/testEXCEL_embeded.xlsx,Excel,.xlsx,348405,OfficeFileReader,COMPLETE,1.0,46,0,416,29,cell:29,1027.8,0,,1c373b197c13df4414320441830c5df3acfa048bea6f9b7ed4dbbdf88e458bc6
+Spreadsheets/testEXCEL_extra_metadata.xls,Excel (.xls),.xls,12800,OfficeFileReader,COMPLETE,1.0,25,0,298,12,cell:12,1.9,0,,5f154c194cf66bccfd342868769dbe812d1cde003c2185136aee15cac36cf0db
+Spreadsheets/testEXCEL_headers_footers.xls,Excel (.xls),.xls,33792,OfficeFileReader,COMPLETE,1.0,412,0,2476,166,cell:166,2.4,0,,9ccba88419a56401bd0252445440964989425132251672bcafc06fe2297ff1df
+Spreadsheets/testEXCEL_headers_footers.xlsx,Excel,.xlsx,11740,OfficeFileReader,COMPLETE,1.0,412,0,2476,166,cell:166,8.4,0,,c317b80a473fea5549ed241e813f734bffa01c2a9587170bd4254e4d143f2b2d
+Spreadsheets/testEXCEL_hyperlinks.xls,Excel (.xls),.xls,29696,OfficeFileReader,COMPLETE,1.0,21,0,137,5,cell:5,2.5,0,,780345567ca0026705d3617ae0b631c3a84fcbf506e5f2a5b64ed829a8851b40
+Spreadsheets/testEXCEL_hyperlinks.xlsx,Excel,.xlsx,10038,OfficeFileReader,COMPLETE,1.0,21,0,137,5,cell:5,6.2,0,,37a527b3212aed31305a63671cb3edc637865cde57f40d02adab5273c0e8f0e6
+Spreadsheets/testEXCEL_labels-govdocs-515858.xls,Excel (.xls),.xls,57856,OfficeFileReader,COMPLETE,1.0,632,0,3446,222,cell:222,3.6,0,,f07b662feb8bb20ef63855aaf234a8a18d3b251e588301785cf87de27b888932
+Spreadsheets/testEXCEL_macro.xls,Excel (.xls),.xls,30720,OfficeFileReader,COMPLETE,1.0,13,0,1773,2,cell:2,8.9,0,,c89ad115e042403052f01f8381dac2c5f2a5a324def46d1f2a9f98bd113a906a
+Spreadsheets/testEXCEL_macro.xlsm,Excel,.xlsm,14561,OfficeFileReader,COMPLETE,1.0,13,0,1778,2,cell:2,11.6,0,,4a82d32be9bbe6cbc0e232727668f2344edb249c8c0bcd8d3f3e1e16ffddd859
+Spreadsheets/testEXCEL_phonetic.xls,Excel (.xls),.xls,27136,OfficeFileReader,COMPLETE,1.0,44,0,784,72,cell:72,2.4,0,,d452191b738b1ed5dbae5474e766fec20667934c6171c01860f564d0d945ee75
+Spreadsheets/testEXCEL_phonetic.xlsx,Excel,.xlsx,10210,OfficeFileReader,COMPLETE,1.0,27,0,750,72,cell:72,7.2,0,,3a68ed7bcd764b4f38ab6a66d5385a644b84de8572b00aefb4316b43a274882b
+Spreadsheets/testEXCEL_poi-61034.xlsx,Excel,.xlsx,32774,OfficeFileReader,OK-NO-ORACLE,,,,4556,0,,29.6,0,,9b62e496695791931a51e0541e4fec1138e0b372a406ae7f87bb03bb5af5b2ce
+Spreadsheets/testEXCEL_poi.xlsx,Excel,.xlsx,3360,OfficeFileReader,COMPLETE,1.0,2,0,56,2,cell:2,4.4,0,,4a83b21d8cac8ae074d984b3ac541bdaa74c6b9dcc81facc9f4b471c9208ba25
+Spreadsheets/testEXCEL_protected_passtika.xls,Excel (.xls),.xls,17408,OfficeFileReader,ERROR,,,,0,0,,1.3,0,Workbook is encrypted,79e11c5245f4e5e5892a5864e8d10f581cf50b7aa4cbfb4924ff2b934684bcdc
+Spreadsheets/testEXCEL_protected_passtika.xlsx,Excel,.xlsx,12800,OfficeFileReader,ERROR,,,,0,0,,1.1,0,File is not a zip file,e58713895915de62efead6d99018245cc5490cddd2493c84508b4a67fb001581
+Spreadsheets/testEXCEL_protected_passtika_2.xlsx,Excel,.xlsx,15872,OfficeFileReader,ERROR,,,,0,0,,1.3,0,File is not a zip file,e2c06dd0c52107c7424a31f9e5cef1925fb08f18f58c0af5230e3324c5e676bb
+Spreadsheets/testEXCEL_signed.xlsx,Excel,.xlsx,15221,OfficeFileReader,COMPLETE,1.0,2,0,41,1,cell:1,4.3,0,,10289e76d736e49a43607dca2612ad22d2c72c365a3b16187aefcfcfd91a0cb3
+Spreadsheets/testEXCEL_textbox.xls,Excel (.xls),.xls,26112,OfficeFileReader,OK-NO-ORACLE,,,,103,0,,2.7,0,,eefca2e963fcd71c9c45fe71cd2082fc3c2bcfb6a13df9d777900f1a4ae31762
+Spreadsheets/testEXCEL_textbox.xlsx,Excel,.xlsx,11017,OfficeFileReader,OK-NO-ORACLE,,,,103,0,,6.3,0,,0c2ba4333dec20f9a81f03e92b1031014c6173804054b1761b0f99cb94eb1cdf
+Spreadsheets/testExcel_embeddedPDF.xls,Excel (.xls),.xls,38400,OfficeFileReader,OK-NO-ORACLE,,,,33,0,,2.9,0,,762a3f521e7dde83c4acd9e7bd99041f5bd34aa9e72f9edbe7e5f1836f7a90bb
+Spreadsheets/testExcel_embeddedPDF.xlsx,Excel,.xlsx,25602,OfficeFileReader,OK-NO-ORACLE,,,,33,0,,4.8,0,,5e12782099c9af66eee3e65b9c2d72c22d27835c2eab460bc7813ddb70f92570
+Spreadsheets/testFooter.ods,OpenDocument,.ods,7207,OfficeFileReader,COMPLETE,1.0,8,0,130,4,cell:4,6.2,0,,4a145b8d935ca91506a7f8a65c3df4e8ff655261337cedbeb4ae2494ec8fe3c3
+Spreadsheets/testMSChart-govdocs-428996.xls,Excel (.xls),.xls,35328,OfficeFileReader,OK-NO-ORACLE,,,,33,0,,2.8,0,,bcdb4ffbdb49c67a4c53ce6e0588bf4fad0f03ff4432e5146ae92ac08c695ed5
+Spreadsheets/testMSChart-govdocs-428996.xlsx,Excel,.xlsx,17112,OfficeFileReader,OK-NO-ORACLE,,,,33,0,,4.6,0,,7130224f9722fa8b7bdfeba71bcd9d50cf0cca2a616cef12816fe24f75004d24
+Spreadsheets/testODSMacro.ods,OpenDocument,.ods,30726,OfficeFileReader,OK-NO-ORACLE,,,,38,0,,820.2,0,,1bbcc2e1753af18cd94d9c56645f1a5d695ec09c7758ffa0eb45b0f8646c28ca
+Spreadsheets/testRecordSizeExceeded.xlsx,Excel,.xlsx,12364136,OfficeFileReader,TIMEOUT,,,,0,0,,100000.0,0,no result within 100 s; probe process killed externally,d0b6d457f7e1bb6fd48fb725fdc192ad91233f87b9db195cdf2fa8ef2963ccff
+Spreadsheets/testWPSAttachment.xls,Excel (.xls),.xls,229888,OfficeFileReader,OK-NO-ORACLE,,,,155,0,,22.6,0,,d96a564495fe65b273ade75023497a01a992493693896bf49f81c7586dd78507
+Spreadsheets/testWPSAttachment.xlsx,Excel,.xlsx,131498,OfficeFileReader,OK-NO-ORACLE,,,,155,0,,167.6,0,,3d6dedcafad1d8ff1ad441454bac1562ba5a25e9af8bbe11524f2b0543ccaede
+Spreadsheets/testXLSX_Thumbnail.xlsx,Excel,.xlsx,10318,OfficeFileReader,COMPLETE,1.0,8,0,161,1,cell:1,5.2,0,,a05b2cc90e7c433b1a3d48c45fccce4844873bdd2a27482de3fbbc996193f641
+Spreadsheets/text-test.tsv,Delimited text,.tsv,43902,OfficeFileReader,COMPLETE,1.0,5709,0,38951,0,,7.9,0,,e4abe9ed247ce5443b2fd775b860b33e037396c941169412b137546b2beddcf0
+Text/2.4.0-no-tesseract.txt,Plain text,.txt,25336,RemainingFileReader,COMPLETE,1.0,3711,0,25336,1,document:1,2.2,0,,66adce9aaa39e68ff1dd665bacf7b9eb8c50004e74cbf3b2b47351ec3f5ec1b4
+Text/2.4.0-tesseract.txt,Plain text,.txt,26025,RemainingFileReader,COMPLETE,1.0,3813,0,26025,1,document:1,2.2,0,,140e5c6f0391d123800e134f0fa897c25baa77c8bdf74784357c9e02fa1fd8d6
+Text/2.4.1-no-tesseract.txt,Plain text,.txt,25165,RemainingFileReader,COMPLETE,1.0,3692,0,25165,1,document:1,2.0,0,,ff1baf6fbe24f46eb0c38c826760d4fccb71fc3f5693a2daefc346b1cb5fc603
+Text/2.4.1-tesseract.txt,Plain text,.txt,25293,RemainingFileReader,COMPLETE,1.0,3712,0,25293,1,document:1,2.1,0,,8c234379bef123e15d617fe5bed45e34c4b9460b099ec751328780c9b58ac7e4
+Text/20260422-0.95-model-partial-20B.txt,Plain text,.txt,6114,RemainingFileReader,COMPLETE,1.0,1343,0,6113,1,document:1,0.6,0,,a42680e129fdf44eb2eb4daa373b846a1c78c981cff6e4e5acda04da9094e6f5
+Text/20260422-0.98-model.txt,Plain text,.txt,24312,RemainingFileReader,COMPLETE,1.0,5341,0,24308,1,document:1,2.0,0,,47641297b91a4972a48b70993ad650aa5a1a7b64aca47c9345fafc24f47fd57c
+Text/20260422-0.999-int8-model.txt,Plain text,.txt,24312,RemainingFileReader,COMPLETE,1.0,5341,0,24308,1,document:1,2.0,0,,d11a6ee7f9438e90ca90ab32b5ecabc0bdad83996d4afbdf3c380b07e2204529
+Text/20260422-0.999-model.txt,Plain text,.txt,24312,RemainingFileReader,COMPLETE,1.0,5341,0,24308,1,document:1,2.0,0,,a35c08a87058307935d7019fa57f0a4d422b6226d59eef5cbbfbb7ee2d67c5eb
+Text/20260422-v4-normalized-devtest.txt,Plain text,.txt,24312,RemainingFileReader,COMPLETE,1.0,5341,0,24308,1,document:1,2.0,0,,072a48ba09b94ee16475acefe1a651bf964880971907e3783add1666d73d3b00
+Text/CHANGES.md,Plain text,.md,4001,RemainingFileReader,COMPLETE,1.0,703,0,3993,1,document:1,0.5,0,,f6c0f34c2cb6f08e3eda3e0473edc7ed26ef7b76f90cffdfc8bac20db3e89b80
+Text/CHANGES.txt,Plain text,.txt,168807,RemainingFileReader,COMPLETE,1.0,24955,0,168778,1,document:1,4.9,0,,882555479daced8fc7c294498d1018d43e8beec3e65801fbf5e8f8bb7c8bba73
+Text/CONTRIBUTING.md,Plain text,.md,2381,RemainingFileReader,COMPLETE,1.0,354,0,2381,1,document:1,0.4,0,,5c1571c0a3d25f005a3eb3754b1e2b515ad8c47bdd52b8d178648eada196f5a4
+Text/EnviHeaderGroundTruth.txt,Plain text,.txt,4408,RemainingFileReader,COMPLETE,1.0,866,0,4408,1,document:1,0.5,0,,331274bb843f77f8892af240704753e77b063aea1372903a95337c5b39f1cfe5
+Text/HEADER.txt,Plain text,.txt,802,RemainingFileReader,COMPLETE,1.0,120,0,802,1,document:1,0.6,0,,b1945f0f6b5c57fab0613e6b6bb094c3722bc906e6d1bd48e9b17caf96cb863a
+Text/LICENSE.txt,Plain text,.txt,32149,RemainingFileReader,COMPLETE,1.0,4711,0,32149,1,document:1,7.1,0,,ad5f4c4d0d4a04ac264ee55539191e1d36eb5d43ff63bbfc2cf97d541dc7ce8c
+Text/NOTICE.txt,Plain text,.txt,848,RemainingFileReader,COMPLETE,1.0,115,0,848,1,document:1,0.2,0,,407c430392d86b3eca6df93f62d9c07625f1968f4ed0bd68d817e00da44945aa
+Text/README.md,Plain text,.md,10620,RemainingFileReader,COMPLETE,1.0,1583,0,10606,1,document:1,1.0,0,,4d960b82f0f6521dd1a98d3bcb676d8aa596ddce841e520253738617538db4f3
+Text/README.txt,Plain text,.txt,233,RemainingFileReader,COMPLETE,1.0,33,0,233,1,document:1,0.1,0,,ba74c871846788e8c10cd070854b9b03d53d2fa8d7b21171bd9739bec9310e64
+Text/SECURITY.md,Plain text,.md,1788,RemainingFileReader,COMPLETE,1.0,246,0,1788,1,document:1,0.3,0,,4862685f92a28f244a423fb77175d8838b7c0db0f5e8efe87f3bd1e9751aeca1
+Text/StandardCharsets_unsupported_by_IANA.txt,Plain text,.txt,1827,RemainingFileReader,COMPLETE,1.0,324,0,1827,1,document:1,0.3,0,,19d79bb7fac67a30d03a2bf9f6150272c1cec8e71b8873113d2c8e544464cb42
+Text/a_bii-s-2_metabolite profiling_NMR spectroscopy.txt,Plain text,.txt,8474,RemainingFileReader,COMPLETE,1.0,574,0,8474,1,document:1,0.8,0,,b6ebe3c792c186ca137eb0ece5c308bc1e547849c79d06e0c8f49dbb34afa0bc
+Text/a_metabolome.txt,Plain text,.txt,42961,RemainingFileReader,COMPLETE,1.0,6922,0,42961,1,document:1,2.9,0,,89a793950aac5071e5d35a8644312e35746afa8b33841cfc93390ff2a76f1481
+Text/a_microarray.txt,Plain text,.txt,8227,RemainingFileReader,COMPLETE,1.0,1365,0,8227,1,document:1,0.8,0,,1d4dc51d8067a6c81159728716d7d7ba79dbc6b4d8e0f97ebbc4d8b307c13be2
+Text/a_proteome.txt,Plain text,.txt,5645,RemainingFileReader,COMPLETE,1.0,801,0,5645,1,document:1,0.6,0,,0530c94ce3fb642139ba3820b6081b8d41d2b49ddc290142b2e9fe7a36bedda9
+Text/a_transcriptome.txt,Plain text,.txt,18020,RemainingFileReader,COMPLETE,1.0,2986,0,18020,1,document:1,1.5,0,,bc0b89bebd04382fde4c2a8571a551034cc40176da2afe8cb35272471b037f91
+Text/comparison-report.txt,Plain text,.txt,15135,RemainingFileReader,COMPLETE,1.0,2150,0,15135,1,document:1,1.3,0,,e7e5995cf5ffb10f1b1111829cac13cc80e4fb05d5d1f70a62ca6a5e53ba7a1a
+Text/confusables.txt,Plain text,.txt,2656,RemainingFileReader,COMPLETE,1.0,385,0,2655,1,document:1,0.3,0,,b945174f93f62b831bf295d3bb40a2391d4ebf650175555a10a5e293f29eafa1
+Text/english.cp500.txt,Plain text,.txt,7543,RemainingFileReader,COMPLETE,1.0,355,0,7543,1,document:1,1.8,0,,6bb07e5a56d89f768578c68394b2591ea08f6d058ef459c1edf5fc97b4fae005
+Text/english.txt,Plain text,.txt,17,RemainingFileReader,COMPLETE,1.0,3,0,17,1,document:1,0.1,0,,a6b695487a802cc6924f5ad98e949ef7ebeae427c86867af6ed74f56da404218
+Text/file-list.txt,Plain text,.txt,46,RemainingFileReader,COMPLETE,1.0,9,0,46,1,document:1,0.1,0,,e24697c81ad8ee75d8984455d2bd3f616f336c77ec46f4e1fcffac1a0ba82e39
+Text/file10_permahang.txt,Plain text,.txt,0,RemainingFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.1,0,,e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+Text/file11_oom.txt,Plain text,.txt,12,RemainingFileReader,COMPLETE,1.0,2,0,12,1,document:1,0.1,0,,4718668fffca7333786584337d9b13254dd4ba0e6236f9aaf504ff16ee5049f5
+Text/file12_es.txt,Plain text,.txt,208,RemainingFileReader,COMPLETE,1.0,30,0,199,1,document:1,0.1,0,,e4e09a9a850de1abf8de5493a87f2d3a52c7fd0e046c6b1d2af7cdb71b1cd4ef
+Text/file13_attachANotB.doc.txt,Plain text,.txt,58,RemainingFileReader,COMPLETE,1.0,12,0,58,1,document:1,0.1,0,,1c39c9ca4a2ca0bdb341b6a3a7020aeb1e413cc078864d8e75c585048f9f78bd
+Text/file9_noextract.txt,Plain text,.txt,11,RemainingFileReader,COMPLETE,1.0,2,0,11,1,document:1,0.1,0,,9bc52ec71decb9f571a710faaf98781a061d4d6798aa92a0403bffc6d530c0d0
+Text/flores-eval-20260320.txt,Plain text,.txt,38141,RemainingFileReader,COMPLETE,1.0,6614,0,36545,1,document:1,3.1,0,,2c190539cc73d406cb2222e7ab6df9616202f25de33a74afeb8a132b060cff35
+Text/forbidden-apis-exception-reporting-bans.txt,Plain text,.txt,2138,RemainingFileReader,COMPLETE,1.0,303,0,2138,1,document:1,0.3,0,,685c77c6bdc91282716c827d9d6b4628c4186cd4b203e7a7c992d5b435614ce0
+Text/forbidden-apis-metadata-string-key-bans.txt,Plain text,.txt,2645,RemainingFileReader,COMPLETE,1.0,392,0,2645,1,document:1,0.4,0,,4157b82f77f9bcd61911b989190f9dde038764a0b5dce6ca6ca0147688e3c60d
+Text/forbidden-apis-none.txt,Plain text,.txt,1001,RemainingFileReader,COMPLETE,1.0,148,0,1001,1,document:1,0.2,0,,dddc4907820867fc28d729bde91be4f6b199ce862006f345d85c4d2585af305d
+Text/forbidden-apis-xml-factory-bans.txt,Plain text,.txt,5990,RemainingFileReader,COMPLETE,1.0,737,0,5990,1,document:1,0.6,0,,4309990f9adecc00fded11abbb144689990bc219ce454378916c83aea85b451b
+Text/french.txt,Plain text,.txt,27,RemainingFileReader,COMPLETE,1.0,6,0,24,1,document:1,0.1,0,,67704244fb299ad8e30b8513e116b102c87c203338e329ca7648d17c6104dbfd
+Text/i_investigation.txt,Plain text,.txt,23589,RemainingFileReader,COMPLETE,1.0,3509,0,23589,1,document:1,2.0,0,,c74a03d40648d53d84507d30c0dddfd82d661da68bb4b39f8840c772ca69d410
+Text/language-codes.txt,Plain text,.txt,2667,RemainingFileReader,COMPLETE,1.0,433,0,2654,1,document:1,0.4,0,,81643b39e09685c495c6c04072b7c079ea88da239cc5ccb70bb27190f8b3ded1
+Text/license-header.txt,Plain text,.txt,801,RemainingFileReader,COMPLETE,1.0,120,0,801,1,document:1,0.2,0,,32235a65b50f13cb98f1f60098ffa1141e8b61987165952f97300476b44d2b2e
+Text/llms.txt,Plain text,.txt,2036,RemainingFileReader,COMPLETE,1.0,306,0,2036,1,document:1,0.3,0,,252238a131855b109fabf0e4b2ff107710ba2704b23bf3a26df38bd7c5351c75
+Text/lucene-char-mapping.txt,Plain text,.txt,812,RemainingFileReader,COMPLETE,1.0,122,0,812,1,document:1,0.2,0,,ae59d63ffd2b0bdc00d8d632a118c06309102279d871395443971ee31419f831
+Text/multi-language.txt,Plain text,.txt,1573,RemainingFileReader,COMPLETE,1.0,268,0,1573,1,document:1,0.3,0,,3f2326fbaae834a9237b7763781e22fa6437f57b56dd11d0b2fa0e41f9ac50c6
+Text/ner-regex.txt,Plain text,.txt,955,RemainingFileReader,COMPLETE,1.0,146,0,955,1,document:1,0.2,0,,740d8e52c762d1eb412d8e3329171370e561fb073646141b538e584c4a22d978
+Text/props_table.txt,Plain text,.txt,248551,RemainingFileReader,COMPLETE,1.0,37175,0,248541,1,document:1,4.4,0,,ca53ea05335c820a2c5b85da95211441599ee23b784b11e783d8fcf5c1ce6a63
+Text/russian.cp866.txt,Plain text,.txt,207,RemainingFileReader,PARTIAL,0.9211,38,3,207,1,document:1,0.2,0,,a8c95330e32292a02dcad7b0181289a0f63e6cc16ad1ba9e90b4e5aee8bdac18
+Text/s_BII-S-1.txt,Plain text,.txt,42237,RemainingFileReader,COMPLETE,1.0,6138,0,42237,1,document:1,3.3,0,,032dd4cbb9c4e01090e7d34a149b64d596fb8318d8b4f96ca6e05d707a1f8ffe
+Text/s_BII-S-2.txt,Plain text,.txt,6042,RemainingFileReader,COMPLETE,1.0,941,0,6042,1,document:1,0.6,0,,d8831ebd35d00ba9c82a3274b6d7ac2f7ea34d586a84f8cc9be7fb4955162e77
+Text/sample.txt,Plain text,.txt,218,RemainingFileReader,COMPLETE,1.0,39,0,218,1,document:1,0.1,0,,c73413e8970a4eb664634dc30f4e09272cbc3724cd4ea7a1d8f1da49a40a328a
+Text/self-closeable-tags.txt,Plain text,.txt,984,RemainingFileReader,COMPLETE,1.0,159,0,984,1,document:1,0.2,0,,4a101aeb3d93b9bc0ec45f088741e69bdb6f649feb7d28a5f9890fca5c1b1d12
+Text/test.txt,Plain text,.txt,13,RemainingFileReader,COMPLETE,1.0,2,0,13,1,document:1,0.1,0,,dffd6021bb2bd5b0af676290809ec3a53191dd81c7f70a4b28688a362182986f
+Text/testBMPfp.txt,Plain text,.txt,1757,ImageFileReader,INCOMPLETE,0.0,312,312,0,0,,200.6,0,,612251ade215ec3ac925c3bf95c9c59cb4652fe549c0fb10c755c93a39d2c8d7
+Text/testColonDelimited.txt,Plain text,.txt,104,RemainingFileReader,COMPLETE,1.0,52,0,104,1,document:1,0.2,0,,dab72e1c2bc45ddd962e0bfbfb2412811c3a522a25a444b93e314ea212293ada
+Text/testIgnoreCharset.txt,Plain text,.txt,18,RemainingFileReader,COMPLETE,1.0,3,0,18,1,document:1,4.8,0,,ac9e9919f304cc078bb17095cc05dd53f03181a39daec40773db3b97f90719ba
+Text/testMARKDOWN.md,Plain text,.md,320,RemainingFileReader,COMPLETE,1.0,47,0,316,1,document:1,0.2,0,,33f4415793ca862ac2c24f5957488e79df5b798330c2ad664b3a44fa0923d10d
+Text/testMARKDOWN_dataURI.md,Plain text,.md,222,RemainingFileReader,COMPLETE,1.0,19,0,222,1,document:1,0.6,0,,1baa95bdb84fe2fea1368775fcd763980addfead20a34ff8f3afca253227f853
+Text/testMessageNews.txt,Plain text,.txt,262,RemainingFileReader,COMPLETE,1.0,48,0,262,1,document:1,0.2,0,,bcad1fa9ff1e38af01991e8b312856fddd3c027cd086d439e216a61c0a53c928
+Text/testRFC822_simple_inline_body.txt,Plain text,.txt,483,RemainingFileReader,COMPLETE,1.0,81,0,483,1,document:1,0.2,0,,8435da3a68932e4d9d4bf48f0a3bec7f1a6bb0610d7fe241ac8b9c9b3233f994
+Text/testRobots.txt,Plain text,.txt,107,RemainingFileReader,COMPLETE,1.0,13,0,107,1,document:1,0.2,0,,f9c93644cb2068c19a73c6b7149342f293e69280f3a2596fc7588464380eda58
+Text/testRobots2.txt,Plain text,.txt,300,RemainingFileReader,COMPLETE,1.0,44,0,300,1,document:1,0.3,0,,4620cdd9c951e60cfec117075dc4395c305c9480b5ca2a6db6938dbb53179eec
+Text/testStandardsExtractor.txt,Plain text,.txt,685,RemainingFileReader,COMPLETE,1.0,85,0,685,1,document:1,0.3,0,,3310fa2082f7ee8a3c61c3b5dc0669219268eb062bc661e1db0ba3156ba53f31
+Text/testStataDTA.txt,Plain text,.txt,419,RemainingFileReader,COMPLETE,1.0,50,0,419,1,document:1,0.3,0,,7c47da4c79843905014140434a2d1e85ca74de82faf383e4895efdd59d63f3b8
+Text/testTXT.txt,Plain text,.txt,47,RemainingFileReader,COMPLETE,1.0,9,0,47,1,document:1,0.2,0,,4e8755a5f304821b8699531cc1071fa877ea5a3bac2d6863f308387d2f7e7e25
+Text/testTXTNonASCIIUTF8.txt,Plain text,.txt,229,RemainingFileReader,COMPLETE,1.0,35,0,197,1,document:1,0.2,0,,53071426a28802e6b26ee43d2a4481447e3828ef6f92b3d6252ea573ba522482
+Text/testTXT_win-1252.txt,Plain text,.txt,94,RemainingFileReader,OK-NO-ORACLE,,0,0,94,1,document:1,0.3,0,,75190a38e583959a54bccf7f4d80bfa8300a32e3480ebb4e0cab029b88e93217
+Text/tika-serialization-allowlist.txt,Plain text,.txt,1150,RemainingFileReader,COMPLETE,1.0,170,0,1150,1,document:1,0.4,0,,e3f27a5eed2f159c46b8e5ddbff0343a70f1397eb5bfaa48e0e1929b577844bb
+Text/udhr-known.txt,Plain text,.txt,2313,RemainingFileReader,COMPLETE,1.0,229,0,1692,1,document:1,0.8,0,,8188ab699ef541016e3220ec6ad5a4ff630a6c25bd028ce159bdd45963017e47
+Text/udhr-unknown.txt,Plain text,.txt,386,RemainingFileReader,COMPLETE,1.0,85,0,380,1,document:1,0.1,0,,fd1ad368b21489f2cf218a10dacf07873b805eeba4ff802bb8f832c2433291ef
+Text/welsh_corpus.txt,Plain text,.txt,187944,RemainingFileReader,COMPLETE,1.0,34263,0,186057,1,document:1,5.4,0,,962d42ae149f97103ed671a93ad03c6cd43c62f726af8f8b67cba165a1bb922b
+Videos/en-US_(Hi).mp4,Video,.mp4,21739,VideoFileReader,EMPTY-PLAUSIBLE,,,,0,0,,26.5,0,,2253aeab3de56fd5e2164a15f653e88b06e58b02c36e0197823dc71b8bb48ce3
+Videos/ko-KR_(Annyeonghaseyo).mp4,Video,.mp4,144151,VideoFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.9,0,,e65e147f66f528960df67eb3395ba0f60be5049680127ccd8dad517ae0389c46
+Videos/testFLV.flv,Video,.flv,90580,VideoFileReader,EMPTY-PLAUSIBLE,,,,0,0,,2.4,0,,2e6f43b5395b085ecdac4d6bcb17d2e35fa8958c2167dfedd2928cca1b30b924
+Videos/testMKV.mkv,Video,.mkv,82969,VideoFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.8,0,,3d2d975b7f81fec04d467eac7ae83b907614dcffb36d01a56a7642fe1c1f02bf
+Videos/testMP4AudioOnly.mp4,Video,.mp4,35236,VideoFileReader,ERROR,,,,0,0,,5.9,0,No video library installed. Install with: pip install opencv-python or pip install moviepy,81041ef517865e574fa41575656d918a2e82d3057b2dc235e71f096cac5ed173
+Videos/testMP4Video.mp4,Video,.mp4,1810,VideoFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,86cfcd8a978cbe012600afc34fa6183942b57e6a39228199a9809ec6b238231c
+Videos/testMP4VideoAudio.mp4,Video,.mp4,11065,VideoFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.0,0,,df3c4854d24153da40ec7760c56c6cae4137ad856930f569f8ff3d40322bda24
+Videos/testMP4_QuickTimeMetadata.mov,Video,.mov,2770,VideoFileReader,ERROR,,,,0,0,,1.2,0,No video library installed. Install with: pip install opencv-python or pip install moviepy,cf02fa537c017934a7e5d1522908a79dc2fa62bceb96dc471657598607c634a4
+Videos/testMP4_StillImageTimeZero.mov,Video,.mov,1157,VideoFileReader,ERROR,,,,0,0,,0.9,0,No video library installed. Install with: pip install opencv-python or pip install moviepy,d38c93b782ea08b4e15a3b986aca39f56e9cbd1c9d8239331fd59dd333b2dbdb
+Videos/testMP4_encv.mp4,Video,.mp4,1890,VideoFileReader,EMPTY-PLAUSIBLE,,,,0,0,,0.6,0,,ac82195557931ee194fa7b7e20ed6715966e5264a2054a4d0c67df1bef8461cd
+Videos/testMP4_udtaLocation.mp4,Video,.mp4,200,VideoFileReader,ERROR,,,,0,0,,0.8,0,No video library installed. Install with: pip install opencv-python or pip install moviepy,d27a4e40da64fd0d111e0a4c75e084b9c860c45795144c9c92a6dc8269006b45
+Videos/testVideoMp4.mp4,Video,.mp4,1053651,VideoFileReader,EMPTY-PLAUSIBLE,,,,0,0,,3.5,0,,ce4bfdc8fda0c1a3393dbb6850de2bee1f44e9be6839a377499009dde493a1f8
+Videos/testVideo_3s.mp4,Video,.mp4,48013,VideoFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.2,0,,7357f30ac13c3ec754e15070168752adf8b1498285bc9f6c2579ae085d79340d
+Videos/testWEBM.webm,Video,.webm,39745,VideoFileReader,EMPTY-PLAUSIBLE,,,,0,0,,2.1,0,,3aa8ce924c469bfc6aa7d43697b5c00ed3a1fe167312d8258ca01ec335e630a6
+Videos/testWMV.wmv,Video,.wmv,113878,VideoFileReader,EMPTY-PLAUSIBLE,,,,0,0,,3.6,0,,8ab2f746b2de388a648797e9e189e72a84b06e9649aa2c2176ca9249a4c60504
+Videos/testWMV_WMV2.wmv,Video,.wmv,554297,VideoFileReader,EMPTY-PLAUSIBLE,,,,0,0,,1.7,0,,60084bf1d83c48fa33c46a0d51346b11a62a3a8112fa7cf1115479cd96f42353

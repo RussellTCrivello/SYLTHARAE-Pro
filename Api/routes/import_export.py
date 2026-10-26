@@ -26,22 +26,32 @@ import_export_bp = Blueprint('import_export', __name__, url_prefix='/api/import-
 @limiter.limit("20 per minute")
 def batch_import_files():
 
+    def _as_int(value):
+        """Parse an optional numeric field; ``None`` for anything unusable."""
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return None
+
     try:
         if request.is_json:
-            data = request.get_json()
-            file_paths = data.get('file_paths', [])
-            source_id = int(data.get('source_id'))
-            side_id = int(data.get('side_id'))
+            data = request.get_json(silent=True) or {}
+            file_paths = data.get('file_paths') or []
+            source_id = _as_int(data.get('source_id'))
+            side_id = _as_int(data.get('side_id'))
         else:
             file_paths_json = request.form.get('file_paths')
             if file_paths_json:
                 import json
-                file_paths = json.loads(file_paths_json)
+                try:
+                    file_paths = json.loads(file_paths_json)
+                except (TypeError, ValueError):
+                    return jsonify({'error': 'file_paths must be a JSON array'}), 400
             else:
                 file_paths = []
-            source_id = int(request.form.get('source_id'))
-            side_id = int(request.form.get('side_id'))
-        
+            source_id = _as_int(request.form.get('source_id'))
+            side_id = _as_int(request.form.get('side_id'))
+
         if not file_paths:
             return jsonify({'error': 'No file paths provided'}), 400
 

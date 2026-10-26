@@ -18,7 +18,10 @@ import logging
 from Api.utils import get_processing_statistics, get_statistics, get_format_overview
 from Api.services import lineage_service
 from Api.services.analyst_categories import AnalystCategoryService
-from core.errors import client_error
+from core.errors import client_error, conflict, is_unique_violation
+from core.table_paging import MAX_PAGE
+from core.validation import query_int
+from core.validation import PayloadError, int_field, number_field, text_field
 from core.security.rate_limit import INTERACTIVE_READ_LIMIT, limiter
 from database import (
     create_side, create_source, insert_side, insert_source, get_side, get_side_by_name, get_source, get_source_by_name, get_source_by_id,
@@ -89,31 +92,27 @@ def register_api_routes(app):
                 if not data:
                     return jsonify({'success': False, 'error': 'JSON data is required'}), 400
                 
-                name = data.get('name', '').strip()
-                if not name:
-                    return jsonify({'success': False, 'error': 'Source name is required'}), 400
-                
-                # Get optional fields
-                job = data.get('job', '')
-                importance = data.get('importance', 0.5)
-                country = data.get('country', '')
-                city = data.get('city', '')
-                description = data.get('description', '')
-                accounts = data.get('accounts', '')
-                note = data.get('note', '')
-                attachments = data.get('attachments', '')
-                ownership = data.get('ownership')
-                access_status = data.get('access_status')
-                category_id = data.get('category_id')
+                try:
+                    name = text_field(data, 'name', required=True, max_length=255,
+                                      trim=True)
+                    # Every column below is VARCHAR(255) in m0001: a longer
+                    # value used to reach the INSERT and come back as a 500.
+                    job = text_field(data, 'job', max_length=255)
+                    importance = number_field(data, 'importance', default=0.5)
+                    country = text_field(data, 'country', max_length=255)
+                    city = text_field(data, 'city', max_length=255)
+                    description = text_field(data, 'description', max_length=255)
+                    accounts = text_field(data, 'accounts', max_length=255)
+                    note = text_field(data, 'note', max_length=255)
+                    attachments = text_field(data, 'attachments', max_length=255)
+                    ownership = text_field(data, 'ownership', max_length=255) or None
+                    access_status = text_field(data, 'access_status',
+                                               max_length=255) or None
+                    category_id = int_field(data, 'category_id')
+                except PayloadError as exc:
+                    return jsonify({'success': False, **exc.to_dict()}), 400
+
                 date_source_discovery = data.get('date_source_discovery')
-                
-                # Convert empty strings to None for optional/enum fields
-                if ownership == '':
-                    ownership = None
-                if access_status == '':
-                    access_status = None
-                if category_id == '':
-                    category_id = None
                 if date_source_discovery == '':
                     date_source_discovery = None
                 
@@ -156,9 +155,17 @@ def register_api_routes(app):
                         logger.error(f"insert_source returned invalid ID: {source_id}")
                         return jsonify({'success': False, 'error': 'Failed to create source: Invalid source ID returned'}), 500
                 except Exception as create_error:
+                    if is_unique_violation(create_error):
+                        # sources.name is UNIQUE (m0001): a duplicate is the
+                        # client's mistake, not a server fault.
+                        return conflict('A source with that name already exists',
+                                        field='name', success_key='success')
                     logger.error(f"Error in insert_source function: {create_error}", exc_info=True)
                     raise  # Re-raise to be caught by outer except
             except Exception as e:
+                if is_unique_violation(e):
+                    return conflict('A source with that name already exists',
+                                    field='name', success_key='success')
                 logger.error(f"Error creating source: {e}", exc_info=True)
                 return client_error(e, subsystem='Api.routes.api', success_key='success', public_message='Failed to create source', status=500)
         else:
@@ -247,31 +254,25 @@ def register_api_routes(app):
                 if not data:
                     return jsonify({'success': False, 'error': 'JSON data is required'}), 400
                 
-                name = data.get('name', '').strip()
-                if not name:
-                    return jsonify({'success': False, 'error': 'Source name is required'}), 400
-                
-                # Get optional fields
-                job = data.get('job', '')
-                importance = data.get('importance')
-                country = data.get('country', '')
-                city = data.get('city', '')
-                description = data.get('description', '')
-                accounts = data.get('accounts', '')
-                note = data.get('note', '')
-                attachments = data.get('attachments', '')
-                ownership = data.get('ownership')
-                access_status = data.get('access_status')
-                category_id = data.get('category_id')
+                try:
+                    name = text_field(data, 'name', required=True, max_length=255,
+                                      trim=True)
+                    job = text_field(data, 'job', max_length=255)
+                    importance = number_field(data, 'importance')
+                    country = text_field(data, 'country', max_length=255)
+                    city = text_field(data, 'city', max_length=255)
+                    description = text_field(data, 'description', max_length=255)
+                    accounts = text_field(data, 'accounts', max_length=255)
+                    note = text_field(data, 'note', max_length=255)
+                    attachments = text_field(data, 'attachments', max_length=255)
+                    ownership = text_field(data, 'ownership', max_length=255) or None
+                    access_status = text_field(data, 'access_status',
+                                               max_length=255) or None
+                    category_id = int_field(data, 'category_id')
+                except PayloadError as exc:
+                    return jsonify({'success': False, **exc.to_dict()}), 400
+
                 date_source_discovery = data.get('date_source_discovery')
-                
-                # Convert empty strings to None for optional/enum fields
-                if ownership == '':
-                    ownership = None
-                if access_status == '':
-                    access_status = None
-                if category_id == '':
-                    category_id = None
                 if date_source_discovery == '':
                     date_source_discovery = None
                 
@@ -381,6 +382,9 @@ def register_api_routes(app):
                 logger.info(f"Successfully updated source: {source_id}")
                 return jsonify({'success': True, 'message': 'Source updated successfully'})
             except Exception as e:
+                if is_unique_violation(e):
+                    return conflict('A source with that name already exists',
+                                    field='name', success_key='success')
                 logger.error(f"Error updating source {source_id}: {e}", exc_info=True)
                 return client_error(e, subsystem='Api.routes.api', success_key='success', status=500)
     
@@ -548,16 +552,12 @@ def register_api_routes(app):
                     else:
                         return jsonify({'success': False, 'error': 'JSON data is required'}), 400
                 
-                name = data.get('name', '').strip()
-                importance = data.get('importance', 0.5)
-                
-                if not name:
-                    return jsonify({'success': False, 'error': 'Side name is required'}), 400
-                
                 try:
-                    importance = float(importance)
-                except (ValueError, TypeError):
-                    importance = 0.5
+                    name = text_field(data, 'name', required=True, max_length=255,
+                                      trim=True)
+                    importance = number_field(data, 'importance', default=0.5)
+                except PayloadError as exc:
+                    return jsonify({'success': False, **exc.to_dict()}), 400
                 
                 side_id = insert_side(name=name, importance=importance)
                 
@@ -575,6 +575,9 @@ def register_api_routes(app):
                     logger.error(f"insert_side returned invalid ID: {side_id}")
                     return jsonify({'success': False, 'error': 'Failed to create side: Invalid side ID returned'}), 500
             except Exception as e:
+                if is_unique_violation(e):
+                    return conflict('A side with that name already exists',
+                                    field='name', success_key='success')
                 logger.error(f"Error creating side: {e}", exc_info=True)
                 return client_error(e, subsystem='Api.routes.api', success_key='success', status=500)
         else:
@@ -644,17 +647,13 @@ def register_api_routes(app):
                 if not data:
                     return jsonify({'success': False, 'error': 'JSON data is required'}), 400
                 
-                name = data.get('name', '').strip()
-                importance = data.get('importance')
-                
-                if not name:
-                    return jsonify({'success': False, 'error': 'Side name is required'}), 400
-                
                 try:
-                    importance_float = float(importance) if importance is not None else None
-                except (ValueError, TypeError):
-                    return jsonify({'success': False, 'error': 'Invalid importance value'}), 400
-                
+                    name = text_field(data, 'name', required=True, max_length=255,
+                                      trim=True)
+                    importance_float = number_field(data, 'importance')
+                except PayloadError as exc:
+                    return jsonify({'success': False, **exc.to_dict()}), 400
+
                 update_side(side_id, name=name, importance=importance_float)
                 
                 try:
@@ -667,6 +666,9 @@ def register_api_routes(app):
                 logger.info(f"Successfully updated side: {side_id}")
                 return jsonify({'success': True, 'message': 'Side updated successfully'})
             except Exception as e:
+                if is_unique_violation(e):
+                    return conflict('A side with that name already exists',
+                                    field='name', success_key='success')
                 logger.error(f"Error updating side {side_id}: {e}", exc_info=True)
                 return client_error(e, subsystem='Api.routes.api', success_key='success', status=500)
     
@@ -777,8 +779,8 @@ def register_api_routes(app):
         Uses exact match for multi-word keywords to search for the entire keyword."""
         try:
             search_query = request.args.get('q', '').strip()
-            page = request.args.get('page', 1, type=int)
-            per_page = request.args.get('per_page', 20, type=int)
+            page = query_int("page", 1, minimum=1, maximum=MAX_PAGE)
+            per_page = query_int("per_page", 20, minimum=1, maximum=200)
             exclude_category_id = request.args.get('exclude_category_id', type=int)
             offset = (page - 1) * per_page
             

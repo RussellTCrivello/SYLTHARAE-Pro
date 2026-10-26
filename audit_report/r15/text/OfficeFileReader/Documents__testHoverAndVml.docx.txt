@@ -1,0 +1,5 @@
+Testing hlinkHover:  (hover over image)
+
+Testing VML shape:
+
+[Style: Text Box] Click me

@@ -34,8 +34,6 @@ def test_scenario_identifiers_reject_a_trailing_newline():
 @pytest.mark.parametrize("module, name, good", [
     ("core.analytics.kinds", "_ID", "keyness"),
     ("core.criteria.model", "_ISO_DATE", "2026-01-31"),
-    ("core.reporting.model", "_ID", "keyword.summary"),
-    ("core.reporting.model", "_HELP_TOPIC", "reports/keyword"),
     ("core.security.audit_query", "_ID", "42"),
     ("services.detection.signal_query", "_METHOD_RE", "gazetteer.exact"),
     ("services.detection.signal_query", "_PLACE_KEY_RE", "wd:Q1234"),

@@ -1,0 +1,17 @@
+Title: XHTML test document
+Links (1 total):
+XHTML document -> http://www.w3.org/TR/xhtml1/
+
+--- Content ---
+
+
+
+XHTML test document
+
+
+
+
+
+      from an XHTML document.
+    
+

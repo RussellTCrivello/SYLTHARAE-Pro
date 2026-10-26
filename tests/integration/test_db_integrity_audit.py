@@ -16,10 +16,11 @@ status, so its contracts are worth pinning:
 * exit 1 - with the offending table and column named - when a value is outside
   the vocabulary the code defines.
 
-The registered-shape expectation below is a tripwire and it is now empty: m0038
-removed the nine duplicate shapes the register listed (DB-1/DB-2). Any entry
-here is a *new* duplicate shape - either the schema grew one, or a migration that
-adds an index over columns a constraint already indexes needs to justify itself.
+The registered-shape expectation below is a tripwire listing the five duplicate
+shapes the frozen baseline creates (DB-1/DB-2, D-8). Any *other* entry is a new
+duplicate shape - either the schema grew one, or a migration that adds an index
+over columns a constraint already indexes needs to justify itself. Removing the
+registered five is a schema change and is not done in tests.
 """
 
 from __future__ import annotations
@@ -38,9 +39,19 @@ pytestmark = pytest.mark.integration
 ROOT = Path(__file__).resolve().parents[2]
 TOOL = ROOT / "tools" / "db" / "integrity_audit.py"
 
-#: Duplicate index shapes the register accepts. Empty since m0038 removed the
-#: nine it listed; the set stays as the place to declare any future exception.
-REGISTERED_REDUNDANT_SHAPES = set()
+#: Duplicate index shapes the register accepts (D-8). They are the five pairs
+#: the frozen baseline creates; dropping one of each pair is a schema change,
+#: so they are registered rather than removed, and this set stays as the place
+#: to declare any future exception. The register itself is
+#: ``docs/database/DUPLICATION_REGISTER.md`` (that directory is not committed -
+#: D-7 - so the list is repeated here, where it is executed).
+REGISTERED_REDUNDANT_SHAPES = {
+    ("categorys", "USING btree (word_id)"),
+    ("hashs", "USING btree (hash)"),
+    ("punctuation", "USING btree (punctuation_text)"),
+    ("words", "USING btree (word)"),
+    ("words_hashs", "USING btree (hash_id, word_id)"),
+}
 
 
 @pytest.fixture(scope="module")
@@ -121,7 +132,7 @@ def test_no_constraint_is_left_unvalidated(audit_db):
 
 
 def test_no_duplicate_index_shape_remains(audit_db):
-    """m0038 removed the nine; a new duplicate shape fails here."""
+    """The five registered pairs are accepted; a new duplicate shape fails."""
     result = _audit(audit_db, "--json")
     payload = json.loads(result.stdout)
     shapes = {(item["table"], item["shape"]) for item in payload["redundant_indexes"]}
@@ -135,20 +146,22 @@ def test_no_duplicate_index_shape_remains(audit_db):
 def test_an_out_of_vocabulary_value_is_reported_and_fails_the_gate(audit_db):
     """The detector stays meaningful now the schema also enforces it.
 
-    Since m0039 the CHECK rejects such a value outright, so the probe removes the
-    constraint for its duration - a database can legitimately be in that state
-    (a constraint dropped for maintenance, or added NOT VALID and never
-    validated) - inserts the value, and asserts the audit names it and exits 1.
-    `finally` deletes the row and re-runs the migration to restore the
-    constraint, so the shared test database is left exactly as it was found.
+    The CHECK in the frozen baseline (m0001) rejects such a value outright, so
+    the probe removes the constraint for its duration - a database can
+    legitimately be in that state (a constraint dropped for maintenance, or
+    added NOT VALID and never validated) - inserts the value, and asserts the
+    audit names it and exits 1. The constraint is restored from the definition
+    read before it was dropped, so the shared test database is left exactly as
+    it was found and no migration outside m0001..m0003 is involved.
     """
-    import importlib
-
-    m0039 = importlib.import_module("database.migrations.m0039_vocabulary_constraints")
     conn = connect(audit_db)
     try:
         with conn, conn.cursor() as cur:
-            cur.execute("ALTER TABLE jobs DROP CONSTRAINT IF EXISTS ck_jobs_status")
+            cur.execute("SELECT conname, pg_get_constraintdef(oid) FROM pg_constraint"
+                        " WHERE conrelid = 'jobs'::regclass AND pg_get_constraintdef(oid)"
+                        " LIKE '%%status%%'")
+            name, definition = cur.fetchone()
+            cur.execute(f"ALTER TABLE jobs DROP CONSTRAINT {name}")
             cur.execute("INSERT INTO jobs (job_id, job_type, status)"
                         " VALUES (%s, %s, %s)", ("AUDITBAD", "import", "nope"))
         result = _audit(audit_db, "--json")
@@ -162,13 +175,13 @@ def test_an_out_of_vocabulary_value_is_reported_and_fails_the_gate(audit_db):
     finally:
         with conn, conn.cursor() as cur:
             cur.execute("DELETE FROM jobs WHERE job_id = %s", ("AUDITBAD",))
-        m0039.upgrade(conn)
+            cur.execute(f"ALTER TABLE jobs ADD CONSTRAINT {name} {definition}")
         conn.commit()
         conn.close()
 
 
 def test_the_vocabulary_checks_no_longer_find_anything_on_a_clean_database(audit_db):
-    """m0039 made the four vocabulary columns impossible to violate."""
+    """The baseline's CHECKs make the four vocabulary columns impossible to violate."""
     payload = json.loads(_audit(audit_db, "--json").stdout)
     assert [v for v in payload["vocabularies"] if v.get("count")] == []
     assert all(v.get("allowed") for v in payload["vocabularies"])

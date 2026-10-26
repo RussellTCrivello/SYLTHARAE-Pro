@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import calendar as _calendar
 import datetime
+from bisect import bisect_left
 import hashlib
 import json
 import re
@@ -832,6 +833,35 @@ def _orientation_cues(ctx: _Context, sentences):
     return out
 
 
+class _Spans:
+    """Accepted spans, kept sorted so an overlap test costs O(log n).
+
+    Accepted spans never overlap one another, so a candidate can only clash
+    with the kept span that starts before it (if that one ends after the
+    candidate starts) or the one that starts after it (if it starts before the
+    candidate ends). Scanning every kept span for every candidate made temporal
+    detection quadratic (M-3 profile: 106.7 million generator steps on a 2 MB
+    document; audit_report/evidence_scale/ingest_profile_before.json).
+    """
+
+    __slots__ = ("_starts", "_ends")
+
+    def __init__(self) -> None:
+        self._starts: List[int] = []
+        self._ends: List[int] = []
+
+    def overlaps(self, start: int, end: int) -> bool:
+        at = bisect_left(self._starts, start)
+        if at and self._ends[at - 1] > start:
+            return True
+        return at < len(self._starts) and self._starts[at] < end
+
+    def add(self, start: int, end: int) -> None:
+        at = bisect_left(self._starts, start)
+        self._starts.insert(at, start)
+        self._ends.insert(at, end)
+
+
 def detect(text: Optional[str], *, anchor_date: Optional[datetime.date] = None,
            languages: Optional[Iterable[str]] = None) -> DetectionResult:
     """Detect temporal signals in ``text``.
@@ -862,17 +892,17 @@ def detect(text: Optional[str], *, anchor_date: Optional[datetime.date] = None,
 
     # Overlap resolution: longest span wins, then priority, then position.
     candidates = sorted(_candidates(ctx), key=lambda c: (-(c.end - c.start), -c.priority, c.start))
-    taken: List[Tuple[int, int]] = []
+    taken = _Spans()
     signals: List[TemporalSignal] = []
     for cand in candidates:
-        if any(cand.start < e and s < cand.end for s, e in taken):
+        if taken.overlaps(cand.start, cand.end):
             continue
         sig = cand.build()
         if sig is None:
             continue
         if sig.language is not None and sig.language not in wanted:
             continue
-        taken.append((cand.start, cand.end))
+        taken.add(cand.start, cand.end)
         signals.append(sig)
 
     # Orientation: one signal per (sentence, orientation) and a sentence-level
@@ -887,9 +917,8 @@ def detect(text: Optional[str], *, anchor_date: Optional[datetime.date] = None,
         by_sentence.append(next(iter(kept)) if len(kept) == 1 else None)
         for orientation, matches in sorted(kept.items()):
             first = matches[0]
-            if any(first.start() < e and s < first.end() for s, e in taken):
-                matches = [m for m in matches
-                           if not any(m.start() < e and s < m.end() for s, e in taken)]
+            if taken.overlaps(first.start(), first.end()):
+                matches = [m for m in matches if not taken.overlaps(m.start(), m.end())]
                 if not matches:
                     continue
                 first = matches[0]

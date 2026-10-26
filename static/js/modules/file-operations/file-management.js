@@ -435,10 +435,12 @@ const FileManagement = {
     }
 };
 
-// FILE-UI-01: files_list.html references bulkDelete()/deleteFile(id) from
-// inline onclick handlers; expose the implementations globally (this module
-// is loaded as an ES module, so its top-level names are module-scoped).
-window.bulkDelete = (...args) => FileManagement.bulkDelete(...args);
+// FILE-UI-01: files_list.html references deleteFile(id) from inline onclick
+// handlers; expose the implementation globally (this module is loaded as an ES
+// module, so its top-level names are module-scoped). bulkDelete is published by
+// the page that owns the list it deletes from - files-list-page.js here, and
+// keywords-list-page.js / words-list-page.js on their own lists - because this
+// module is imported on every route and used to overwrite their handlers.
 window.deleteFile = (...args) => FileManagement.deleteFile(...args);
 
 // Export for use in other modules

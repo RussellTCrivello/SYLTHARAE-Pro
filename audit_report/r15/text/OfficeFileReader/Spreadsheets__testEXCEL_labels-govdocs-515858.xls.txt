@@ -1,0 +1,66 @@
+Sheet: Cabbage and other brassicas
+Rows: 63
+Columns: 6
+Cabbage and other brassicas:  U.S. import-eligible countries; world production and exports					
+					
+Total production, exports and export value (2005) for countries eligible to ship cabbage and other brassicas to the United States 1/					Top world producers and exporters of cabbage and other brassicas (2005) 1/
+Country 1/	Production 	Total exports 	Export value		
+	1,000 metric tons		1,000 US$		
+Antigua and Barbuda	0.122	0.0	nd		
+Argentina	nd	0.07	7.0		
+Austria	88.832	10.08	6694.0		
+Bahamas	nd	nd	nd		
+Barbados	0.55	0.0	1.0		
+Belgium	109.95	13.75	6377.46		
+Belize	2.0	nd	nd		
+Bermuda	0.18	nd	nd		
+Brazil	nd	0.02	2.0		
+Canada	180.367	46.84	20576.0		
+Cayman Islands	nd	nd	nd		
+Chile	62.0	0.01	nd		
+Colombia	142.821	0.09	13.0		
+Costa Rica	9.711	2.47	599.0		
+Cyprus	4.394	0.0	9.0		
+Denmark	27.593	1.21	1010.17		
+Dominica	0.682	nd	0.0		
+Dominican Republic	4.437	0.04	nd		
+Ecuador	10.876	0.0	0.0		
+Egypt	550.0	0.02	nd		
+El Salvador	69.508	0.0	nd		
+France	201.215	17.26	14952.0		
+Germany	721.549	67.46	24022.0		
+Greece	180.078	0.24	34.0		
+Grenada	0.217	nd	nd		
+Guadeloupe	2.061	nd	nd		
+Guatemala	73.322	40.78	4814.0		
+Haiti	8.401	0.0	nd		
+Honduras	65.051	0.0	nd		
+Israel	58.56	0.27	160.0		
+Italy	340.425	46.71	43139.0		
+Jamaica	27.219	nd	nd		
+Japan	2286.8	1.54	911.0		
+Martinique	1.192	nd	nd		
+Mexico	221.317	88.78	53896.0		
+Montserrat	nd	0.0	0.89		
+Netherlands	209.0	156.08	104060.0		
+Netherlands Antilles	nd	nd	nd		
+Nicaragua	14.0	0.65	63.0		
+Nigeria	nd	0.0	nd		
+Panama	4.2519	nd	nd		
+Peru	30.211	0.01	12.0		
+Portugal	184.861	10.32	7500.0		
+Spain	259.2	68.63	62509.91		
+St. Kitts and Nevis	0.081	nd	nd		
+St. Lucia	nd	nd	nd		
+St. Vincent and the Grenadines	nd	nd	nd		
+Taiwan	nd	nd	nd		
+United Kingdom	308.2	0.84	2414.0		
+Percent eligible	10.0	50.0	76.0		
+World median	40.5	0.84	221.0		
+World average	489.43	14.57	7514.0		
+					
+Note:  nd = no data; Percent eligible = Percentage of total world production, export, or export value for this commodity for countries eligible to export this commodity to the United States according to fruit and vegetable import regulations from USDA's Animal and Plant Health Inspection Service (APHIS). Median = Median global production quantity, export quantity, or value.  Median is the value for which half of all values in a series are greater and half are smaller.  Average = Average global production quantity, export quantity, or value.  Average is the sum of all numbers in a series divided by the total number of entries in that series.    					
+1/ "Cabbages and other brassicas" are defined as cabbage, collard greens, and kale.					1/ Black bars indicate countries eligible to export this commodity to the United States according to APHIS regulations.
+2/ Countries eligible to export this commodity to the United States according to APHIS regulations as of June 2008. See Documentation for more information. Countries in bold are high-income nations, all others are middle- and low-income nations according to the 2007 country classification developed by World Bank.					
+					
+Sources: USDA, Animal and Plant Health Inspection Service, Fresh Fruit and Vegetable Import Manual, http://www.aphis.usda.gov/import_export/plants/manuals/ports/downloads/fv.pdf; World Bank, World Development Indicators 2007, http://go.worldbank.org/K2CKM78CC0; United Nations, Food and Agriculture Organization, FAOSTAT, http://faostat.fao.org/site/291/default.aspx.					

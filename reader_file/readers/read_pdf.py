@@ -38,6 +38,9 @@ from reader_file.readers.read_img_fast import (
 # re-exported through read_img_fast.
 from core.ocr import get_ocr_engine, recognize_best
 
+# The page model: reading order, ligatures, hyphenation, tables, geometry.
+from .pdf_layout import page_model, text_quality
+
 from .base_reader import BaseReader
 
 logger = logging.getLogger(__name__)
@@ -50,6 +53,68 @@ MIN_OCR_ZOOM = 2.0
 MAX_OCR_ZOOM = 300 / 72
 #: Pixels per rendered page (the engine's own enlargement budget).
 MAX_OCR_PAGE_PIXELS = 16_000_000
+
+#: A page of a "text" PDF with fewer characters than this is treated as a page
+#: that may be a scan even though the document as a whole is text. A whole
+#: document sampled from its first three pages used to decide for every page,
+#: so a report with text on pages 1-3 and scans after them was never OCR'd.
+MIN_PAGE_TEXT_CHARS = 32
+
+#: Below this share of lexical words a text layer is not worth keeping when the
+#: page also has an image: it is the residue of a failed recognition, not text.
+MIN_TEXT_LAYER_QUALITY = 0.5
+
+
+def choose_reading(native_text, ocr_text, layer_quality: float,
+                   min_quality: float = MIN_TEXT_LAYER_QUALITY) -> dict:
+    """Decide which reading of a page to store: its text layer, OCR, or neither.
+
+    OCR exists to recover pages that have no usable text of their own. It is not
+    a second opinion on a page that already reads: a rendered page loses
+    characters to hinting, column layout and table rules, so a recognition of
+    the *same* page is usually shorter than the layer it was rendered from. When
+    the two were compared by lexical quality alone the shorter OCR reading won
+    (it has a higher ratio of real words - it simply has fewer of them), and
+    testPDF_childAttachments.pdf stored 1 566 characters for a page of 2 503.
+
+    The rule, in order:
+    1. no usable text layer  -> OCR is the page;
+    2. no OCR text           -> the layer is the page;
+    3. the layer reads as language (quality >= ``min_quality``) -> keep it;
+    4. otherwise the page's layer is recognition residue -> OCR, but only when
+       it is both better and not shorter than what it replaces.
+
+    Returns ``{text, source, reason, native_quality, ocr_quality}`` so the
+    decision is auditable per page rather than implied by a stored string.
+    """
+    native = str(native_text or "")
+    ocr = str(ocr_text or "")
+    native_quality = round(float(layer_quality or 0.0), 4)
+    ocr_quality = round(text_quality(ocr), 4) if ocr else 0.0
+    decision = {"native_quality": native_quality, "ocr_quality": ocr_quality}
+
+    if not native.strip():
+        if ocr.strip():
+            return {**decision, "text": ocr, "source": "ocr", "reason": "no_text_layer"}
+        return {**decision, "text": "", "source": "none", "reason": "no_text_and_no_ocr"}
+
+    if not ocr.strip():
+        return {**decision, "text": native, "source": "text_layer", "reason": "no_ocr_text"}
+
+    if native_quality >= min_quality:
+        return {**decision, "text": native, "source": "text_layer",
+                "reason": "text_layer_reads_as_language"}
+
+    if ocr_quality <= native_quality:
+        return {**decision, "text": native, "source": "text_layer",
+                "reason": "ocr_not_better_than_residue"}
+
+    if len(ocr.strip()) < 0.9 * len(native.strip()):
+        return {**decision, "text": native, "source": "text_layer",
+                "reason": "ocr_shorter_than_residue"}
+
+    return {**decision, "text": ocr, "source": "ocr",
+            "reason": "text_layer_is_recognition_residue"}
 
 
 def ocr_render_zoom(page) -> float:
@@ -185,6 +250,64 @@ class PDFFileReader(BaseReader):
         else:
             return "image"
     
+    def _page_ocr_fallback(self, page, page_num, fitz, filepath,
+                           native_text, ocr_languages, ocr_available):
+        """OCR one page of a document that is otherwise text.
+
+        The document-level decision to skip OCR is made from a three-page
+        sample. That is fine for a born-digital report and wrong for the very
+        common mixed document - a cover sheet, then scans - where pages 4+ hold
+        no text at all and are stored as empty strings with no error.
+
+        A page qualifies when it carries an image and either almost no text or
+        a text layer that does not look like language. The page is rasterised,
+        recognised, and the better of the two readings is kept, so this can only
+        add text: a page whose own layer is better keeps its layer.
+        """
+        if not ocr_available:
+            return None
+        try:
+            images = page.get_images(full=True)
+        except Exception:
+            return None
+        if not images:
+            return None
+        zoom = ocr_render_zoom(page)
+        try:
+            pix = page.get_pixmap(matrix=fitz.Matrix(zoom, zoom), alpha=False)
+            img_bytes = pix.tobytes("png")
+        except Exception as exc:
+            return {"ocr_trigger": "rasterise_failed", "error": str(exc)}
+        if not img_bytes:
+            return None
+        tesseract_lang, tesseract_config = _get_optimized_tesseract_config(
+            None, tuple(ocr_languages))
+        try:
+            recognised = self.process_page_optimized((
+                page_num, img_bytes, tesseract_lang, tesseract_config,
+                True, ocr_languages, native_text, str(filepath)))
+        except Exception as exc:
+            return {"ocr_trigger": "ocr_failed", "error": str(exc)}
+        if not recognised or not str(recognised.get("text") or "").strip():
+            return None
+        recognised["ocr_trigger"] = "page_scan_or_broken_text_layer"
+        recognised["ocr_render_dpi"] = round(72 * zoom)
+        return recognised
+
+    def _structure_page(self, page, want_tables=True):
+        """The page model, or a minimal fallback when the model itself fails."""
+        try:
+            return page_model(page, want_tables=want_tables)
+        except Exception as exc:
+            text = page.get_text("text") or ""
+            return {
+                "text": text, "text_raw": text, "blocks": [], "columns": 0,
+                "tables": [], "rotation": int(getattr(page, "rotation", 0) or 0),
+                "width": round(page.rect.width, 2), "height": round(page.rect.height, 2),
+                "stats": {"chars": len(text), "quality": 0.0},
+                "model_error": f"{type(exc).__name__}: {exc}",
+            }
+
     def process_page_optimized(self, page_data):
         """
         Optimized page processing - uses shared OCR functions from read_img_fast
@@ -462,7 +585,12 @@ class PDFFileReader(BaseReader):
                     # PRODUCTION: Process pages incrementally to prevent memory buildup
                     max_text_length = 0
                     total_text_length = 0
-                    
+
+                    # Decided lazily: a document that needs no page fallback
+                    # must not pay for an OCR engine probe.
+                    ocr_available = None
+                    ocr_languages = languages if languages else DEFAULT_OCR_LANGUAGES
+
                     for page_num in range(num_pages):
                         # Yield periodically to prevent CPU spikes
                         self.yield_periodically(page_num, interval=5, aggressive=False)
@@ -472,13 +600,55 @@ class PDFFileReader(BaseReader):
                             self.yield_cpu_if_needed(aggressive=True)
                         
                         page = doc[page_num]
-                        # Get text - handle None and ensure string type
-                        text = page.get_text("text")
-                        if text is None:
-                            text = ""
-                        else:
-                            text = str(text)
-                        
+                        # The page model, not get_text("text"): reading order
+                        # recovered by an X-Y cut, ligatures resolved, words
+                        # rejoined across line breaks, tables located. The old
+                        # string is kept beside it as text_raw so the change is
+                        # auditable.
+                        model = self._structure_page(page)
+                        text = str(model.get("text") or "")
+
+                        # A page of a "text" document can still be a scan (mixed
+                        # documents) or carry a text layer that is recognition
+                        # residue. OCR it and keep whichever reading is better.
+                        layer_quality = float((model.get("stats") or {}).get("quality") or 0.0)
+                        if (len(text.strip()) < MIN_PAGE_TEXT_CHARS
+                                or layer_quality < MIN_TEXT_LAYER_QUALITY):
+                            if ocr_available is None:
+                                ocr_available = bool(
+                                    (_is_tesseract_available() and pytesseract is not None)
+                                    or get_ocr_engine() is not None)
+                            if ocr_available and page.get_images(full=True):
+                                fallback = self._page_ocr_fallback(
+                                    page, page_num, fitz, filepath, text,
+                                    ocr_languages, ocr_available)
+                                if fallback and str(fallback.get("text") or "").strip():
+                                    ocr_text = str(fallback.get("text") or "")
+                                    choice = choose_reading(text, ocr_text, layer_quality)
+                                    if choice["source"] == "ocr":
+                                        result["ocr_used"] = True
+                                        text = choice["text"]
+                                        model["text"] = text
+                                        model["ocr_fallback"] = {
+                                            "trigger": fallback.get("ocr_trigger"),
+                                            "engine": fallback.get("ocr_engine"),
+                                            "confidence": fallback.get("ocr_confidence"),
+                                            "render_dpi": fallback.get("ocr_render_dpi"),
+                                            "replaced_chars": len(model.get("text_raw") or ""),
+                                            "decision": choice["reason"],
+                                        }
+                                    else:
+                                        # The page keeps its own layer: record that OCR was
+                                        # considered and why it was not used, so the
+                                        # choice is evidence rather than an absence.
+                                        model["ocr_rejected"] = {
+                                            "reason": choice["reason"],
+                                            "native_chars": len(text),
+                                            "ocr_chars": len(ocr_text.strip()),
+                                            "native_quality": choice["native_quality"],
+                                            "ocr_quality": choice["ocr_quality"],
+                                        }
+
                         text_len = len(text)
                         total_text_length += text_len
                         max_text_length = max(max_text_length, text_len)
@@ -496,7 +666,29 @@ class PDFFileReader(BaseReader):
                             "text": stored_text,
                             "text_length": text_len,  # Store original length
                             "stored_text_length": len(stored_text),  # Store actual stored length
-                            "method": "direct_extraction"
+                            "method": ("ocr_layout_fallback" if model.get("ocr_fallback")
+                                       else "direct_extraction"),
+                            # Where the text is: size, rotation, blocks with their
+                            # bounding boxes and column, and any grids found.
+                            "width": model.get("width"),
+                            "height": model.get("height"),
+                            "rotation": model.get("rotation"),
+                            "columns": model.get("columns"),
+                            "blocks": [
+                                {"index": b.get("index"), "type": b.get("type"),
+                                 "bbox": b.get("bbox"), "column": b.get("column"),
+                                 "dir": b.get("dir"), "lines": b.get("lines"),
+                                 "font_size": b.get("font_size"),
+                                 "chars": len(b.get("text") or "")}
+                                for b in (model.get("blocks") or [])
+                            ],
+                            "tables": model.get("tables") or [],
+                            "text_raw": model.get("text_raw"),
+                            "layout": model.get("stats") or {},
+                            **({"ocr_fallback": model["ocr_fallback"]}
+                               if model.get("ocr_fallback") else {}),
+                            **({"model_error": model["model_error"]}
+                               if model.get("model_error") else {}),
                         })
                         
                         # PRODUCTION: Log progress for very large PDFs
@@ -513,8 +705,10 @@ class PDFFileReader(BaseReader):
                     # Always close the document to prevent resource leaks
                     doc.close()
                 
-                result["ocr_used"] = False
-                
+                # A text document may still have OCR'd individual pages
+                # (mixed documents); never overwrite that back to False.
+                result["ocr_used"] = bool(result.get("ocr_used"))
+
             else:
                 # ===== IMAGE-BASED PDF: OCR required (SLOWER) =====
                 logger.info(f"Using parallel OCR for {filepath.name} ({len(doc)} pages, {max_workers} workers)")
@@ -549,6 +743,7 @@ class PDFFileReader(BaseReader):
                 # Prepare page data for parallel processing
                 page_data_list = []
                 render_dpi = {}  # page index -> resolution it was rasterised at for OCR
+                native_texts = {}  # page index -> the page's own text layer
                 
                 try:
                     for page_num in range(len(doc)):
@@ -558,13 +753,12 @@ class PDFFileReader(BaseReader):
                         try:
                             page = doc[page_num]
                             
-                            # Quick check: does this page have text?
-                            text = page.get_text("text")
-                            # Handle None and ensure string type
-                            if text is None:
-                                text = ""
-                            else:
-                                text = str(text)
+                            # Quick check: does this page have text? The
+                            # model gives the same string a reader would see
+                            # (reading order, no ligatures, no broken words)
+                            # plus the geometry and grids that go with it.
+                            model = self._structure_page(page)
+                            text = str(model.get("text") or "")
                             
                             if len(text.strip()) > 30:
                                 # Page has text, no OCR needed
@@ -572,7 +766,22 @@ class PDFFileReader(BaseReader):
                                     "page_number": page_num + 1,
                                     "text": text,
                                     "text_length": len(text),
-                                    "method": "direct_extraction"
+                                    "method": "direct_extraction",
+                                    "width": model.get("width"),
+                                    "height": model.get("height"),
+                                    "rotation": model.get("rotation"),
+                                    "columns": model.get("columns"),
+                                    "blocks": [
+                                        {"index": b.get("index"), "type": b.get("type"),
+                                         "bbox": b.get("bbox"), "column": b.get("column"),
+                                         "dir": b.get("dir"), "lines": b.get("lines"),
+                                         "font_size": b.get("font_size"),
+                                         "chars": len(b.get("text") or "")}
+                                        for b in (model.get("blocks") or [])
+                                    ],
+                                    "tables": model.get("tables") or [],
+                                    "text_raw": model.get("text_raw"),
+                                    "layout": model.get("stats") or {},
                                 })
                             elif not ocr_available:
                                 # Do not silently classify a scanned page as
@@ -598,6 +807,7 @@ class PDFFileReader(BaseReader):
                                     pix = page.get_pixmap(matrix=fitz.Matrix(zoom, zoom), alpha=False)
                                     img_bytes = pix.tobytes("png")
                                     
+                                    native_texts[page_num] = text
                                     page_data_list.append((
                                         page_num,
                                         img_bytes,
@@ -658,6 +868,33 @@ class PDFFileReader(BaseReader):
                                 page_result = future.result()
                                 if page_result.get("ocr_derived") and futures[future] in render_dpi:
                                     page_result["ocr_render_dpi"] = render_dpi[futures[future]]
+
+                                # A document typed "image" from a three-page
+                                # sample can still hold pages with a short, real
+                                # text layer: a cover page with a title and a
+                                # page number, or a form with printed labels.
+                                # The recognition of the rendered page is
+                                # shorter than that layer (rendering loses
+                                # hinting, rules and column order), and before
+                                # this the layer was simply discarded.
+                                native_text = native_texts.get(futures[future], "")
+                                if (page_result.get("ocr_derived") and native_text.strip()):
+                                    choice = choose_reading(
+                                        native_text, page_result.get("text"),
+                                        text_quality(native_text))
+                                    if choice["source"] == "text_layer":
+                                        page_result["ocr_text"] = page_result.get("text")
+                                        page_result["text"] = choice["text"]
+                                        page_result["text_length"] = len(choice["text"])
+                                        page_result["method"] = "text_layer_preferred"
+                                        page_result["ocr_rejected"] = {
+                                            "reason": choice["reason"],
+                                            "native_chars": len(native_text.strip()),
+                                            "ocr_chars": len(str(
+                                                page_result.get("ocr_text") or "").strip()),
+                                            "native_quality": choice["native_quality"],
+                                            "ocr_quality": choice["ocr_quality"],
+                                        }
                                 result["pages"].append(page_result)
                             except Exception as ocr_error:
                                 # If OCR fails for a page, we should still have the page number

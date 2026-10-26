@@ -13,6 +13,7 @@ Security model (server-side enforced):
                     IngestionValidationError/... -> HTTP 400 structured error);
 * rate limiting   - strict per-route limits on job creation.
 """
+import errno
 import hashlib
 import json
 import logging
@@ -23,6 +24,7 @@ import uuid
 from pathlib import Path
 
 from flask import Blueprint, current_app, jsonify, request
+from core.validation import query_int, query_text
 
 from core.path_safety import configured_ingestion_roots
 from core.security.flask_ext import admin_required, current_user
@@ -65,6 +67,36 @@ def _error(code: str, message: str, status: int, details=None):
     if details is not None:
         body["error"]["details"] = details
     return jsonify(body), status
+
+
+#: Errnos that mean "the disk cannot take this right now", not "we have a bug".
+_STORAGE_ERRNOS = frozenset({
+    errno.ENOSPC,    # no space left on device
+    errno.EDQUOT,    # quota exceeded
+    errno.EROFS,     # read-only filesystem
+    errno.EACCES,    # permission denied on the staging tree
+    errno.EPERM,     # ditto, on some filesystems
+    errno.EIO,       # I/O error on the device
+})
+
+
+def _storage_failure(exc: BaseException):
+    """507 for a storage problem, ``None`` when it is anything else.
+
+    Staging is plain filesystem work. A full volume or an unwritable upload
+    directory is an expected condition with a plain answer; letting it become an
+    unhandled 500 (measured in the round-10 disk-full drill) hides the one thing
+    the operator needs to know.
+    """
+    if isinstance(exc, OSError) and exc.errno in _STORAGE_ERRNOS:
+        return _error(
+            "STORAGE_UNAVAILABLE",
+            "The upload storage cannot be written right now "
+            f"(ERRNO {exc.errno}: {exc.strerror or exc}). Free space on the "
+            "data volume or check its permissions, then retry.",
+            507,
+        )
+    return None
 
 
 def _validation_error(exc: Exception):
@@ -324,14 +356,14 @@ def api_input_options_info():
 
 @operations_bp.route("/api/input/sources", methods=["GET"])
 def api_input_sources():
-    q = (request.args.get("q") or "").strip()
+    q = query_text("q", max_length=255)
     rows = search_sources_svc(q) if q else list_sources_svc()
     return jsonify({"success": True, "sources": rows})
 
 
 @operations_bp.route("/api/input/sides", methods=["GET"])
 def api_input_sides():
-    q = (request.args.get("q") or "").strip()
+    q = query_text("q", max_length=255)
     rows = search_sides_svc(q) if q else list_sides_svc()
     return jsonify({"success": True, "sides": rows})
 
@@ -540,7 +572,6 @@ def api_chunked_start():
     chunk_size = CHUNK_SIZE_BYTES
     upload_id = uuid.uuid4().hex
     directory = _chunked_session_dir(upload_id)
-    directory.mkdir(parents=True, exist_ok=False)
     total_chunks = max((size + chunk_size - 1) // chunk_size, 1)
     session = {
         "filename": filename,
@@ -550,7 +581,15 @@ def api_chunked_start():
         "total_chunks": total_chunks,
         "created_at": _utc_now(),
     }
-    (directory / "session.json").write_text(json.dumps(session), encoding="utf-8")
+    try:
+        directory.mkdir(parents=True, exist_ok=False)
+        (directory / "session.json").write_text(json.dumps(session), encoding="utf-8")
+    except OSError as exc:
+        shutil.rmtree(directory, ignore_errors=True)
+        answer = _storage_failure(exc)
+        if answer is not None:
+            return answer
+        raise
     return jsonify({
         "success": True,
         "upload_id": upload_id,
@@ -591,8 +630,11 @@ def api_chunked_chunk(upload_id: str, index: int):
     except ValueError:
         incoming.unlink(missing_ok=True)
         return _error("CHUNK_TOO_LARGE", "Chunk is larger than the plan allows", 413)
-    except Exception:
+    except Exception as exc:
         incoming.unlink(missing_ok=True)
+        answer = _storage_failure(exc)
+        if answer is not None:
+            return answer
         logger.exception("chunk write failed")
         return _error("CHUNK_FAILED", "Chunk could not be stored", 500)
     if digest is not None and digest.hexdigest() != declared:
@@ -825,7 +867,7 @@ def api_create_input_job():
 @operations_bp.route("/api/input/jobs", methods=["GET"])
 def api_list_input_jobs():
     jobs = _manager().list(job_type="ingestion",
-                           limit=min(int(request.args.get("limit", 50)), 200))
+                           limit=query_int("limit", 50, minimum=1, maximum=200))
     return jsonify({"success": True, "jobs": [job_to_api(j) for j in jobs]})
 
 
@@ -958,7 +1000,7 @@ def api_create_import_job():
 def api_list_import_jobs():
     jobs = _manager().list(
         job_type=request.args.get("type") or None,
-        limit=min(int(request.args.get("limit", 50)), 200),
+        limit=query_int("limit", 50, minimum=1, maximum=200),
     )
     return jsonify({"success": True, "jobs": [job_to_api(j) for j in jobs]})
 
@@ -978,8 +1020,8 @@ def api_list_import_jobs():
 @limiter.limit(INTERACTIVE_READ_LIMIT)
 def api_list_jobs():
     try:
-        limit = min(max(int(request.args.get("limit", 50)), 1), 200)
-        offset = max(int(request.args.get("offset", 0)), 0)
+        limit = query_int("limit", 50, minimum=1, maximum=200)
+        offset = query_int("offset", 0, minimum=0)
     except (TypeError, ValueError):
         return _error("VALIDATION_FAILED", "limit/offset must be integers", 400)
     jobs = _manager().list(
@@ -1008,8 +1050,8 @@ def api_job_events(job_id):
     if err:
         return err
     try:
-        after = int(request.args.get("after_id", 0))
-        limit = min(max(int(request.args.get("limit", 200)), 1), 1000)
+        after = query_int("after_id", 0, minimum=0)
+        limit = query_int("limit", 200, minimum=1, maximum=1000)
     except (TypeError, ValueError):
         return _error("VALIDATION_FAILED", "after_id/limit must be integers", 400)
     events = _manager().events(job_id, limit=limit, after_id=after)

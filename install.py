@@ -153,6 +153,66 @@ def run_system_checks(ni: bool) -> bool:
 
 
 # ── Phase: Dependency check ──
+def _requirement_names(req_file: Path) -> Dict[str, str]:
+    """``{distribution or module name: original requirement line}``.
+
+    The manifest is keyed by *distribution* name, which is not always the
+    importable module name (``python-docx`` imports as ``docx``).
+    """
+    import re
+
+    required: Dict[str, str] = {}
+    for line in Path(req_file).read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        name = re.split(r"[><=!~\[; ]", line, maxsplit=1)[0].strip()
+        if name:
+            required[name.lower()] = line
+    return required
+
+
+def _missing_requirements(req_file: Path) -> List[str]:
+    """Requirement lines from *req_file* that are not installed.
+
+    Checks the *distribution* metadata first, so entries whose import name
+    differs from the distribution name (python-docx, python-pptx, odfpy,
+    RTFDE, compressed-rtf, PyMuPDF...) are not reported as missing on a
+    complete environment. A module-import fallback catches anything that is
+    importable but has no metadata (vendored modules, editable checkouts).
+    """
+    import_aliases = {
+        "python-docx": "docx", "python-pptx": "pptx", "pyyaml": "yaml",
+        "psycopg2-binary": "psycopg2", "python-dateutil": "dateutil",
+        "python-dotenv": "dotenv", "flask-babel": "flask_babel",
+        "flask-limiter": "flask_limiter", "flask-wtf": "flask_wtf",
+        "flask-compress": "flask_compress", "extract-msg": "extract_msg",
+        "rtfde": "RTFDE", "compressed-rtf": "compressed_rtf",
+        "pymupdf": "fitz", "pillow": "PIL", "beautifulsoup4": "bs4",
+        "msoffcrypto-tool": "msoffcrypto", "opencv-python": "cv2",
+        "opencv-python-headless": "cv2", "pymupdf4llm": "pymupdf4llm",
+        "pymupdf-layout": "pymupdf_layout", "pycryptodomex": "Cryptodome",
+        "rapidocr-onnxruntime": "rapidocr_onnxruntime", "mobi": "mobi",
+        "eBookLib": "ebooklib", "ordered-set": "ordered_set",
+        "backports.zstd": "backports.zstd",
+    }
+    from importlib.metadata import PackageNotFoundError, distribution
+
+    missing: List[str] = []
+    for name, req_spec in _requirement_names(req_file).items():
+        try:
+            distribution(name)
+            continue
+        except (PackageNotFoundError, ValueError):
+            pass
+        module = import_aliases.get(name, name.replace("-", "_"))
+        try:
+            importlib.import_module(module)
+        except Exception:
+            missing.append(req_spec)
+    return missing
+
+
 def run_dependency_check(ni: bool) -> bool:
     section("Dependencies")
     req_file = PROJECT_ROOT / "requirements.txt"
@@ -160,28 +220,8 @@ def run_dependency_check(ni: bool) -> bool:
         print(f"  {RED('✗')} requirements.txt not found")
         return False
 
-    required = {}
-    for line in req_file.read_text().splitlines():
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        name = line.split(">=")[0].split("==")[0].split("<")[0].split("[")[0].strip()
-        required[name.lower()] = line
-
-    import_map = {
-        "flask": "flask", "flask-babel": "flask_babel", "flask-limiter": "flask_limiter",
-        "flask-wtf": "flask_wtf", "flask-compress": "flask_compress",
-        "psycopg2-binary": "psycopg2", "python-dateutil": "dateutil",
-        "python-dotenv": "dotenv", "psutil": "psutil", "chardet": "chardet",
-        "pyyaml": "yaml", "html2text": "html2text", "extract-msg": "extract_msg",
-        "rarfile": "rarfile", "py7zr": "py7zr", "icalendar": "icalendar",
-    }
-    missing = []
-    for pkg_name, req_spec in required.items():
-        try:
-            importlib.import_module(import_map.get(pkg_name, pkg_name))
-        except ImportError:
-            missing.append(req_spec)
+    required = _requirement_names(req_file)
+    missing = _missing_requirements(req_file)
 
     if missing:
         print(f"  {RED('✗')} {len(missing)} missing: {', '.join(m[:30] for m in missing[:5])}")
@@ -191,6 +231,13 @@ def run_dependency_check(ni: bool) -> bool:
                 [sys.executable, "-m", "pip", "install", "-r", str(req_file)],
                 capture_output=True, text=True, timeout=600)
             if result.returncode == 0:
+                # pip's exit code says "pip succeeded", not "the environment is
+                # now complete", so ask the same question again.
+                still_missing = _missing_requirements(req_file)
+                if still_missing:
+                    print(f"  {RED('✗')} still missing after install: "
+                          f"{', '.join(m[:30] for m in still_missing[:5])}")
+                    return False
                 print(f"  {GREEN('✓')} All packages installed")
                 return True
             print(f"  {RED('✗')} pip returned code {result.returncode}")
@@ -201,17 +248,38 @@ def run_dependency_check(ni: bool) -> bool:
 
 
 # ── Phase: Gather configuration ──
+#: The settings the installer prompts for; these keys are also accepted from
+#: the process environment (see gather_config).
+_CONFIG_KEYS = frozenset({
+    "FLASK_ENV", "FLASK_HOST", "FLASK_PORT", "FLASK_SECRET_KEY",
+    "DB_HOST", "DB_PORT", "DB_USER", "DB_PASSWORD", "DB_NAME",
+    "APP_ADMIN_USERNAME", "APP_ADMIN_PASSWORD", "PASSWORD_MIN_LENGTH",
+    "SECURITY_MAX_FAILED_LOGINS", "SECURITY_LOCKOUT_MINUTES",
+    "SECURITY_SESSION_HOURS", "SECURITY_SESSION_IDLE_HOURS",
+    "RATE_LIMIT_PER_MINUTE", "RATE_LIMIT_PER_HOUR",
+    "MAX_WORKERS", "FILE_PROCESSING_TIMEOUT", "INGESTION_ROOTS", "LOG_LEVEL",
+})
+
+
 def gather_config(ni: bool) -> Dict[str, str]:
     section("Configuration")
     print("  Press Enter to accept the default shown in brackets.\n")
 
-    existing = {}
+    # Defaults, lowest precedence first: the .env file, then the process
+    # environment. Non-interactive mode returns these defaults unchanged, so
+    # without the environment half an unattended install could never set the
+    # administrator password (main() reports "Password must be at least 12
+    # characters" however long APP_ADMIN_PASSWORD was) - measured on a clean
+    # clone in the round-10 install drill. The precedence (environment over
+    # file) is the one the application itself uses.
+    existing: Dict[str, str] = {}
     if ENV_FILE.exists():
         for line in ENV_FILE.read_text().splitlines():
             line = line.strip()
             if line and not line.startswith("#") and "=" in line:
                 k, _, v = line.partition("=")
                 existing[k.strip()] = v.strip()
+    existing.update({k: v for k, v in os.environ.items() if k in _CONFIG_KEYS})
 
     config: Dict[str, str] = {}
 
@@ -266,11 +334,39 @@ def gather_config(ni: bool) -> Dict[str, str]:
 
 
 # ── Phase: Write config.json ──
+#: The sections every config.json must have. ``config.example.json`` is not in
+#: the repository (only ``.env.example`` is tracked), so on a clean checkout the
+#: example file does not exist and the skeleton below is the only definition of
+#: the document - the install used to die with KeyError: 'app' here.
+_CONFIG_SKELETON: Dict[str, Any] = {
+    "environment": "production",
+    "app": {},
+    "database": {},
+    "security": {"rate_limit": {}},
+    "admin": {},
+    "processing": {},
+    "ingestion": {"roots": []},
+}
+
+
+def _config_skeleton() -> Dict[str, Any]:
+    import copy
+
+    return copy.deepcopy(_CONFIG_SKELETON)
+
+
 def write_config_json(config: Dict[str, str]):
-    data = {}
+    import copy
+
+    data = _config_skeleton()
     if CONFIG_EXAMPLE.exists():
         with open(CONFIG_EXAMPLE) as f:
-            data = json.load(f)
+            example = json.load(f)
+        if isinstance(example, dict):
+            data.update(example)
+            for section, value in _CONFIG_SKELETON.items():
+                if isinstance(value, dict) and not isinstance(data.get(section), dict):
+                    data[section] = copy.deepcopy(value)
 
     data["environment"] = config.get("FLASK_ENV", "production")
     data["app"]["debug_mode"] = data["environment"] == "development"

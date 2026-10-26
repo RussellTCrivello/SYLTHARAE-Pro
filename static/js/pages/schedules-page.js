@@ -11,7 +11,7 @@
  * CSP-safe: no eval, no inline script, no Function constructor.
  */
 
-import { getCSRFTokenAsync } from '../modules/core/utils.js';
+import { escapeHtml, getCSRFTokenAsync } from '../modules/core/utils.js';
 
 const DATA = JSON.parse(document.getElementById('schedules-page-data').textContent);
 const L = JSON.parse(document.getElementById('schedules-page-labels').textContent);
@@ -89,9 +89,11 @@ function statusCell(row) {
 }
 
 function escapeCell(value) {
-    return String(value == null ? '' : value).replace(/[&<>\"']/g, (ch) => ({
-        '&': '&', '<': '<', '>': '>', '"': '"', "'": ''',
-    }[ch]));
+    // One canonical implementation (core/utils.js). The local copy that used
+    // to live here had lost its entity table - every mapping returned the
+    // character it was meant to replace, so cells were never escaped and the
+    // file did not even parse.
+    return escapeHtml(String(value == null ? '' : value));
 }
 
 function fmtWhen(iso) {

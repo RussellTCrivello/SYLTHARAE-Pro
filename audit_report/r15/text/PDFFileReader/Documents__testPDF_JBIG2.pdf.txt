@@ -1,0 +1,8 @@
+Total Pages: 1
+OCR Used: No
+Author: Pascal Essiembre
+Creator: Writer
+Producer: OpenOffice 4.1.1; modified using iText® 5.1.3 ©2000-2011 1T3XT BVBA
+
+Page 1 | Method: direct_extraction | Length: 61 chars
+This is a sample file to test images compressed using JBIG2.

@@ -1,0 +1,36 @@
+key,title,kind,rule,endpoint,template,template_exists,route_exists,required_role,has_test,status
+dashboard,Dashboard,PAGE,/,index,-,-,yes,-,yes,VERIFIED-OK
+file_library,File Library,PAGE,/files,files.files_list,-,-,yes,-,yes,VERIFIED-OK
+search,Search,PAGE,/search,search_page,-,-,yes,-,yes,VERIFIED-OK
+sources,Sources,PAGE,/sources,sources_list,-,-,yes,-,yes,VERIFIED-OK
+sides,Sides,PAGE,/sides,sides_list,-,-,yes,-,yes,VERIFIED-OK
+keywords,Keywords,PAGE,/keywords,keywords_list,-,-,yes,-,yes,VERIFIED-OK
+words,Words,PAGE,/words,words_list,-,-,yes,-,yes,VERIFIED-OK
+categories,Categories,PAGE,/categories,categories_list,-,-,yes,-,yes,VERIFIED-OK
+email_words,Email Words,PAGE,/email-words,email_words,-,-,yes,-,yes,VERIFIED-OK
+lexis_cosmos,LEXIS Cosmos,PAGE,/lexis,lexis_cosmos_page,-,-,yes,-,yes,FIXED+TEST
+analyst_categorization,Analyst Categories,PAGE,/analyst/categorization,analyst_categorization_page,-,-,yes,-,yes,VERIFIED-OK
+notifications,Notifications,PAGE,/notifications,notifications_page,-,-,yes,-,yes,VERIFIED-OK
+signal_horizon,Horizon & Signal Explorer,PAGE,/signals,signals_page,-,-,yes,-,yes,VERIFIED-OK
+monitoring,Monitoring,PAGE,/monitoring,monitoring_page,-,-,yes,-,yes,VERIFIED-OK
+input_ingestion,Input / Ingestion,PAGE,/operations/input,operations_input_page,-,-,yes,-,yes,VERIFIED-OK
+import_center,Import Center,PAGE,/operations/import,operations_import_page,-,-,yes,-,yes,FIXED+TEST
+archives,File Management and Analysis,PAGE,/archives,archives_page,-,-,yes,-,yes,VERIFIED-OK
+path_analysis,Path Analysis,PAGE,/analytics/path-analysis,path_analysis_page,-,-,yes,-,yes,VERIFIED-OK
+map_viewer,Map Viewer,PAGE,/analytics/map-viewer,map_viewer_page,-,-,yes,-,yes,VERIFIED-OK
+batch_analysis,Batch Analysis,PAGE,/analysis/batch,analysis_batch,-,-,yes,-,yes,VERIFIED-OK
+classification,Classification,PAGE,/analysis/classification,file_classification_page,-,-,yes,-,yes,VERIFIED-OK
+comprehensive_dashboard,Comprehensive Dashboard,PAGE,/dashboard/comprehensive,comprehensive_dashboard,-,-,yes,-,yes,VERIFIED-OK
+reports,Reports,PAGE,/reports,reports_page,-,-,yes,-,yes,VERIFIED-OK
+reports_dashboard,Reports Dashboard,PAGE,/reports/dashboard,reports_dashboard_page,-,-,yes,-,yes,VERIFIED-OK
+retention,Retention,PAGE,/retention,retention_page,-,-,yes,-,yes,VERIFIED-OK
+schedules,Schedules,PAGE,/schedules,schedules_page,-,-,yes,-,yes,VERIFIED-OK
+charts_dashboard,Charts Dashboard,PAGE,/dashboard/charts,charts_dashboard,-,-,yes,-,yes,VERIFIED-OK
+detection,Detection,PAGE,/signals/detection,detection_page,-,-,yes,admin,yes,VERIFIED-OK
+jobs,Jobs,PAGE,/operations/jobs,operations_jobs_page,-,-,yes,-,yes,VERIFIED-OK
+import_export_console,Import/Export,PAGE,/import-export,import_export_page,-,-,yes,admin,yes,VERIFIED-OK
+users,User Management,PAGE,/users,users_page,-,-,yes,admin,yes,VERIFIED-OK
+audit_log,Audit Log,PAGE,/admin/audit,audit_page,-,-,yes,admin,yes,VERIFIED-OK
+settings,Settings,PAGE,/settings,settings_page_direct,-,-,yes,admin,yes,VERIFIED-OK
+translation_manager,Translation Management,PAGE,/translations/manage,translations.translation_management_page,-,-,yes,admin,yes,VERIFIED-OK
+concurrency_monitor,Concurrency Monitor,INTERNAL,/concurrency/,concurrency.dashboard,-,-,yes,admin,yes,VERIFIED-OK

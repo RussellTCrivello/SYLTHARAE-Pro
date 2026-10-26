@@ -259,7 +259,12 @@ def _recover_jobs():
     try:
         from services.jobs.manager import JobManager
 
-        out = JobManager.get_instance().recover_stale_jobs()
+        # At startup nothing can legitimately be running: imports and jobs are
+        # threads inside this one process, and exactly one process may use a
+        # database (README "Import jobs are process-local"; run_web.py). Waiting
+        # for the runtime six-hour window instead left a SIGKILLed import
+        # listed as RUNNING in the Import Center for the rest of the window.
+        out = JobManager.get_instance().recover_stale_jobs(stale_seconds=0)
         if out.get("count"):
             logger.warning("Job crash recovery: %d stale job(s) marked FAILED: %s",
                            out["count"], out["recovered"])
@@ -282,7 +287,9 @@ def _start_scheduler():
             Scheduler.get_instance().start()
             logger.info("✅ Job scheduler started")
     except Exception as exc:
-        logger.warning("Job scheduler not started: %s", exc.__class__.__name__)
+        # Name the cause, not the exception class: "ModuleNotFoundError" alone
+        # hid a missing dependency (apscheduler) on a clean install.
+        logger.warning("Job scheduler not started: %s: %s", exc.__class__.__name__, exc)
 
 _start_scheduler()
 logger.info("✅ Rate limiting enabled (default 60/min, 600/hour per client)")

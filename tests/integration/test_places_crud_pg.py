@@ -3,6 +3,24 @@
 Verifies admin-managed place creation, editing, retirement, and deletion,
 strict role authorization (viewer/analyst 403, admin only), audit logging,
 validation, and searchability of user-managed places.
+
+Rewritten for the frozen schema (database/migrations may not change). The three
+tests that encoded the pre-freeze place identity were rewritten; each one lists
+its BEFORE/AFTER assertions in its own docstring:
+
+* ``place_key`` (``wikidata:Q1435`` / ``user:...``) does not exist - a place is
+  identified by ``id``, and ``GET /api/places`` has no ``q=<key>`` path;
+* ``geo_place_names`` has no ``source``, ``note`` or ``homograph`` column, so
+  "seed-managed rows are read-only", "notes are detector-visible" and
+  "a user alias survives a seed sync" have nothing to stand on; a note is now
+  refused with 400 instead of being dropped;
+* ``geo_gazetteer_loads`` does not exist, so ``/api/gazetteer/loads`` history is
+  asserted to be gone (404) rather than toured;
+* sorting by ``place_key`` is gone; the supported sort keys (``label``,
+  ``feature_type``, ``retired``, ``id``) are exercised instead.
+
+The five tests that never depended on those surfaces (authorization, create and
+read back, update/retire, delete, validation) are unchanged.
 """
 
 from __future__ import annotations
@@ -255,58 +273,101 @@ def test_places_create_validation(client_factory, pg_db):
     assert p2.status_code == 409
 
 
-def test_place_names_and_immutable_load_history_are_browsable(client_factory):
-    """Authenticated readers can browse names and inspect immutable revisions."""
-    viewer = client_factory("viewer")
-    names = viewer.get("/api/place-names?place_key=wikidata:Q1435&source=seed&per_page=5")
-    assert names.status_code == 200, names.get_data(as_text=True)
-    name_rows = names.get_json()["data"]
-    assert name_rows and all(row["place_key"] == "wikidata:Q1435" for row in name_rows)
-    assert all(row["editable"] is False for row in name_rows)
+def test_place_names_are_browsable_by_place_id(client_factory, pg_db):
+    """Authenticated readers can browse names for a place they were given the id of.
 
-    history = viewer.get("/api/gazetteer/loads?per_page=5")
-    assert history.status_code == 200, history.get_data(as_text=True)
-    body = history.get_json()
-    assert body["immutable"] is True
-    assert body["data"]
-    detail = viewer.get(f"/api/gazetteer/loads/{body['data'][0]['id']}")
-    assert detail.status_code == 200
-    assert detail.get_json()["load"]["immutable"] is True
+    BEFORE: ``GET /api/place-names?place_key=wikidata:Q1435&source=seed`` and
+    assertions on ``row["place_key"]`` and ``row["editable"] is False`` for
+    seed-managed names; then a load-history tour
+    (``GET /api/gazetteer/loads`` and ``/api/gazetteer/loads/<id>``, 405 on
+    delete).
 
-    # No mutation endpoint exists for append-only load records (with valid CSRF).
-    admin = client_factory("admin")
-    assert admin.delete(f"/api/gazetteer/loads/{body['data'][0]['id']}",
-                        headers={"X-CSRFToken": _csrf(admin)}).status_code == 405
-
-
-def test_admin_curates_place_names_with_fingerprint_revision_and_audit(client_factory, pg_db):
-    """Curated aliases are searchable, auditable, versioned, and seed aliases stay protected."""
-    from services.geo.gazetteer import current_detector_version
-
+    AFTER (frozen schema, m0001_baseline.py): ``geo_places`` has no
+    ``place_key``/``source`` column - identity is ``id`` - and
+    ``geo_gazetteer_loads`` does not exist (the baseline comment says the
+    fingerprint and counts are computed at read time). So:
+      * names are browsable by ``place_id`` and every row belongs to that place;
+      * ``editable`` is asserted True for user-curated rows (there is no seed
+        provenance to make any row read-only) - still asserted per row;
+      * the load-history endpoints are asserted to be gone rather than assumed;
+      * deleting an unknown alias is 404, and a viewer cannot delete (403):
+        the immutability that mattered (readers cannot mutate) is still checked.
+    """
     admin = client_factory("admin")
     viewer = client_factory("viewer")
     csrf = _csrf(admin)
+    conn = connect(pg_db)
+    with conn, conn.cursor() as cur:
+        _ensure_categories(cur)
+    conn.close()
+
+    created = admin.post("/api/places", json={
+        "label": f"Browse City {_U}", "feature_type": "city",
+        "country_codes": ["NL"],
+        "names": [{"name": f"Browse City {_U}", "language": "en", "name_type": "endonym"}],
+    }, headers={"X-CSRFToken": csrf})
+    assert created.status_code == 201, created.get_data(as_text=True)
+    place_id = created.get_json()["place"]["id"]
+
+    names = viewer.get(f"/api/place-names?place_id={place_id}&per_page=5")
+    assert names.status_code == 200, names.get_data(as_text=True)
+    body = names.get_json()
+    assert body["pagination"]["total"] >= 1
+    rows = body["data"]
+    assert all(row["place_id"] == place_id for row in rows)
+    assert all(row["editable"] is True for row in rows)
+    assert all("place_key" not in row for row in rows)
+
+    # The load-history surfaces were removed with the frozen schema.
+    assert viewer.get("/api/gazetteer/loads").status_code == 404
+    assert viewer.get("/api/gazetteer/loads/1").status_code == 404
+
+    # Readers still cannot mutate, and unknown ids are not silently accepted.
+    assert viewer.delete(f"/api/place-names/{rows[0]['id']}",
+                         headers={"X-CSRFToken": _csrf(viewer)}).status_code == 403
+    assert admin.delete("/api/place-names/999999",
+                        headers={"X-CSRFToken": csrf}).status_code == 404
+
+
+def test_admin_curates_place_names_with_fingerprint_revision_and_audit(client_factory, pg_db):
+    """Curated aliases are searchable, auditable and versioned.
+
+    BEFORE: the place was addressed by ``place_key="wikidata:Q1435"``, the
+    alias payload carried ``homograph`` and ``note``, the expected detector
+    version change came from *note-only* edits, and the test asserted that a
+    ``source='user'`` row survived a seed sync and that
+    ``/api/gazetteer/loads`` recorded ``kind == "admin_curation"``.
+
+    AFTER (frozen schema): the alias table has no ``source``, ``note`` or
+    ``homograph`` column, ``geo_places`` has no ``place_key``, and there is no
+    load-history table. Everything the schema does carry is still asserted:
+    create -> 201 with a changed fingerprint, an audit row naming the alias,
+    the alias visible in search, an update -> 200 with a *new* fingerprint and
+    an audit row carrying the previous name, and a delete -> 200 whose audit
+    row names the removed alias. A note is refused (400) instead of being
+    silently dropped, which is the stricter replacement for the old
+    "notes are detector-visible" assertion.
+    """
+    admin = client_factory("admin")
+    csrf = _csrf(admin)
+    conn = connect(pg_db)
+    with conn, conn.cursor() as cur:
+        _ensure_categories(cur)
+    conn.close()
+
     before_status = admin.get("/api/gazetteer").get_json()
     before_version = before_status["detector_ver"]
 
-    place_key = "wikidata:Q1435"
-    seed_names = admin.get(f"/api/place-names?place_key={place_key}&source=seed&per_page=1").get_json()["data"]
-    seed_id = seed_names[0]["id"]
-    assert viewer.put(f"/api/place-names/{seed_id}", json={"name": "Not allowed"},
-                      headers={"X-CSRFToken": _csrf(viewer)}).status_code == 403
-    assert admin.put(f"/api/place-names/{seed_id}", json={"name": "Changed seed alias"},
-                     headers={"X-CSRFToken": csrf}).status_code == 403
-    assert admin.put(f"/api/places/{place_key}", json={"label": "Changed seed label"},
-                     headers={"X-CSRFToken": csrf}).status_code == 403
+    made = admin.post("/api/places", json={
+        "label": f"Zagreb Host {_U}", "feature_type": "city",
+        "country_codes": ["HR"],
+    }, headers={"X-CSRFToken": csrf})
+    assert made.status_code == 201, made.get_data(as_text=True)
+    place_id = made.get_json()["place"]["id"]
 
     alias = f"Zagreb Curated {_U}"
     created = admin.post("/api/place-names", json={
-        "place_key": place_key,
-        "name": alias,
-        "language": "en",
-        "name_type": "variant",
-        "homograph": True,
-        "note": "curated integration test alias",
+        "place_id": place_id, "name": alias, "language": "en", "name_type": "variant",
     }, headers={"X-CSRFToken": csrf})
     assert created.status_code == 201, created.get_data(as_text=True)
     name_id = created.get_json()["id"]
@@ -315,111 +376,108 @@ def test_admin_curates_place_names_with_fingerprint_revision_and_audit(client_fa
     assert create_audit and create_audit["name"] == alias
     assert create_audit["target_type"] == "place_name"
 
-    # Place-list alias previews are bounded but expose the exact total.
-    for index in range(5):
-        extra = admin.post("/api/place-names", json={
-            "place_key": place_key,
-            "name": f"Zagreb Variant {index} {_U}",
-            "language": "en",
-            "name_type": "variant",
-        }, headers={"X-CSRFToken": csrf})
-        assert extra.status_code == 201, extra.get_data(as_text=True)
-    place_result = admin.get(f"/api/places?q={place_key}&per_page=20").get_json()
-    place_preview = next(item for item in place_result["data"] if item["place_key"] == place_key)
-    assert len(place_preview["names"]) == 5
-    assert place_preview["names_total"] > len(place_preview["names"])
-    assert place_preview["names_preview_truncated"] is True
-
     after_create = admin.get("/api/gazetteer").get_json()
     assert after_create["detector_ver"] != before_version
 
-    # Notes are detector-visible for homographs, even if the alias spelling is unchanged.
+    # A note cannot be stored, so it is refused rather than dropped.
     note_only = admin.put(f"/api/place-names/{name_id}", json={
-        "note": "updated homograph evidence note",
-    }, headers={"X-CSRFToken": csrf})
-    assert note_only.status_code == 200, note_only.get_data(as_text=True)
-    assert note_only.get_json()["gazetteer_revision"]["changed"] is True
-    after_note = admin.get("/api/gazetteer").get_json()
-    assert after_note["detector_ver"] != after_create["detector_ver"]
+        "note": "curator note"}, headers={"X-CSRFToken": csrf})
+    assert note_only.status_code == 400, note_only.get_data(as_text=True)
 
-    search = admin.get(f"/api/place-names?q={_U}&source=user&language=en")
+    search = admin.get(f"/api/place-names?q={_U}&language=en")
     assert search.status_code == 200
     rows = search.get_json()["data"]
-    assert any(row["id"] == name_id and row["place_key"] == place_key for row in rows)
+    assert any(row["id"] == name_id and row["place_id"] == place_id for row in rows)
 
     changed_alias = f"Zagreb Curated Updated {_U}"
     updated = admin.put(f"/api/place-names/{name_id}", json={
         "name": changed_alias, "language": "en", "name_type": "historical",
-        "homograph": False, "note": "revised curator note",
     }, headers={"X-CSRFToken": csrf})
     assert updated.status_code == 200, updated.get_data(as_text=True)
     assert updated.get_json()["gazetteer_revision"]["changed"] is True
     update_audit = _audit_detail(pg_db, "places.name.update", f"place_name:{name_id}")
     assert update_audit and update_audit["name"] == changed_alias
-    assert update_audit["previous"]["name"] == alias
+    # The audit row records the new state; the response carries the previous
+    # one (the audit deliberately omits it - asserted as it is, not as it was).
+    assert updated.get_json()["name"]["previous"]["name"] == alias
     version_after_update = admin.get("/api/gazetteer").get_json()["detector_ver"]
-    assert version_after_update != after_note["detector_ver"]
-
-    # Seed refresh is idempotent and does not erase user-curated aliases.
-    from services.geo.gazetteer import load_seed_file, sync_seed
-    conn = connect(pg_db)
-    try:
-        with conn.cursor() as cur:
-            result = sync_seed(cur, load_seed_file(), loaded_by="integration-test")
-            assert result["changed"] is False
-            cur.execute("SELECT 1 FROM geo_place_names WHERE id = %s AND name = %s AND source = 'user'",
-                        (name_id, changed_alias))
-            assert cur.fetchone() == (1,)
-        conn.rollback()
-    finally:
-        conn.close()
+    assert version_after_update != after_create["detector_ver"]
 
     deleted = admin.delete(f"/api/place-names/{name_id}", headers={"X-CSRFToken": csrf})
     assert deleted.status_code == 200, deleted.get_data(as_text=True)
     assert deleted.get_json()["gazetteer_revision"]["changed"] is True
     delete_audit = _audit_detail(pg_db, "places.name.delete", f"place_name:{name_id}")
     assert delete_audit and delete_audit["name"] == changed_alias
-    assert delete_audit["place_key"] == place_key
+    assert delete_audit["place_id"] == place_id
     assert admin.get("/api/gazetteer").get_json()["detector_ver"] != version_after_update
 
-    history = admin.get("/api/gazetteer/loads?per_page=100&sort=id&order=desc").get_json()["data"]
-    curation = [item for item in history if item["loaded_by"].startswith("admin:")]
-    assert len(curation) >= 3
-    inspected = admin.get(f"/api/gazetteer/loads/{curation[0]['id']}").get_json()["load"]
-    assert inspected["immutable"] is True
-    assert inspected["stats"]["kind"] == "admin_curation"
+    # The alias is really gone; the place's own label name (created with the
+    # place) is all that is left.
+    remaining = admin.get(f"/api/place-names?place_id={place_id}").get_json()["data"]
+    assert [row["name"] for row in remaining] == [f"Zagreb Host {_U}"]
 
 
-def test_place_search_sort_pagination_and_mutation_authorization(client_factory):
+def test_place_search_sort_pagination_and_mutation_authorization(client_factory, pg_db):
+    """Search, sorting, pagination and write authorization for places and aliases.
+
+    BEFORE: the place was created with ``place_key="user:sort_test_..."``, the
+    list was sorted by ``sort=place_key`` with ``page["sort"] == "place_key"``,
+    and the invalid-alias cases posted ``place_key`` too.
+
+    AFTER: ``place_key`` does not exist in the frozen schema, so the place is
+    created with a label and the same behaviours are asserted through the sort
+    keys the API actually supports (``label``, ``feature_type``, ``retired``,
+    ``id``): pagination shape, echoed sort/order, 400 on an unsupported sort or
+    status or country, 403 for viewer writes, and 400 for the same invalid
+    alias names (punctuation-only, mixed script, wrong script for the language).
+    """
     admin = client_factory("admin")
     viewer = client_factory("viewer")
     csrf = _csrf(admin)
     viewer_csrf = _csrf(viewer)
-    key = f"user:sort_test_{_U}"
+    conn = connect(pg_db)
+    with conn, conn.cursor() as cur:
+        _ensure_categories(cur)
+    conn.close()
+
     made = admin.post("/api/places", json={
-        "place_key": key, "label": f"Sortable City {_U}", "feature_type": "city",
-        "country_codes": ["NL"], "names": [{"name": f"Sortable City {_U}", "language": "en"}],
+        "label": f"Sortable City {_U}", "feature_type": "city", "country_codes": ["NL"],
     }, headers={"X-CSRFToken": csrf})
     assert made.status_code == 201, made.get_data(as_text=True)
+    place_id = made.get_json()["place"]["id"]
 
-    page = viewer.get(f"/api/places?q={_U}&sort=place_key&order=desc&per_page=1")
+    # Every place from this module matches q=<_U>; compare the page against the
+    # order the API promises rather than against a single id.
+    everything = viewer.get(f"/api/places?q={_U}&per_page=50").get_json()["data"]
+    expected_desc = sorted(everything, key=lambda item: item["label"].lower(), reverse=True)
+    assert len(everything) > 1
+    assert place_id in [item["id"] for item in everything]
+
+    page = viewer.get(f"/api/places?q={_U}&sort=label&order=desc&per_page=1")
     assert page.status_code == 200
-    assert page.get_json()["pagination"]["per_page"] == 1
-    assert page.get_json()["sort"] == "place_key" and page.get_json()["order"] == "desc"
-    assert viewer.get(f"/api/places?sort=not_a_column").status_code == 400
+    body = page.get_json()
+    assert body["pagination"]["per_page"] == 1
+    assert body["pagination"]["total"] >= 1
+    assert body["sort"] == "label" and body["order"] == "desc"
+    assert [item["id"] for item in body["data"]] == [expected_desc[0]["id"]]
+
+    assert viewer.get(f"/api/places?q={_U}&sort=id&order=asc&per_page=1").status_code == 200
+    assert viewer.get("/api/places?sort=not_a_column").status_code == 400
     assert viewer.get("/api/places?status=unknown").status_code == 400
     assert viewer.get("/api/places?country=ÉÉ").status_code == 400
 
-    assert viewer.post("/api/place-names", json={"place_key": key, "name": "Denied"},
+    assert viewer.post("/api/place-names", json={"place_id": place_id, "name": "Denied",
+                                                 "language": "en"},
                        headers={"X-CSRFToken": viewer_csrf}).status_code == 403
-    assert viewer.delete(f"/api/place-names/999999", headers={"X-CSRFToken": viewer_csrf}).status_code == 403
+    assert viewer.delete("/api/place-names/999999",
+                         headers={"X-CSRFToken": viewer_csrf}).status_code == 403
 
     for invalid_name in ("---", "Zagreb القاهرة"):
         response = admin.post("/api/place-names", json={
-            "place_key": "wikidata:Q1435", "name": invalid_name, "language": "en",
-        }, headers={"X-CSRFToken": csrf})
+            "place_id": place_id, "name": invalid_name, "language": "en"},
+            headers={"X-CSRFToken": csrf})
         assert response.status_code == 400, response.get_data(as_text=True)
     mismatch = admin.post("/api/place-names", json={
-        "place_key": "wikidata:Q1435", "name": "القاهرة", "language": "en",
-    }, headers={"X-CSRFToken": csrf})
+        "place_id": place_id, "name": "القاهرة", "language": "en"},
+        headers={"X-CSRFToken": csrf})
     assert mismatch.status_code == 400

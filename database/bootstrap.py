@@ -130,6 +130,41 @@ def preflight_extensions(conn) -> List[str]:
     return missing
 
 
+#: The only encoding the application stores text in. Corpora are Arabic,
+#: Hebrew and Persian as well as Latin, and psycopg2 maps a SQL_ASCII server to
+#: the ``ascii`` codec, so anything else degrades documents on ingest.
+REQUIRED_ENCODING = "UTF8"
+
+
+def preflight_encoding(conn) -> str:
+    """Return the database's server encoding (``UTF8``, ``SQL_ASCII``, ...)."""
+    with conn.cursor() as cur:
+        cur.execute("SELECT pg_encoding_to_char(encoding) FROM pg_database "
+                    "WHERE datname = current_database()")
+        row = cur.fetchone()
+    return row[0] if row else ""
+
+
+def bootstrap_encoding_guard(conn) -> str:
+    """Raise :class:`BootstrapError` unless the database is UTF8.
+
+    ``ensure_database`` creates a *new* database with ``ENCODING 'UTF8'
+    TEMPLATE template0``; this covers the pre-existing database an operator
+    points us at, which bootstrap used to connect to without looking.
+    """
+    encoding = preflight_encoding(conn)
+    if encoding != REQUIRED_ENCODING:
+        raise BootstrapError(
+            f"The database is encoded {encoding or 'unknown'!r}; SYLTHARAE "
+            f"requires {REQUIRED_ENCODING} because it stores Arabic, Hebrew "
+            f"and Persian text. Changing a database's encoding is not "
+            f"supported in place: create a {REQUIRED_ENCODING} database and "
+            f"recreate the schema (pg_dump/restore into the new database), "
+            f"then re-import."
+        )
+    return encoding
+
+
 def bootstrap_database(cfg: Dict[str, Any], dry_run: bool = False) -> Dict[str, Any]:
     """Create the database if missing and apply all pending migrations.
 
@@ -139,6 +174,7 @@ def bootstrap_database(cfg: Dict[str, Any], dry_run: bool = False) -> Dict[str, 
     created = ensure_database(cfg)
     conn = connect_application_db(cfg)
     try:
+        bootstrap_encoding_guard(conn)
         missing = preflight_extensions(conn)
         if missing:
             raise BootstrapError(

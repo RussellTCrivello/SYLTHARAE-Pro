@@ -1,0 +1,9 @@
+Total Pages: 1
+OCR Used: Yes
+OCR Languages: heb, eng, ara
+Title: Untitled
+Creator: TextEdit
+Producer: Mac OS X 10.10.3 Quartz PDFContext
+
+Page 1 | Method: ocr_rapidocr | Length: 11 chars
+Hello World

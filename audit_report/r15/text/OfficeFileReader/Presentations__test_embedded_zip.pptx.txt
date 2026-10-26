@@ -1,0 +1,78 @@
+IBM LBM
+IBM EEM
+IBM EM R
+IBM
+NOHTE
+
+JavaMonitonng &ManagementConsole- pid:8436 sun.toolsjconsoleJConsole
+ConnectionWindowHelp
+“”
+"x"
+OverviewMemoryThreadsClassesVM SummaryMBeans
+Ime Range:
+A
+Heap Memory Usage
+Threads
+20 Mb
+50
+pa5n
+15,922,776
+15 Mb
+40
+39
+10 Mb -
+30
+19:41
+19:41
+Used:.15.9 Mb Committed: 23 Mb Maxc 2.1Gb :
+Live: 39 Peak: 40 Total: 50 ,
+-Classes
+4,000
+Loaded
+3,401
+3,000
+19:41
+loaded: 3,401. Unloaded: 0 Total: 3,401 *,
+
+Total Slides: 3
+
+Slide 1
+
+JConsole  (Java monitoring and Management Console)
+
+[Image: slide_1_shape_1]
+
+Application for real-time monitoring of Java apps
+Located at <JDK>\bin\JConsole(.exe)
+Bundled with the JDK since 6.0 (not with the JRE)
+JConsole User Guide: http://download.oracle.com/javase/6/docs/technotes/guides/management/jconsole.html
+
+Slide 2
+
+Java Dump
+
+Easiest way to see what’s going on in a running application (or one that has exited abnormally)
+Usually named like this: javacore.20110604.072156.336.0002.txt (date.time, time, and serial number)
+By default, it’s created on fatal native exceptions or out of memory
+Can be triggered inside the application using com.ibm.jvm.Dump.JavaDump()
+Manually induced by sending a break signal to the JRE:
+Hitting Ctrl+Break on an interactive Java console
+kill -3 <pid>  (UNIX)
+SendSignal.exe <pid> (Win32)
+http://www.latenighthacking.com/projects/2003/sendSignal/SendSignal.exe
+SendSignal64.exe <pid>  (Win7/64bit)
+Send me a note if SendSignal doesn’t work on your Win platform
+
+Slide 3
+
+Final slide
+
+No title
+
+JConsole  (Java monitoring and Management Console)Application for real-time monitoring of Java appsLocated at <JDK>\bin\JConsole(.exe) Bundled with the JDK since 6.0 (not with the JRE)JConsole User Guide: http://download.oracle.com/javase/6/docs/technotes/guides/management/jconsole.html
+Java DumpEasiest way to see what’s going on in a running application (or one that has exited abnormally)Usually named like this: javacore.20110604.072156.336.0002.txt (date.time, time, and serial number)By default, it’s created on fatal native exceptions or out of memoryCan be triggered inside the application using com.ibm.jvm.Dump.JavaDump()Manually induced by sending a break signal to the JRE:Hitting Ctrl+Break on an interactive Java consolekill -3 <pid>  (UNIX) SendSignal.exe <pid> (Win32)http://www.latenighthacking.com/projects/2003/sendSignal/SendSignal.exe SendSignal64.exe <pid>  (Win7/64bit) Send me a note if SendSignal doesn’t work on your Win platform
+No titleFinal slide
+1
+ppt/media/image1.png
+ppt/media/image2.png
+ppt/media/image3.wmf

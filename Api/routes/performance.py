@@ -7,6 +7,7 @@ from flask import Blueprint, jsonify, request
 import logging
 
 from core.errors import client_error
+from core.validation import query_int
 from typing import Dict, Any
 
 from database import (
@@ -149,7 +150,7 @@ def get_cache_stats():
         # Get cache entries if requested
         entries = None
         if request.args.get('include_entries', 'false').lower() == 'true':
-            limit = int(request.args.get('limit', 10))
+            limit = query_int("limit", 10, minimum=1, maximum=1000)
             entries = cache.get_entries(limit=limit)
         
         result = {
@@ -234,7 +235,7 @@ def get_slow_queries():
         # Use context manager for connection
         with db_hub._get_connection() as conn:
             slow_query_threshold = float(request.args.get('threshold', 1.0))
-            limit = int(request.args.get('limit', 10))
+            limit = query_int("limit", 10, minimum=1, maximum=1000)
             
             profiler = QueryProfiler(conn, slow_query_threshold)
             

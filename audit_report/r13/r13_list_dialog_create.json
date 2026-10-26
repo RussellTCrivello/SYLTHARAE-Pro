@@ -1,0 +1,310 @@
+{
+  "base": "http://127.0.0.1:5077",
+  "stamp": "R13-807373",
+  "root": {
+    "name": "R13-807373-root",
+    "id": "1"
+  },
+  "child": {
+    "name": "R13-807373-child",
+    "row": {
+      "id": "2",
+      "parentId": "1",
+      "isSubcategory": true,
+      "parentCellText": "R13-807373-root",
+      "parentHref": "/categories?search=R13-807373-root"
+    }
+  },
+  "checks": [
+    {
+      "ok": true,
+      "label": "sign in with the changed password",
+      "detail": 200
+    },
+    {
+      "ok": true,
+      "label": "fresh list page renders the empty table",
+      "detail": {
+        "rows": 0,
+        "hasTable": true
+      }
+    },
+    {
+      "ok": true,
+      "label": "parent selector is populated before creating",
+      "detail": 1
+    },
+    {
+      "ok": true,
+      "label": "root category appears in the list after creating it from the dialog",
+      "detail": {
+        "id": "1",
+        "parentId": "",
+        "isSubcategory": false,
+        "parentCellText": "Main Category",
+        "parentHref": null
+      }
+    },
+    {
+      "ok": true,
+      "label": "the root row is a top-level row (no parent)",
+      "detail": {
+        "parentId": ""
+      }
+    },
+    {
+      "ok": true,
+      "label": "parent selector offers the new root",
+      "detail": 2
+    },
+    {
+      "ok": true,
+      "label": "the new root can be selected as parent",
+      "detail": {
+        "value": "1",
+        "text": "R13-807373-root"
+      }
+    },
+    {
+      "ok": true,
+      "label": "child category appears in the list after creating it from the dialog",
+      "detail": {
+        "id": "2",
+        "parentId": "1",
+        "isSubcategory": true,
+        "parentCellText": "R13-807373-root",
+        "parentHref": "/categories?search=R13-807373-root"
+      }
+    },
+    {
+      "ok": true,
+      "label": "the child row is rendered as a subcategory",
+      "detail": {
+        "cls": true
+      }
+    },
+    {
+      "ok": true,
+      "label": "the child row records the chosen parent",
+      "detail": {
+        "parentId": "1",
+        "expected": "1"
+      }
+    },
+    {
+      "ok": true,
+      "label": "the parent cell names the parent",
+      "detail": "R13-807373-root"
+    },
+    {
+      "ok": true,
+      "label": "the parent cell links to a search for the parent",
+      "detail": "/categories?search=R13-807373-root"
+    },
+    {
+      "ok": true,
+      "label": "following the parent link finds the parent row",
+      "detail": "1"
+    },
+    {
+      "ok": true,
+      "label": "both categories are listed together",
+      "detail": [
+        {
+          "name": "r13-807373-child",
+          "parentId": "1",
+          "cls": "category-item subcategory"
+        },
+        {
+          "name": "r13-807373-root",
+          "parentId": "",
+          "cls": "category-item"
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "label": "both creates went through POST /api/categories/tree with 201",
+      "detail": [
+        {
+          "status": 201,
+          "url": "/api/categories/tree",
+          "body": "{\"children\":[],\"node\":{\"child_count\":0,\"depth\":1,\"descendant_count\":0,\"id\":1,\"name\":\"R13-807373-root\",\"own_terms\":0,\"parent_id\":null,\"path\":\"R13-807373-root\",\"path_ids\":[1],\"sort_key\":\"000000000001\",\"total_terms\":0}}\n"
+        },
+        {
+          "status": 201,
+          "url": "/api/categories/tree",
+          "body": "{\"children\":[],\"node\":{\"child_count\":0,\"depth\":2,\"descendant_count\":0,\"id\":2,\"name\":\"R13-807373-child\",\"own_terms\":0,\"parent_id\":1,\"path\":\"R13-807373-root / R13-807373-child\",\"path_ids\":[1,2],\"sort_key\":\"000000000001.000000000002\",\"total_terms\":0}}\n"
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "label": "ar: document direction is rtl",
+      "detail": "rtl"
+    },
+    {
+      "ok": true,
+      "label": "ar: rows still render",
+      "detail": 2
+    },
+    {
+      "ok": true,
+      "label": "ar: no horizontal overflow",
+      "detail": {
+        "sw": 1440,
+        "cw": 1440
+      }
+    },
+    {
+      "ok": true,
+      "label": "ar: the parent link survives translation",
+      "detail": "/categories?search=R13-807373-root"
+    },
+    {
+      "ok": true,
+      "label": "he: document direction is rtl",
+      "detail": "rtl"
+    },
+    {
+      "ok": true,
+      "label": "he: rows still render",
+      "detail": 2
+    },
+    {
+      "ok": true,
+      "label": "he: no horizontal overflow",
+      "detail": {
+        "sw": 1440,
+        "cw": 1440
+      }
+    },
+    {
+      "ok": true,
+      "label": "he: the parent link survives translation",
+      "detail": "/categories?search=R13-807373-root"
+    },
+    {
+      "ok": true,
+      "label": "fa: document direction is rtl",
+      "detail": "rtl"
+    },
+    {
+      "ok": true,
+      "label": "fa: rows still render",
+      "detail": 2
+    },
+    {
+      "ok": true,
+      "label": "fa: no horizontal overflow",
+      "detail": {
+        "sw": 1440,
+        "cw": 1440
+      }
+    },
+    {
+      "ok": true,
+      "label": "fa: the parent link survives translation",
+      "detail": "/categories?search=R13-807373-root"
+    },
+    {
+      "ok": true,
+      "label": "390px: both rows render",
+      "detail": {
+        "rows": 2,
+        "bodyOverflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "tableScrolls": true
+      }
+    },
+    {
+      "ok": true,
+      "label": "390px: the page itself does not overflow horizontally",
+      "detail": {
+        "rows": 2,
+        "bodyOverflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "tableScrolls": true
+      }
+    },
+    {
+      "ok": true,
+      "label": "390px: the dialog still offers parent options",
+      "detail": 3
+    },
+    {
+      "ok": true,
+      "label": "390px: the root is selectable in the dialog",
+      "detail": true
+    },
+    {
+      "ok": true,
+      "label": "no console errors, page errors or non-2xx responses",
+      "detail": {
+        "console": [],
+        "pageerror": [],
+        "badResponses": []
+      }
+    }
+  ],
+  "problems": {
+    "console": [],
+    "pageerror": [],
+    "badResponses": []
+  },
+  "posts": [
+    {
+      "status": 201,
+      "url": "/api/categories/tree",
+      "body": "{\"children\":[],\"node\":{\"child_count\":0,\"depth\":1,\"descendant_count\":0,\"id\":1,\"name\":\"R13-807373-root\",\"own_terms\":0,\"parent_id\":null,\"path\":\"R13-807373-root\",\"path_ids\":[1],\"sort_key\":\"000000000001\",\"total_terms\":0}}\n"
+    },
+    {
+      "status": 201,
+      "url": "/api/categories/tree",
+      "body": "{\"children\":[],\"node\":{\"child_count\":0,\"depth\":2,\"descendant_count\":0,\"id\":2,\"name\":\"R13-807373-child\",\"own_terms\":0,\"parent_id\":1,\"path\":\"R13-807373-root / R13-807373-child\",\"path_ids\":[1,2],\"sort_key\":\"000000000001.000000000002\",\"total_terms\":0}}\n"
+    }
+  ],
+  "rtl": {
+    "ar": {
+      "lang": "ar",
+      "dir": "rtl",
+      "rows": 2,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "parentHref": "/categories?search=R13-807373-root"
+    },
+    "he": {
+      "lang": "he",
+      "dir": "rtl",
+      "rows": 2,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "parentHref": "/categories?search=R13-807373-root"
+    },
+    "fa": {
+      "lang": "fa",
+      "dir": "rtl",
+      "rows": 2,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "parentHref": "/categories?search=R13-807373-root"
+    }
+  },
+  "emptyState": {
+    "rows": 0,
+    "hasTable": true
+  },
+  "mobile": {
+    "rows": 2,
+    "bodyOverflow": false,
+    "scrollWidth": 390,
+    "viewport": 390,
+    "tableScrolls": true
+  },
+  "failed": []
+}

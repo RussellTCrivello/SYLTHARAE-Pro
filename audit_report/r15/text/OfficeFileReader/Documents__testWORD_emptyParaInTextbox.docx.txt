@@ -1,0 +1,38 @@
+[Style: Heading 1] Komisia SAV pre posudzovanie vedeckej kvalifikácie zamestnancov
+
+[Style: Heading 1] 
+
+[Style: Heading 3] Prehľad vybraných kvantitatívnych údajov
+
+[Style: Heading 3] uchádzača o preradenie do vedeckého kvalifikačného stupňa IIa a I.
+
+Meno, priezvisko, tituly uchádzača:
+
+Pracovisko:
+
+Rok ukončenia vysokoškolského štúdia:
+
+Rok udelenia vedeckej hodnosti (akad. titulu): CSc./PhD.:                        DrSc.:
+
+Vedný odbor:
+
+Vedný odbor s medzinárodným charakterom              Vedný odbor bez priamej medzinárodnej väzby
+
+(vyznačiť zaškrtnutím √ )
+
+Table 1
+	spolu	od udelenia CSc./PhD. preradenia	za posledných 5 rokov
+Počet pôvodných vedeckých prác (štúdií) uverejnených v karentovaných a/alebo impaktovaných časopisoch			
+Počet pôvodných vedeckých prác uverejnených v časopisoch mimo CC a v recenzovaných zborníkoch (nie súhrny)			
+Počet publikovaných vedeckých monografií                  (s minimálnym rozsahom 3AH)			
+Počet kapitol v knižných publikáciách			
+Vysokoškolské učebnice a skriptá (počet)			
+Počet citácií WOS, Scopus			
+Počet citácií v iných databázach 			
+Počet ostatných ohlasov			
+Vedúci medzinárodného výskumného  projektu (počet)			
+Vedúci domáceho výskumného projektu (počet)			
+Počet patentových prihlášok a udelených patentov 			
+Počet realizovaných patentov, nových technológií, predaných licencií a pod.patentov, nových technológií, predaných licencií ap.patentov, nových technológií, predaných licencií ap.			
+Školiteľ skončených ašpirantov/doktorandov (počet) Počet realizovaných patentov, nových technológií, predaných licencií ap. Pedagogická činnosť  (počet hodín ročne)			
+

@@ -1,0 +1,27 @@
+Total Slides: 1
+
+Slide 1
+
+The quick
+
+The quick
+
+' --- ppt/vbaProject.bin :: Module1.bas
+Attribute VB_Name = "Module1"
+Sub Embolden()
+'
+' Embolden Macro
+'
+'
+    Selection.Font.Bold = wdToggle
+    Selection.Font.BoldBi = wdToggle
+End Sub
+
+Sub Italicize()
+'
+' Italicize Macro
+'
+'
+    Selection.Font.Italic = wdToggle
+    Selection.Font.ItalicBi = wdToggle
+End Sub

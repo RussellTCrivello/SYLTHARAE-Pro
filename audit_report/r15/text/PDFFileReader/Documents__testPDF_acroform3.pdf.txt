@@ -1,0 +1,31 @@
+Total Pages: 1
+OCR Used: No
+Title: pdf-form-with-signature-field
+Author: Dr. Eric Knauel
+Creator: PDFCreator Version 1.7.0
+Producer: GPL Ghostscript 9.07; modified using iTextSharp 5.2.1 (c) 1T3XT BVBA
+
+Page 1 | Method: direct_extraction | Length: 421 chars
+Example PDF file that contains a form with a signature field. 
+PDF processed with CutePDF evaluation edition www.CutePDF.com
+PDF processed with CutePDF evaluation edition www.CutePDF.com
+PDF processed with CutePDF evaluation edition www.CutePDF.com
+PDF processed with CutePDF evaluation edition www.CutePDF.com
+PDF processed with CutePDF evaluation edition www.CutePDF.com
+TIKA-1226
+
+comboItemB
+listItemB
+listItemC
+SIGN
+
+
+aTextField
+TIKA-1226
+aCheckBox
+Yes
+aComboBox
+comboExportB
+aListBox
+exportListItemC
+aSignature

@@ -122,8 +122,12 @@ def decision_sql(definition, scope, reference_date: datetime.date) -> Decision:
 
     signal_conds = [c for c in definition.conditions if c.kind == "signal"]
     idx = {c.name: i for i, c in enumerate(signal_conds)}
-    imminent = (reference_date,
-                reference_date + datetime.timedelta(days=priority_rules.IMMINENT_DAYS))
+    # ``imminent_sql`` renders "date_from <= %s + IMMINENT_DAYS AND date_to >= %s":
+    # the window is [reference_date, reference_date + IMMINENT_DAYS], so both
+    # placeholders are the reference date. Binding the window *end* second
+    # compared ``date_to`` against reference+7 and nothing inside the window
+    # counted as imminent (see tests/unit/test_scenario_imminent_window.py).
+    imminent = (reference_date, reference_date)
     if signal_conds:
         q.add(", sx AS (SELECT s.hash_id, s.id, s.confidence, s.date_from,"
               f" {rule_engine._CONF_RANK_SQL} AS rank,"
@@ -241,8 +245,15 @@ def decision_sql(definition, scope, reference_date: datetime.date) -> Decision:
           + " AS sample_signal_ids, " + decisive("hi") + " AS ev_hi, " + decisive("best")
           + " AS ev_best, " + decisive("early") + " AS ev_early, " + decisive("n")
           + " AS ev_n, " + decisive("unrec") + " AS ev_unrec FROM d)")
+    # The documented ladder (core/monitoring/priority.py) keyed on the
+    # strongest confidence among the decisive cases. ``ev_hi`` is only
+    # "a high-confidence signal is imminent"; using it as the first rung
+    # labelled a high-confidence, non-imminent match "medium". The outcome
+    # column admits high/medium/low only, so the summary rule is capped
+    # at high (see ``priority_from_summary``).
     q.add(", out AS (SELECT e.*,"
-          " CASE WHEN ev_hi THEN 'high' WHEN ev_best >= 2 THEN 'medium' ELSE 'low' END"
+          " CASE WHEN ev_best = 3 THEN 'high' WHEN ev_best = 2 THEN 'medium'"
+          " ELSE 'low' END"
           " AS priority,"
           " jsonb_build_object('rule', %s::text, 'high_and_imminent', ev_hi,"
           " 'highest_confidence', CASE ev_best WHEN 3 THEN 'high' WHEN 2 THEN 'medium'"
@@ -294,7 +305,7 @@ def _status_alert(cur, row, reason, eid, now):
     insert_alerts(cur, [Notification(
         id=None, type=NotificationType.SCENARIO_STATUS, priority=NotificationPriority.MEDIUM,
         title=row["name"], message=f"Scenario disabled: {reason}", file_id=None,
-        file_name=None, file_path=None, event_date=None,
+        event_date=None,
         metadata={"scenario_id": row["id"], "scenario_name": row["name"],
                   "disabled_reason": reason, "scenario_evaluation_id": eid},
         created_at=now, recipient_user_id=row["owner_user_id"], scenario_id=row["id"])])

@@ -1,0 +1,1 @@
+bjbjE This is a bold   HYPERLINK "http://tika.apache.org/"  hyper  link ; bold, I say.   HYPERLINK "http://tika.apache.org/"  hyper  link ; bold, I say. hf"I hf"I hf"I hf"I hf"I hf"I

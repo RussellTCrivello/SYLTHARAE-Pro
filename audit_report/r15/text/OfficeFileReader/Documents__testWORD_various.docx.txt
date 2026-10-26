@@ -1,0 +1,99 @@
+Footnote appears here
+
+[Style: Text Box] Here is a text box
+
+
+
+Bold italic underline superscript subscript strikethrough
+
+italic
+
+italic
+
+underline
+
+Here is a list:
+
+[Style: List Paragraph] Bullet 1
+
+[Style: List Paragraph] Bullet 2
+
+[Style: List Paragraph] Bullet 3
+
+Here is a numbered list:
+
+[Style: List Paragraph] Number bullet 1
+
+[Style: List Paragraph] Number bullet 2
+
+[Style: List Paragraph] Number bullet 3
+
+
+
+Keyword1 Keyword2
+
+
+
+This is a hyperlink
+
+
+
+Subject is here
+
+
+
+Table 1
+Row 1 Col 1	Row 1 Col 2	Row 1 Col 3
+Row 2 Col 1	Row 2 Col 2	Row 2 Col 3
+
+
+
+Suddenly some Japanese text:
+
+ゾルゲと尾崎、淡々と最期
+
+（ＧＨＱ）
+
+And then some Gothic text:
+
+𐌲𐌿𐍄𐌹𐍃𐌺
+
+
+
+Here is a citation:
+
+(Kramer)
+
+
+
+[Style: Caption] Figure 1 This is a caption for Figure 1
+
+
+
+
+
+
+
+Row 1 column 1
+
+Row 2 column 1
+
+Row 1 column 2
+
+Row 2 column 2
+
+
+
+
+
+
+
+This is a hyperlink
+fldChar
+SEQ Figure \* ARABIC
+This is the footer text.
+This is the header text.
+This is a footnote.
+12.0000
+4
+0

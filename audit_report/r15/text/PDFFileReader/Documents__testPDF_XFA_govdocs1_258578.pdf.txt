@@ -1,0 +1,246 @@
+Total Pages: 1
+OCR Used: No
+Creator: Adobe InDesign CS3 (5.0.2)
+Producer: Adobe PDF Library 8.0
+
+Page 1 | Method: direct_extraction | Length: 1565 chars
+National Park Service
+U.S. Department of the Interior
+RangeRs in the ClassRoom appliCation
+Submit application by email or fax
+marvin_achtenberg@nps.gov
+(605) 574-2307  fax
+Mount Rushmore National Memorial
+13000 Highway 244, Bldg. 31, Suite 1
+Keystone, SD 57751
+Marvin Achtenberg, Park Ranger
+(605) 574-3184  phone
+(605) 574-2307  fax
+marvin_achtenberg@nps.gov
+School Name:  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Grade Level:  
+ 
+ 
+ 
+ 
+Number of Classes:   
+ 
+ 
+Classroom information:
+ 
+ 
+Teacher’s Name  
+ 
+Room # 
+ 
+ 
+# of Students
+1.   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 
+ 
+2.   
+ 
+ 
+ 
+ 
+  
+ 
+ 
+ 
+  
+ 
+ 
+ 
+3.   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+4.   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+5.   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Contact information:
+ 
+Name   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Phone Number    
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Email   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Program Requested:
+Date Requested:  1st choice  
+ 
+  2nd choice  
+ 
+  3rd choice 
+ 
+Time(s) available for programs: 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Comments:
+Applications will be considered based on dates, and ranger availability.  
+Decisions will be made within one week after the submission of the application.
+Applications should be submitted two full weeks before the requested date.
+Programs are only available during Mount Rushmore’s classroom season 
+between January 19 and April 10, 2009.
+my_school
+my_grade_level
+my_number_of_cl
+my_teacher_name1
+my_teacher_name2
+my_teacher_name3
+my_teacher_name4
+my_room1
+my_room2
+my_room3
+my_room4
+my_numSt1
+my_numSt2
+my_numSt3
+my_numSt4
+my_name
+my_phone
+my_email
+my_date1
+my_date2
+my_date3
+my_times
+my_comments
+2:  Young Abraham Lincoln (Ranger Ed)
+
+
+topmostSubform[0].Page1[0].School_Name[0]
+my_school
+topmostSubform[0].Page1[0].Grade_Level[0]
+my_grade_level
+topmostSubform[0].Page1[0].Number_of_Classes[0]
+my_number_of_cl
+topmostSubform[0].Page1[0]._1[0]
+my_teacher_name1
+topmostSubform[0].Page1[0]._2[0]
+my_teacher_name2
+topmostSubform[0].Page1[0]._3[0]
+my_teacher_name3
+topmostSubform[0].Page1[0]._4[0]
+my_teacher_name4
+topmostSubform[0].Page1[0]._5[0]
+topmostSubform[0].Page1[0].Room_1[0]
+my_room1
+topmostSubform[0].Page1[0].Room_2[0]
+my_room2
+topmostSubform[0].Page1[0].Room_3[0]
+my_room3
+topmostSubform[0].Page1[0].Room_4[0]
+my_room4
+topmostSubform[0].Page1[0].Room_5[0]
+topmostSubform[0].Page1[0].of_Students_1[0]
+my_numSt1
+topmostSubform[0].Page1[0].of_Students_2[0]
+my_numSt2
+topmostSubform[0].Page1[0].of_Students_3[0]
+my_numSt3
+topmostSubform[0].Page1[0].of_Students_4[0]
+my_numSt4
+topmostSubform[0].Page1[0].of_Students_5[0]
+topmostSubform[0].Page1[0].Name[0]
+my_name
+topmostSubform[0].Page1[0].Phone_Number[0]
+my_phone
+topmostSubform[0].Page1[0].Email[0]
+my_email
+topmostSubform[0].Page1[0].Date_Requested___1st_choice[0]
+my_date1
+topmostSubform[0].Page1[0]._2nd_choice[0]
+my_date2
+topmostSubform[0].Page1[0]._3rd_choice[0]
+my_date3
+topmostSubform[0].Page1[0].Times_available_for_programs[0]
+my_times
+topmostSubform[0].Page1[0].TextField1[0]
+my_comments
+topmostSubform[0].Page1[0].DropDownList1[0]
+2:  Young Abraham Lincoln (Ranger Ed)

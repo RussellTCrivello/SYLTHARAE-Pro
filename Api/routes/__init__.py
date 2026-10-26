@@ -6,6 +6,7 @@ def register_all_routes(app, babel_instance=None):
     """Register all routes with the Flask app"""
     # Import and register route modules
     from . import common, dashboard, categories, search
+    from . import category_tree
     from . import analyst_categories
     from . import analytics, analysis, archives, keywords, words, sources, sides, api, performance, notifications, notifications_page
     from . import preview, import_export, setup
@@ -18,6 +19,8 @@ def register_all_routes(app, babel_instance=None):
     from . import preferences
     from . import audit
     from . import lexis_cosmos
+    from . import reports
+    from . import translation_api
     # Import new settings routes (replaces old settings.py) - optional
     try:
         from settings.routes import register_settings_routes
@@ -36,6 +39,8 @@ def register_all_routes(app, babel_instance=None):
         common.register_common_routes(app, None)
     dashboard.register_dashboard_routes(app)
     categories.register_categories_routes(app)
+    # Depth-aware hierarchy surface: tree read, create/adopt/move/delete.
+    category_tree.register_category_tree_routes(app)
     search.register_search_routes(app)
     # Analyst-driven manual categorization (fully separate from the smart
     # classification taxonomy - see Api/routes/analyst_categories.py)
@@ -73,6 +78,12 @@ def register_all_routes(app, babel_instance=None):
     # LEXIS Cosmos: the taxonomy galaxy, its search, viewer, exports and
     # management API (Api/services/lexis_queries.py holds every statement).
     lexis_cosmos.register_lexis_cosmos_routes(app)
+    # Reports: the processing report, its dashboard and the printable dossier
+    # (registry ``reports`` and ``reports_dashboard``), all read from one
+    # statement over paths/hash_contexts/sources/sides/classifications.
+    reports.register_report_routes(app)
+    # Manual translation (POST only; nothing here runs unattended)
+    translation_api.register_translation_routes(app)
     # Unified operations API + pages (Input / Import Center / Job Center)
     app.register_blueprint(operations_api.operations_bp)
     operations_pages.register_operations_pages(app)

@@ -1,0 +1,277 @@
+....FF.........................................................FF....... [  2%]
+........................................................................ [  4%]
+........................FF.............................................. [  6%]
+........................................................................ [  8%]
+..............F............................FF.....F..................... [ 11%]
+........................................................................ [ 13%]
+........................................................................ [ 15%]
+....................................................................FFFF [ 17%]
+FF...................................................................... [ 19%]
+........................................................................ [ 22%]
+..........................FFFF..FFFF.................................... [ 24%]
+.FF..................................................................... [ 26%]
+........................................................................ [ 28%]
+........................................................................ [ 30%]
+...............................................................FF....... [ 33%]
+...............................................EEEE...EFFEEEEEE......... [ 35%]
+.......F.............F.................................................. [ 37%]
+...............................sss...................................... [ 39%]
+........................................................................ [ 42%]
+...ss..........................F.........F.............................. [ 44%]
+........................................................................ [ 46%]
+..................s..........................F.......................... [ 48%]
+......................................................FFF............... [ 50%]
+...........................FsFFsssssssF.F.ssF.s..................FF..... [ 53%]
+......F.F............................................................... [ 55%]
+..........................................FFFF.......................... [ 57%]
+............................s........................................... [ 59%]
+........................................................................ [ 61%]
+........................................................................ [ 64%]
+.....................................F.................................. [ 66%]
+........................................................................ [ 68%]
+..................................................................s..... [ 70%]
+...................FF................................................... [ 73%]
+........................................................................ [ 75%]
+........................................................................ [ 77%]
+........................................................................ [ 79%]
+........................................................................ [ 81%]
+........................................................................ [ 84%]
+........................................................................ [ 86%]
+........................................................................ [ 88%]
+........................................................................ [ 90%]
+........................................................................ [ 92%]
+........................................................................ [ 95%]
+...................................................F.................... [ 97%]
+...................................................................s.ss. [ 99%]
+.............                                                            [100%]
+=============================== warnings summary ===============================
+database/__init__.py:1190
+tests/unit/test_catalog_extraction.py::TestNoTranslationCallPassesALookupKey::test_no_translation_call_is_given_a_key_it_looks_up_at_runtime
+  /tmp/r12b_suite/database/__init__.py:1190: DeprecationWarning: invalid escape sequence '\.'
+    file_types_query = """
+
+tests/unit/test_analyst_csv_export_columns.py:9
+  /tmp/r12b_suite/tests/unit/test_analyst_csv_export_columns.py:9: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_bandit_count_gate.py:21
+  /tmp/r12b_suite/tests/unit/test_bandit_count_gate.py:21: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_bandit_count_gate.py:33
+  /tmp/r12b_suite/tests/unit/test_bandit_count_gate.py:33: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_bandit_count_gate.py:47
+  /tmp/r12b_suite/tests/unit/test_bandit_count_gate.py:47: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_bandit_count_gate.py:58
+  /tmp/r12b_suite/tests/unit/test_bandit_count_gate.py:58: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_file_action_button_i18n.py:15
+tests/unit/test_file_action_button_i18n.py:15
+  /tmp/r12b_suite/tests/unit/test_file_action_button_i18n.py:15: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_export_surfaces_i18n.py:22
+  /tmp/r12b_suite/tests/unit/test_export_surfaces_i18n.py:22: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_interface_registry_i18n.py:21
+  /tmp/r12b_suite/tests/unit/test_interface_registry_i18n.py:21: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_job_event_storage_vocabulary.py:26
+  /tmp/r12b_suite/tests/unit/test_job_event_storage_vocabulary.py:26: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_js_api_urls_resolve.py:24
+  /tmp/r12b_suite/tests/unit/test_js_api_urls_resolve.py:24: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_lexis_cosmos_i18n.py:39
+  /tmp/r12b_suite/tests/unit/test_lexis_cosmos_i18n.py:39: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_map_viewer_i18n.py:22
+  /tmp/r12b_suite/tests/unit/test_map_viewer_i18n.py:22: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_no_remote_runtime_resources.py:69
+  /tmp/r12b_suite/tests/unit/test_no_remote_runtime_resources.py:69: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_structured_folder_export.py:13
+  /tmp/r12b_suite/tests/unit/test_structured_folder_export.py:13: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_action_toolbar.py::TestTheMigratedPagesRenderTheContract::test_the_served_page_renders_the_no_selection_state[/sources-sourcesActionBar-sources-source-bulk_ids0-sources-list-page.js-source-checkbox-server]
+  /tmp/sylth-venv/lib/python3.11/site-packages/platformdirs/api.py:459: RuntimeDirWarning: XDG_RUNTIME_DIR is not set, falling back to /tmp/runtime-1001
+    return Path(self.user_runtime_dir)
+
+tests/unit/test_catalog_extraction.py::TestNoTranslationCallPassesALookupKey::test_no_translation_call_is_given_a_key_it_looks_up_at_runtime
+  /tmp/r12b_suite/scripts/cleanup_cache.py:18: DeprecationWarning: invalid escape sequence '\S'
+    """
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:920: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+    ParserElement.enablePackrat()
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:957: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    decimal_literal.setParseAction(lambda t: int(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:961: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    octal_literal.setParseAction(lambda t: int(t[0], base=8))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:965: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    hex_literal.setParseAction(lambda t: int(t[0], base=16))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:977: PyparsingDeprecationWarning: 'escQuote' argument is deprecated, use 'esc_quote'
+    quoted_string = QuotedString('"', escQuote='""')
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:978: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    quoted_string.setParseAction(lambda t: str(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:1059: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    vba_chr.setParseAction(vba_chr_tostr)
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:1067: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    vba_asc.setParseAction(lambda t: ord(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:1075: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    vba_val.setParseAction(lambda t: int(t[0].strip()))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:1082: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    strReverse.setParseAction(lambda t: VbaExpressionString(str(t[0])[::-1]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:1089: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    environ.setParseAction(lambda t: VbaExpressionString('%%%s%%' % t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:1099: PyparsingDeprecationWarning: 'initChars' argument is deprecated, use 'init_chars'
+    latin_identifier = Word(initChars=alphas, bodyChars=alphanums + '_')
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:1099: PyparsingDeprecationWarning: 'bodyChars' argument is deprecated, use 'body_chars'
+    latin_identifier = Word(initChars=alphas, bodyChars=alphanums + '_')
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:1108: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    quoted_hex_string.setParseAction(lambda t: str(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:1112: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    hex_function_call.setParseAction(lambda t: VbaExpressionString(binascii.a2b_hex(t.hex_string)))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:1122: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    quoted_base64_string.setParseAction(lambda t: str(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:1126: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    base64_function_call.setParseAction(lambda t: VbaExpressionString(binascii.a2b_base64(t.base64_string)))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:1143: PyparsingDeprecationWarning: 'infixNotation' deprecated - use 'infix_notation'
+    vba_expr_str <<= infixNotation(vba_expr_str_item,
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  /tmp/sylth-venv/lib/python3.11/site-packages/oletools/olevba.py:1198: PyparsingDeprecationWarning: 'infixNotation' deprecated - use 'infix_notation'
+    vba_expr_int <<= infixNotation(vba_expr_int_item,
+
+tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_document_embeds_both_generated_blocks
+  /tmp/sylth-venv/lib/python3.11/site-packages/_pytest/fixtures.py:1313: PytestRemovedIn10Warning: Class-scoped fixture defined as instance method is deprecated.
+  Instance attributes set in this fixture will NOT be visible to test methods,
+  as each test gets a new instance while the fixture runs only once per class.
+  Use @classmethod decorator and set attributes on cls instead.
+  See https://docs.pytest.org/en/stable/deprecations.html#class-scoped-fixture-as-instance-method
+    fixturefunc = resolve_fixture_function(fixturedef, request)
+
+tests/unit/test_logger_shadowing.py::test_no_function_reads_logger_before_binding_it
+  <unknown>:1190: DeprecationWarning: invalid escape sequence '\.'
+
+tests/unit/test_logger_shadowing.py::test_no_function_reads_logger_before_binding_it
+  <unknown>:18: DeprecationWarning: invalid escape sequence '\S'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/unit/test_action_lifecycle_components.py::TestTheyAreDeclaredComponents::test_the_documentation_is_regenerated_from_the_library[confirm_dialog]
+FAILED tests/unit/test_action_lifecycle_components.py::TestTheyAreDeclaredComponents::test_the_documentation_is_regenerated_from_the_library[toast]
+FAILED tests/unit/test_action_surface_audit.py::TestTheDocumentIsGenerated::test_the_document_is_what_the_product_now_says
+FAILED tests/unit/test_action_surface_audit.py::TestTheDocumentIsGenerated::test_the_document_explains_itself_without_a_count_in_prose
+FAILED tests/unit/test_architecture_diagrams.py::test_architecture_has_mermaid_diagrams
+FAILED tests/unit/test_architecture_diagrams.py::test_job_state_diagram_matches_transitions
+FAILED tests/unit/test_component_library.py::TestTheStateVocabularyIsComplete::test_the_document_calls_them_not_yet_rather_than_implying_coverage
+FAILED tests/unit/test_component_library.py::TestTheDocumentCannotDrift::test_the_generated_section_matches_the_components
+FAILED tests/unit/test_component_library.py::TestTheDocumentCannotDrift::test_the_document_states_the_rules
+FAILED tests/unit/test_component_library.py::TestAdoption::test_the_audit_counts_the_hand_written_markup
+FAILED tests/unit/test_date_and_orientation.py::test_standalone_rotated_image_text_extraction[90]
+FAILED tests/unit/test_date_and_orientation.py::test_standalone_rotated_image_text_extraction[180]
+FAILED tests/unit/test_date_and_orientation.py::test_standalone_rotated_image_text_extraction[270]
+FAILED tests/unit/test_date_and_orientation.py::test_pdf_page_rotated_image_text_extraction[90]
+FAILED tests/unit/test_date_and_orientation.py::test_pdf_page_rotated_image_text_extraction[180]
+FAILED tests/unit/test_date_and_orientation.py::test_pdf_page_rotated_image_text_extraction[270]
+FAILED tests/unit/test_embedded_images.py::test_docx_embedded_image_is_extracted
+FAILED tests/unit/test_embedded_images.py::test_docx_embedded_image_text_was_ocrd
+FAILED tests/unit/test_embedded_images.py::test_docx_embedded_image_carries_ocr_provenance
+FAILED tests/unit/test_embedded_images.py::test_docx_embedded_image_keeps_its_part_name
+FAILED tests/unit/test_embedded_images.py::test_pptx_embedded_image_is_extracted
+FAILED tests/unit/test_embedded_images.py::test_xlsx_embedded_image_is_extracted
+FAILED tests/unit/test_embedded_images.py::test_reader_publishes_extraction_path_so_the_router_can_recurse
+FAILED tests/unit/test_embedded_images.py::test_pptx_publishes_extraction_path_without_a_result_dict
+FAILED tests/unit/test_experience_contract.py::TestTheDocumentCannotDrift::test_the_generated_block_matches
+FAILED tests/unit/test_experience_contract.py::TestTheDocumentCannotDrift::test_the_document_has_no_hand_typed_counts
+FAILED tests/unit/test_identifiers_intel.py::test_detects_email_phone_ipv4_and_links_to_sentence
+FAILED tests/unit/test_identifiers_intel.py::test_email_not_double_counted_as_ipv4_fragment
+FAILED tests/unit/test_interface_docs.py::TestOtherDocuments::test_the_productization_map_points_at_the_registry
+FAILED tests/unit/test_interface_docs.py::TestOtherDocuments::test_the_domain_model_exists
+FAILED tests/unit/test_interface_lifecycle.py::TestAllFiveConsumersAgree::test_the_generated_documentation_states_the_policy
+FAILED tests/unit/test_interface_lifecycle.py::TestTheRegistryIsFrozen::test_the_freeze_is_written_down
+FAILED tests/unit/test_licensing.py::test_installed_dependencies_are_agpl_compatible
+FAILED tests/unit/test_licensing.py::test_checker_cli_exits_zero_on_this_environment
+FAILED tests/unit/test_no_machine_paths.py::test_no_machine_specific_paths_or_hosts
+FAILED tests/unit/test_ocr_engines.py::TestImageReaderOcr::test_printed_text_is_extracted_with_provenance
+FAILED tests/unit/test_ocr_engines.py::TestImageReaderOcr::test_blocks_carry_confidence_and_bbox
+FAILED tests/unit/test_ocr_engines.py::TestImageReaderOcr::test_blank_image_yields_no_text_and_no_hallucination
+FAILED tests/unit/test_ocr_matrix.py::TestOrdinaryText::test_extracted_with_full_provenance
+FAILED tests/unit/test_ocr_matrix.py::TestResolution::test_high_resolution - ...
+FAILED tests/unit/test_ocr_matrix.py::TestResolution::test_very_large_image_is_not_refused
+FAILED tests/unit/test_ocr_matrix.py::TestMultiPagePdf::test_every_page_is_ocrd_in_order
+FAILED tests/unit/test_ocr_matrix.py::TestMixedPdf::test_both_layers_survive
+FAILED tests/unit/test_ocr_matrix.py::TestNoText::test_blank_image_yields_nothing
+FAILED tests/unit/test_ocr_provenance_docs.py::test_every_stored_ocr_field_is_documented
+FAILED tests/unit/test_ocr_provenance_docs.py::test_every_documented_ocr_field_is_stored
+FAILED tests/unit/test_ocr_selfcheck.py::TestRequire::test_the_fallback_engine_passes_when_it_is_the_one_required
+FAILED tests/unit/test_ocr_selfcheck.py::test_the_host_engine_reads_every_sample
+FAILED tests/unit/test_pdf_text_layer.py::TestScannedPdfUsesFallbackEngine::test_engine_exists_so_ocr_is_not_skipped
+FAILED tests/unit/test_pdf_text_layer.py::TestScannedPdfUsesFallbackEngine::test_scanned_page_yields_recognised_text_with_provenance
+FAILED tests/unit/test_pdf_text_layer.py::TestScannedPdfUsesFallbackEngine::test_document_is_not_flagged_as_no_engine
+FAILED tests/unit/test_pdf_text_layer.py::TestScannedPdfUsesFallbackEngine::test_blank_scanned_page_falls_back_without_hallucinating
+FAILED tests/unit/test_reference_docs.py::test_reference_docs_are_current - A...
+FAILED tests/unit/test_screen_inspector.py::TestTheEvidenceIsMeasuredNotWritten::test_the_document_is_what_the_product_now_says
+FAILED tests/unit/test_screen_inspector.py::TestTheEvidenceIsMeasuredNotWritten::test_the_document_explains_itself_without_a_count_in_prose
+FAILED tests/unit/test_windows_offline_kit.py::TestDependencyInventory::test_the_committed_inventory_matches_the_generator
+ERROR tests/unit/test_interface_docs.py::TestGeneratedBlock::test_the_document_embeds_a_generated_block
+ERROR tests/unit/test_interface_docs.py::TestGeneratedBlock::test_the_block_matches_the_registry
+ERROR tests/unit/test_interface_docs.py::TestGeneratedBlock::test_regeneration_is_idempotent
+ERROR tests/unit/test_interface_docs.py::TestGeneratedBlock::test_splicing_preserves_the_prose
+ERROR tests/unit/test_interface_docs.py::TestCountsAreGenerated::test_the_document_states_no_endpoint_count_of_its_own
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_document_embeds_both_generated_blocks
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_registry_half_matches_the_registry
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_regeneration_is_idempotent
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_every_required_evidence_item_is_present
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_coverage_claim_is_stated_as_zero_unmanaged
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_document_reports_what_remains_legacy
+UNIT EXIT=1

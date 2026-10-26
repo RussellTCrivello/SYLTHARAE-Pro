@@ -178,6 +178,78 @@ class FileReaderService:
     #: stay on their dedicated reader (``.m4a`` → audio, ``.avif`` → image).
     DECLARED_MEDIA_EXTENSIONS = ('.m4a', '.avif', '.heic', '.heif')
 
+    #: Extensions whose content *is* text. A file that decodes cleanly as text
+    #: is text, whatever its first two bytes happen to spell: "BM" is enough for
+    #: the signature table to call a prose file a bitmap, and testBMPfp.txt (a
+    #: text fixture that begins "BM") was routed to the image reader and stored
+    #: as zero characters. Only these extensions get the veto, so a real bitmap
+    #: called .png still loses to its own bytes.
+    TEXTUAL_EXTENSIONS = ('.txt', '.md', '.markdown', '.csv', '.tsv', '.log',
+                          '.json', '.jsonl', '.xml', '.yml', '.yaml', '.py',
+                          '.ini', '.cfg', '.rst', '.tex', '.sql')
+
+    #: MIME type of an ODF package member -> the extension it stands for.
+    ODF_MIMETYPES = {
+        'application/vnd.oasis.opendocument.text': '.odt',
+        'application/vnd.oasis.opendocument.text-template': '.ott',
+        'application/vnd.oasis.opendocument.spreadsheet': '.ods',
+        'application/vnd.oasis.opendocument.spreadsheet-template': '.ots',
+        'application/vnd.oasis.opendocument.presentation': '.odp',
+        'application/vnd.oasis.opendocument.presentation-template': '.otp',
+        'application/vnd.oasis.opendocument.graphics': '.odg',
+        'application/vnd.oasis.opendocument.graphics-template': '.otg',
+    }
+
+    @staticmethod
+    def _decodes_as_text(file_path: str, limit: int = 8192) -> bool:
+        """True when the first ``limit`` bytes are (almost) all printable text.
+
+        Used to protect a text file from a false magic-byte match. UTF-16 and
+        UTF-8 are both accepted; fewer than 2% non-printable bytes is enough,
+        because a text file may legitimately contain a stray control character.
+        """
+        try:
+            with open(file_path, 'rb') as handle:
+                sample = handle.read(limit)
+        except OSError:
+            return False
+        if not sample:
+            return False
+        if sample.startswith((b'\xff\xfe', b'\xfe\xff')):
+            try:
+                text = sample.decode('utf-16', 'replace')
+            except Exception:
+                return False
+        else:
+            text = sample.decode('utf-8', 'replace')
+        if not text:
+            return False
+        bad = sum(1 for ch in text if ch == '\ufffd' or (ord(ch) < 32 and ch not in '\t\n\r\f\v'))
+        return bad / len(text) <= 0.02
+
+    @staticmethod
+    def _odf_package_extension(file_path: str) -> Optional[str]:
+        """The ODF extension of a ZIP package, read from its ``mimetype`` entry.
+
+        The ODF specification asks for ``mimetype`` to be the first member and
+        stored uncompressed. Files in the wild - LibreOffice's own test corpus
+        among them - do not always comply. Reading the entry by name instead of
+        trusting the order keeps a valid ODT out of the archive reader, which is
+        where it used to land: zero characters, no error.
+        """
+        try:
+            import zipfile
+            with zipfile.ZipFile(file_path) as archive:
+                names = archive.namelist()
+                if 'content.xml' not in names:
+                    return None
+                if 'mimetype' not in names:
+                    return None
+                mimetype = archive.read('mimetype').decode('ascii', 'ignore').strip()
+        except Exception:
+            return None
+        return FileReaderService.ODF_MIMETYPES.get(mimetype)
+
     @staticmethod
     def normalize_extension(extension: Optional[str]) -> str:
         """Normalize an extension to lower case with a single leading dot."""
@@ -285,6 +357,39 @@ class FileReaderService:
                 decision['extension_mismatch'] = True
                 decision['detection_note'] = (
                     f'declared media type {declared} retained over {detected} sniff'
+                )
+            return decision
+
+        # An ODF package identifies itself inside its own container. Consult the
+        # ``mimetype`` member by name: member order is not evidence, and a valid
+        # ODT whose ``mimetype`` was not written first used to be routed to the
+        # archive reader (0 characters, no error).
+        if detected == '.zip' or declared in ('.odt', '.ods', '.odp', '.ott',
+                                              '.ots', '.otp', '.odg'):
+            odf_extension = self._odf_package_extension(file_path)
+            if odf_extension and self.is_supported(odf_extension):
+                decision['effective_extension'] = odf_extension
+                decision['detection_method'] = 'odf-mimetype'
+                if declared and declared != odf_extension:
+                    decision['extension_mismatch'] = True
+                decision['detection_note'] = (
+                    f'ODF package declares {odf_extension} in its mimetype member'
+                )
+                return decision
+
+        # Text that is text stays text. The signature table matches two-byte
+        # prefixes ("BM" is a bitmap, "MZ" an executable), which a prose file can
+        # start with by coincidence; when the declared extension is textual and
+        # the bytes decode as text, the name wins.
+        if (declared in self.TEXTUAL_EXTENSIONS and self.is_supported(declared)
+                and self._decodes_as_text(file_path)):
+            decision['effective_extension'] = declared
+            decision['detection_method'] = 'extension'
+            if detected and detected != declared:
+                decision['extension_mismatch'] = True
+                decision['detection_note'] = (
+                    f'declared text {declared} retained over {detected} signature: '
+                    f'the content decodes as text'
                 )
             return decision
 

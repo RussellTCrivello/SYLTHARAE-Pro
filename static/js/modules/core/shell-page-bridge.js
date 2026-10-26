@@ -31,21 +31,9 @@ export async function preparePageShell(pageType) {
         attachWindowGlobals();
     }
 
-    if (pageType === 'files-list') {
-        try {
-            const mod = await import('../file-operations/file-management.js');
-            const FileManagement = mod.default || mod;
-            if (FileManagement && typeof FileManagement.applyFilters === 'function') {
-                const bound = FileManagement.applyFilters.bind(FileManagement);
-                window.applyFileFilters = bound;
-                if (document.getElementById('filesTable')) {
-                    window.applyFilters = bound;
-                }
-            }
-        } catch (_error) { /* files-list module wires its own exports */ }
-    } else if (pageType === 'archives') {
-        if (window.fms?.ui?.filters?.applyFilters) {
-            window.applyFilters = window.fms.ui.filters.applyFilters;
-        }
-    }
+    // applyFilters/resetFilters are published by the page that owns the filter
+    // bar it filters: files-list-page.js, charts-dashboard-page.js and the rest
+    // assign their own, and the archives page uses the registry's suffixed
+    // applyFiltersShared/resetFiltersShared. Wiring them here as well made the
+    // winner depend on whether the page published at module scope or in init().
 }

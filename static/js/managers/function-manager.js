@@ -215,13 +215,17 @@ export function attachWindowGlobals() {
     window.navigateFileInModal = fileNavigation.navigateFileInModal;
     window.selectAllFiles = fileSelection.selectAllFiles;
     window.deselectAllFiles = fileSelection.deselectAllFiles;
-    window.toggleAllFilesSelection = fileSelection.toggleAllFilesSelection;
-    window.exportSelectedFiles = fileSelection.exportSelectedFiles;
+    // The files list page publishes its own toggleAllFilesSelection; the shared
+    // copy carries the suffix so the two never compete for one name.
+    window.toggleAllFilesSelectionShared = fileSelection.toggleAllFilesSelection;
+    // Search-advanced owns exportSelectedFiles for its own results table; the
+    // shared selection export is the suffixed copy.
+    window.exportSelectedFilesShared = fileSelection.exportSelectedFiles;
     window.exportSelectedOriginals = fileSelection.exportSelectedOriginals;
     window.filterDisplayedFiles = fileSelection.filterDisplayedFiles;
     // Bulk analyst categorization of the FMAS selection (analyst namespace only)
     window.assignAnalystCategoriesToSelection = bulkAnalyst.assignAnalystCategoriesToSelection;
-    window.removeAnalystCategoriesFromSelection = bulkAnalyst.removeAnalystCategoriesFromSelection;
+    window.removeAnalystCategoriesFromSelectionShared = bulkAnalyst.removeAnalystCategoriesFromSelection;
     window.updateAnalystBulkBar = bulkAnalyst.updateAnalystBulkBar;
     // Shared selectable-file operations (folder export, native open, locate, details)
     window.exportSelectionToFolder = async (...args) => {
@@ -275,7 +279,7 @@ export function attachWindowGlobals() {
     window.loadItemsForModal = modalManager.loadItemsForModal;
     window.searchItems = modalManager.searchItems;
     window.submitAddItem = modalManager.submitAddItem;
-    window.submitSourceForm = () => modalManager.submitAddItem('source');
+
     window.submitAddWordsCategorys = modalManager.submitAddWordsCategorys;
     window.searchCategoryWords = modalManager.searchCategoryWords;
     
@@ -310,7 +314,7 @@ export function attachWindowGlobals() {
     };
     
     // Utility functions
-    window.updateKeywordAssociations = keywordAssociations.updateKeywordAssociations;
+    window.updateKeywordAssociationsShared = keywordAssociations.updateKeywordAssociations;
     
     // Select2 initialization functions (backward compatibility)
     window.initializeCategoryWordSelect = select2Initializers.initializeCategoryWordSelect;
@@ -321,8 +325,12 @@ export function attachWindowGlobals() {
     
     // Filters
     window.handleGlobalSearch = filters.handleGlobalSearch;
-    window.applyFilters = filters.applyFilters;
-    window.resetFilters = filters.resetFilters;
+    // The dashboard pages, the files list and the keyword/word lists each own
+    // applyFilters/resetFilters with their own section semantics. The generic
+    // filter-bar versions live under the suffixed names so a page module is
+    // never silently overwritten by the registry.
+    window.applyFiltersShared = filters.applyFilters;
+    window.resetFiltersShared = filters.resetFilters;
     window.hideFilters = filters.hideFilters;
     window.showFilters = filters.showFilters;
     
@@ -347,14 +355,15 @@ export function attachWindowGlobals() {
     };
     exposeFileManagement('selectAllFiles', 'selectAllFiles');
     exposeFileManagement('deselectAllFiles', 'deselectAllFiles');
-    exposeFileManagement('toggleAllFilesSelection', 'toggleAllFilesSelection');
     exposeFileManagement('toggleSelectAll', 'toggleSelectAll');
     exposeFileManagement('updateBulkToolbar', 'updateBulkToolbar');
     exposeFileManagement('clearFileSearch', 'clearFileSearch');
     exposeFileManagement('changeFilesPageSize', 'changeFilesPageSize');
     exposeFileManagement('bulkAnalyze', 'bulkAnalyze');
     exposeFileManagement('bulkExport', 'bulkExport');
-    exposeFileManagement('bulkDelete', 'bulkDelete');
+    // bulkDelete belongs to the page whose list it deletes from (files list,
+    // keywords list, word list). The registry does not publish it at all.
+
     exposeFileManagement('deleteFile', 'deleteFile');
     // Expose applyFilters for files list page (override the generic one from filters module)
     exposeFileManagement('applyFilters', 'applyFileFilters');

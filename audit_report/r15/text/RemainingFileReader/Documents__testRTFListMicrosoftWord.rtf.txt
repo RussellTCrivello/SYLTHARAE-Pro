@@ -1,0 +1,17 @@
+A short ordered list:
+1.	one
+2.	two
+3.	three
+
+A short unordered list:
+–	first
+–	second
+–	third
+
+A nested list:
+1.	a
+-	aa
+-	ab
+2.	b
+3.	c
+

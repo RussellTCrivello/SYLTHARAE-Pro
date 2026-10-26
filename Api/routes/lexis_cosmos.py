@@ -28,6 +28,8 @@ from typing import Any, Dict, List, Optional
 
 from flask import g, jsonify, render_template, request, url_for
 
+from core.errors import conflict, is_unique_violation
+from core.validation import PayloadError, int_field, text_field
 from Api.services.lexis_cosmos import (
     LexisCosmosService,
     LexisError,
@@ -142,9 +144,16 @@ def _saved_search_state(data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def _error(exc: Exception, message: str, status: int = 500):
+def _error(exc: Exception, message: str, status: int = 500,
+           duplicate: str = "That name is already in use"):
     if isinstance(exc, LexisError):
         return jsonify({"success": False, "error": str(exc)}), 400
+    if is_unique_violation(exc):
+        # A duplicate category / view name is the caller's mistake: 409, not a
+        # server fault with a correlation id.
+        body, conflict_status = conflict(duplicate, field="name",
+                                         success_key="success")
+        return jsonify(body), conflict_status
     return client_error(exc, subsystem="lexis", public_message=message,
                         success_key="success", status=status)
 
@@ -583,10 +592,16 @@ def register_lexis_cosmos_routes(app):
         """Q8.2 / Q8.3 (+ Q8.5) - create a main category or subcategory."""
         data = _payload()
         try:
+            name = text_field(data, "name", required=True, max_length=255, trim=True)
+            color = text_field(data, "color", max_length=16) or None
+            parent_id = int_field(data, "parent_id", minimum=1)
+        except PayloadError as exc:
+            return jsonify({"success": False, **exc.to_dict()}), 400
+        try:
             result = _service().create_category(
-                str(data.get("name") or ""),
-                parent_id=data.get("parent_id"),
-                color=data.get("color"),
+                name,
+                parent_id=parent_id,
+                color=color,
                 user_id=_actor()["id"],
             )
             _log_activity("lexis.category.create", "category:%s" % result["id"],
@@ -594,7 +609,8 @@ def register_lexis_cosmos_routes(app):
             return _ok({"category": result})
         except Exception as exc:
             logger.error("LEXIS category create failed", exc_info=True)
-            return _error(exc, "Could not create that category.")
+            return _error(exc, "Could not create that category.",
+                          duplicate="A category with that name already exists")
 
     @app.route("/api/lexis/taxonomy/categories/<int:category_id>", methods=["PATCH"])
     @write_access_required
@@ -602,10 +618,15 @@ def register_lexis_cosmos_routes(app):
         """Q8.4 (+ Q8.5) - rename a category or subcategory."""
         data = _payload()
         try:
+            name = text_field(data, "name", required=True, max_length=255, trim=True)
+            color = text_field(data, "color", max_length=16) or None
+        except PayloadError as exc:
+            return jsonify({"success": False, **exc.to_dict()}), 400
+        try:
             result = _service().rename_category(
                 category_id,
-                str(data.get("name") or ""),
-                color=data.get("color"),
+                name,
+                color=color,
                 user_id=_actor()["id"],
             )
             _log_activity("lexis.category.rename", "category:%s" % category_id,
@@ -613,7 +634,8 @@ def register_lexis_cosmos_routes(app):
             return _ok({"category": result})
         except Exception as exc:
             logger.error("LEXIS category rename failed", exc_info=True)
-            return _error(exc, "Could not rename that category.")
+            return _error(exc, "Could not rename that category.",
+                          duplicate="A category with that name already exists")
 
     @app.route("/api/lexis/taxonomy/categories/<int:category_id>", methods=["DELETE"])
     @write_access_required
@@ -870,11 +892,16 @@ def register_lexis_cosmos_routes(app):
         """Q10.2 - save the current view."""
         data = _payload()
         try:
+            name = text_field(data, "name", required=True, max_length=255, trim=True)
+            query = text_field(data, "query", max_length=8192)
+        except PayloadError as exc:
+            return jsonify({"success": False, **exc.to_dict()}), 400
+        try:
             state = _saved_search_state(data)
             result = _service().save_view(
                 _actor()["id"],
-                str(data.get("name") or ""),
-                str(data.get("query") or data.get("q") or ""),
+                name,
+                query or text_field(data, "q", max_length=8192),
                 state,
             )
             _log_activity("lexis.view.save", "view:%s" % result["id"],
@@ -882,7 +909,8 @@ def register_lexis_cosmos_routes(app):
             return _ok({"view": result})
         except Exception as exc:
             logger.error("LEXIS view save failed", exc_info=True)
-            return _error(exc, "Could not save that view.")
+            return _error(exc, "Could not save that view.",
+                          duplicate="A view with that name already exists")
 
     @app.route("/api/lexis/views/<int:view_id>", methods=["PATCH"])
     @write_access_required
@@ -890,14 +918,18 @@ def register_lexis_cosmos_routes(app):
         """Q10.3 - rename a saved view."""
         data = _payload()
         try:
-            result = _service().rename_view(view_id, str(data.get("name") or ""),
-                                            _actor()["id"])
+            name = text_field(data, "name", required=True, max_length=255, trim=True)
+        except PayloadError as exc:
+            return jsonify({"success": False, **exc.to_dict()}), 400
+        try:
+            result = _service().rename_view(view_id, name, _actor()["id"])
             _log_activity("lexis.view.rename", "view:%s" % view_id,
                           "Renamed view %s" % result["name"])
             return _ok({"view": result})
         except Exception as exc:
             logger.error("LEXIS view rename failed", exc_info=True)
-            return _error(exc, "Could not rename that view.")
+            return _error(exc, "Could not rename that view.",
+                          duplicate="A view with that name already exists")
 
     @app.route("/api/lexis/views/<int:view_id>/touch", methods=["POST"])
     def lexis_views_touch(view_id: int):

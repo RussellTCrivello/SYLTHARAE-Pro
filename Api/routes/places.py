@@ -131,11 +131,12 @@ def _clean_name(data):
     if len(key) > 255:
         return None, "normalized name exceeds the 255-character database limit"
     # homograph field removed - common word detection is now via words vocabulary
-    note = data.get("note")
-    if note is not None:
-        if not isinstance(note, str) or len(note) > 2000:
-            return None, "note must be at most 2000 characters"
-        note = note.strip() or None
+    # geo_place_names has no note column in the frozen schema (m0001 baseline:
+    # id, place_id, name, match_key, language, script, name_type). Accepting a
+    # note and dropping it would be the same silent loss as a dropped parent, so
+    # it is refused explicitly.
+    if data.get("note") not in (None, ""):
+        return None, "note is not supported: geo_place_names has no note column in the frozen schema"
     return {"name": name, "match_key": key, "language": language,
             "script": expected_script, "name_type": name_type}, None
 
@@ -650,9 +651,9 @@ def register_place_routes(app):
             row = cur.fetchone()
             if row is None:
                 return None, 404, None
-            cur.execute("INSERT INTO geo_place_names (place_id, name, match_key, language, script, name_type, note) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id",
+            cur.execute("INSERT INTO geo_place_names (place_id, name, match_key, language, script, name_type) VALUES (%s, %s, %s, %s, %s, %s) RETURNING id",
                         (row[0], name["name"], name["match_key"], name["language"], name["script"],
-                         name["name_type"], name["note"]))
+                         name["name_type"]))
             name_id = cur.fetchone()[0]
             revision = _record_curation(cur, "place_name.create")
             return name_id, 201, revision
@@ -695,7 +696,7 @@ def register_place_routes(app):
             if old is None:
                 return None, 404, None
             payload = {"name": data.get("name", old[2]), "language": data.get("language", old[3]),
-                       "name_type": data.get("name_type", old[4]), "note": data.get("note", old[5])}
+                       "name_type": data.get("name_type", old[4]), "note": data.get("note")}
             cleaned, error = _clean_name(payload)
             if error:
                 return error, 400, None

@@ -146,15 +146,74 @@ def client_error(
 
     ``success_key`` adds ``{"success": False}`` (or any key) for endpoints
     whose clients expect that shape.
+
+    An ``HTTPException`` keeps its own status: routes wrap their body in
+    ``except Exception`` and call this with ``status=500``, which turned a
+    request the client can fix (no JSON content type, a bad parameter) into a
+    reported server fault. The exception's code is the truth; ``status`` is
+    only the default for genuine failures. Its description is a fixed,
+    framework-authored sentence, so it is safe to return.
     """
+    if isinstance(exc, HTTPException) and exc.code and exc.code < 500:
+        body: Dict[str, Any] = {}
+        if success_key:
+            body[success_key] = False
+        body["error"] = exc.description or public_message
+        body["code"] = (exc.name or "error").lower().replace(" ", "_")
+        response = jsonify(body)
+        response.status_code = exc.code
+        return response, exc.code
+
     correlation_id = new_correlation_id()
     log_server_error(exc, correlation_id, subsystem=subsystem, extra=extra)
-    body: Dict[str, Any] = {}
+    body = {}
     if success_key:
         body[success_key] = False
     body["error"] = public_message
     body["correlation_id"] = correlation_id
     return jsonify(body), status
+
+
+#: Substrings psycopg2 puts in a unique-constraint violation message. Used
+#: only when the exception chain carries no psycopg2 class we can see (the
+#: repository wraps the driver error in ``QueryError``).
+_UNIQUE_MARKERS = (
+    "duplicate key value violates unique constraint",
+    "UniqueViolation",
+)
+
+
+def is_unique_violation(exc: BaseException) -> bool:
+    """Did *exc* come from a UNIQUE constraint?
+
+    The repositories wrap driver errors (``QueryError``), so the original
+    ``psycopg2.errors.UniqueViolation`` is a ``__cause__`` away rather than the
+    exception being caught. Walking the chain is what lets a handler answer
+    "that name is taken" (409) instead of reporting a server fault for
+    something the client typed.
+    """
+    seen = set()
+    current: BaseException | None = exc
+    while current is not None and id(current) not in seen:
+        seen.add(id(current))
+        if type(current).__name__ in ("UniqueViolation", "IntegrityError"):
+            return True
+        text = str(current)
+        if any(marker in text for marker in _UNIQUE_MARKERS):
+            return True
+        current = current.__cause__ or current.__context__
+    return False
+
+
+def conflict(message: str, *, field: str | None = None,
+             success_key: str | None = None):
+    """A 409 the client can act on: the value already exists."""
+    body = {"error": message, "code": "already_exists"}
+    if field:
+        body["field"] = field
+    if success_key:
+        body[success_key] = False
+    return body, 409
 
 
 def register_error_handlers(app) -> None:

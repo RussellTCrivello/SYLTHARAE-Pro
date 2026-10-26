@@ -6,7 +6,7 @@ This module contains the single function that maps a signal (temporal or
 place) and a reference date to a priority level.
 """
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from core.monitoring.notification_service import NotificationPriority
 
 
@@ -68,25 +68,70 @@ def priority_from_signal(signal: dict, reference_date: date) -> NotificationPrio
     return NotificationPriority.LOW
 
 
-def priority_from_summary(summary: dict, reference_date: date) -> tuple[NotificationPriority, str]:
+def priority_basis(summary: dict, reference_date: date) -> dict:
+    """The ``priority_basis`` record stored with an outcome.
+
+    Same keys, same values, same types as the JSONB object
+    ``services.monitoring.scenario_engine.decision_sql`` builds while it
+    decides - the two must not drift, because the record is how a reader
+    reconstructs why a row was labelled the way it was, and the SQL/derivation
+    agreement test compares them literally.
+
+    ``earliest_event_date`` is an ISO date string (as JSONB holds it) and
+    ``highest_confidence`` is ``None`` when no decisive case carried a
+    confidence - the SQL leaves the key null in that situation too.
+    """
+    earliest = summary.get('earliest_event_date')
+    if isinstance(earliest, (date, datetime)):
+        earliest = earliest.isoformat()
+    return {
+        'rule': PRIORITY_RULE_VERSION,
+        'high_and_imminent': bool(summary.get('high_and_imminent')),
+        'highest_confidence': summary.get('highest_confidence'),
+        'unrecorded_confidence': summary.get('unrecorded_confidence', 0),
+        'matches': summary.get('matches'),
+        'earliest_event_date': earliest,
+        'reference_date': reference_date.isoformat(),
+        'imminent_days': IMMINENT_DAYS,
+    }
+
+
+def priority_from_summary(summary: dict, reference_date: date) -> tuple[NotificationPriority, dict]:
     """Derive priority from a group summary (used by scenario/rule delivery).
 
     ``summary`` has keys: ``highest_confidence`` (high/medium/low/None),
-    ``high_and_imminent`` (bool), ``earliest_event_date`` (date/None).
+    ``high_and_imminent`` (bool), ``earliest_event_date`` (date/None), and the
+    counts ``matches`` / ``unrecorded_confidence`` that
+    :func:`priority_basis` records.
 
-    Returns (priority, basis) where basis is a short string for the manifest.
+    Returns ``(priority, basis)`` where basis is that complete
+    ``priority_basis`` record - not a prose note - so the caller stores the
+    same evidence the rule used.
+
+    The ladder is the signal rule's (see :func:`priority_from_signal`) keyed
+    on the strongest confidence among the decisive cases, then the imminent
+    cases: high -> HIGH, medium (or low+imminent) -> MEDIUM, else LOW.
+
+    The summary form tops out at ``high``: ``scenario_outcomes.priority``
+    accepts ``high``/``medium``/``low`` only, and the row recorded for an
+    evaluation is the value the delivery reads back. The *signal* rule
+    (:func:`priority_from_signal`, feeding a single alert) may return
+    ``critical`` because ``alerts.priority`` accepts it. An imminent,
+    high-confidence summary therefore lands on ``high`` - the highest rung the
+    outcome vocabulary admits - and the basis record shows
+    ``high_and_imminent`` true so a report can see the ceiling was storage's,
+    not policy's.
     """
     highest = summary.get('highest_confidence')
     high_imminent = summary.get('high_and_imminent', False)
+    basis = priority_basis(summary, reference_date)
 
-    if highest == 'high' and high_imminent:
-        return NotificationPriority.CRITICAL, "high confidence + imminent"
     if highest == 'high':
-        return NotificationPriority.HIGH, "high confidence"
+        return NotificationPriority.HIGH, basis
     if highest == 'medium' and high_imminent:
-        return NotificationPriority.HIGH, "medium confidence + imminent"
+        return NotificationPriority.HIGH, basis
     if highest == 'medium':
-        return NotificationPriority.MEDIUM, "medium confidence"
+        return NotificationPriority.MEDIUM, basis
     if highest == 'low' and high_imminent:
-        return NotificationPriority.MEDIUM, "low confidence + imminent"
-    return NotificationPriority.LOW, "low confidence or no date"
+        return NotificationPriority.MEDIUM, basis
+    return NotificationPriority.LOW, basis
