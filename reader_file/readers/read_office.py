@@ -427,27 +427,57 @@ def _docx_cover_remaining(elements: List[Dict[str, Any]], filepath) -> Dict[str,
     def normalise(text: str) -> str:
         return " ".join(text.split())
 
-    haystack = normalise("\n".join(
-        str(element.get("text") or "") for element in elements
-        if isinstance(element, dict)))
+    # Coverage is counted, per line, over what the structured walk produced.
+    #
+    # Two defects lived here, both measured on `Other/testWORD_template.dotx`:
+    # the whole haystack was normalised after joining, so every newline became
+    # a space and nothing ever matched (the backfill re-added paragraphs that
+    # had already been extracted), and coverage was a plain membership test, so
+    # the five identical "Click here to enter text" placeholders the package
+    # contains were stored once and the file scored 0.839.
+    #
+    # Matching is by whole line rather than by substring: "Click here to enter
+    # text" is a substring of "Click here to enter text.", and a substring test
+    # declared three real paragraphs covered by one that differs by a full
+    # stop. A cell holding several paragraphs contributes each of its lines, so
+    # a paragraph inside a table cell still matches rather than being stored
+    # twice.
+    covered: Dict[str, int] = {}
+
+    def add_lines(text: Any, counts: Dict[str, int]) -> None:
+        for line in str(text or "").split("\n"):
+            line = normalise(line)
+            if line:
+                counts[line] = counts.get(line, 0) + 1
+
     for element in elements:
-        if isinstance(element, dict) and element.get("rows"):
-            for row in element["rows"]:
-                haystack += "\n" + normalise(" | ".join(str(c) for c in row))
+        if not isinstance(element, dict):
+            continue
+        add_lines(element.get("text"), covered)
+        for row in element.get("rows") or []:
+            add_lines(" | ".join(str(c) for c in row), covered)
+            for cell in row:
+                add_lines(cell, covered)
+
+    def present_in_document(text: str) -> int:
+        return covered.get(text, 0)
 
     added: List[Dict[str, Any]] = []
     per_part: Dict[str, Dict[str, int]] = {}
+
     for name in sorted(parts):
         xml = _MC_FALLBACK_RE.sub("", parts[name])  # never count a fallback twice
         part_added = part_seen = 0
+        seen_per_text: Dict[str, int] = {}
         for paragraph in _docx_paragraph_texts(xml):
             text = normalise(_docx_unescape(paragraph))
             if not text:
                 continue
             part_seen += 1
-            if text in haystack:
+            seen_per_text[text] = seen_per_text.get(text, 0) + 1
+            if seen_per_text[text] <= present_in_document(text):
                 continue
-            haystack += "\n" + text
+            covered[text] = covered.get(text, 0) + 1
             part_added += 1
             added.append({
                 "type": "paragraph",
@@ -482,6 +512,57 @@ _ODF_INLINE = frozenset({
     "reference-mark-start", "reference-mark-end", "change-start", "change-end",
     "change", "note-citation", "note-ref", "ruby-base", "ruby-text",
 })
+
+
+#: OOXML extensions whose encrypted form is a CFB container rather than a ZIP.
+_ENCRYPTABLE_OOXML = (
+    '.docx', '.docm', '.dotx', '.dotm',
+    '.xlsx', '.xlsm', '.xltx', '.xltm',
+    '.pptx', '.pptm', '.potx', '.potm', '.ppsx', '.ppsm',
+)
+
+
+def _ooxml_encryption_report(filepath: str) -> Optional[dict]:
+    """Describe an encrypted OOXML package, or return None if it is not one.
+
+    Password-protected OOXML is not a ZIP: the whole package is a CFB container
+    holding ``EncryptionInfo`` and ``EncryptedPackage``, which is why openpyxl
+    answers "File is not a zip file" and python-pptx "Package not found" for
+    files that are intact. Measured on the round-17 corpus: five such files were
+    reported as unreadable rather than protected. The evidence is two stream
+    names, so it can be checked before any parser is asked to open the file.
+    """
+    try:
+        import olefile
+    except Exception:
+        return None
+    try:
+        if not olefile.isOleFile(filepath):
+            return None
+        with olefile.OleFileIO(filepath) as ole:
+            names = ["/".join(entry) for entry in ole.listdir()]
+    except Exception:
+        return None
+
+    lowered = [name.lower() for name in names]
+    encrypted_parts = [name for name, low in zip(names, lowered)
+                       if low.startswith('encryptioninfo')
+                       or low.startswith('encryptedpackage')]
+    if not encrypted_parts:
+        return None
+    return {
+        'error': ('Encrypted Office package (CFB encryption): the payload is '
+                  'ciphertext and needs the password; EncryptionInfo and '
+                  'EncryptedPackage are present, so the file is protected, '
+                  'not corrupt'),
+        'encrypted': True,
+        'encrypted_parts': sorted(encrypted_parts),
+        'extraction_info': {
+            'skipped': True,
+            'skip_reason': 'encrypted_without_password',
+            'encryption': 'cfb',
+        },
+    }
 
 
 def _odf_encryption_report(filepath):
@@ -754,6 +835,14 @@ class OfficeFileReader(BaseReader):
         file_path = str(file_info.get("path"))
         # DETECT-01: dispatch on the content-verified type, not the filename.
         ext = self.effective_extension(file_info)
+
+        # An encrypted OOXML package is not a broken ZIP. Answer before any
+        # parser gets the chance to describe the ciphertext as corruption.
+        if ext in _ENCRYPTABLE_OOXML:
+            encrypted = _ooxml_encryption_report(file_path)
+            if encrypted:
+                encrypted["filepath"] = file_path
+                return encrypted
         
         try:
             result = None
@@ -1754,19 +1843,47 @@ class OfficeFileReader(BaseReader):
                 # nowhere. Collected per sheet with their anchor cell so the
                 # note keeps its address.
                 try:
+                    # openpyxl keeps the comments themselves; walking the grid
+                    # to find them repeats work proportional to the sheet, on
+                    # the one path where the sheet may be too large to walk
+                    # again. Measured on testRecordSizeExceeded.xlsx: the value
+                    # pass had stored 10,000,085 characters and this second
+                    # walk raised MemoryError, which the reader returned as a
+                    # total failure - throwing the extracted text away.
                     comments = []
-                    for row in sheet.iter_rows():
-                        for cell in row:
+                    # The cells openpyxl has already materialised, not a second
+                    # walk over the grid: reading a sheet twice costs a second
+                    # pass's memory for text that has already been collected.
+                    cells = getattr(sheet, "_cells", None)
+                    if isinstance(cells, dict):
+                        for cell in list(cells.values()):
                             note = getattr(cell, "comment", None)
-                            if note is None or not str(getattr(note, "text", "") or "").strip():
+                            text = " ".join(str(getattr(note, "text", "") or "").split()) \
+                                if note is not None else ""
+                            if not text:
                                 continue
                             comments.append({
-                                "cell": cell.coordinate,
+                                "cell": str(getattr(cell, "coordinate", "") or ""),
                                 "author": str(getattr(note, "author", "") or ""),
-                                "text": " ".join(str(note.text).split()),
+                                "text": text,
                             })
+                    else:  # pragma: no cover - read-only workbooks have no cell map
+                        for row in sheet.iter_rows():
+                            for cell in row:
+                                note = getattr(cell, "comment", None)
+                                if note is None or not str(getattr(note, "text", "") or "").strip():
+                                    continue
+                                comments.append({
+                                    "cell": cell.coordinate,
+                                    "author": str(getattr(note, "author", "") or ""),
+                                    "text": " ".join(str(note.text).split()),
+                                })
                     if comments:
                         sheet_data["comments"] = comments
+                except MemoryError:
+                    # A comment inventory is worth less than the cells already
+                    # read: say it could not be collected and keep the sheet.
+                    sheet_data["comments_error"] = "MemoryError while collecting comments"
                 except Exception as comment_error:
                     sheet_data["comments_error"] = str(comment_error)[:200]
 

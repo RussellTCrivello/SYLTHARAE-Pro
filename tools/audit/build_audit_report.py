@@ -386,6 +386,77 @@ def render(records: List[Dict[str, Any]], register: Dict[str, Any]) -> str:
     add("")
 
     # ------------------------------------------------------------------ #
+    add("## 10a. Where extraction stops: the storage boundary (measured)")
+    add("")
+    add("A reader's `content` dict is not the thing that is stored. "
+        "`StoragePipeline._extract_text_from_content` is, and it reads a fixed "
+        "set of keys (read from its syntax tree by "
+        "`tools/audit/archive_extraction.py::storage_consumed_keys`, "
+        f"{len(_consumed_keys())} keys). Every key a reader "
+        "populates that is **not** in that set is content the pipeline "
+        "discards - unless the discard is deliberate, which the table says "
+        "per key.")
+    add("")
+    boundary_rows = boundary_table(records, register)
+    if boundary_rows:
+        add("| key | files where populated | family examples | verdict |")
+        add("|---|---|---|---|")
+        for row in boundary_rows:
+            add(f"| `{row['key']}` | {row['files']} | {row['families']} | "
+                f"{row['judgement']} |")
+        add("")
+        lost_content = [r for r in boundary_rows
+                        if r["judgement"].startswith("**content loss**")]
+        add(f"Keys judged content loss: **{len(lost_content)}**"
+            + (": " + ", ".join(f"`{r['key']}`" for r in lost_content)
+               if lost_content else "") + ".")
+    else:
+        add("No records carried the `keys_not_persisted` field; the storage "
+            "boundary could not be measured in this run.")
+    add("")
+
+    # ------------------------------------------------------------------ #
+    add("## 10b. Isolation, memory and runtime (measured)")
+    add("")
+    isolated = [r for r in records if r.get("isolated")]
+    if isolated:
+        peaks = sorted(r.get("peak_rss_kb", 0) for r in isolated)
+        walls = sorted(r.get("wall_ms", 0) for r in isolated if r.get("wall_ms"))
+        add("Each file ran in its own process, so `peak_rss_kb` is that file's "
+            "high-water mark rather than the harness's running maximum, and a "
+            "hang or a crash costs one record instead of the run.")
+        add("")
+        add("| Measure | Value |")
+        add("|---|---|")
+        add(f"| Files run isolated | {len(isolated)} |")
+        add(f"| Median peak RSS | {statistics.median(peaks) / 1024:.0f} MiB |")
+        add(f"| 95th percentile peak RSS | "
+            f"{peaks[int(0.95 * (len(peaks) - 1))] / 1024:.0f} MiB |")
+        add(f"| Maximum peak RSS | {peaks[-1] / 1024:.0f} MiB |")
+        if walls:
+            add(f"| Median wall clock (parent, incl. process start) | "
+                f"{statistics.median(walls) / 1000:.2f} s |")
+            add(f"| Maximum wall clock | {walls[-1] / 1000:.1f} s |")
+        add(f"| Files that hit the timeout | "
+            f"{sum(1 for r in isolated if r.get('verdict') == 'TIMEOUT')} |")
+        add(f"| Files killed for memory | "
+            f"{sum(1 for r in isolated if r.get('memory_limited'))} |")
+        add("")
+        heaviest = sorted(isolated, key=lambda r: r.get("peak_rss_kb", 0),
+                          reverse=True)[:8]
+        add("| Heaviest files | peak RSS (MiB) | stored chars |")
+        add("|---|---|---|")
+        for record in heaviest:
+            add(f"| `{record.get('path')}` | "
+                f"{record.get('peak_rss_kb', 0) / 1024:.0f} | "
+                f"{record.get('stored_chars', 0):,} |")
+        add("")
+    else:
+        add("This run was not isolated; memory figures are the harness's "
+            "running maximum and are reported as an upper bound only.")
+        add("")
+
+    # ------------------------------------------------------------------ #
     add("## 11. Per-family summary")
     add("")
     add("| family | files | scored | mean recall | worst | complete | "
@@ -446,6 +517,44 @@ def write_csv(path: Path, header: List[str], rows: List[List[str]]) -> None:
         writer = csv.writer(handle)
         writer.writerow(header)
         writer.writerows(rows)
+
+
+def _consumed_keys() -> set:
+    """The keys storage reads, from the same scanner the audit run uses."""
+    try:
+        from tools.audit.archive_extraction import _storage_keys
+
+        return _storage_keys()
+    except Exception:
+        return set()
+
+
+def boundary_table(records, register) -> list:
+    """Aggregate the keys each reader populated but storage never reads.
+
+    The judgement column is the only authored part: whether a discarded key is
+    instrumentation (line counts, timings) or content (revisions, comments) is
+    an analysis, and the register carries it per key so the table cannot
+    quietly disagree with the narrative.
+    """
+    judgements = register.get("storage_key_judgements", {})
+    stats = {}
+    for record in records:
+        for key in record.get("keys_not_persisted") or []:
+            entry = stats.setdefault(key, {"files": 0, "families": set()})
+            entry["files"] += 1
+            entry["families"].add(record.get("folder") or "?")
+    rows = []
+    for key, entry in stats.items():
+        families = sorted(entry["families"])[:3]
+        rows.append({
+            "key": key,
+            "files": entry["files"],
+            "families": ", ".join(families) + ("…" if len(entry["families"]) > 3 else ""),
+            "judgement": judgements.get(key, "unclassified — needs review"),
+        })
+    rows.sort(key=lambda r: (-r["files"], r["key"]))
+    return rows
 
 
 def main(argv=None) -> int:

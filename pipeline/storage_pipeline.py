@@ -1508,6 +1508,37 @@ class StoragePipeline:
         if detection:
             provenance["detection"] = detection
 
+        # ---- scale: was a cap reached? ----
+        # Not diagnostics about a failure but about how much of the container
+        # was read: a sheet stopped at the cell cap and a sheet that ended
+        # there both store text, and only this record keeps the difference.
+        scale = {key: content.get(key)
+                 for key in ("truncated", "cells_read", "cells_available",
+                             "rows_read", "members_skipped")
+                 if content.get(key) is not None}
+        # A reader that caps per container reports the cap per container; sum
+        # it here rather than losing it, and let the total say "a cap was hit"
+        # even when no single sheet flags itself.
+        sheets = content.get("sheets")
+        if isinstance(sheets, dict):
+            sheet_list = [s for s in sheets.values() if isinstance(s, dict)]
+            if sheet_list:
+                if "cells_read" not in scale:
+                    read = [s.get("cells_read") for s in sheet_list
+                            if isinstance(s.get("cells_read"), int)]
+                    if read:
+                        scale["cells_read"] = sum(read)
+                if "cells_available" not in scale:
+                    available = [s.get("cells_available") for s in sheet_list
+                                 if isinstance(s.get("cells_available"), int)]
+                    if available:
+                        scale["cells_available"] = sum(available)
+                if "truncated" not in scale and any(s.get("truncated")
+                                                    for s in sheet_list):
+                    scale["truncated"] = True
+        if scale:
+            provenance["scale"] = scale
+
         # ---- extraction diagnostics ----
         info = content.get("extraction_info")
         if isinstance(info, dict) and info:
@@ -1521,6 +1552,13 @@ class StoragePipeline:
                     # often), so the condition is queryable after the run.
                     "decoder_missing", "members_total", "members_read",
                     "members_unreadable",
+                    # Scale: whether a cap was reached, and how much of the
+                    # container was read. A spreadsheet stopped at 250 000
+                    # cells and one that ended there both store text; without
+                    # these keys the archive cannot tell them apart, and a
+                    # capped read silently claims completeness.
+                    "truncated", "cells_read", "cells_available",
+                    "rows_read", "members_skipped",
                     # HTML: where a document's characters went (visible text
                     # versus inline script/style and excluded comments).
                     "visible_text_chars", "script_chars", "style_chars",

@@ -110,3 +110,10 @@ sample_data/
 
 # Browser automation scratch (Chromium/Playwright create this in the CWD)
 .cache/
+
+# Audit archives are delivered compressed; the uncompressed JSONL is a
+# working file (13.5 M characters of stored text per run) and is rebuilt by
+# tools/audit/run_audit.sh.
+audit_report/*/archive/records.jsonl
+audit_report/*/final/records.jsonl
+audit_report/*/archive/text/
