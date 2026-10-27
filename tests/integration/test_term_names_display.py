@@ -157,9 +157,20 @@ class TestTheCategoryPage:
         assert AR_NAME in html, "the list did not render the translated name"
 
     def test_the_page_marks_a_name_that_was_not_translated(self, admin_client, labelled):
-        html = admin_client.get("/categories",
-                                query_string={"search": labelled["only_en"],
-                                              "lang": "ar"}).get_data(as_text=True)
+        # The *interface* language is not a query parameter: it comes from the
+        # ``user_language`` cookie the header switcher sets, then the session,
+        # then the system setting (Api/routes/common.resolve_interface_language).
+        # ``?lang=ar`` only selects which translation of a *term* the API
+        # returns, so the page still rendered in English and this assertion
+        # failed against the English marker. Set the cookie the switcher sets,
+        # and remove it again so no other test inherits an Arabic interface.
+        admin_client.set_cookie("user_language", "ar")
+        try:
+            html = admin_client.get("/categories",
+                                    query_string={"search": labelled["only_en"]}
+                                    ).get_data(as_text=True)
+        finally:
+            admin_client.delete_cookie("user_language")
         assert 'data-term-source="default-language"' in html
         # ``Missing`` is the catalog's existing word for "not translated"
         # (Arabic "غير مترجم"); ``Original`` is absent from the Hebrew and
