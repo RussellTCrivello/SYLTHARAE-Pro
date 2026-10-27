@@ -600,10 +600,25 @@ def _powerpoint_features(package: zipfile.ZipFile, limits: PackageLimits,
         if root is None:
             errors.append({"scope": part, "error": "notes part is not well-formed XML"})
             continue
+        # Runs concatenate inside a paragraph and paragraphs are separated by a
+        # newline. Joining every a:t in the part with no separator welded
+        # adjacent placeholders into words that do not exist:
+        # "NotesMasterHeader" + "NotesMasterFooter" became one 29-character
+        # token, so a search for either heading missed the notes page and the
+        # audit oracle - which does separate paragraphs - counted two words the
+        # store appeared not to have.
+        paragraphs = []
+        for paragraph in root.findall(".//a:p", NS):
+            text = "".join(t.text or "" for t in paragraph.findall(".//a:t", NS))
+            if text.strip():
+                paragraphs.append(text)
+        if not paragraphs:
+            # A part with runs but no paragraphs is malformed; it still holds
+            # text, so it is recorded run by run rather than dropped.
+            paragraphs = [t.text for t in root.findall(".//a:t", NS) if t.text]
         features["notes_text"].append({
             "part": part,
-            "text": _clip("".join(t.text or "" for t in root.findall(".//a:t", NS)),
-                          limits.max_text_chars),
+            "text": _clip("\n".join(paragraphs), limits.max_text_chars),
         })
 
     for part in sorted(n for n in names if re.match(r"ppt/comments/.*\.xml$", n))[: limits.max_parts]:

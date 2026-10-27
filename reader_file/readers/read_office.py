@@ -231,6 +231,25 @@ def _pptx_cover_remaining(slides: List[Dict[str, Any]], filepath: str) -> Dict[s
                           or name.startswith('ppt/notesMasters/'))]
             payload = {name: archive.read(name).decode('utf-8', 'replace')
                        for name in parts}
+            # A notes page is not slide N just because its part is called
+            # notesSlideN: the number is the notes page's own, and a deck that
+            # gained or lost a notes page while editing has them out of step.
+            # notesSlide2.xml in testPPT_various2.pptx holds "Notes for slide3".
+            # The relationship file is the authority.
+            notes_targets = {}
+            for name in parts:
+                if not name.startswith('ppt/notesSlides/notesSlide'):
+                    continue
+                rels_name = name.replace('notesSlides/', 'notesSlides/_rels/') + '.rels'
+                rels = payload.get(rels_name)
+                if rels is None:
+                    try:
+                        rels = archive.read(rels_name).decode('utf-8', 'replace')
+                    except KeyError:
+                        continue
+                match = re.search(r'Target="[^"]*slides/(slide\d+)\.xml"', rels)
+                if match:
+                    notes_targets[name] = int(match.group(1)[len('slide'):])
     except Exception as exc:
         return {"error": f"{type(exc).__name__}: {exc}", "added": 0}
 
@@ -245,9 +264,12 @@ def _pptx_cover_remaining(slides: List[Dict[str, Any]], filepath: str) -> Dict[s
     added, per_part, leftovers = 0, {}, []
     for name in sorted(payload):
         number = 0
-        match = re.search(r'(slide|notesSlide)(\d+)\.xml$', name)
-        if match:
-            number = int(match.group(2))
+        if name in notes_targets:
+            number = notes_targets[name]
+        else:
+            match = re.search(r'(slide|notesSlide)(\d+)\.xml$', name)
+            if match:
+                number = int(match.group(2))
         paragraphs = _drawingml_paragraph_texts(payload[name])
         kept = 0
         for text in paragraphs:
