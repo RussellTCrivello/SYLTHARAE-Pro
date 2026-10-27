@@ -150,6 +150,27 @@ def _unique_conflict(exc):
     return getattr(exc, "pgcode", None) == "23505"
 
 
+def _revision_block(revision):
+    """The ``gazetteer_revision`` block of a response, and never an exception.
+
+    Every caller of this function has already committed. If describing the
+    result fails - the recorder returned something unexpected, a fingerprint
+    query fails, a future edit raises - the mutation has still happened, and
+    answering 5xx tells the client to retry a write it already made (the retry
+    is then answered 409 for a place the client believes it never created).
+
+    Measured with tests/integration/test_partial_write_faults.py: before this
+    wrapper, a raise in the revision step turned four committed writes
+    (create, update, delete, place-name create/update/delete) into 500s.
+    """
+    try:
+        return _revision_payload(revision)
+    except Exception:
+        logger.exception("gazetteer revision could not be rendered after a "
+                         "committed mutation; answering without a fingerprint")
+        return {"fingerprint": None, "changed": False}
+
+
 def _revision_payload(revision):
     """The ``gazetteer_revision`` block of a response.
 
@@ -437,7 +458,7 @@ def register_place_routes(app):
             # from being reported as a success path with a None revision.
             return _error("VALIDATION_FAILED", str(error), 400)
 
-        revision_block = _revision_payload(revision)
+        revision_block = _revision_block(revision)
         _audit("places.create", place_id, {"label": label, "feature_type": feature_type,
                                              "country_codes": country_codes,
                                              "names_count": len(cleaned_names),
@@ -536,7 +557,7 @@ def register_place_routes(app):
                     "previous": {"label": label, "feature_type": feature_type,
                                  "country_codes": list(countries or []), "latitude": lat,
                                  "longitude": lon, "retired": retired},
-                    "fingerprint": _revision_payload(revision)["fingerprint"]}, 200, revision
+                    "fingerprint": _revision_block(revision)["fingerprint"]}, 200, revision
 
         try:
             result, code, revision = _write(do_update)
@@ -555,7 +576,7 @@ def register_place_routes(app):
             return _error("NOT_FOUND", "Place not found", 404)
         if code in (400, 403):
             return _error("FORBIDDEN" if code == 403 else "VALIDATION_FAILED", result, code)
-        revision_block = _revision_payload(revision)
+        revision_block = _revision_block(revision)
         result["fingerprint"] = revision_block["fingerprint"]
         _audit("places.update", place_id, {k: v for k, v in result.items() if k != "previous"})
         return jsonify({"success": True, "place": result,
@@ -601,7 +622,7 @@ def register_place_routes(app):
             return _error("PLACES_UNAVAILABLE", "Failed to delete place", 500)
         if code == 404:
             return _error("NOT_FOUND", "Place not found", 404)
-        revision_block = _revision_payload(revision)
+        revision_block = _revision_block(revision)
         _audit("places.delete", place_id, {"action": action,
                                            "fingerprint": revision_block["fingerprint"]})
         return jsonify({"success": True, "place_id": place_id,
@@ -734,7 +755,7 @@ def register_place_routes(app):
             return _error("PLACES_UNAVAILABLE", "Place alias could not be created", 500)
         if code == 404:
             return _error("NOT_FOUND", "An active place with that id was not found", 404)
-        revision_block = _revision_payload(revision)
+        revision_block = _revision_block(revision)
         _audit("places.name.create", name_id,
                {"place_id": place_id, "name": name["name"], "language": name["language"],
                 "fingerprint": revision_block["fingerprint"]}, target_type="place_name")
@@ -805,7 +826,7 @@ def register_place_routes(app):
             return _error("VALIDATION_FAILED", result, 400)
         if code == 404:
             return _error("NOT_FOUND", result or "Place name not found", 404)
-        revision_block = _revision_payload(revision)
+        revision_block = _revision_block(revision)
         _audit("places.name.update", name_id,
                {k: v for k, v in {**result, "fingerprint": revision_block["fingerprint"]}.items()
                 if k != "previous"}, target_type="place_name")
@@ -849,7 +870,7 @@ def register_place_routes(app):
             return _error("FORBIDDEN", "Seed-managed names are read-only", 403)
         if code == 404:
             return _error("NOT_FOUND", "Place name not found", 404)
-        revision_block = _revision_payload(revision)
+        revision_block = _revision_block(revision)
         _audit("places.name.delete", name_id,
                {**name, "fingerprint": revision_block["fingerprint"]},
                target_type="place_name")
