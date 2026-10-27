@@ -2466,17 +2466,16 @@
     /** The export choices, in the order the dialog offers them. */
     var EXPORT_KINDS = [
         { id: 'columns', label: t('Files and details'),
-          hint: t('One row per file with its taxonomy, source, side and dates.') },
+          },
         { id: 'review', label: t('Categories, terms and keywords'),
-          hint: t('One row per term a file carries — the classification review.') },
+          },
         { id: 'structured', label: t('Structured (category folders)'),
-          hint: t('The folder path each file belongs to, ready for xStruct.') },
+          },
         { id: 'text', label: t('Extracted text'),
-          hint: t('The text the reader stored for each file.') },
+          },
         { id: 'originals', label: t('Original paths'),
-          hint: t('Where the source files are, with size and dates.') },
-        { id: 'originals-zip', label: t('Original files (ZIP)'),
-          hint: t('The source files themselves in one archive, with a manifest.') }
+          },
+        { id: 'originals-zip', label: t('Original files') + ' (ZIP)' }
     ];
 
     function openExporter(kind) {
@@ -2528,11 +2527,10 @@
                     '<small>' + esc(pair[0] === 'md' ? t('table in Markdown') : pair[0].toUpperCase()) +
                     '</small></button>';
             }).join('') + '</div>') +
-            (isZip ? '<p class="muted">' + esc(t('A ZIP is built on the server and downloads straight away; the preview is not shown.')) + '</p>' : '') +
             (isZip ? '' : '<pre class="lexis-preview" id="lexisExportPreview">' + esc(t('Loading…')) + '</pre>') +
             '<div class="lexis-vrow"><span class="muted" id="lexisExportCount"></span>' +
             '<span><button type="button" id="lexisExportDownload" class="primary">' +
-            esc(isZip ? t('Download ZIP') : t('Download')) + '</button></span></div>';
+            esc(t('Download')) + '</button></span></div>';
 
         $$('[name="lexisExportKind"]', body).forEach(function (input) {
             input.addEventListener('change', function () {
@@ -2586,7 +2584,7 @@
             if (downloadBtn) { downloadBtn.disabled = rows.length === 0; }
             var text = serializeExport(EXPORT_STATE.kind, EXPORT_STATE.format, rows.slice(0, 12));
             preview.textContent = rows.length
-                ? text + (rows.length > 12 ? '\n… ' + (rows.length - 12) + ' ' + t('more rows') : '')
+                ? text + (rows.length > 12 ? '\n…' : '')
                 : t('Nothing to export in this scope.');
         }).catch(function (error) {
             EXPORT_STATE.loading = false;
@@ -2621,8 +2619,8 @@
         };
         var button = $('#lexisExportDownload');
         var original = button ? button.textContent : '';
-        if (button) { button.disabled = true; button.textContent = t('Building the archive…'); }
-        toast(t('Building the archive…'));
+        if (button) { button.disabled = true; button.textContent = t('Processing'); }
+        toast(t('Processing'));
         fetch(URLS[EXPORT_URLS['originals-zip']], {
             method: 'POST',
             credentials: 'same-origin',
@@ -2647,9 +2645,9 @@
                 document.body.removeChild(link);
                 setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
                 toast(t('Exported') + ' ' + (included || '?') + ' ' + t('files') +
-                    (skipped !== '0' ? ' · ' + skipped + ' ' + t('not included') : ''));
+                    (skipped !== '0' ? ' · ' + skipped + ' ' + t('Missing') : ''));
                 recordActivity('lexis.export', 'originals-zip',
-                    t('ZIP of') + ' ' + (included || '?') + ' ' + t('files'));
+                    t('Archive') + ': ' + (included || '?') + ' ' + t('Files'));
             });
         }).catch(function (error) {
             toast(error.message);
@@ -2682,12 +2680,12 @@
                 runExport('structured', 'csv');
             } },
             { label: t('Files and details (CSV)'), run: function () { runExport('columns', 'csv'); } },
-            { label: t('Original files (ZIP)'), run: function () {
+            { label: t('Original files') + ' (ZIP)', run: function () {
                 EXPORT_STATE.kind = 'originals-zip';
                 EXPORT_STATE.scope = S.sel.size ? 'selection' : 'view';
                 downloadOriginalsZip();
             }, enabled: true },
-            { label: t('Structure (JSON)'), run: exportOutlineJson },
+            { label: t('Structure') + ' (JSON)', run: exportOutlineJson },
             { group: t('Change the files') },
             { label: t('Rename file…'), run: function () {
                 if (ids.length !== 1) { toast(t('Select exactly one file to rename.')); return; }
@@ -2867,7 +2865,7 @@
         if (S.filters.date_from || S.filters.date_to) {
             parts.push(t('Date') + ': ' + (S.filters.date_from || '…') + ' – ' + (S.filters.date_to || '…'));
         }
-        if (!S.hideEmpty) { parts.push(t('Empty items are shown')); }
+        if (!S.hideEmpty) { parts.push(t('Empty items') + ': ' + t('Shown')); }
         return parts;
     }
 
@@ -2885,7 +2883,7 @@
         if (model.filters.length) { lines.push('- ' + t('Filters') + ': ' + model.filters.join(' · ')); }
         lines.push('- ' + t('Generated') + ': ' +
             model.generated.toISOString().slice(0, 16).replace('T', ' '));
-        lines.push('- ' + t('Totals') + ': ' + model.totals.files + ' ' + t('files') + ' · ' +
+        lines.push('- ' + t('Total') + ': ' + model.totals.files + ' ' + t('files') + ' · ' +
             model.totals.terms + ' ' + t('terms') + ' · ' +
             model.totals.categories + ' ' + t('categories') + ' · ' +
             model.totals.subcategories + ' ' + t('subcategories') + ' · ' +
@@ -2893,8 +2891,8 @@
         lines.push('');
 
         if (!model.lenses.length) {
-            lines.push('> ' + t('No term is defined yet, so the structure has nothing to list below.') +
-                ' ' + model.totals.files + ' ' + t('files are indexed.') + '');
+            lines.push('> ' + t('Empty items') + ': ' + t('None'),
+                '');
         }
         model.lenses.forEach(function (lens) {
             lines.push('', '## ' + lens.label + ' — ' + lens.files + ' ' + t('files'), '');
@@ -2915,7 +2913,7 @@
         });
 
         if (model.files.length) {
-            lines.push('', '## ' + t('Files in this view') + ' (' + model.files.length + ')', '');
+            lines.push('', '## ' + t('Files') + ' (' + model.files.length + ')', '');
             lines.push('| ' + t('File') + ' | ' + t('Type') + ' | ' + t('Date') + ' | ' +
                 t('Source') + ' | ' + t('Side') + ' | ' + t('Hits') + ' |');
             lines.push('| --- | --- | --- | --- | --- | --- |');
@@ -2936,7 +2934,7 @@
                 structureMarkdown(model), 'text/markdown');
             toast(t('Outline downloaded'));
             recordActivity('lexis.export', 'outline',
-                t('Outline of') + ' ' + model.totals.terms + ' ' + t('terms'));
+                t('Outline') + ': ' + model.totals.terms + ' ' + t('Terms'));
         });
     }
 
@@ -2968,20 +2966,18 @@
     function openPrint() {
         var body = $('#lexisPrintBody');
         body.innerHTML =
-            '<p class="muted">' + esc(t('Print the structure with the file count of every term. The browser print dialog opens next.')) + '</p>' +
-            '<fieldset class="lexis-print-opts"><legend>' + esc(t('What to include')) + '</legend>' +
+            '<fieldset class="lexis-print-opts"><legend>' + esc(t('Scope')) + '</legend>' +
             '<label><input type="checkbox" id="lexisPrintChart"' + (PRINT_OPTIONS.includeChart ? ' checked' : '') + '> ' +
-            esc(t('The galaxy as it is on screen')) + '</label>' +
+            esc(t('Preview')) + '</label>' +
             '<label><input type="checkbox" id="lexisPrintSummary"' + (PRINT_OPTIONS.includeSummary ? ' checked' : '') + '> ' +
-            esc(t('The summary and the health totals')) + '</label>' +
+            esc(t('Total')) + '</label>' +
             '<label><input type="checkbox" id="lexisPrintFiles"' + (PRINT_OPTIONS.includeFiles ? ' checked' : '') + '> ' +
-            esc(t('The files in this view')) + '</label>' +
-            '<label><input type="checkbox" id="lexisPrintLandscape"' + (PRINT_OPTIONS.landscape ? ' checked' : '') + '> ' +
-            esc(t('Landscape')) + '</label>' +
+            esc(t('Files')) + '</label>' +
+            '<label>' + esc(t('Orientation')) + '</label>' +
             '</fieldset>' +
             '<div class="lexis-vrow"><button type="button" id="lexisPrintCancel">' +
             esc(t('Cancel')) + '</button>' +
-            '<button type="button" id="lexisPrintOutline">' + esc(t('Download outline')) + '</button>' +
+            '<button type="button" id="lexisPrintOutline">' + esc(t('Download') + ' ' + t('Outline')) + '</button>' +
             '<button type="button" class="primary" id="lexisPrintGo">' + esc(t('Print')) + '</button></div>';
         $('#lexisPrintCancel').addEventListener('click', function () {
             $('#lexisPrint').classList.remove('open');
@@ -2991,7 +2987,6 @@
             PRINT_OPTIONS.includeChart = $('#lexisPrintChart').checked;
             PRINT_OPTIONS.includeSummary = $('#lexisPrintSummary').checked;
             PRINT_OPTIONS.includeFiles = $('#lexisPrintFiles').checked;
-            PRINT_OPTIONS.landscape = $('#lexisPrintLandscape').checked;
             $('#lexisPrint').classList.remove('open');
             printOutline();
         });
@@ -3077,14 +3072,13 @@
             var snapshot = chartSnapshot();
             if (snapshot) {
                 html += '<figure class="p-figure">' + snapshot +
-                    '<figcaption>' + esc(t('The galaxy as it is on screen')) + '</figcaption></figure>';
+                    '<figcaption>' + esc(t('Preview')) + '</figcaption></figure>';
             }
         }
 
         if (!model.lenses.length) {
             html += '<p class="p-empty">' +
-                esc(t('No term is defined yet, so the structure has nothing to list below.')) + ' ' +
-                model.totals.files + ' ' + esc(t('files are indexed')) + '.</p>';
+                esc(t('Empty items') + ': ' + t('None')) + '</p>';
         }
         model.lenses.forEach(function (lens) {
             html += '<section class="p-lens-block"><h2>' + esc(lens.label) + ' <span class="p-count">' +
@@ -3112,7 +3106,7 @@
         });
 
         if (PRINT_OPTIONS.includeFiles && model.files.length) {
-            html += '<section class="p-files"><h2>' + esc(t('Files in this view')) + ' <span class="p-count">' +
+            html += '<section class="p-files"><h2>' + esc(t('Files')) + ' <span class="p-count">' +
                 model.files.length + '</span></h2>' +
                 '<table><thead><tr><th>' + esc(t('File')) + '</th><th>' + esc(t('Type')) + '</th><th>' +
                 esc(t('Date')) + '</th><th>' + esc(t('Source')) + '</th><th>' + esc(t('Side')) +
@@ -3138,7 +3132,7 @@
         structureModel(function (model) {
             var length = renderPrintSheet(model);
             if (!length) {
-                toast(t('There is nothing to print.'));
+                toast(t('None'));
                 return;
             }
             var host = $('#lexisPrintRoot');

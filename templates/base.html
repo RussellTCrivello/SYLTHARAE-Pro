@@ -13,8 +13,12 @@
     {#- Theme mode, before the first style is applied: <html> carries
         data-theme-mode so a dark-mode reader never sees a white flash.
         The full module (menu, system listener) is loaded further down. -#}
-    <script src="{{ url_for('static', filename='js/theme-mode-init.js') }}?v=20261026a"></script>
     <script src="{{ url_for('static', filename='js/modules/core/declarative-events.js') }}"></script>
+    <!-- The theme is applied before body renders; it runs second only because
+         the declarative event runtime must be the first script on the page
+         (RES-CSP-01 test_the_shell_loads_the_runtime_first_and_synchronously).
+         Both are synchronous, so no frame is painted between them. -->
+    <script src="{{ url_for('static', filename='js/theme-mode-init.js') }}?v=20261026a"></script>
     {#- Static sidebar: in-application navigations swap only the main
         content, so the sidebar element is never redrawn; its state is also
         restored on a real load. Defers to declarative-events (installed
@@ -437,15 +441,15 @@
                                 <li>
                                     <button type="button" class="dropdown-item d-flex align-items-center gap-2"
                                             id="themeModeItem" aria-haspopup="true" aria-expanded="false"
-                                            title="{{ _('Light, dark, or follow the system') }}">
+                                            title="{{ _('Theme') }}: {{ _('Auto') }} / {{ _('Light') }} / {{ _('Dark') }}">
                                         <i class="bi bi-circle-half me-2" aria-hidden="true"></i>
-                                        <span>{{ _('Appearance') }}</span>
+                                        <span>{{ _('Theme') }}</span>
                                         <span class="badge text-bg-secondary ms-auto" id="themeModeBadge">{{ _('Auto') }}</span>
                                     </button>
                                 </li>
                                 <li id="themeModeChoices" class="px-3 pb-2" hidden>
                                     <div class="btn-group btn-group-sm w-100" role="group"
-                                         aria-label="{{ _('Appearance') }}">
+                                         aria-label="{{ _('Theme') }}">
                                         <button type="button" class="btn btn-outline-secondary"
                                                 data-theme-choice="auto" aria-pressed="true">
                                             <i class="bi bi-display" aria-hidden="true"></i> {{ _('Auto') }}
