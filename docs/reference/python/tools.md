@@ -567,15 +567,8 @@ Add missing report narrative/chrome msgids to Babel catalogs and compile .mo.
 
 ### `tools/i18n/sync_taxonomy.py`
 
-Make the category workbook the source of truth for the classification data.
+Command line over :mod:`services.importing.taxonomy_sync`.
 
-- **class `Plan`** - The difference between the workbook and the database.
-  - `changes(self) -> int` *(property)*
-  - `as_dict(self) -> Dict[str, Any]`
-- `connect()`
-- `snapshot(conn) -> Dict[str, int]`
-- `build_plan(conn, workbook: rules.Workbook, *, prune_categories: bool = False, prune_words: bool = False, renames: Optional[Dict[str, str]] = None) -> Plan` - Compute the difference. Reads only, so it is safe against production.
-- `apply_plan(conn, workbook: rules.Workbook, plan: Plan, *, prune_words: bool = False) -> Dict[str, int]` - Write exactly the plan, in one transaction.
 - `report_workbook(workbook: rules.Workbook) -> None`
 - `run(path: str, *, check_only: bool = False, apply: bool = False, prune_categories: bool = False, prune_words: bool = False, renames: Optional[Dict[str, str]]...`
 - `watch(path: str, interval: float, **options) -> int` - Apply the workbook whenever the file changes on disk.

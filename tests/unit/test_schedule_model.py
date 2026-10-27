@@ -7,6 +7,8 @@ eligibility rule is the authorization the scheduler re-decides at every
 fire.
 """
 
+from pathlib import Path
+
 import pytest
 
 from services.scheduling.model import (
@@ -16,10 +18,50 @@ from services.scheduling.model import (
 )
 
 
+def _job_types_the_manager_handles() -> set:
+    """The job types ``JobManager._run_builtin`` actually dispatches on.
+
+    Read from the source rather than imported, because the manager dispatches
+    through an if/elif chain and has no registry to ask. This is what makes
+    "a schedule type maps onto an existing job" checkable: a type added to the
+    vocabulary without a handler used to pass this test by being listed here.
+    """
+    import ast
+
+    source = (Path(__file__).resolve().parents[2]
+              / "services" / "jobs" / "manager.py")
+    tree = ast.parse(source.read_text(encoding="utf-8"))
+    handled = set()
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Compare) or len(node.ops) != 1:
+            continue
+        left = node.left
+        if not (isinstance(left, ast.Name) and left.id == "job_type"):
+            continue
+        comparator = node.comparators[0]
+        if isinstance(node.ops[0], ast.Eq) and isinstance(comparator, ast.Constant):
+            handled.add(comparator.value)
+        elif isinstance(node.ops[0], ast.In) and isinstance(comparator, (ast.Tuple, ast.List)):
+            for element in comparator.elts:
+                if isinstance(element, ast.Constant):
+                    handled.add(element.value)
+    return handled
+
+
 class TestTheVocabulary:
     def test_the_job_types_map_onto_existing_jobs(self):
-        # Only scenario_evaluation and retention remain after consolidation.
-        assert set(SCHEDULE_TYPES) == {"scenario_evaluation", "retention"}
+        # Was a hardcoded set of the two types; a hardcoded list cannot catch a
+        # type whose handler is missing, which is the property the test is
+        # named for. It now checks the property directly. taxonomy_sync was
+        # added (workbook reconciliation, services/importing/taxonomy_*).
+        assert set(SCHEDULE_TYPES) == {"scenario_evaluation", "retention",
+                                       "taxonomy_sync"}
+        assert set(SCHEDULE_TYPES) <= _job_types_the_manager_handles()
+
+    def test_a_type_without_a_handler_would_be_caught(self):
+        handled = _job_types_the_manager_handles()
+        assert "taxonomy_sync" in handled, "the new job type has no handler"
+        assert "no_such_job_type" not in handled
 
     def test_evaluations_are_administrative_retention_is_administrative(self):
         assert required_role("scenario_evaluation") == "admin"
@@ -94,3 +136,30 @@ class TestDescription:
             "scenario_id": 42})
         assert "retention" in describe("retention", {
             "policy": "jobs"})
+
+class TestTheTaxonomySchedule:
+    """A schedule that keeps the database in step with the workbook."""
+
+    def test_its_payload_names_a_file_not_a_path(self):
+        assert validate_payload("taxonomy_sync", {}) == {}
+        assert validate_payload("taxonomy_sync", None) == {}
+        assert validate_payload("taxonomy_sync",
+                                {"data_file": "domain_data.xlsx"})["data_file"] == (
+            "domain_data.xlsx")
+        for bad in ("../domain_data.xlsx", "classification/domain_data.xlsx",
+                    "C:\\data\\domain_data.xlsx", "..", ".", 7):
+            with pytest.raises(ScheduleError):
+                validate_payload("taxonomy_sync", {"data_file": bad})
+
+    def test_it_refuses_fields_it_does_not_understand(self):
+        with pytest.raises(ScheduleError):
+            validate_payload("taxonomy_sync", {"prune_categories": True})
+
+    def test_it_needs_an_administrator(self):
+        assert required_role("taxonomy_sync") == "admin"
+        assert owner_eligible("taxonomy_sync", "admin", True) == (True, None)
+        assert owner_eligible("taxonomy_sync", "analyst", True) == (False, "owner_role")
+
+    def test_the_page_says_which_file_it_applies(self):
+        assert describe("taxonomy_sync", {"data_file": "x.xlsx"}) == "apply x.xlsx to the database"
+        assert "workbook" in describe("taxonomy_sync", {})

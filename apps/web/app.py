@@ -292,6 +292,46 @@ def _start_scheduler():
         logger.warning("Job scheduler not started: %s: %s", exc.__class__.__name__, exc)
 
 _start_scheduler()
+
+# The category workbook is authoritative (docs/DATA_ENTRY.md): at startup the
+# database is compared with classification/domain_data.xlsx, and - with
+# SYLTHARAE_TAXONOMY_SYNC=apply - brought into step, so an edit made while the
+# service was down reaches the database without anybody running a command. The
+# decision logic and its tests live in services/importing/taxonomy_startup.py.
+# Guarded like the scheduler: this may never stop the web app from serving.
+def _reconcile_taxonomy():
+    try:
+        from services.importing.taxonomy_startup import reconcile
+
+        outcome = reconcile()
+        action = outcome.get("action")
+        if action == "disabled":
+            logger.info("Taxonomy reconciliation disabled (SYLTHARAE_TAXONOMY_SYNC=0)")
+        elif action == "unchanged":
+            logger.info("Taxonomy matches the workbook (%s)",
+                        str(outcome.get("fingerprint"))[:12])
+        elif action == "already_in_sync":
+            logger.info("\u2705 Taxonomy matches %s", outcome.get("path"))
+        elif action == "applied":
+            logger.info("\u2705 Taxonomy reconciled with %s: %s",
+                        outcome.get("path"), outcome.get("written"))
+        elif action == "drift":
+            logger.warning(
+                "Taxonomy is out of step with %s: %s change(s) pending. Run "
+                "'python -m tools.i18n.sync_taxonomy --apply', or set "
+                "SYLTHARAE_TAXONOMY_SYNC=apply to reconcile on startup.",
+                outcome.get("path"), outcome.get("pending"))
+        elif action == "refused":
+            logger.warning("Taxonomy reconciliation refused: %s",
+                           "; ".join(outcome.get("errors") or []) or "unknown reason")
+        else:
+            logger.warning("Taxonomy reconciliation skipped: %s", outcome.get("error"))
+    except Exception as exc:  # pragma: no cover - this may never stop the app
+        logger.warning("Taxonomy reconciliation skipped: %s: %s",
+                       exc.__class__.__name__, exc)
+
+
+_reconcile_taxonomy()
 logger.info("✅ Rate limiting enabled (default 60/min, 600/hour per client)")
 
 # Enable gzip compression for all responses

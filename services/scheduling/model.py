@@ -23,12 +23,22 @@ MAX_INTERVAL_MINUTES = 525600  # one year
 
 SCENARIO_EVALUATION = "scenario_evaluation"
 RETENTION = "retention"
+#: Reconcile the classification database with the category workbook
+#: (services/importing/taxonomy_sync_service.py). The workbook is
+#: authoritative; this is the periodic form of the same run.
+TAXONOMY_SYNC = "taxonomy_sync"
 
-SCHEDULE_TYPES = (SCENARIO_EVALUATION, RETENTION)
+SCHEDULE_TYPES = (SCENARIO_EVALUATION, RETENTION, TAXONOMY_SYNC)
 
 #: The role an owner must hold *at each fire* for the schedule to run.
 #: "evaluate every scenario" is the same privilege as the manual all-scenarios trigger.
-REQUIRED_ROLE = {SCENARIO_EVALUATION: "admin", RETENTION: "admin"}
+REQUIRED_ROLE = {
+    SCENARIO_EVALUATION: "admin",
+    RETENTION: "admin",
+    # It rewrites the taxonomy, so it is the same privilege as running the
+    # command line against the database.
+    TAXONOMY_SYNC: "admin",
+}
 
 DISABLE_REASONS = {
     "paused": "paused by the owner or an administrator",
@@ -84,6 +94,20 @@ def validate_payload(schedule_type: str, payload: Any) -> Dict[str, Any]:
             raise ScheduleError("payload.version must be an integer")
         return dict(payload)
 
+    if schedule_type == TAXONOMY_SYNC:
+        extra = sorted(set(payload) - {"data_file"})
+        if extra:
+            raise ScheduleError(f"unknown payload field(s): {', '.join(extra)}")
+        data_file = payload.get("data_file")
+        if data_file is not None:
+            if not isinstance(data_file, str):
+                raise ScheduleError("payload.data_file must be a string")
+            # A file name, never a path: the job resolves it through the same
+            # allowlist the Import Center uses.
+            if "/" in data_file or "\\" in data_file or data_file in (".", ".."):
+                raise ScheduleError("payload.data_file must be a file name, not a path")
+        return dict(payload)
+
     if schedule_type == RETENTION:
         extra = sorted(set(payload) - {"policy", "max_age_days"})
         if extra:
@@ -122,4 +146,7 @@ def describe(schedule_type: str, payload: Dict[str, Any]) -> str:
     """One line for the page: what the schedule runs."""
     if schedule_type == RETENTION:
         return "every enabled retention policy"
+    if schedule_type == TAXONOMY_SYNC:
+        name = (payload or {}).get("data_file") or "the category workbook"
+        return f"apply {name} to the database"
     return "every active scenario"

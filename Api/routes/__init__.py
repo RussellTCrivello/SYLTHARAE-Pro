@@ -21,6 +21,7 @@ def register_all_routes(app, babel_instance=None):
     from . import lexis_cosmos
     from . import reports
     from . import translation_api
+    from . import taxonomy_api
     # Import new settings routes (replaces old settings.py) - optional
     try:
         from settings.routes import register_settings_routes
@@ -84,6 +85,9 @@ def register_all_routes(app, babel_instance=None):
     reports.register_report_routes(app)
     # Manual translation (POST only; nothing here runs unattended)
     translation_api.register_translation_routes(app)
+    # Taxonomy status and the workbook's one-button reconciliation: the same
+    # service the command line and the taxonomy_sync job use.
+    taxonomy_api.register_taxonomy_routes(app)
     # Unified operations API + pages (Input / Import Center / Job Center)
     app.register_blueprint(operations_api.operations_bp)
     operations_pages.register_operations_pages(app)

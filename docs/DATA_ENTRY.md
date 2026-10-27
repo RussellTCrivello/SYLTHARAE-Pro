@@ -82,7 +82,43 @@ refused the write.
 The tool is idempotent: running it twice in a row performs no second write, and
 re-syncing an unchanged file reports every count as zero.
 
-### 2. The importer (legacy route)
+### 2. When it happens without you
+
+The workbook is authoritative, which is only true if something notices when the
+database has fallen behind. Three mechanisms, in the order most operators meet
+them:
+
+**On startup.** The service compares the workbook with the database and acts
+according to `SYLTHARAE_TAXONOMY_SYNC`:
+
+| value | behaviour |
+|---|---|
+| `apply` (default for `run_web.py`) | write the difference at startup |
+| `check` | say in the log how many changes are pending, write nothing |
+| `0` / `off` | neither |
+
+The fingerprint of the last applied run is kept in `APP_DATA_DIR`, so a restart
+with an unchanged file costs one SHA-256 and no database work. An edit made
+while the service was down is therefore applied the next time it starts, and
+nothing else is touched.
+
+**From the interface.** `GET /api/taxonomy/status` answers "is the database up to
+date?" with the pending counts; `POST /api/taxonomy/sync` runs the job. Neither
+can delete a category unless the request asks for it by name
+(`prune_categories`), because a half-saved workbook and a deliberate deletion
+look identical to the reader.
+
+**On a schedule.** The `taxonomy_sync` schedule type applies the workbook every
+N minutes, as an administrator. See the caveat below: in this tree the scheduler
+is not wired, so this is the shape the feature takes once it is.
+
+**Continuously, on one machine.** `python3 tools/i18n/sync_taxonomy.py --watch`
+applies on every save. It is what you want while editing the file.
+
+Every one of these calls `services/importing/taxonomy_sync_service.py`, so they
+cannot disagree about what the difference is.
+
+### 3. The importer (legacy route)
 
 `apps/importing` reads the same workbook through the same rules, so a file the
 sync tool accepts is a file the importer accepts, and a file that breaks a rule
@@ -107,6 +143,19 @@ python3 -m pytest tests/unit/test_committed_workbook.py -q
 rules, asserts the reviewed counts, checks that `Master Index` agrees with the
 category sheets, and refuses a stray third column. A count that changes is the
 review — the test failing is the tool telling you what your edit did.
+
+## What an automatic run will and will not do
+
+| it does | it does not |
+|---|---|
+| create categories a new worksheet describes | delete a category whose worksheet vanished (reported; `--prune-categories` says otherwise) |
+| rename a category when the content proves the rename | guess a rename when the content also changed - that is reported as one missing, one new |
+| add, link and unlink terms | delete a word row (a keyword phrase may reference it) |
+| add and delete phrases | store a phrase in two categories (`keywords.keyword` is unique) |
+
+An applied run also returns a snapshot of the taxonomy as it was
+(`sync_workbook(..., apply=True)`), so a wrong edit can be put back with
+`restore_state`. A workbook that breaks a rule is never written at all.
 
 ## What the rules do not cover
 

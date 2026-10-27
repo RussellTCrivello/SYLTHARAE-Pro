@@ -9,6 +9,7 @@ Schedule -> JobManager mapping:
 
 * ``scenario_evaluation`` -> ``JobManager.enqueue("scenario_evaluation", ...)``
 * ``retention``           -> ``JobManager.enqueue("retention", ...)``
+* ``taxonomy_sync``       -> ``JobManager.enqueue("taxonomy_sync", ...)``
 """
 
 from __future__ import annotations
@@ -77,6 +78,12 @@ class ScheduleRunner:
                 args=[s.id],
                 replace_existing=True,
             )
+        elif s.schedule_type == "taxonomy_sync":
+            self._scheduler.add_job(
+                self._run_taxonomy_sync, trigger, id=job_id,
+                args=[s.id],
+                replace_existing=True,
+            )
         else:
             log.warning("Unknown schedule type %r for schedule %d", s.schedule_type, s.id)
             return
@@ -128,3 +135,30 @@ class ScheduleRunner:
             log.info("Schedule %d disabled: %s", schedule_id, reason)
             return
         self._job_manager.enqueue("retention", schedule_id=schedule_id)
+
+    def _run_taxonomy_sync(self, schedule_id: int) -> None:
+        """Fire the workbook reconciliation (services/importing/taxonomy_*)."""
+        s = self._store.get(schedule_id)
+        if not s or s.disabled:
+            log.info("Schedule %d disabled or missing; skipping", schedule_id)
+            return
+        owner = self._store.get_user(s.owner_id)
+        if not owner:
+            self._store.disable(schedule_id, "owner_missing")
+            log.info("Schedule %d disabled: owner missing", schedule_id)
+            return
+        from services.scheduling.model import owner_eligible
+        ok, reason = owner_eligible(s.schedule_type, owner.get("role"),
+                                    owner.get("is_active", True))
+        if not ok:
+            self._store.disable(schedule_id, reason)
+            log.info("Schedule %d disabled: %s", schedule_id, reason)
+            return
+        payload = getattr(s, "payload", None) or {}
+        self._job_manager.enqueue(
+            "taxonomy_sync",
+            created_by=owner.get("username") or "system",
+            data_file=payload.get("data_file"),
+            apply=True,
+            auto_renames=True,
+        )

@@ -184,6 +184,24 @@ class JobManager:
     # ------------------------------------------------------------------
     # Worker lifecycle
     # ------------------------------------------------------------------
+    def enqueue(self, job_type: str, created_by: Optional[str] = None,
+                **options: Any) -> Dict[str, Any]:
+        """Create a job from a schedule.
+
+        ``services/scheduling/scheduler.py`` documents its whole job as
+        "call ``JobManager.enqueue`` at the right times" - and did so, into a
+        method that did not exist, so every scheduled fire raised
+        ``AttributeError`` inside APScheduler and no scheduled job ever ran.
+        This is that entry point: a thin, explicit wrapper over ``create_job``
+        so a schedule's options arrive as the job's options.
+        """
+        return self.create_job(
+            job_type,
+            source=f"schedule:{job_type}",
+            options=dict(options),
+            created_by=created_by or "system",
+        )
+
     def _worker(self, record: Dict[str, Any], starter) -> None:
         job_id = record["job_id"]
         try:
@@ -527,6 +545,24 @@ class JobManager:
                 created_by=record.get("created_by"),
             )
             return DomainImportService().run(request, progress_cb=progress_cb)
+        if job_type == "taxonomy_sync":
+            # The workbook is authoritative; this job is the mechanism that
+            # makes that true without a human running a command. It writes the
+            # plan it computed in one transaction and returns the snapshot that
+            # can undo it (services/importing/taxonomy_sync_service.py).
+            from services.importing.taxonomy_sync_service import (
+                TaxonomySyncRequest, TaxonomySyncService,
+            )
+
+            request = TaxonomySyncRequest(
+                data_file=options.get("data_file"),
+                apply=bool(options.get("apply", False)),
+                auto_renames=bool(options.get("auto_renames", True)),
+                prune_categories=bool(options.get("prune_categories", False)),
+                prune_words=bool(options.get("prune_words", False)),
+                created_by=record.get("created_by"),
+            )
+            return TaxonomySyncService().run(request, progress_cb=progress_cb)
         if job_type == "backup_import":
             from services.importing.backup_import_service import (
                 BackupImportRequest, BackupImportService,
