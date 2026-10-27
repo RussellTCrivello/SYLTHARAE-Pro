@@ -1,23 +1,7 @@
-=== python -m tools.i18n.backfill_term_names --reconcile  (db=taxonomy_scratch @ /tmp/pgdata_taxonomy_t0oxy2yp)
-{
-  "language": "en",
-  "counts": {
-    "words": 10566,
-    "categorys": 56,
-    "keywords": 0,
-    "term_names": 10566
-  },
-  "coverage": {
-    "words": 10566,
-    "with_a_name": 10566,
-    "without_a_name": 0,
-    "with_more_than_one": 0
-  },
-  "ok": true
-}
-rc=0
+# Backfill cycle against the real taxonomy (10 566 words), 2026-10-27T13:02:28Z
+# command: DB_HOST=/tmp/pgdata_taxonomy_t0oxy2yp DB_NAME=taxonomy_scratch python -m tools.i18n.backfill_term_names <mode>
 
-=== python -m tools.i18n.backfill_term_names --rollback  (db=taxonomy_scratch @ /tmp/pgdata_taxonomy_t0oxy2yp)
+=== backfill_term_names --rollback
 {
   "dry_run": false,
   "source": "backfill",
@@ -44,7 +28,26 @@ rc=0
 }
 rc=0
 
-=== python -m tools.i18n.backfill_term_names --dry-run  (db=taxonomy_scratch @ /tmp/pgdata_taxonomy_t0oxy2yp)
+=== backfill_term_names --reconcile
+{
+  "language": "en",
+  "counts": {
+    "words": 10566,
+    "categorys": 56,
+    "keywords": 0,
+    "term_names": 0
+  },
+  "coverage": {
+    "words": 10566,
+    "with_a_name": 0,
+    "without_a_name": 10566,
+    "with_more_than_one": 0
+  },
+  "ok": false
+}
+rc=1
+
+=== backfill_term_names --dry-run
 {
   "language": "en",
   "dry_run": true,
@@ -103,66 +106,7 @@ rc=0
 }
 rc=0
 
-=== python -m tools.i18n.backfill_term_names --dry-run  (db=taxonomy_scratch @ /tmp/pgdata_taxonomy_t0oxy2yp)
-{
-  "language": "en",
-  "dry_run": true,
-  "pending": 10566,
-  "would_insert": 10566,
-  "skipped": [],
-  "sample": [
-    {
-      "word_id": 1,
-      "word": "Computer networks",
-      "name": "Computer networks",
-      "match_key": "computer networks",
-      "language": "en",
-      "script": "Latn"
-    },
-    {
-      "word_id": 2,
-      "word": "Networking",
-      "name": "Networking",
-      "match_key": "networking",
-      "language": "en",
-      "script": "Latn"
-    },
-    {
-      "word_id": 3,
-      "word": "Network architecture",
-      "name": "Network architecture",
-      "match_key": "network architecture",
-      "language": "en",
-      "script": "Latn"
-    },
-    {
-      "word_id": 4,
-      "word": "Network topology",
-      "name": "Network topology",
-      "match_key": "network topology",
-      "language": "en",
-      "script": "Latn"
-    },
-    {
-      "word_id": 5,
-      "word": "Nodes",
-      "name": "Nodes",
-      "match_key": "nodes",
-      "language": "en",
-      "script": "Latn"
-    }
-  ],
-  "before": {
-    "words": 10566,
-    "categorys": 56,
-    "keywords": 0,
-    "term_names": 0
-  },
-  "inserted": 0
-}
-rc=0
-
-=== python -m tools.i18n.backfill_term_names --apply  (db=taxonomy_scratch @ /tmp/pgdata_taxonomy_t0oxy2yp)
+=== backfill_term_names --apply
 {
   "language": "en",
   "dry_run": false,
@@ -233,7 +177,7 @@ rc=0
 }
 rc=0
 
-=== python -m tools.i18n.backfill_term_names --reconcile  (db=taxonomy_scratch @ /tmp/pgdata_taxonomy_t0oxy2yp)
+=== backfill_term_names --reconcile
 {
   "language": "en",
   "counts": {
@@ -252,3 +196,46 @@ rc=0
 }
 rc=0
 
+=== m0005 upgrade -> downgrade -> re-upgrade on the populated taxonomy
+# command: python /tmp/m0005_cycle.py (uses database.migrations.m0005_term_names directly)
+{
+  "versions_before": [
+    "0001",
+    "0002",
+    "0003",
+    "0004",
+    "0005"
+  ],
+  "before": {
+    "words": 10566,
+    "categorys": 56,
+    "words_categorys": 11054,
+    "term_names": 0
+  },
+  "after_downgrade": {
+    "words": 10566,
+    "categorys": 56,
+    "words_categorys": 11054,
+    "term_names": null
+  },
+  "after_reupgrade": {
+    "words": 10566,
+    "categorys": 56,
+    "words_categorys": 11054,
+    "term_names": 0
+  },
+  "versions_after": [
+    "0001",
+    "0002",
+    "0003",
+    "0004",
+    "0005"
+  ]
+}
+rc=0
+
+=== backfill_term_names --apply (restore the names the cycle removed)
+    "term_names": 0
+  "inserted": 10566,
+    "term_names": 10566
+    "without_a_name": 0,
