@@ -120,6 +120,54 @@ def _get_health_connection():
     return conn
 
 
+#: The gazetteer check costs one indexed query, but /health may be polled every
+#: few seconds by a load balancer; the answer is cached for half a minute.
+#: ``HEALTH_GAZETTEER_CACHE_SECONDS=0`` disables the cache (tests do this).
+_gazetteer_cache = {"at": 0.0, "value": None}
+
+
+def _gazetteer_cache_seconds() -> float:
+    raw = os.environ.get("HEALTH_GAZETTEER_CACHE_SECONDS", "30")
+    try:
+        value = float(raw)
+    except (TypeError, ValueError):
+        return 30.0
+    return max(0.0, min(value, 600.0))
+
+
+def _probe_gazetteer() -> str:
+    """``ok``, ``not-seeded`` or ``unavailable`` - never an exception message.
+
+    An unseeded gazetteer is the state that made *Add place* answer 503 after
+    the operator had already filled the form; saying it here means the instance
+    reports it from its first minute. The strings are fixed on purpose: this
+    body is served without authentication.
+    """
+    now = time.time()
+    ttl = _gazetteer_cache_seconds()
+    if _gazetteer_cache["value"] and ttl and now - _gazetteer_cache["at"] < ttl:
+        return _gazetteer_cache["value"]
+
+    try:
+        conn = _get_health_connection()
+        cur = conn.cursor()
+        try:
+            cur.execute("SELECT 1 FROM geo_places WHERE NOT retired LIMIT 1")
+            value = "ok" if cur.fetchone() is not None else "not-seeded"
+        finally:
+            cur.close()
+    except Exception:
+        logger.warning("Health probe could not read the gazetteer state")
+        value = "unavailable"
+
+    if value == "not-seeded" and _gazetteer_cache.get("value") != "not-seeded":
+        logger.warning(
+            "Gazetteer is not seeded: place detection is skipped on ingest and "
+            "POST /api/places will answer 503 until the seed is loaded")
+    _gazetteer_cache.update(at=now, value=value)
+    return value
+
+
 def _probe_database() -> None:
     """Ask the database for one row; raises if it cannot answer."""
     conn = _get_health_connection()
@@ -160,6 +208,10 @@ def health():
         logger.warning("Health probe failed; reporting the database as unavailable")
         checks["database"] = "unavailable"
         all_ok = False
+
+    # Gazetteer seed: cheap, and the first thing an operator would otherwise
+    # discover from a failed *Add place*.
+    checks["gazetteer"] = _probe_gazetteer()
 
     # Settings system
     try:
