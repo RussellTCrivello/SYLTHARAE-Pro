@@ -3,6 +3,7 @@ API Routes for Archives sections with cursor-based pagination
 """
 
 from flask import Blueprint, request, jsonify
+from services.i18n.term_search import expand_for_search
 from Api.cursor_pagination import get_cursor_paginator, SortDirection
 from Api.utils import (
     execute_query,
@@ -180,7 +181,16 @@ def api_archives_categories():
         
         filters = {}
         if search:
-            filters['w.word'] = {'ILIKE': f'%{search}%'}
+            # Cross-language recall: the text matches, or the word's id is one
+            # whose translation normalises to the query.
+            expansion = expand_for_search(search)
+            if expansion.word_ids:
+                filters['OR'] = [
+                    {'w.word': {'op': 'ILIKE', 'value': f'%{search}%'}},
+                    {'c.word_id': {'op': 'IN', 'value': list(expansion.word_ids)}},
+                ]
+            else:
+                filters['w.word'] = {'ILIKE': f'%{search}%'}
         
         # Determine sort column and direction
         sort_column_map = {
@@ -368,8 +378,13 @@ def api_archives_categories():
         count_query += ")"
         
         if search:
-            count_query += " AND w.word ILIKE %s"
-            count_params.append(f'%{search}%')
+            expansion = expand_for_search(search)
+            if expansion.word_ids:
+                count_query += (" AND (w.word ILIKE %s OR c.word_id = ANY(%s))")
+                count_params.extend([f'%{search}%', list(expansion.word_ids)])
+            else:
+                count_query += " AND w.word ILIKE %s"
+                count_params.append(f'%{search}%')
         
         count_result = execute_query(count_query, tuple(count_params) if count_params else None, fetch="one")
         total_estimated = count_result[0] if count_result and isinstance(count_result, (tuple, list)) else (count_result if count_result else 0)
@@ -1557,7 +1572,16 @@ def api_archives_addresses():
         
         filters = {}
         if search:
-            filters['w.word'] = {'ILIKE': f'%{search}%'}
+            # Same union as the category facet above: the word's text, or the
+            # word whose name in another language normalises to the query.
+            expansion = expand_for_search(search)
+            if expansion.word_ids:
+                filters['OR'] = [
+                    {'w.word': {'op': 'ILIKE', 'value': f'%{search}%'}},
+                    {'w.id': {'op': 'IN', 'value': list(expansion.word_ids)}},
+                ]
+            else:
+                filters['w.word'] = {'ILIKE': f'%{search}%'}
         
         paginator = get_cursor_paginator('words')
         result = paginator.get_page(

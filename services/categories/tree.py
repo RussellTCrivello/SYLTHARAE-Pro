@@ -34,6 +34,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict, Iterable, List, Optional
 
+from services.i18n.term_search import expand_for_search
+
 logger = logging.getLogger(__name__)
 
 #: The most rows one page may ask for.
@@ -254,7 +256,12 @@ def fetch_tree(cur, *, search: Optional[str] = None, cursor: Optional[str] = Non
     needle = f"%{search.strip()}%" if search and search.strip() else None
 
     if needle:
-        return _search_rows(cur, needle, limit=limit, search=search)
+        # Cross-language recall: the query may name a node in any supported
+        # language, so the match set includes the words whose translation
+        # normalises to it. No match leaves the predicate as it was.
+        expansion = expand_for_search(search, run=_run_from_cursor(cur))
+        return _search_rows(cur, needle, limit=limit, search=search,
+                            word_ids=expansion.word_ids)
 
     base = _ROW_SQL
     where, params = "", []
@@ -290,12 +297,31 @@ def fetch_tree(cur, *, search: Optional[str] = None, cursor: Optional[str] = Non
 SEARCH_MATCH_CAP = 500
 
 
-def _search_rows(cur, needle: str, *, limit: int, search: str) -> Dict[str, Any]:
+def _run_from_cursor(cur):
+    """Adapt a psycopg2 cursor to the ``run(sql, params, fetch=...)`` shape the
+    resolver expects, so the tree search can expand without opening a second
+    connection (and therefore without a second transaction)."""
+    def run(sql, params=None, fetch="all"):
+        cur.execute(sql, params)
+        return cur.fetchall()
+    return run
+
+
+def _search_rows(cur, needle: str, *, limit: int, search: str,
+                 word_ids: Iterable[int] = ()) -> Dict[str, Any]:
     """Matches plus their ancestors, without the closure or the full recursion."""
-    cur.execute(
-        "SELECT c.id FROM categorys c JOIN words w ON w.id = c.word_id"
-        " WHERE w.word ILIKE %s ORDER BY lower(w.word), c.id LIMIT %s",
-        (needle, SEARCH_MATCH_CAP + 1))
+    ids = [int(w) for w in word_ids]
+    if ids:
+        cur.execute(
+            "SELECT c.id FROM categorys c JOIN words w ON w.id = c.word_id"
+            " WHERE w.word ILIKE %s OR c.word_id = ANY(%s)"
+            " ORDER BY lower(w.word), c.id LIMIT %s",
+            (needle, ids, SEARCH_MATCH_CAP + 1))
+    else:
+        cur.execute(
+            "SELECT c.id FROM categorys c JOIN words w ON w.id = c.word_id"
+            " WHERE w.word ILIKE %s ORDER BY lower(w.word), c.id LIMIT %s",
+            (needle, SEARCH_MATCH_CAP + 1))
     match_ids = [row[0] for row in cur.fetchall()]
     truncated = len(match_ids) > SEARCH_MATCH_CAP
     match_ids = match_ids[:SEARCH_MATCH_CAP]

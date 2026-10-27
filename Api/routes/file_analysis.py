@@ -32,6 +32,7 @@ import zlib
 
 from Api.utils import execute_query
 from core.serialization import unpack_int_list
+from services.i18n.term_search import expand_for_search
 from core.errors import client_error
 from core.security.rate_limit import INTERACTIVE_READ_LIMIT, limiter
 from Api.services.geo_extraction_service import scan_and_tag_geolocations
@@ -244,6 +245,23 @@ def fa_overview():
 # Category -> Keywords -> Files
 # ---------------------------------------------------------------------------
 
+
+def _word_search_where(run, search):
+    """``WHERE``/``params`` for a word-name facet search, with cross-language recall.
+
+    A typed term may name the word in any supported language; the facet then
+    matches the word id as well as the text. With no expansion the predicate is
+    exactly the one this module always built.
+    """
+    if not search:
+        return "", []
+    expansion = expand_for_search(search, run=run)
+    if expansion.word_ids:
+        return "WHERE (w.word ILIKE %s OR w.id = ANY(%s))", [
+            f"%{search}%", list(expansion.word_ids)]
+    return "WHERE w.word ILIKE %s", [f"%{search}%"]
+
+
 @limiter.limit(INTERACTIVE_READ_LIMIT)
 @file_analysis_bp.route('/api/file-analysis/categories', methods=['GET'])
 def fa_categories():
@@ -273,8 +291,7 @@ def fa_categories():
         per_page = _int_arg('per_page', 50)
         search = _str_arg('search')
 
-        where = "WHERE w.word ILIKE %s" if search else ""
-        params = [f"%{search}%"] if search else []
+        where, params = _word_search_where(execute_query, search)
 
         rows = execute_query(f"""
             WITH word_stats AS (
@@ -477,8 +494,7 @@ def fa_words():
         page = _int_arg('page', 1)
         per_page = _int_arg('per_page', 50)
         search = _str_arg('search')
-        where = "WHERE w.word ILIKE %s" if search else ""
-        params = [f"%{search}%"] if search else []
+        where, params = _word_search_where(execute_query, search)
         page_items, pagination = _words_query(where, params, page, per_page)
         return jsonify({'success': True, 'data': page_items, 'pagination': pagination})
     except Exception as e:

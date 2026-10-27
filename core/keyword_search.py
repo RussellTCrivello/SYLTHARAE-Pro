@@ -166,13 +166,20 @@ def usage_counts(run: Run, ids: Sequence[int]) -> dict:
 
 def _scan(run: Run, *, needle: Optional[str], conditions: Sequence[str],
           params: Sequence[Any], rank: Optional[Callable[[Candidate], Rank]],
-          keep: int, chunk: int) -> Tuple[List[Candidate], int]:
+          keep: int, chunk: int,
+          needle_ids: Optional[Sequence[int]] = None) -> Tuple[List[Candidate], int]:
     """One streamed pass. ``keep == 0`` counts only. Otherwise returns the
     ``keep`` best candidates in rank order, plus the total number of matches.
 
     ``needle`` is the lower-case text to find. ``None`` means every keyword
-    counts, including one with no text (the sort-by-text listing does that)."""
+    counts, including one with no text (the sort-by-text listing does that).
+
+    ``needle_ids`` are the word ids a query resolves to through its translations
+    (``services/i18n/term_labels.py``). A keyword matches if its text contains
+    the needle **or** any of the words it is made of is one of those ids, so a
+    keyword written ``political stability`` is found by ``الاستقرار السياسي``."""
     total = 0
+    wanted = set(int(w) for w in (needle_ids or ()))
 
     def matches() -> Iterator[Candidate]:
         nonlocal total
@@ -185,6 +192,8 @@ def _scan(run: Run, *, needle: Optional[str], conditions: Sequence[str],
                     hits.append((kid, blob, cat, text or ""))
                 elif text and needle in text.lower():
                     hits.append((kid, blob, cat, text))
+                elif wanted and _shares_a_word(blob, wanted):
+                    hits.append((kid, blob, cat, text or ""))
             total += len(hits)
             if keep == 0:
                 continue
@@ -202,16 +211,31 @@ def _scan(run: Run, *, needle: Optional[str], conditions: Sequence[str],
 def keyword_page(run: Run, *, page: int, size: int, needle: Optional[str],
                  conditions: Sequence[str], params: Sequence[Any],
                  rank: Callable[[Candidate], Rank],
-                 chunk: int = CHUNK) -> Tuple[List[Candidate], int]:
+                 chunk: int = CHUNK,
+                 needle_ids: Optional[Sequence[int]] = None) -> Tuple[List[Candidate], int]:
     """``(rows_for_page, total)``. ``rows_for_page`` is empty for a page past the
     end; the caller's page model decides what that means."""
     _, total = _scan(run, needle=needle, conditions=conditions, params=params,
-                     rank=None, keep=0, chunk=chunk)
+                     rank=None, keep=0, chunk=chunk, needle_ids=needle_ids)
     if page > total_pages_for(total, size):
         return [], total
     top, _ = _scan(run, needle=needle, conditions=conditions, params=params,
-                   rank=rank, keep=page * size, chunk=chunk)
+                   rank=rank, keep=page * size, chunk=chunk, needle_ids=needle_ids)
     return top[(page - 1) * size:], total
+
+
+def _shares_a_word(blob, wanted: set) -> bool:
+    """Whether this keyword's packed word list intersects ``wanted``.
+
+    An undecodable blob is not a match: the same rule ``decode_texts`` applies,
+    so a corrupt row cannot be reported as relevant to a query."""
+    if not blob:
+        return False
+    try:
+        ids = unpack_int_list(blob)
+    except Exception:  # noqa: BLE001 - undecodable is not a match
+        return False
+    return any(word_id in wanted for word_id in ids or ())
 
 
 def category_names(run: Run, category_ids: Sequence[Any]) -> dict:

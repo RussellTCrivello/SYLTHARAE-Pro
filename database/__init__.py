@@ -407,9 +407,16 @@ def search_categories(search_query=None, page=1, per_page=20):
     try:
         db_service = ContentDBService()
         offset = (page - 1) * per_page
+
+        # Cross-language recall: the query may name the category in any
+        # supported language. No match leaves the predicate unchanged.
+        from services.i18n.term_search import expand_for_search
+        expansion = expand_for_search(search_query) if search_query else None
+        word_ids = list(expansion.word_ids) if expansion else []
         
         # Get results
-        rows = db_service.categorys_repo.search_categories(search_query, per_page, offset)
+        rows = db_service.categorys_repo.search_categories(
+            search_query, per_page, offset, word_ids=word_ids)
         
         # Format results as dictionaries
         results = []
@@ -428,11 +435,13 @@ def search_categories(search_query=None, page=1, per_page=20):
                 FROM categorys c
                 JOIN words w ON c.word_id = w.id
                 WHERE w.word ILIKE %s
+                   OR (%s::int[] IS NOT NULL AND c.word_id = ANY(%s::int[]))
             """
             search_param = f"%{search_query}%"
+            ids = word_ids or None
             count_result = db_service.categorys_repo.execute(
                 count_query,
-                (search_param,),
+                (search_param, ids, ids),
                 fetchone=True
             )
         else:

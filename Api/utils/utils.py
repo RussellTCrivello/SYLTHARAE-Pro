@@ -6,6 +6,7 @@ from collections import defaultdict
 
 from core.serialization import unpack_int_list
 from core.keyword_search import html_rank, keyword_page
+from services.i18n.term_search import expand_for_search
 
 # Unified database interface - import from centralized database module
 # This provides a single source of truth for all database operations
@@ -1365,8 +1366,17 @@ def get_categories_paged(
         where_sql = ""
         params: list = []
         if search:
-            where_sql = "WHERE w.word ILIKE %s"
-            params.append(f"%{search}%")
+            # Cross-language recall: a query in any supported language also
+            # matches the categories whose name in that language normalises to
+            # it (services/i18n/term_labels.py owns the guards). With no match
+            # this is exactly the predicate the page always had.
+            expansion = expand_for_search(search)
+            if expansion.word_ids:
+                where_sql = "WHERE (w.word ILIKE %s OR w.id = ANY(%s))"
+                params.extend([f"%{search}%", list(expansion.word_ids)])
+            else:
+                where_sql = "WHERE w.word ILIKE %s"
+                params.append(f"%{search}%")
 
         count_query = f"""
             SELECT COUNT(*)
@@ -2043,10 +2053,14 @@ def get_keywords_with_usage(
         # Errors are not caught here: a database failure must reach the caller,
         # not look like "no keywords".
         descending = str(sort_order).lower() != 'asc'
+        # Cross-language recall, same rule as the API: a keyword matches when
+        # one of its words is the translation of what was typed.
+        needle_ids = list(expand_for_search(search_term).word_ids) if search_term else None
         rows, total = keyword_page(
             execute_query, page=page, size=per_page,
             needle=search_term.lower() if search_term else None,
-            conditions=[], params=[], rank=html_rank(sort_by, descending))
+            conditions=[], params=[], rank=html_rank(sort_by, descending),
+            needle_ids=needle_ids)
         # Same row shape as the SQL path: (id, category_id, keyword, usage_count).
         return [(c[0], c[2], c[1], c[4]) for c in rows], total
     try:

@@ -77,6 +77,7 @@ class CategoryQueries(BaseQueries):
             LEFT JOIN hash_contexts hc ON hc.hash_id = wp.hash_id
             LEFT JOIN paths p ON p.context_id = hc.id
             WHERE %s IS NULL OR w.word ILIKE %s
+               OR (%s::int[] IS NOT NULL AND c.word_id = ANY(%s::int[]))
             GROUP BY c.id, w.word
             ORDER BY file_count DESC, w.word ASC
             LIMIT %s OFFSET %s

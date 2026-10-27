@@ -28,6 +28,7 @@ from database import (
     update_source, update_side, search_categories
 )
 from core.serialization import unpack_int_list
+from services.i18n.term_search import expand_for_search
 
 logger = logging.getLogger(__name__)
 
@@ -792,6 +793,15 @@ def register_api_routes(app):
                 exclude_params = [exclude_category_id]
             
             if search_query:
+                # Cross-language recall: the picker also offers a word whose
+                # translation normalises to the query, so a term can be found by
+                # its Arabic name in an English interface. No match keeps the
+                # exact-match predicate this endpoint has always used.
+                expansion = expand_for_search(search_query)
+                translated = list(expansion.word_ids)
+                id_clause = " OR w.id = ANY(%s)" if translated else ""
+                id_params = [translated] if translated else []
+
                 # Use exact match (case-insensitive, no wildcards) to search for entire keyword, especially for multi-word keywords
                 query = f"""
                     SELECT w.id, w.word,
@@ -800,17 +810,17 @@ def register_api_routes(app):
                     LEFT JOIN words_hashs wp ON w.id = wp.word_id
                     LEFT JOIN hash_contexts hc ON hc.hash_id = wp.hash_id
                     LEFT JOIN paths p ON p.context_id = hc.id
-                    WHERE w.word ILIKE %s {exclude_clause}
+                    WHERE (w.word ILIKE %s{id_clause}) {exclude_clause}
                     GROUP BY w.id, w.word
                     ORDER BY usage_count DESC, w.word ASC
                     LIMIT %s OFFSET %s
                 """
                 # Use exact match without wildcards - ILIKE without % is case-insensitive exact match
-                data = execute_query(query, tuple([search_query] + exclude_params + [per_page, offset]))
+                data = execute_query(query, tuple([search_query] + id_params + exclude_params + [per_page, offset]))
                 
                 # Get total count
-                count_query = f"SELECT COUNT(*) FROM words w WHERE w.word ILIKE %s {exclude_clause}"
-                total_result = execute_query(count_query, tuple([search_query] + exclude_params), fetch="one")
+                count_query = f"SELECT COUNT(*) FROM words w WHERE (w.word ILIKE %s{id_clause}) {exclude_clause}"
+                total_result = execute_query(count_query, tuple([search_query] + id_params + exclude_params), fetch="one")
                 total = total_result[0] if total_result and total_result[0] is not None else 0
             else:
                 query = f"""
