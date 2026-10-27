@@ -1,20 +1,23 @@
 # Multilingual category / term / keyword labels — implementation plan
 
-Status: **decisions taken, first slice implemented.** The questions in §11 are
-answered (2026-10-27): the schema freeze is extended by one additive
-`m0005_term_names.py` (D1), search expansion covers the taxonomy only (D3), and
-curation starts as a CSV import and gains in-UI editing after it (D5).
+Status: **built.** Round 21 implemented the plan end to end; the measured
+record is `audit_report/r21_i18n/REPORT.md`. The decisions taken on 2026-10-27
+(§11) are unchanged: one additive `m0005_term_names.py`, taxonomy-only search,
+CSV curation first.
 
-Implemented so far — the half that needs no database:
-
-| slice | state | evidence |
+| slice | state | where |
 | --- | --- | --- |
-| T0 surface inventory | **done** | `tools/audit/scan_term_label_surface.py`, `audit_report/r20/term_label_surface.csv` |
-| T2a normalisation (`term_key`, `key_variants`, `script_ok`) | **done** | `core/i18n/term_key.py`, `tests/unit/test_term_key.py` — 26 passed |
-
-Everything else in this document is still a plan, and the integration slices (T1,
-T3–T7) need a rebuilt environment: the sandbox was re-cloned mid-session and the
-virtualenv and PostgreSQL instance lived in `/tmp`.
+| T0 surface inventory | **done** | `tools/audit/scan_term_label_surface.py` (158 SQL label sites / 29 modules / 148 routes / 12 templates / 17 scripts) |
+| T1 migration + schema tests | **done** | `database/migrations/m0005_term_names.py`, `tests/integration/test_term_names_schema.py` (upgrade → downgrade → re-upgrade, and 45 database-vs-Python script cases) |
+| T2 normalisation | **done** | `core/i18n/term_key.py`, `tests/unit/test_term_key.py` |
+| T2 resolver | **done** | `services/i18n/term_labels.py` (labels, fallback chain, expansion guards), `services/i18n/term_search.py`, unit + integration tests |
+| T3 display | **done** | `labels_for_categories` (one query per page), `GET /api/i18n/term-labels`, the category list template, `data-term-source` marker |
+| T4 search expansion | **done** | six entry points: category list, `/api/categories/search`, category tree, `/api/words/search`, keywords (API + page), archives + file-analysis facets; `OR` groups added to `Api/cursor_pagination.py` |
+| T5 curation | **done** | `services/i18n/term_names.py`, `/api/term-names` CRUD + CSV import, the Names page (`/categories/<id>/names`) |
+| T5 backfill | **done** | `tools/i18n/backfill_term_names.py` (dry run / apply / rollback / reconcile) |
+| T6 scale + plans | **done** | `tools/i18n/audit_terms.py plans` — EXPLAIN for all six predicates |
+| T7 generated artefacts | **done** | `docs/endpoint_inventory.json`, `docs/reference/*` regenerated |
+| audit | **done** | `tools/i18n/audit_terms.py collisions|matrix` |
 
 Every number below carries the command that produced it. Anything I could not
 measure is labelled **inferred** or **unverified**.
@@ -29,7 +32,7 @@ measure is labelled **inferred** or **unverified**.
 | R2 | The interface shows the label in the user's current language, and never a blank one | `test_term_names_display.py` |
 | R3 | Terms assigned to a category (`words_categorys`) and keywords are labelled the same way | `test_term_names_display.py` |
 | R4 | A search in any language finds the entity: Arabic query → English-named category, and the reverse | `test_term_names_search.py` (**the core acceptance test**) |
-| R5 | Analysts and administrators can curate names without SQL; no machine translation | `test_term_names_curation.py`, `test_translation_memory_rules.py` (existing) |
+| R5 | Analysts and administrators can curate names without SQL; no machine translation | `test_term_names_display.py::TestTheCurationApi`, `test_term_names_faults.py`, `test_translation_memory_rules.py` (existing) — see §14 for why the planned module name changed |
 
 "Without a significant expansion of the architecture" is taken literally: one new
 table, one resolver module, and changes at two boundaries (display, search). No
@@ -351,9 +354,9 @@ measured separately.
 | `tests/unit/test_term_key.py` | `term_key('السِّياسي')` == `term_key('سياسي')` == `term_key('سیاسی')`; Hebrew niqqud dropped; ZWNJ dropped; Latin casefolded |
 | `tests/integration/test_term_names_display.py` | `/categories?lang=ar` renders `سياسي`; `?lang=en` renders `political`; a language with no row falls back to `political` and never to `""`; the cell carries `dir="auto"`; `/api/categories/search` returns `name` in the requested language and `canonical_name` unchanged |
 | `tests/integration/test_term_names_search.py` | **the acceptance test**: with only `political`/`سياسي` seeded, `GET /categories?search=سياسي` finds it; `/api/categories/search?q=سياسي` finds it; `/api/words/search?q=سياسي` returns the word; `/api/keywords?q=سياسي` returns keywords containing it; `/api/categories/tree?search=سياسي` marks the node `is_match`; an English query in an Arabic session finds it; a harakat/tatweel spelling finds it; an unknown query returns exactly what it returns today |
-| `tests/integration/test_term_names_curation.py` | non-admin POST → 403; analyst PUT → 403; admin POST → 201 + `audit_log` row; duplicate preferred → 409; wrong script → 400; the label cache reflects the write on the next request |
-| `tests/integration/test_term_names_scale.py` | 100 000 words × 3 languages: one page of 200 labels issues **one** query (assert the cursor call count); `EXPLAIN` for the expanded search uses `idx_term_names_key`; p95 page latency recorded |
-| `tests/unit/test_term_label_surface.py` | runs `tools/audit/scan_term_label_surface.py` and fails if a label site is not localised and not in a declared allowlist — this is the guard that stops the 158 sites growing back to English-only |
+| `tests/integration/test_term_names_curation.py` (**not created — see §14**) | non-admin POST → 403; analyst PUT → 403; admin POST → 201 + `audit_log` row; duplicate preferred → 409; wrong script → 400; the label cache reflects the write on the next request |
+| `tests/integration/test_term_names_scale.py` (**not created — see §14**) | 100 000 words × 3 languages: one page of 200 labels issues **one** query (assert the cursor call count); `EXPLAIN` for the expanded search uses `idx_term_names_key`; p95 page latency recorded |
+| `tests/unit/test_term_label_surface.py` (**not created — see §14**) | runs `tools/audit/scan_term_label_surface.py` and fails if a label site is not localised and not in a declared allowlist — this is the guard that stops the 158 sites growing back to English-only |
 
 The surface scan already exists (`tools/audit/scan_term_label_surface.py`,
 committed with this plan) so the allowlist starts from a generated inventory
@@ -413,10 +416,74 @@ the existing contract tests fail when they drift (`test_interface_coverage`,
 * **Measured**: schema shape and constraints (§2), the `words`/`categorys`
   uniqueness trap, normalisation location, language resolution, override store,
   and the 158 / 29 / 148 / 12 / 17 surface counts — the last from
-  `python3 tools/audit/scan_term_label_surface.py` at commit `3703c90`.
+  `python3 tools/audit/scan_term_label_surface.py` at commit `eb987e5`
+  (re-run unchanged at `eb9dea7`).
 * **Inferred**: table sizes, latencies, effort estimates, and that the six
   entry points are exhaustive (the scan is regex-based: a label built by
   string concatenation across lines, or in a query loaded from a file, would be
   missed).
 * **Unverified**: anything about production data volume; the current environment
   has no dataset beyond the test fixtures.
+
+---
+
+## 14. Status at the end of round 21 (2026-10-27)
+
+Written after the work, not before it. Every row names the commit that carries
+it and the artefact that measures it; where the plan named a module that was not
+built, the row says so instead of renaming the plan after the fact.
+
+| Workstream | State | Commit | Evidence |
+|---|---|---|---|
+| T0 surface inventory | done (before this round) | `eb9dea7` | `audit_report/r20/term_label_surface.csv` |
+| T1 migration + schema tests | done | `e04764b` | `tests/integration/test_term_names_schema.py` (round-trip, constraint, cascade) |
+| T2 normalisation + resolver | done | `559fb99` | `tests/unit/test_term_key.py`, `tests/unit/test_term_labels.py` (23) |
+| T3 display | done | `1c9c1ae` | `test_term_names_display.py`, `test_term_names_catalog.py` (11) |
+| T4 search expansion | done — six entry points | `e990c6c` | `test_term_names_search.py`; `taxonomy_matrix.csv` (3 342 rows, 0 wrong) |
+| T5 curation (CSV first, then UI) | done | `c432acf`, `1f5035b` | `category_names.html`, `test_term_names_faults.py` |
+| T6 scale + EXPLAIN | **partly** | `357a105` | `taxonomy_plans.csv` (14 plans on 10 566 words); **no 100 000-row fixture** — see the gap below |
+| T7 generated artefacts | done once, at the end | round-21 docs commit | `docs/reference/HTTP_ROUTES.md` 484 → 509 routes |
+
+### Where the plan's file names and the shipped tests differ
+
+The plan listed five new integration modules; four were built and one was split.
+Recorded here rather than silently renaming:
+
+| Planned | Shipped |
+|---|---|
+| `test_term_names_schema.py` | as planned |
+| `test_term_names_display.py` | as planned, **plus** `TestTheCurationApi` (so the display module also covers R5's API contract) |
+| `test_term_names_search.py` | as planned (the acceptance test keeps its name: `test_an_arabic_query_finds_the_english_named_category`) |
+| `test_term_names_curation.py` | **not created** — its cases live in `test_term_names_display.py::TestTheCurationApi` (permissions, 409, 400) and `test_term_names_faults.py` (audit failure, partial write, import outage) |
+| `test_term_names_scale.py` | **not created** — the query-count assertion moved to `tests/unit/test_term_labels.py::test_one_query_serves_a_whole_page`; the 100 k fixture was not built (gap below) |
+| `tests/unit/test_term_label_surface.py` (**not created — see §14**) | **not created** — the surface scan exists as a tool (`tools/audit/scan_term_label_surface.py`) but has no test enforcing it |
+
+### Gaps this plan promised and the round did not close
+
+1. **100 000-word scale test.** The largest measured dataset is the operator's
+   taxonomy: 10 566 words, 56 categories, 11 054 links
+   (`audit_report/r21_i18n/taxonomy_plans.csv`, `taxonomy_matrix.csv`). The
+   100 k fixture and its p95 latency are unmeasured. The one-query-per-page
+   property *is* asserted, against a fake cursor.
+2. **No enforcing test for the label surface scan.** The scan runs and prints
+   (`tools/audit/scan_term_label_surface.py`), nothing fails when a new
+   English-only label site appears.
+3. **Criterion 5 collisions are English-only.** `classification/domain_data.xlsx`
+   carries English master terms; the 20 collisions / 10 keys the CSV records are
+   Latin-case pairs. Arabic definite-article (`ال`) and diacritic collisions are
+   **unmeasured** in this round, because no curated Arabic names exist yet to
+   collide. The comparator handles them (`term_key` strips both) but nothing has
+   demonstrated it on real Arabic data.
+4. **Keyword phrases are word-by-word (D2).** A phrase whose translation is not
+   the word-by-word concatenation will not be found by the keyword search; this
+   is the decided scope, not a defect discovered late.
+
+### Decisions taken during the work that the plan did not anticipate
+
+| Decision | Why | Commit |
+|---|---|---|
+| Server errors answer with `code` + `ERR-…`, never a driver message | criterion 9; the three new endpoints leaked psycopg2 text before | `218af8d` |
+| An audit failure can never fail the write, and is logged with action + word id | the round's starting defect was a silent audit failure; the opposite failure (lost write) would be worse | `6316168` |
+| A wholly unreadable import is a 5xx, not 200 with every row "rejected" | a database outage must not look like a file of typos | `6316168` |
+| The import accepts both `multipart/form-data` and a raw body | the page sent multipart, the route read the body — the browser path was broken | `1f5035b` |
+| `with_a_name` counts filtered rows, and `without_a_name` is printed | the old count was `count(*)` and passed on an empty table | `f5a5eff` |
