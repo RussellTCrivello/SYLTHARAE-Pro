@@ -51,6 +51,22 @@ class TermNameError(Exception):
         self.details = details
 
 
+class ImportUnavailable(Exception):
+    """Every line failed for a reason that was not about the line.
+
+    A database that is down looks, row by row, exactly like a file full of
+    typos: ``ROW_FAILED``. Reporting that as a 200 hides an outage behind a
+    validation message, so a file where *nothing* could be read is a server
+    error, and the route answers it with a correlation id.
+    """
+
+    def __init__(self, message: str, first_line: int, reason: str):
+        super().__init__(message)
+        self.message = message
+        self.first_line = first_line
+        self.reason = reason
+
+
 def _clean_name(raw: Any) -> str:
     name = " ".join(str(raw or "").split())
     if not name:
@@ -119,6 +135,25 @@ def _audit(action: str, word_id: int, language: str,
             "term name audit write failed: action=TERM_NAME_%s word_id=%s "
             "language=%s actor=%s: %s: %s",
             action, word_id, language, actor, type(exc).__name__, exc)
+
+
+def _audit_write(action: str, word_id: int, language: str,
+                 before: Optional[str], after: Optional[str],
+                 actor: str = "system", actor_id: Optional[int] = None) -> None:
+    """Call :func:`_audit`, and survive even a *broken* audit function.
+
+    ``_audit`` already swallows a failing audit backend. This second guard
+    exists for the other failure: ``_audit`` itself raising - an import error,
+    a logging handler failure, a signature change. Without it the row is
+    committed and the client is told the write failed, which is the worst of
+    both answers: a partial write the caller will retry.
+    """
+    try:
+        _audit(action, word_id, language, before, after, actor, actor_id)
+    except Exception:  # noqa: BLE001 - auditing can never fail the write
+        logger.exception(
+            "term name audit call crashed: action=TERM_NAME_%s word_id=%s "
+            "language=%s actor=%s", action, word_id, language, actor)
 
 
 def list_names(run, *, word_id: Optional[int] = None,
@@ -190,7 +225,7 @@ def create_name(run, payload: Dict[str, Any], *, actor: str = "system",
         " script, source) VALUES (%s, %s, %s, %s, %s, %s, 'admin')"
         " RETURNING id", (word_id, name, key, language, name_type,
                           script_of(name)), fetch="one")
-    _audit("CREATE", word_id, language, None, name, actor, actor_id)
+    _audit_write("CREATE", word_id, language, None, name, actor, actor_id)
     return {"id": row[0] if row else None, "word_id": word_id, "language": language,
             "name": name, "name_type": name_type, "match_key": key}
 
@@ -224,7 +259,7 @@ def update_name(run, name_id: int, payload: Dict[str, Any], *,
         " name_type = %s, script = %s, source = 'admin', updated_at = NOW()"
         " WHERE id = %s",
         (name, key, language, name_type, script_of(name), name_id), fetch=None)
-    _audit("UPDATE", word_id, language, old_name, name, actor, actor_id)
+    _audit_write("UPDATE", word_id, language, old_name, name, actor, actor_id)
     return {"id": name_id, "word_id": word_id, "language": language, "name": name,
             "name_type": name_type, "match_key": key}
 
@@ -236,7 +271,7 @@ def delete_name(run, name_id: int, *, actor: str = "system",
     if not current:
         raise TermNameError("NOT_FOUND", "that name does not exist", 404)
     run("DELETE FROM term_names WHERE id = %s", (name_id,), fetch=None)
-    _audit("DELETE", current[0], current[1], current[2], None, actor, actor_id)
+    _audit_write("DELETE", current[0], current[1], current[2], None, actor, actor_id)
     return {"id": name_id, "deleted": True}
 
 
@@ -267,6 +302,8 @@ def import_csv(run, stream, *, apply: bool = False,
     a category.
     """
     accepted, rejected, written, updated = [], [], 0, 0
+    row_failures = 0
+    first_row_failure = None
     for line_number, row in _rows_from_csv(stream):
         if not any(row.values()):
             continue
@@ -317,11 +354,21 @@ def import_csv(run, stream, *, apply: bool = False,
             rejected.append({"line": line_number, "word": row.get("word", ""),
                              "code": exc.code, "reason": exc.message})
         except Exception as exc:  # noqa: BLE001 - one bad row must not stop the file
+            row_failures += 1
+            if first_row_failure is None:
+                first_row_failure = (line_number, f"{type(exc).__name__}: {exc}")
             rejected.append({"line": line_number, "word": row.get("word", ""),
                              "code": "ROW_FAILED",
                              "reason": f"{type(exc).__name__}"})
+    if rejected and row_failures == len(rejected) and not accepted:
+        # Not a validation result: the store could not be read at all.
+        logger.error("term name import could not run: %s rows, first failure at "
+                     "line %s: %s", row_failures, first_row_failure[0],
+                     first_row_failure[1])
+        raise ImportUnavailable("the import did not run", first_row_failure[0],
+                                first_row_failure[1])
     if apply:
-        _audit("IMPORT", 0, "-", None,
+        _audit_write("IMPORT", 0, "-", None,
                f"{written} inserted, {updated} updated, {len(rejected)} rejected",
                actor, actor_id)
     return {"rows": len(accepted) + len(rejected), "accepted": len(accepted),
