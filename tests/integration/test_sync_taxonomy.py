@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from apps.importing.validators import workbook_rules as rules  # noqa: E402
-from tools.i18n import sync_taxonomy as sync  # noqa: E402
+from services.importing import taxonomy_sync as sync  # noqa: E402
 
 pytestmark = pytest.mark.integration
 
@@ -429,3 +429,153 @@ def test_the_same_workbook_twice_creates_one_category_per_case(conn):
     plan = sync.build_plan(conn, workbook)
     assert plan.create_categories == []
     assert plan.rename_categories == [], "a casing change is not a rename by itself"
+
+
+# ---------------------------------------------------------------------------
+# renames inferred from content, and the ability to undo a write
+# ---------------------------------------------------------------------------
+def test_a_renamed_sheet_with_identical_content_is_one_rename(conn):
+    """A rename that the content proves is applied without being stated.
+
+    Without this, an operator who renames a worksheet gets an empty new
+    category and a report that the old one is missing - the content moves
+    nowhere, and the database keeps a category the file no longer describes.
+    """
+    suffix = token()
+    old, new = f"Zeta Was {suffix}", f"Zeta Now {suffix}"
+    term, phrase = f"Alpha{suffix}", f"Gamma delta {suffix}"
+    sync_workbook(conn, build(workbook_path(),
+                              {old: {"terms": [term], "keywords": [phrase]}}))
+
+    renamed = build(workbook_path(), {new: {"terms": [term], "keywords": [phrase]}})
+    workbook = rules.read(str(renamed))
+    assert sync.detect_renames(conn, workbook) == {old: new}
+
+    plan = sync.build_plan(conn, workbook, auto_renames=True)
+    assert plan.rename_categories == [(old, new)]
+    assert plan.create_categories == [] and plan.link_terms == []
+
+
+def test_a_rename_that_also_changes_content_is_left_to_the_operator(conn):
+    """Content decides only when it is identical; otherwise it is a decision.
+
+    A category that lost a term has a different content set, so "renamed" and
+    "deleted, and a new one added" are both consistent with what is stored.
+    Guessing here would move rows on a hunch.
+    """
+    suffix = token()
+    old, new = f"Zeta Moved {suffix}", f"Zeta Elsewhere {suffix}"
+    term = f"Alpha{suffix}"
+    sync_workbook(conn, build(workbook_path(), {old: {"terms": [term]}}))
+
+    changed = build(workbook_path(),
+                    {new: {"terms": [term, f"Beta{suffix}"]}})
+    workbook = rules.read(str(changed))
+    assert sync.detect_renames(conn, workbook) == {}
+
+    plan = sync.build_plan(conn, workbook, auto_renames=True)
+    assert plan.rename_categories == []
+    assert plan.create_categories == [new]
+    assert plan.missing_categories == [old]
+
+
+def test_two_worksheets_with_the_same_content_are_not_a_pairing(conn):
+    """Ambiguity is not resolved by guessing: two candidates is a decision."""
+    suffix = token()
+    old = f"Zeta Single {suffix}"
+    term = f"Alpha{suffix}"
+    sync_workbook(conn, build(workbook_path(), {old: {"terms": [term]}}))
+
+    copied = build(workbook_path(), {
+        f"Zeta Copy One {suffix}": {"terms": [term]},
+        f"Zeta Copy Two {suffix}": {"terms": [term]},
+    })
+    workbook = rules.read(str(copied))
+    assert sync.detect_renames(conn, workbook) == {}
+
+
+def test_an_empty_stored_category_is_never_matched_by_content(conn):
+    """Every empty category has the same content, so it matches everything."""
+    suffix = token()
+    old, new = f"Zeta Empty {suffix}", f"Zeta Filled {suffix}"
+    with conn.cursor() as cur:
+        cur.execute("INSERT INTO words (word) VALUES (%s) RETURNING id", (old,))
+        word_id = cur.fetchone()[0]
+        cur.execute("INSERT INTO categorys (word_id) VALUES (%s)", (word_id,))
+    conn.commit()
+
+    path = build(workbook_path(), {new: {"terms": [f"Alpha{suffix}"]}})
+    workbook = rules.read(str(path))
+    assert sync.detect_renames(conn, workbook) == {}
+
+
+def test_an_applied_change_can_be_undone_from_its_snapshot(conn):
+    """Automatic propagation has to be reversible, or it is a liability.
+
+    The snapshot the tool takes before writing is put back here, and the two
+    states are compared as data: same categories, same terms, same phrases.
+    """
+    suffix = token()
+    keep, doomed = f"Zeta Keep {suffix}", f"Zeta Doomed {suffix}"
+    term, phrase = f"Alpha{suffix}", f"Gamma delta {suffix}"
+    first = build(workbook_path(), {
+        keep: {"terms": [term], "keywords": [phrase]},
+        doomed: {"terms": [f"Beta{suffix}"]},
+    })
+    sync_workbook(conn, first)
+    before = sync.export_state(conn)
+
+    second = build(workbook_path(), {keep: {"terms": [], "keywords": []}})
+    workbook = rules.read(str(second))
+    plan = sync.build_plan(conn, workbook, prune_categories=True)
+    sync.apply_plan(conn, workbook, plan)
+    conn.commit()
+    after = sync.export_state(conn)
+    assert after != before, "the edit did nothing, so the restore proves nothing"
+
+    sync.restore_state(conn, before)
+    conn.commit()
+    restored = sync.export_state(conn)
+
+    def shape(state):
+        return {name: (sorted(content["terms"]),
+                       sorted(item["text"] for item in content["keywords"]))
+                for name, content in state["categories"].items()}
+
+    assert shape(restored) == shape(before)
+
+
+def test_the_single_entry_point_plans_without_writing_and_writes_when_asked(conn):
+    suffix = token()
+    name = f"Zeta Entry {suffix}"
+    path = build(workbook_path(), {name: {"terms": [f"Alpha{suffix}"]}})
+
+    planned = sync.sync_workbook(conn, str(path), apply=False)
+    assert planned["ok"] and planned["applied"] is False
+    assert planned["planned_changes"] > 0
+    assert category_id(conn, name) is None, "a plan wrote to the database"
+
+    written = sync.sync_workbook(conn, str(path), apply=True)
+    assert written["applied"] is True and written["written"]["categories_created"] == 1
+    assert category_id(conn, name) is not None
+    assert "snapshot" in written, "an automatic write must be reversible"
+
+    again = sync.sync_workbook(conn, str(path), apply=True)
+    assert again["applied"] is False and again["reason"] == "nothing to do"
+
+
+def test_a_workbook_that_breaks_a_rule_is_never_written(conn):
+    path = build(workbook_path(), {"Broken": {"terms": ["Two words"]}})
+    result = sync.sync_workbook(conn, str(path), apply=True)
+    assert result["ok"] is False and result["applied"] is False
+    assert result["errors"], "the refusal must say why"
+
+
+def test_the_fingerprint_changes_only_when_the_file_does(conn, tmp_path):
+    path = build(workbook_path(), {"Fingerprint": {"terms": ["Alpha"]}})
+    first = sync.fingerprint(str(path))
+    assert sync.fingerprint(str(path)) == first
+    book = openpyxl.load_workbook(path)
+    book["Fingerprint"].cell(row=3, column=1, value="Beta")
+    book.save(path)
+    assert sync.fingerprint(str(path)) != first
