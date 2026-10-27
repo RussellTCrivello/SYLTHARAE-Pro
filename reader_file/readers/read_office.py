@@ -348,6 +348,44 @@ def _odf_node_text(node):
 MAX_SHEET_CELLS = 250_000
 MAX_WORKBOOK_CELLS = 1_000_000
 
+#: Work ceiling on the *padded* rectangle, which is what actually costs time.
+#: The cap above counts populated cells; a sheet whose used range spans all
+#: 16384 columns still has to be walked, so iteration is bounded separately.
+MAX_SHEET_GRID_CELLS = 4_000_000
+
+
+def _cap_from_env(name: str, default: int) -> int:
+    """A configured cap, falling back to the module default.
+
+    The caps are deployment facts: a workstation and a 512 MB container have
+    different right answers, and a ceiling that can only be changed by editing
+    a reader is a ceiling that silently decides what is recoverable.
+    """
+    raw = os.environ.get(name)
+    if not raw:
+        return default
+    try:
+        value = int(raw.strip())
+    except (TypeError, ValueError):
+        logger.warning("Ignoring %s=%r: not an integer", name, raw)
+        return default
+    if value <= 0:
+        logger.warning("Ignoring %s=%r: must be positive", name, raw)
+        return default
+    return value
+
+
+def sheet_cell_cap() -> int:
+    return _cap_from_env("SYLTHARAE_MAX_SHEET_CELLS", MAX_SHEET_CELLS)
+
+
+def workbook_cell_cap() -> int:
+    return _cap_from_env("SYLTHARAE_MAX_WORKBOOK_CELLS", MAX_WORKBOOK_CELLS)
+
+
+def sheet_grid_cap() -> int:
+    return _cap_from_env("SYLTHARAE_MAX_SHEET_GRID_CELLS", MAX_SHEET_GRID_CELLS)
+
 #: Every part of a WordprocessingML package that can hold visible text.
 _DOCX_TEXT_PARTS = re.compile(
     r"word/(document|header\d*|footer\d*|footnotes|endnotes|comments)\.xml$")
@@ -1903,26 +1941,65 @@ class OfficeFileReader(BaseReader):
                 }
 
                 sheet_cells = 0
+                grid_cells = 0
+                max_sheet_cells = sheet_cell_cap()
+                max_workbook_cells = workbook_cell_cap()
+                max_grid_cells = sheet_grid_cap()
                 for row_idx, row in enumerate(sheet.iter_rows(values_only=True)):
                     # Yield periodically during row processing
                     if row_idx > 0 and row_idx % 100 == 0:
                         self.yield_cpu_if_needed(aggressive=False)
+                    padded = len(row)
+                    # Trailing empty cells are padding, not content. A sheet
+                    # whose used range spans all 16384 columns used to burn the
+                    # whole cell cap on fifteen rows of empty space - the
+                    # CVLKRA KYC workbook stopped at 245,760 cells with rows
+                    # still to read - so only populated cells are counted and
+                    # only they are stored.
                     row = list(row)
-                    if (sheet_cells + len(row) > MAX_SHEET_CELLS
-                            or cells_read + len(row) > MAX_WORKBOOK_CELLS):
+                    while row and (row[-1] is None or row[-1] == ""):
+                        row.pop()
+                    if not row:
+                        continue
+                    grid_cells += padded
+                    if grid_cells > max_grid_cells:
                         sheet_data["truncated"] = True
+                        sheet_data["truncated_reason"] = (
+                            f"sheet grid cap reached: {grid_cells} padded cells "
+                            f"> SYLTHARAE_MAX_SHEET_GRID_CELLS ({max_grid_cells})")
                         sheet_data["cells_read"] = sheet_cells
                         sheet_data["rows_read"] = row_idx
-                        logger.warning(
-                            "Sheet %s in %s truncated at %d cells (cap %d per sheet, %d per workbook)",
-                            sheet_name, filepath, sheet_cells, MAX_SHEET_CELLS, MAX_WORKBOOK_CELLS)
+                        logger.warning("Sheet %s in %s: %s", sheet_name, filepath,
+                                       sheet_data["truncated_reason"])
+                        break
+                    if (sheet_cells + len(row) > max_sheet_cells
+                            or cells_read + len(row) > max_workbook_cells):
+                        sheet_data["truncated"] = True
+                        if cells_read + len(row) > max_workbook_cells:
+                            sheet_data["truncated_reason"] = (
+                                f"workbook cell cap reached: {cells_read} + {len(row)} "
+                                f"> SYLTHARAE_MAX_WORKBOOK_CELLS ({max_workbook_cells})")
+                        else:
+                            sheet_data["truncated_reason"] = (
+                                f"sheet cell cap reached: {sheet_cells} + {len(row)} "
+                                f"> SYLTHARAE_MAX_SHEET_CELLS ({max_sheet_cells})")
+                        sheet_data["cells_read"] = sheet_cells
+                        sheet_data["rows_read"] = row_idx
+                        logger.warning("Sheet %s in %s: %s", sheet_name, filepath,
+                                       sheet_data["truncated_reason"])
                         break
                     sheet_data["data"].append(row)
                     sheet_cells += len(row)
                     cells_read += len(row)
+                    # Row numbers are the sheet's own (1-based) so a truncation
+                    # gap can be located: rows_read counts rows, row_numbers
+                    # records which.
+                    sheet_data.setdefault("row_numbers", []).append(row_idx + 1)
 
                 if not sheet_data.get("truncated"):
                     sheet_data["cells_read"] = sheet_cells
+                if len(sheet_data.get("data") or []) == (sheet.max_row or 0):
+                    sheet_data.pop("row_numbers", None)
                 sheet_data["cells_available"] = (
                     (sheet.max_row or 0) * (sheet.max_column or 0))
 
