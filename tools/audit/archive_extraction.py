@@ -24,6 +24,7 @@ import collections
 import gzip
 import hashlib
 import json
+import html
 import re
 import resource
 import sys
@@ -768,7 +769,24 @@ def _oracle_text(path: Path, ext: str) -> str:
                     # reader at all.
                     return ""
                 xml = zf.read("content.xml").decode("utf-8", "replace")
-            return re.sub(r"<[^>]+>", " ", xml)
+            # An index title *template* is the model LibreOffice regenerates the
+            # heading from, not text the document shows: the rendered copy sits
+            # next to it in text:index-title. Tag-stripping counted both and
+            # made a reader that stores the visible one look lossy. Drop the
+            # template, keep everything else.
+            xml = re.sub(r"<text:index-title-template\b.*?</text:index-title-template>",
+                         " ", xml, flags=re.S)
+            # Inline formatting carries no whitespace: `1<text:span>er</text:span>`
+            # reads as "1er", and inserting a space at the tag boundary split it
+            # into two tokens the reader was then blamed for not storing.
+            # Block-level boundaries do separate words, so they still become
+            # a space. (``testODT-TIKA-6000.odt``: "1er cycle", twice.)
+            xml = re.sub(r"<text:(?:span|a)\b[^>]*>|</text:(?:span|a)>", "", xml)
+            xml = re.sub(r"<text:bookmark(?:-start|-end)?\b[^>]*/?>", "", xml)
+            # XML escapes are markup, not content: a reader that stores
+            # "l'apostrophe" was being marked down for the four tokens
+            # `apos`, `quot`, `lt`, `gt` that the escape spelling produced.
+            return html.unescape(re.sub(r"<[^>]+>", " ", xml))
         if ext in (".html", ".htm", ".xhtml"):
             from bs4 import BeautifulSoup
 

@@ -565,6 +565,73 @@ def _ooxml_encryption_report(filepath: str) -> Optional[dict]:
     }
 
 
+def _odf_tracked_changes(filepath: str) -> List[Dict[str, Any]]:
+    """Every tracked change in ``content.xml``, with its author and timestamp.
+
+    Two parsers can read an ODT and they answered this question differently:
+    the content.xml fallback read ``office:change-info`` and the odfpy path did
+    not look at it at all, so whether an author survived depended on which
+    parser accepted the package. Both paths now call this one function, which
+    walks the real tree and returns one record per ``text:insertion`` /
+    ``text:deletion`` / ``text:format-change`` / ``text:change`` region:
+
+    ``{kind, author, date, text, location}``
+
+    Repeated records are kept. Two insertions by the same person in the same
+    second are two entries in the redline, and collapsing them by text loses a
+    change an examiner may need to count - which is exactly what happened to
+    ``testODFwithOOo3.odt`` (three regions, one stored).
+    """
+    import zipfile
+    import xml.etree.ElementTree as ET
+
+    try:
+        with zipfile.ZipFile(filepath) as zf:
+            if "content.xml" not in zf.namelist():
+                return []
+            root = ET.fromstring(zf.read("content.xml"))
+    except Exception:
+        return []
+
+    records: List[Dict[str, Any]] = []
+    for element in root.iter():
+        if _et_local(element.tag) not in ("insertion", "deletion",
+                                          "format-change", "change"):
+            continue
+        author = date = ""
+        bodies: List[str] = []
+        for child in element.iter():
+            local = _et_local(child.tag)
+            if local == "creator" and not author:
+                author = _collapse(child.text or "")
+            elif local == "date" and not date:
+                date = _collapse(child.text or "")
+            elif local in ("p", "h"):
+                text = _collapse(_odf_block_text(child))
+                if text:
+                    bodies.append(text)
+        kind = _et_local(element.tag)
+        records.append({
+            "kind": kind,
+            "author": author,
+            "date": date,
+            "text": " ".join(bodies),
+            "location": f"text:{kind}",
+        })
+    return records
+
+
+def _odf_change_line(record: Dict[str, Any]) -> str:
+    """The one-line form of a tracked change, as it reaches the text body."""
+    parts = [f"[{record['kind']}"]
+    if record.get("author"):
+        parts.append(f": {record['author']}")
+    if record.get("date"):
+        parts.append(f" on {record['date']}")
+    head = "".join(parts) + "]"
+    return f"{head} {record['text']}".strip() if record.get("text") else head
+
+
 def _odf_encryption_report(filepath):
     """A structured, honest answer for an encrypted ODF package.
 
@@ -2884,19 +2951,34 @@ class OfficeFileReader(BaseReader):
 
         paragraphs: List[Dict[str, Any]] = []
         tables: List[Dict[str, Any]] = []
-        seen: set = set()
+        # De-duplication is by element, not by text. Two identical paragraphs
+        # are two paragraphs - a résumé repeats a placeholder, a redline repeats
+        # a change - and collapsing them by text dropped real content. What the
+        # set is for is the nesting case: a paragraph inside a paragraph (a text
+        # box, a nested list item) is already part of its ancestor's text, so
+        # its element id is marked when the ancestor is emitted.
+        emitted: set = set()
 
         def record(text: str, style: str, location: str, kind: str = "paragraph"):
             text = _collapse(text)
-            if not text or text in seen:
+            if not text:
                 return
-            seen.add(text)
             paragraphs.append({"text": text, "style": style, "location": location,
                                "kind": kind})
 
+        def mark_descendants(element) -> None:
+            for child in element.iter():
+                if child is element:
+                    continue
+                if _et_local(child.tag) in ("p", "h"):
+                    emitted.add(id(child))
+
         def add_block(element, location: str, kind: str = "paragraph"):
+            if id(element) in emitted:
+                return
             style = (element.get(_ODF_NS["text"] + "style-name")
                      or ("Heading" if _et_local(element.tag) == "h" else "Normal"))
+            mark_descendants(element)
             record(_odf_block_text(element), style, location, kind)
 
         for element in body.iter():
@@ -2931,33 +3013,17 @@ class OfficeFileReader(BaseReader):
                     if _et_local(para.tag) in ("p", "h"):
                         record(_odf_block_text(para), note_class.capitalize(),
                                f"text:{note_class}", note_class)
-            elif tag in ("deletion", "insertion"):
-                # Who changed what, and when, is forensic evidence, not chrome:
-                # a redline whose author and timestamp were dropped cannot be
-                # attributed. The author and date are stored with the text.
-                author, date = "", ""
-                for child in element.iter():
-                    local = _et_local(child.tag)
-                    if local == "creator":
-                        author = _collapse(child.text or "")
-                    elif local == "date":
-                        date = _collapse(child.text or "")
-                prefix = " ".join(part for part in (
-                    f"[{tag}: {author}" if author else f"[{tag}",
-                    f"on {date}]" if date else "]",
-                ) if part)
-                bodies = [_odf_block_text(para) for para in element.iter()
-                          if _et_local(para.tag) in ("p", "h")]
-                bodies = [body for body in bodies if body]
-                record(" ".join([prefix] + bodies), "Tracked change",
-                       f"text:{tag}", "tracked_change")
-                if not bodies:
-                    record(prefix, "Tracked change metadata",
-                           f"text:{tag}", "tracked_change")
+            # Tracked changes are emitted once, below, by the shared extractor,
+            # so the fallback and the odfpy path cannot disagree about them.
+
+        changes = _odf_tracked_changes(filepath)
+        for change in changes:
+            record(_odf_change_line(change), "Tracked change",
+                   change["location"], "tracked_change")
 
         if not paragraphs and not tables:
             return None
-        return {
+        result = {
             "filepath": filepath,
             "paragraphs": paragraphs,
             "tables": tables,
@@ -2965,6 +3031,9 @@ class OfficeFileReader(BaseReader):
             "total_tables": len(tables),
             "method": "odt_content_xml",
         }
+        if changes:
+            result["tracked_changes"] = changes
+        return result
 
     def read_odt_file(self, filepath):
         """Independent ODT (OpenDocument Text) reader function."""
@@ -3015,7 +3084,24 @@ class OfficeFileReader(BaseReader):
                         "text": text,
                         "style": paragraph.getAttribute("stylename") or "Normal"
                     })
-            
+
+            # Tracked changes. odfpy happily loads a document full of redlines
+            # and never mentions them: getElementsByType(P) returns the body
+            # paragraphs, and office:change-info is not one. The same package
+            # handed to the content.xml fallback kept its authors, so whether
+            # a change could be attributed depended on which parser accepted
+            # the file. Both paths now use the shared extractor.
+            changes = _odf_tracked_changes(filepath)
+            if changes:
+                for change in changes:
+                    result["paragraphs"].append({
+                        "text": _odf_change_line(change),
+                        "style": "Tracked change",
+                        "location": change["location"],
+                        "kind": "tracked_change",
+                    })
+                result["tracked_changes"] = changes
+
             result["total_paragraphs"] = len(result["paragraphs"])
             
             # Extract tables
