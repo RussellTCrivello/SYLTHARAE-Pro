@@ -126,6 +126,11 @@ async function askFilename(promptText, suggested) {
     return String(answer).trim();
 }
 
+/**
+ * POST an export and save the answer. Resolves true when a file was saved,
+ * false when the reader dismissed the save picker, so callers can avoid
+ * announcing success for an export that never reached the disk.
+ */
 async function postDownload(url, body, suggestedName) {
     let destination = null;
     try {
@@ -156,8 +161,7 @@ async function postDownload(url, body, suggestedName) {
         try { filename = decodeURIComponent(match[1].replace(/"/g, '')); }
         catch (_e) { filename = match[1].replace(/"/g, ''); }
     }
-    await saveExportBlob(blob, filename, destination);
-    return true;
+    return (await saveExportBlob(blob, filename, destination)) !== false;
 }
 
 /** Export selected originals/text as ZIP with a chosen name and destination. */
@@ -172,11 +176,12 @@ export async function exportSelectionZip(mode = 'text') {
     );
     if (name === null) return;
     try {
-        await postDownload('/files/export', {
+        const saved = await postDownload('/files/export', {
             file_ids: ids,
             mode: kind,
             filename: name,
         }, ensureExportExtension(name || suggested, 'zip', suggested));
+        if (saved === false) return;  // the reader dismissed the save dialog
         notify('success', t('selectedExportReady', 'Selected-file export ready.'));
     } catch (error) {
         notify('error', (t('selectedExportFailed', 'Selected-file export failed.') + ' ' + error.message).trim());
@@ -412,8 +417,9 @@ export async function exportFileNames({
             filename: name,
         };
         if (scope === 'selected') body.file_ids = ids;
-        await postDownload('/api/files/names/export', body,
+        const saved = await postDownload('/api/files/names/export', body,
             ensureExportExtension(name || suggested, extension, suggested));
+        if (saved === false) return;  // the reader dismissed the save dialog
         notify('success', t('selectedNamesReady', 'Filename export ready.'));
     } catch (error) {
         notify('error', error.message || t('exportFailed', 'Export failed'));
@@ -516,8 +522,9 @@ function ensureDetailsDialog() {
                 filename: filename || suggested,
             };
             if (scope === 'selected') body.file_ids = ids;
-            await postDownload('/api/files/details/export', body,
+            const saved = await postDownload('/api/files/details/export', body,
                 ensureExportExtension(filename || suggested, extension, suggested));
+            if (saved === false) return;  // the reader dismissed the save dialog
             notify('success', t('detailsExportReady', 'File details export ready.'));
             dialog.hidden = true;
         } catch (error) {
@@ -676,13 +683,14 @@ export async function exportSelectionWithManifest(mode = 'text') {
     // naming_template uses {name} from server; pass explicit map via filename only for archive.
     // Per-file renames are applied client-side for folder exports; for ZIP we send naming_template.
     try {
-        await postDownload('/files/export', {
+        const saved = await postDownload('/files/export', {
             file_ids: resolved.map((r) => r.id),
             mode: kind,
             filename: name,
             naming_template: '{name}',
             rename_map: Object.fromEntries(resolved.map((r) => [String(r.id), r.exportAs])),
         }, ensureExportExtension(name || suggested, 'zip', suggested));
+        if (saved === false) return;  // the reader dismissed the save dialog
         notify('success', t('selectedExportReady', 'Selected-file export ready.'));
     } catch (error) {
         notify('error', (t('selectedExportFailed', 'Selected-file export failed.') + ' ' + error.message).trim());
