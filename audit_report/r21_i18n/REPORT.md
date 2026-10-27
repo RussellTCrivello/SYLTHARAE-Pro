@@ -1,7 +1,7 @@
 # Round 21 — i18n term names: verification record and closeout
 
 Branch `arena/d19d9293-syltharae-pro`. Base for every comparison:
-`445982b` (the commit round 20 diffed from). **Final head: `dc6a413`** unless a
+`445982b` (the commit round 20 diffed from). **Final head: `a465e40` (artefacts); the suites ran at `dc6a413`** unless a
 later commit is named.
 
 | label | meaning |
