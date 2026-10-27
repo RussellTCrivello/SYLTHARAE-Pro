@@ -94,7 +94,11 @@
                 <div class="mb-3">
                     <label class="form-label" for="nameLanguage">{{ _('Language') }}</label>
                     <select class="form-select" id="nameLanguage">
-                        {% for code, label in languages %}
+                        {# ``languages`` is ``base.html``'s dict (used by the top-bar
+                switcher); iterating the pairs needs its own name, or this page
+                shadows the dict with a list and the base template raises
+                ``'list object' has no attribute 'items'``. -#}
+                        {% for code, label in name_languages.items() %}
                         <option value="{{ code }}">{{ label }}</option>
                         {% endfor %}
                     </select>

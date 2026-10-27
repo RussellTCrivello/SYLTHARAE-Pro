@@ -163,8 +163,11 @@ class TestTheCategoryPage:
         assert 'data-term-source="default-language"' in html
         # ``Missing`` is the catalog's existing word for "not translated"
         # (Arabic "غير مترجم"); ``Original`` is absent from the Hebrew and
-        # Persian catalogs, so it would render in English.
-        assert 'title="Missing"' in html
+        # Persian catalogs, so it would render in English. The page is Arabic,
+        # so the *attribute* is the stable thing to assert - the text is the
+        # translation, not the msgid.
+        assert 'data-term-marker="missing"' in html
+        assert "غير مترجم" in html
 
     def test_the_page_marks_a_translated_name_as_such(self, admin_client, labelled):
         html = admin_client.get("/categories",
@@ -172,6 +175,37 @@ class TestTheCategoryPage:
                                               "lang": "ar"}).get_data(as_text=True)
         assert 'data-term-source="translated"' in html or \
                'data-term-source="default-language"' in html
+
+
+class TestTheNamesPage:
+    """The page a curator actually opens.
+
+    It is not enough that the API behind it works: the page renders through
+    ``base.html``, which takes a ``languages`` **dict**, and passing a list of
+    pairs from the route shadowed it - every request to
+    ``/categories/<id>/names`` was a 500 with ``'list object' has no attribute
+    'items'`` while the API tests stayed green. Found in the browser.
+    """
+
+    def test_the_page_renders(self, admin_client, labelled):
+        response = admin_client.get(f"/categories/{labelled['translated_cat']}/names")
+        assert response.status_code == 200, response.get_data(as_text=True)[:400]
+
+    def test_it_lists_the_names_that_exist(self, admin_client, labelled):
+        html = admin_client.get(
+            f"/categories/{labelled['translated_cat']}/names").get_data(as_text=True)
+        assert AR_NAME in html and EN_NAME in html
+
+    def test_it_offers_every_supported_language(self, admin_client, labelled):
+        from settings.languages import SUPPORTED_LANGUAGES
+
+        html = admin_client.get(
+            f"/categories/{labelled['translated_cat']}/names").get_data(as_text=True)
+        for code in SUPPORTED_LANGUAGES:
+            assert f'value="{code}"' in html, f"language {code} is not offered"
+
+    def test_an_unknown_category_is_a_404(self, admin_client):
+        assert admin_client.get("/categories/2000000000/names").status_code == 404
 
 
 class TestTheCurationApi:

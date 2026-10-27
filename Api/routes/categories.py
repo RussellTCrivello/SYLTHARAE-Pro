@@ -144,7 +144,10 @@ def register_categories_routes(app):
             'Category/category_names.html',
             category=category,
             names=names,
-            languages=list(SUPPORTED_LANGUAGES.items()),
+            # ``languages`` is the base template's dict; a list here
+            # shadowed it and every page rendering base.html raised
+            # 'list object' has no attribute 'items'.
+            name_languages=SUPPORTED_LANGUAGES,
             interface_language=resolve_label_locale() or 'en')
 
     @app.route('/categories/<int:category_id>/documents')
