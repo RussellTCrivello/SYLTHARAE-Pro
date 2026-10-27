@@ -149,7 +149,11 @@ function filterParams() {
     for (const [key, value] of fd.entries()) {
         const v = String(value).trim();
         if (!v) continue;
-        if (key === 'category_id' || key === 'keyword_id' || key === 'place_key' || key === 'hash_id') {
+        // identifier_kind belongs here for the same reason as the ids: the
+        // kind presets write "ipv4,ipv6" into one hidden input
+        // (applyKindPreset), and the API takes one value per parameter.
+        if (key === 'category_id' || key === 'keyword_id' || key === 'place_key' || key === 'hash_id'
+            || key === 'identifier_kind') {
             v.split(/[\s,]+/).filter(Boolean).forEach((id) => params.append(key, id));
             continue;
         }

@@ -203,8 +203,29 @@ def _text_match_sql(columns: Sequence[str], mode: str, value: str,
 
 
 def _values(get_list: Callable[[str], List[str]], name: str, allowed=None,
-            pattern: Optional[re.Pattern] = None) -> Tuple[str, ...]:
-    raw = [v.strip() for v in get_list(name) if v is not None and v.strip()]
+            pattern: Optional[re.Pattern] = None, *,
+            split_commas: bool = False) -> Tuple[str, ...]:
+    """A validated list of values for one filter parameter.
+
+    ``split_commas`` is for parameters whose values cannot contain a comma and
+    whose screens send several at once in a single field: ``identifier_kind`` is
+    a hidden input the kind presets fill with ``','.join(kinds)``, so the "ip"
+    preset sent the literal ``ipv4,ipv6`` and the request was refused with
+    ``(got 'ipv4,ipv6')`` - a payload the API itself made the screen produce.
+    Each item is validated on its own, so the error names the item that is
+    wrong, and duplicates collapse. Empty items are dropped, which is what
+    makes an empty field mean "no filter" and a trailing comma a typo rather
+    than an error. Parameters whose values may legitimately contain a comma
+    (free text, for instance) must not set this.
+    """
+    raw: List[str] = []
+    for value in get_list(name):
+        if value is None:
+            continue
+        for part in (value.split(",") if split_commas else [value]):
+            part = part.strip()
+            if part:
+                raw.append(part)
     if len(raw) > MAX_FILTER_VALUES:
         raise SignalQueryError(f"at most {MAX_FILTER_VALUES} values for {name}")
     for v in raw:
@@ -263,7 +284,8 @@ def parse_filter(args) -> SignalFilter:
         orientations=_values(get_list, "orientation", ORIENTATION_FILTER),
         place_keys=_values(get_list, "place_key", pattern=_PLACE_KEY_RE),
         identifier_kinds=_values(get_list, "identifier_kind",
-                                 allowed=identifiers_intel.KINDS),
+                                 allowed=identifiers_intel.KINDS,
+                                 split_commas=True),
         hash_ids=tuple(sorted(set(hash_ids))),
         evidence_text=evidence_text,
         evidence_mode=_match_mode(args, "evidence_mode") if evidence_text else "contains",
