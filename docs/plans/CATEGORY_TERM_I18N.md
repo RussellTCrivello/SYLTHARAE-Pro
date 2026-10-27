@@ -1,9 +1,20 @@
 # Multilingual category / term / keyword labels — implementation plan
 
-Status: **plan only, nothing implemented.** One decision blocks the first commit:
-the schema freeze (`database/migrations` frozen except `m0004_*.py`) has to be
-extended to a fifth additive migration, or the feature has to take the degraded
-no-schema route described in §4.2.
+Status: **decisions taken, first slice implemented.** The questions in §11 are
+answered (2026-10-27): the schema freeze is extended by one additive
+`m0005_term_names.py` (D1), search expansion covers the taxonomy only (D3), and
+curation starts as a CSV import and gains in-UI editing after it (D5).
+
+Implemented so far — the half that needs no database:
+
+| slice | state | evidence |
+| --- | --- | --- |
+| T0 surface inventory | **done** | `tools/audit/scan_term_label_surface.py`, `audit_report/r20/term_label_surface.csv` |
+| T2a normalisation (`term_key`, `key_variants`, `script_ok`) | **done** | `core/i18n/term_key.py`, `tests/unit/test_term_key.py` — 26 passed |
+
+Everything else in this document is still a plan, and the integration slices (T1,
+T3–T7) need a rebuilt environment: the sandbox was re-cloned mid-session and the
+virtualenv and PostgreSQL instance lived in `/tmp`.
 
 Every number below carries the command that produced it. Anything I could not
 measure is labelled **inferred** or **unverified**.
@@ -85,7 +96,7 @@ displayed in the reader's language.
 
 ## 4. Storage
 
-### 4.1 Recommended: `m0005_term_names.py` (needs the freeze exception, D1)
+### 4.1 Chosen: `m0005_term_names.py` (freeze exception approved, D1)
 
 Additive only; nothing in `m0001`–`m0004` is edited. Mirrors `geo_place_names`
 so the vocabulary, the script rule and the match-key discipline are already
@@ -153,8 +164,9 @@ What it costs:
 * it mixes data labels with UI strings in one table, which makes the Settings
   translation manager show `term:1234` rows unless it filters the prefix.
 
-I recommend §4.1 and will not start it without an explicit decision, because it
-breaks the standing freeze rule.
+§4.1 is the chosen route (D1, approved 2026-10-27); §4.2 is kept here because it
+is the fallback if the freeze is reinstated, and because it states exactly what
+the schema buys.
 
 ---
 
@@ -353,9 +365,9 @@ rather than from memory.
 
 | # | Workstream | Deliverable | Effort (**inferred**) | Blocked by |
 |---|---|---|---|---|
-| T0 | Surface inventory | scan script + CSV (done) | 0.5 d | — |
-| T1 | Migration + schema tests | `m0005_term_names.py`, `test_term_names_schema.py` | 0.5 d | **D1** |
-| T2 | Normalisation + resolver | `core/i18n/term_key.py`, `services/i18n/term_labels.py`, unit tests | 1 d | — |
+| T0 | Surface inventory | scan script + CSV — **done** | 0.5 d | — |
+| T1 | Migration + schema tests | `m0005_term_names.py`, `test_term_names_schema.py` | 0.5 d | environment: no PostgreSQL in this session |
+| T2 | Normalisation + resolver | `core/i18n/term_key.py` **done** (26 passed); `services/i18n/term_labels.py` pending | 1 d (0.4 d done) | resolver needs a database |
 | T3 | Display | Jinja filter, label helper, `/api/i18n/term-labels`, templates, scripts | 1.5 d | T2 |
 | T4 | Search expansion | six entry points + acceptance test | 1.5 d | T2 |
 | T5 | Curation | API, UI tab, CSV import/export, seed sync | 2 d | T1, T3 |
@@ -369,17 +381,16 @@ the existing contract tests fail when they drift (`test_interface_coverage`,
 
 ---
 
-## 11. Decisions needed before T1
+## 11. Decisions
 
-| # | Decision | Recommendation | Cost of the other choice |
-|---|---|---|---|
-| **D1** | Extend the schema freeze to one additive `m0005_term_names.py` (plus regenerating generated docs) | **yes** | fall back to §4.2: no FK, no index, full scan per search, mixed semantics in `translation_overrides` |
-| D2 | Should keyword phrases get phrase-level translations, or is word-by-word acceptable? | word-by-word now, phrase table on request | one more table, one more freeze exception |
-| D3 | Should a translated query also expand full-document search (recall change on `/api/search`)? | no, separate step with a toggle default off | documents match on words they do not contain, which will surprise analysts |
-| D4 | Ranking of a translation-only hit | equal weight to a text hit | a lower weight needs a relevance contract change |
-| D5 | New admin UI strings: reuse existing catalog vocabulary, or authorise new catalog rows (which I am not allowed to machine-translate) | reuse vocabulary first | a translation-authoring task in ar/he/fa/hr |
-
----
+| # | Decision | Answer (2026-10-27) | Consequence |
+| --- | --- | --- | --- |
+| **D1** | Extend the schema freeze to one additive `m0005_term_names.py`, and regenerate the generated docs it affects | **approved** | T1 proceeds as §4.1; `m0001`–`m0004` untouched; T7 regeneration is part of the change, not opportunistic drift-fixing |
+| D2 | Keyword phrases: phrase-level translations or word-by-word? | **word-by-word now** | §6.3; a `keyword_names` table stays in the backlog |
+| D3 | Should a translated query also expand full-document search? | **no — taxonomy only** | §7.3 stays out of scope; the six entry points in §7.2 are the whole surface |
+| D4 | Ranking of a translation-only hit | **equal weight** (unchanged) | no relevance contract change |
+| D5 | Who produces the first names, and through what? | **CSV import first, then in-UI curation** | T5 ships importer + validator + coverage report first; the "Names" tab follows in the same workstream |
+| D6 | New UI strings this feature needs | **reuse existing catalog vocabulary** | authoring new catalog rows is not permitted by the standing rules and is not part of this work |
 
 ## 12. Verification gate for this feature (same discipline as the audit rounds)
 
