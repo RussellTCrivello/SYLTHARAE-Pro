@@ -79,10 +79,19 @@ class TestTheDryRun:
 
         conn, words, suffix = backfill_db
         report = backfill(conn, dry_run=True)
-        sample_words = {row["word"] for row in report["sample"]}
-        assert f"political-{suffix}" in sample_words
+        # The sample is the first page of the *database's* pending words, and
+        # this module shares its database with the rest of the session, so the
+        # fixture's own words are not necessarily in it. Compare against the
+        # query instead of assuming which words come first.
+        with conn.cursor() as cur:
+            cur.execute("SELECT w.word FROM words w WHERE NOT EXISTS ("
+                        "  SELECT 1 FROM term_names t WHERE t.word_id = w.id"
+                        "    AND t.language = 'en' AND t.name_type = 'preferred')"
+                        " ORDER BY w.id LIMIT 5")
+            expected = [row[0] for row in cur.fetchall()]
+        assert [row["word"] for row in report["sample"]] == expected
         # The curated word is not scheduled for insertion at all.
-        assert f"economic-{suffix}" not in sample_words
+        assert f"economic-{suffix}" not in [row["word"] for row in report["sample"]]
 
 
 class TestTheApply:
