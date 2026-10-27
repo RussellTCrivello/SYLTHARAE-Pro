@@ -1,0 +1,1216 @@
+....FF.........................................................FF....... [  2%]
+........................................................................ [  4%]
+........................FF.............................................. [  6%]
+........................................................................ [  8%]
+....................................................F................... [ 10%]
+.........FF.....F....................................................... [ 12%]
+........................................................................ [ 14%]
+.........................................FF............................. [ 16%]
+........................................................................ [ 18%]
+........................................................................ [ 20%]
+........................................................................ [ 22%]
+........................................................FF.............. [ 24%]
+........................................................................ [ 26%]
+........................................................................ [ 28%]
+........................................................................ [ 31%]
+...............................................................FF....... [ 33%]
+................F...................................EEEE...EFFEEEEEE.... [ 35%]
+............F.............F............................................. [ 37%]
+....................................sss................................. [ 39%]
+........................................................................ [ 41%]
+..................ss..........................F.........F............... [ 43%]
+........................................................................ [ 45%]
+.................................s..........................F........... [ 47%]
+........................................................................ [ 49%]
+........................................................................ [ 51%]
+................FF...................................................... [ 53%]
+........................................................................ [ 55%]
+........................................................................ [ 57%]
+....................................................s................... [ 59%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+........................................................................ [ 66%]
+.............F.......................................................... [ 68%]
+........................................................................ [ 70%]
+..........................................s........................FF... [ 72%]
+........................................................................ [ 74%]
+........................................................................ [ 76%]
+........................................................................ [ 78%]
+........................................................................ [ 80%]
+........................................................................ [ 82%]
+........................................................................ [ 84%]
+........................................................................ [ 86%]
+........................................................................ [ 88%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 95%]
+...................................................F.................... [ 97%]
+...................................................................s.... [ 99%]
+..ss......................                                               [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of TestGeneratedBlock.test_the_document_embeds_a_generated_block _
+
+    @pytest.fixture(scope="module")
+    def document():
+>       assert DOC.exists(), "the registry document is missing"
+E       AssertionError: the registry document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md').exists
+
+tests/unit/test_interface_docs.py:24: AssertionError
+___ ERROR at setup of TestGeneratedBlock.test_the_block_matches_the_registry ___
+
+    @pytest.fixture(scope="module")
+    def document():
+>       assert DOC.exists(), "the registry document is missing"
+E       AssertionError: the registry document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md').exists
+
+tests/unit/test_interface_docs.py:24: AssertionError
+_____ ERROR at setup of TestGeneratedBlock.test_regeneration_is_idempotent _____
+
+    @pytest.fixture(scope="module")
+    def document():
+>       assert DOC.exists(), "the registry document is missing"
+E       AssertionError: the registry document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md').exists
+
+tests/unit/test_interface_docs.py:24: AssertionError
+____ ERROR at setup of TestGeneratedBlock.test_splicing_preserves_the_prose ____
+
+    @pytest.fixture(scope="module")
+    def document():
+>       assert DOC.exists(), "the registry document is missing"
+E       AssertionError: the registry document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md').exists
+
+tests/unit/test_interface_docs.py:24: AssertionError
+_ ERROR at setup of TestCountsAreGenerated.test_the_document_states_no_endpoint_count_of_its_own _
+
+    @pytest.fixture(scope="module")
+    def document():
+>       assert DOC.exists(), "the registry document is missing"
+E       AssertionError: the registry document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md').exists
+
+tests/unit/test_interface_docs.py:24: AssertionError
+_ ERROR at setup of TestRegistryEvidence.test_the_document_embeds_both_generated_blocks _
+
+self = <test_interface_docs.TestRegistryEvidence object at 0x7f3bd42da4d0>
+
+    @pytest.fixture(scope="class")
+    def evidence(self):
+>       assert self.DOC.exists(), "the registry evidence document is missing"
+E       AssertionError: the registry evidence document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md').exists
+E        +      where PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f3bd42da4d0>.DOC
+
+tests/unit/test_interface_docs.py:116: AssertionError
+_ ERROR at setup of TestRegistryEvidence.test_the_registry_half_matches_the_registry _
+
+self = <test_interface_docs.TestRegistryEvidence object at 0x7f3bd42da4d0>
+
+    @pytest.fixture(scope="class")
+    def evidence(self):
+>       assert self.DOC.exists(), "the registry evidence document is missing"
+E       AssertionError: the registry evidence document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md').exists
+E        +      where PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f3bd42da4d0>.DOC
+
+tests/unit/test_interface_docs.py:116: AssertionError
+____ ERROR at setup of TestRegistryEvidence.test_regeneration_is_idempotent ____
+
+self = <test_interface_docs.TestRegistryEvidence object at 0x7f3bd42da4d0>
+
+    @pytest.fixture(scope="class")
+    def evidence(self):
+>       assert self.DOC.exists(), "the registry evidence document is missing"
+E       AssertionError: the registry evidence document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md').exists
+E        +      where PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f3bd42da4d0>.DOC
+
+tests/unit/test_interface_docs.py:116: AssertionError
+_ ERROR at setup of TestRegistryEvidence.test_every_required_evidence_item_is_present _
+
+self = <test_interface_docs.TestRegistryEvidence object at 0x7f3bd42da4d0>
+
+    @pytest.fixture(scope="class")
+    def evidence(self):
+>       assert self.DOC.exists(), "the registry evidence document is missing"
+E       AssertionError: the registry evidence document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md').exists
+E        +      where PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f3bd42da4d0>.DOC
+
+tests/unit/test_interface_docs.py:116: AssertionError
+_ ERROR at setup of TestRegistryEvidence.test_the_coverage_claim_is_stated_as_zero_unmanaged _
+
+self = <test_interface_docs.TestRegistryEvidence object at 0x7f3bd42da4d0>
+
+    @pytest.fixture(scope="class")
+    def evidence(self):
+>       assert self.DOC.exists(), "the registry evidence document is missing"
+E       AssertionError: the registry evidence document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md').exists
+E        +      where PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f3bd42da4d0>.DOC
+
+tests/unit/test_interface_docs.py:116: AssertionError
+_ ERROR at setup of TestRegistryEvidence.test_the_document_reports_what_remains_legacy _
+
+self = <test_interface_docs.TestRegistryEvidence object at 0x7f3bd42da4d0>
+
+    @pytest.fixture(scope="class")
+    def evidence(self):
+>       assert self.DOC.exists(), "the registry evidence document is missing"
+E       AssertionError: the registry evidence document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md').exists
+E        +      where PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f3bd42da4d0>.DOC
+
+tests/unit/test_interface_docs.py:116: AssertionError
+=================================== FAILURES ===================================
+_ TestTheyAreDeclaredComponents.test_the_documentation_is_regenerated_from_the_library[confirm_dialog] _
+
+self = <test_action_lifecycle_components.TestTheyAreDeclaredComponents object at 0x7f3be824d150>
+name = 'confirm_dialog'
+
+    @pytest.mark.parametrize("name", ("confirm_dialog", "toast"))
+    def test_the_documentation_is_regenerated_from_the_library(self, name):
+>       document = (PROJECT_ROOT / "docs/COMPONENT_LIBRARY.md").read_text(encoding="utf-8")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_action_lifecycle_components.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/COMPONENT_LIBRARY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/COMPONENT_LIBRARY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_ TestTheyAreDeclaredComponents.test_the_documentation_is_regenerated_from_the_library[toast] _
+
+self = <test_action_lifecycle_components.TestTheyAreDeclaredComponents object at 0x7f3be824d390>
+name = 'toast'
+
+    @pytest.mark.parametrize("name", ("confirm_dialog", "toast"))
+    def test_the_documentation_is_regenerated_from_the_library(self, name):
+>       document = (PROJECT_ROOT / "docs/COMPONENT_LIBRARY.md").read_text(encoding="utf-8")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_action_lifecycle_components.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/COMPONENT_LIBRARY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/COMPONENT_LIBRARY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+__ TestTheDocumentIsGenerated.test_the_document_is_what_the_product_now_says ___
+
+self = <test_action_surface_audit.TestTheDocumentIsGenerated object at 0x7f3be82ac290>
+
+    def test_the_document_is_what_the_product_now_says(self):
+>       assert _generated_block().strip() == reference_markdown().strip()
+               ^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_action_surface_audit.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/unit/test_action_surface_audit.py:48: in _generated_block
+    document = DOC.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/ACTION_SURFACE_AUDIT.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/ACTION_SURFACE_AUDIT.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_ TestTheDocumentIsGenerated.test_the_document_explains_itself_without_a_count_in_prose _
+
+self = <test_action_surface_audit.TestTheDocumentIsGenerated object at 0x7f3be82ac5d0>
+
+    def test_the_document_explains_itself_without_a_count_in_prose(self):
+>       head, _ = DOC.read_text(encoding="utf-8").split(BEGIN, 1)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_action_surface_audit.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/ACTION_SURFACE_AUDIT.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/ACTION_SURFACE_AUDIT.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+____________________ test_architecture_has_mermaid_diagrams ____________________
+
+    def test_architecture_has_mermaid_diagrams():
+>       kinds = {block.split("\n", 1)[0].split()[0] for block in _mermaid_blocks()}
+                                                                 ^^^^^^^^^^^^^^^^^
+
+tests/unit/test_architecture_diagrams.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/unit/test_architecture_diagrams.py:11: in _mermaid_blocks
+    return re.findall(r"```mermaid\n(.*?)```", DOC.read_text(encoding="utf-8"), re.S)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/ARCHITECTURE.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/ARCHITECTURE.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+__________________ test_job_state_diagram_matches_transitions __________________
+
+    def test_job_state_diagram_matches_transitions():
+>       block = next(b for b in _mermaid_blocks() if b.startswith("stateDiagram-v2"))
+                                ^^^^^^^^^^^^^^^^^
+
+tests/unit/test_architecture_diagrams.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/unit/test_architecture_diagrams.py:11: in _mermaid_blocks
+    return re.findall(r"```mermaid\n(.*?)```", DOC.read_text(encoding="utf-8"), re.S)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/ARCHITECTURE.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/ARCHITECTURE.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_ TestTheStateVocabularyIsComplete.test_the_document_calls_them_not_yet_rather_than_implying_coverage _
+
+self = <test_component_library.TestTheStateVocabularyIsComplete object at 0x7f3be5f57d10>
+
+    def test_the_document_calls_them_not_yet_rather_than_implying_coverage(self):
+>       text = LIBRARY_DOC.read_text()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_component_library.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/COMPONENT_LIBRARY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/COMPONENT_LIBRARY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_ TestTheDocumentCannotDrift.test_the_generated_section_matches_the_components _
+
+self = <test_component_library.TestTheDocumentCannotDrift object at 0x7f3be5f704d0>
+
+    def test_the_generated_section_matches_the_components(self):
+>       text = LIBRARY_DOC.read_text()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_component_library.py:427: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/COMPONENT_LIBRARY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/COMPONENT_LIBRARY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+________ TestTheDocumentCannotDrift.test_the_document_states_the_rules _________
+
+self = <test_component_library.TestTheDocumentCannotDrift object at 0x7f3be5f70a50>
+
+    def test_the_document_states_the_rules(self):
+>       text = LIBRARY_DOC.read_text()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_component_library.py:438: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/COMPONENT_LIBRARY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/COMPONENT_LIBRARY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+__________ TestAdoption.test_the_audit_counts_the_hand_written_markup __________
+
+self = <test_component_library.TestAdoption object at 0x7f3be5f73090>
+
+    def test_the_audit_counts_the_hand_written_markup(self):
+        """The measure of this phase is a number, not an impression."""
+        from core.frontend.component_audit import counts, users
+    
+        assert counts()["pattern_empty_state"] == len(users(
+            next(p for p in __import__(
+                "core.frontend.component_audit", fromlist=["PATTERNS"]
+            ).PATTERNS if p.key == "empty_state")))
+        assert counts()["pattern_empty_state"] < 7, (
+            "adoption has not started; the baseline was seven templates")
+        assert counts()["pattern_empty_state"] == 3, (
+            "the raw empty-state blocks the card grids carried went with the "
+            "grids when sources and sides moved onto record_table; what is "
+            "left are the three dashboards that have not been migrated")
+        # The seven list interfaces render through record_table now, and the
+        # File Types dashboard's formats list has followed (its documents
+        # panel embeds the shared file-library table); what is left
+        # hand-writing table markup are the dashboards and screens the table
+        # migration has not reached, named by the audit: analysis_batch,
+        # dashboard, analyst_categorization, job_detail, jobs, settings,
+        # translation_manager, auth/users and email_words.
+        #
+        # Not counted, and deliberately: `components/table.html` is the
+        # component itself, and `components/operations_widget.html` renders a
+        # `<table>` its script fills - a mount, like the pagination mounts the
+        # audit counts separately. `users()` reports user-facing templates.
+>       assert counts()["pattern_table"] == 9
+E       assert 12 == 9
+
+tests/unit/test_component_library.py:512: AssertionError
+____________ test_identity_metadata_does_not_displace_real_content _____________
+
+    def test_identity_metadata_does_not_displace_real_content():
+        content = _detection_payload()
+        content["content"] = "the only real sentence"
+        text = _text(content)
+>       assert "the only real sentence" in text
+E       AssertionError: assert 'the only real sentence' in ''
+
+tests/unit/test_content_vs_identity.py:61: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    pipeline.storage_pipeline:storage_pipeline.py:2688 Error extracting text: 'NoneType' object has no attribute '_media_metadata_text'
+______________ test_forensic_text_is_content_and_is_still_joined _______________
+
+    def test_forensic_text_is_content_and_is_still_joined():
+        """Comments, tracked changes and formulas are content, not metadata."""
+        content = _detection_payload()
+        content["content"] = "body text"
+        content["forensic_text"] = "deleted paragraph: payments to the ministry"
+        text = _text(content)
+>       assert "deleted paragraph" in text
+E       AssertionError: assert 'deleted paragraph' in ''
+
+tests/unit/test_content_vs_identity.py:72: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    pipeline.storage_pipeline:storage_pipeline.py:2688 Error extracting text: 'NoneType' object has no attribute '_media_metadata_text'
+_________ TestTheDocumentCannotDrift.test_the_generated_block_matches __________
+
+self = <test_experience_contract.TestTheDocumentCannotDrift object at 0x7f3bd46f13d0>
+
+    def test_the_generated_block_matches(self):
+>       document = DOC.read_text()
+                   ^^^^^^^^^^^^^^^
+
+tests/unit/test_experience_contract.py:313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/EXPERIENCE_CONTRACT.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/EXPERIENCE_CONTRACT.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+____ TestTheDocumentCannotDrift.test_the_document_has_no_hand_typed_counts _____
+
+self = <test_experience_contract.TestTheDocumentCannotDrift object at 0x7f3bd46f1a90>
+
+    def test_the_document_has_no_hand_typed_counts(self):
+        """The same rule the registry document already follows."""
+>       document = DOC.read_text().split(BEGIN, 1)[0]
+                   ^^^^^^^^^^^^^^^
+
+tests/unit/test_experience_contract.py:322: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/EXPERIENCE_CONTRACT.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/EXPERIENCE_CONTRACT.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_____________ test_detects_email_phone_ipv4_and_links_to_sentence ______________
+
+    def test_detects_email_phone_ipv4_and_links_to_sentence():
+        text = "Contact alice@example.org or +1 (415) 555-0199. Server 192.168.0.1."
+        result = ii.detect(text)
+        by_type = {s.signal_type: s for s in result.signals}
+>       assert by_type["email"].value == "alice@example.org"
+               ^^^^^^^^^^^^^^^^
+E       KeyError: 'email'
+
+tests/unit/test_identifiers_intel.py:10: KeyError
+________________ test_email_not_double_counted_as_ipv4_fragment ________________
+
+    def test_email_not_double_counted_as_ipv4_fragment():
+        text = "Write to user@mail.co.uk today."
+        types = {s.signal_type for s in ii.detect(text).signals}
+>       assert types == {"email"}
+E       AssertionError: assert {'identifier'} == {'email'}
+E         
+E         Extra items in the left set:
+E         'identifier'
+E         Extra items in the right set:
+E         'email'
+E         Use -v to get more diff
+
+tests/unit/test_identifiers_intel.py:20: AssertionError
+__________ test_an_installed_environment_reports_no_missing_packages ___________
+
+tmp_path = PosixPath('{pytest-tmp}/test_an_installed_environment_0')
+
+    def test_an_installed_environment_reports_no_missing_packages(tmp_path):
+        installer = _installer()
+>       assert installer._missing_requirements(PROJECT_ROOT / "requirements.txt") == []
+E       AssertionError: assert ['ruff>=0.4  ...rity linting'] == []
+E         
+E         Left contains 2 more items, first extra item: 'ruff>=0.4                             # [WIN-NATIVE] linting/formatting'
+E         Use -v to get more diff
+
+tests/unit/test_install_cli_config.py:107: AssertionError
+____ TestOtherDocuments.test_the_productization_map_points_at_the_registry _____
+
+self = <test_interface_docs.TestOtherDocuments object at 0x7f3bd42d9d50>
+
+    def test_the_productization_map_points_at_the_registry(self):
+>       text = (PROJECT_ROOT / "docs/PRODUCTIZATION_MAP.md").read_text()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_interface_docs.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/PRODUCTIZATION_MAP.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/PRODUCTIZATION_MAP.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_______________ TestOtherDocuments.test_the_domain_model_exists ________________
+
+self = <test_interface_docs.TestOtherDocuments object at 0x7f3bd42da390>
+
+    def test_the_domain_model_exists(self):
+>       assert (PROJECT_ROOT / "docs/DOMAIN_MODEL.md").exists()
+E       AssertionError: assert False
+E        +  where False = exists()
+E        +    where exists = (PosixPath('{worktree-base}') / 'docs/DOMAIN_MODEL.md').exists
+
+tests/unit/test_interface_docs.py:101: AssertionError
+_ TestAllFiveConsumersAgree.test_the_generated_documentation_states_the_policy _
+
+self = <test_interface_lifecycle.TestAllFiveConsumersAgree object at 0x7f3bd4102810>
+
+    def test_the_generated_documentation_states_the_policy(self):
+        """The reference shows each interface's status, from the same registry."""
+        from core.interfaces import REGISTRY
+    
+>       text = (PROJECT_ROOT / "docs/INTERFACE_REGISTRY.md").read_text()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_interface_lifecycle.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/INTERFACE_REGISTRY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+___________ TestTheRegistryIsFrozen.test_the_freeze_is_written_down ____________
+
+self = <test_interface_lifecycle.TestTheRegistryIsFrozen object at 0x7f3bd41068d0>
+
+    def test_the_freeze_is_written_down(self):
+>       text = (PROJECT_ROOT / "docs/INTERFACE_REGISTRY.md").read_text().lower()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_interface_lifecycle.py:286: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/INTERFACE_REGISTRY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_______________ test_installed_dependencies_are_agpl_compatible ________________
+
+    def test_installed_dependencies_are_agpl_compatible():
+        findings = checker.check(include_extras=True)
+        assert len([f for f in findings if f.verdict == "compatible"]) > 20
+        problems = [f"{f.name} {f.version}: {f.expression or '?'} ({f.detail})"
+                    for f in findings if f.verdict in ("incompatible", "unknown")]
+>       assert not problems, "\n".join(problems)
+E       AssertionError: pymupdf-layout 2.0: ? (no usable licence metadata)
+E         pymupdf4llm 2.0: ? (no usable licence metadata)
+E       assert not ['pymupdf-layout 2.0: ? (no usable licence metadata)', 'pymupdf4llm 2.0: ? (no usable licence metadata)']
+
+tests/unit/test_licensing.py:116: AssertionError
+_______________ test_checker_cli_exits_zero_on_this_environment ________________
+
+    def test_checker_cli_exits_zero_on_this_environment():
+        result = subprocess.run([sys.executable, "tools/licenses/check_licenses.py", "--quiet"],
+                                cwd=ROOT, capture_output=True, text=True)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FAIL pymupdf-layout               2.0          -                                             [unrecognised: License='' classifiers=[]]  no usable licence metadata
+E         FAIL pymupdf4llm                  2.0          -                                             [unrecognised: License='' classifiers=[]]  no usable licence metadata
+E         
+E         AGPL-3.0-or-later: 110 compatible, 0 incompatible, 2 unknown, 2 not installed
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['{venv}/bin/python', 'tools/licenses/check_licenses.py', '--quiet'], returncode=1, stdout="FAI...usable licence metadata\n\nAGPL-3.0-or-later: 110 compatible, 0 incompatible, 2 unknown, 2 not installed\n", stderr='').returncode
+
+tests/unit/test_licensing.py:169: AssertionError
+___________________ test_no_machine_specific_paths_or_hosts ____________________
+
+    def test_no_machine_specific_paths_or_hosts():
+        this_file = Path(__file__).resolve()
+        hits = []
+        for path in _shipped_text_files():
+            if path.resolve() == this_file:
+                continue
+            text = _read(path)
+            for what, pattern in FORBIDDEN.items():
+                for match in pattern.finditer(text):
+                    line = text.count("\n", 0, match.start()) + 1
+                    hits.append(f"{path.relative_to(ROOT)}:{line}: {what}: {match.group(0)}")
+>       assert not hits, "\n".join(hits)
+E       AssertionError: audit_report/R10_VERIFICATION.md:234: pgserver temporary socket: {tmp}
+E         audit_report/evidence_r6/suite_of_record_r6.md:14: pgserver temporary socket: {tmp}
+E         audit_report/evidence_r6/suite_of_record_r6.md:20: pgserver temporary socket: {tmp}
+E       assert not ['audit_report/R10_VERIFICATION.md:234: pgserver temporary socket: {tmp}', 'audit_report/evidence_r6/suite_of_r...ry socket: {tmp}', 'audit_report/evidence_r6/suite_of_record_r6.md:20: pgserver temporary socket: {tmp}']
+
+tests/unit/test_no_machine_paths.py:94: AssertionError
+__________________ test_every_stored_ocr_field_is_documented ___________________
+
+    def test_every_stored_ocr_field_is_documented():
+>       missing = _stored_fields() - _documented_fields()
+                                     ^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_ocr_provenance_docs.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/unit/test_ocr_provenance_docs.py:19: in _documented_fields
+    text = DOC.read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/DOMAIN_MODEL.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/DOMAIN_MODEL.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+__________________ test_every_documented_ocr_field_is_stored ___________________
+
+    def test_every_documented_ocr_field_is_stored():
+>       invented = _documented_fields() - _stored_fields()
+                   ^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_ocr_provenance_docs.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/unit/test_ocr_provenance_docs.py:19: in _documented_fields
+    text = DOC.read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/DOMAIN_MODEL.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/DOMAIN_MODEL.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_______________________ test_reference_docs_are_current ________________________
+
+tmp_path = PosixPath('{pytest-tmp}/test_reference_docs_are_curren0')
+
+    def test_reference_docs_are_current(tmp_path):
+        env = dict(os.environ, APP_DATA_DIR=str(tmp_path))
+        result = subprocess.run(
+            [sys.executable, "tools/docs/generate_reference.py", "--check"],
+            cwd=ROOT, env=env, capture_output=True, text=True, timeout=300)
+>       assert result.returncode == 0, result.stdout[-3000:] + result.stderr[-3000:]
+E       AssertionError: stale reference docs (run python3 tools/docs/generate_reference.py):
+E           docs/reference/README.md
+E           docs/reference/python/Api.md
+E           docs/reference/python/core.md
+E           docs/reference/python/database.md
+E           docs/reference/python/reader_file.md
+E           docs/reference/python/services.md
+E           docs/reference/python/tools.md
+E           docs/reference/HTTP_ROUTES.md
+E         3088643
+E         2026-10-27 08:10:43 INFO core.resource_coordinator:   CPU cores: 2
+E         2026-10-27 08:10:43 INFO core.resource_coordinator:   Total memory: 3.8 GB
+E         2026-10-27 08:10:43 INFO core.resource_coordinator:   Allocated workers: 1
+E         2026-10-27 08:10:43 INFO core.resource_coordinator:   Allocated DB pool: 10
+E         2026-10-27 08:10:43 INFO database.database.config: DB pool size adjusted by resource coordinator: 25 -> 10
+E         2026-10-27 08:10:43 INFO database.database.database: Shared connection pool initialized: 2-10 connections
+E         2026-10-27 08:10:43 INFO apps.web.app: ✅ Notification service initialized at system level
+E         2026-10-27 08:10:43 INFO apps.web.app: ✅ SECRET_KEY loaded from environment variable
+E         2026-10-27 08:10:43 INFO apps.web.app: ✅ SECRET_KEY configured (length: 45)
+E         2026-10-27 08:10:43 INFO apps.web.app: ✅ CSRF protection enabled
+E         2026-10-27 08:10:43 INFO database.database.config: DB pool size adjusted by resource coordinator: 25 -> 10
+E         2026-10-27 08:10:43 WARNING apps.web.app: Job scheduler not started: ImportError: cannot import name 'Scheduler' from 'services.scheduling.scheduler' ({worktree-base}/services/scheduling/scheduler.py)
+E         2026-10-27 08:10:43 INFO apps.web.app: ✅ Rate limiting enabled (default 60/min, 600/hour per client)
+E         2026-10-27 08:10:43 INFO apps.web.app: ✅ Gzip compression enabled
+E         2026-10-27 08:10:43 INFO apps.web.app: ✅ Secure error handlers registered (client-safe messages)
+E         2026-10-27 08:10:43 INFO apps.web.app: ✅ Authentication middleware active (all routes default-deny)
+E         2026-10-27 08:10:43 INFO apps.web.app: ✅ Disclosure register active (DATA_EXPORTED, fail-closed)
+E         2026-10-27 08:10:43 INFO apps.web.app: ✅ Authentication routes registered
+E         2026-10-27 08:10:43 INFO apps.web.app: ✅ Setup routes registered (first)
+E         2026-10-27 08:10:43 INFO apps.web.app: ✅ Content analysis API registered
+E         2026-10-27 08:10:44 INFO settings.routes: ✅ Settings API routes and page route registered
+E         2026-10-27 08:10:44 INFO Api.routes.performance: Performance monitoring routes registered
+E         2026-10-27 08:10:44 INFO apps.web.app: ✅ File Analysis API registered
+E         2026-10-27 08:10:44 INFO apps.web.app: ✅ Cursor-based pagination API registered
+E         2026-10-27 08:10:44 INFO apps.web.app: ✅ Concurrency monitoring dashboard registered
+E         2026-10-27 08:10:44 INFO Api.routes.translations: ✅ Translation API routes registered
+E         2026-10-27 08:10:44 INFO apps.web.app: ✅ Translation API routes registered
+E         2026-10-27 08:10:44 INFO Api.routes.health: ✅ Health check endpoint registered at /health
+E         2026-10-27 08:10:44 INFO apps.web.app: ✅ Error monitoring dashboard API registered
+E         2026-10-27 08:10:44 INFO apps.web.app: ✅ Interface registry views registered
+E         2026-10-27 08:10:44 INFO apps.web.app: ✅ Experience contract views registered
+E         2026-10-27 08:10:44 INFO apps.web.app: ✅ List export views registered
+E         2026-10-27 08:10:44 INFO Api.routes.map_api: Map viewer routes registered
+E         2026-10-27 08:10:44 INFO apps.web.app: ✅ Map viewer registered
+E         2026-10-27 08:10:44 INFO apps.web.app: ✅ File operation views registered
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['{venv}/bin/python', 'tools/docs/generate_reference.py', '--check'], returncode=1, stdout='sta...NFO apps.web.app: ✅ Map viewer registered\n2026-10-27 08:10:44 INFO apps.web.app: ✅ File operation views registered\n").returncode
+
+tests/unit/test_reference_docs.py:21: AssertionError
+_ TestTheEvidenceIsMeasuredNotWritten.test_the_document_is_what_the_product_now_says _
+
+self = <test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten object at 0x7f3bd35d10d0>
+
+    def test_the_document_is_what_the_product_now_says(self):
+>       document = (PROJECT_ROOT / "docs/SCREEN_INSPECTOR_EVIDENCE.md").read_text(
+            encoding="utf-8")
+
+tests/unit/test_screen_inspector.py:742: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/SCREEN_INSPECTOR_EVIDENCE.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/SCREEN_INSPECTOR_EVIDENCE.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_ TestTheEvidenceIsMeasuredNotWritten.test_the_document_explains_itself_without_a_count_in_prose _
+
+self = <test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten object at 0x7f3bd35d1690>
+
+    def test_the_document_explains_itself_without_a_count_in_prose(self):
+>       head, _ = (PROJECT_ROOT / "docs/SCREEN_INSPECTOR_EVIDENCE.md").read_text(
+            encoding="utf-8").split(audit.BEGIN, 1)
+
+tests/unit/test_screen_inspector.py:749: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/SCREEN_INSPECTOR_EVIDENCE.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/SCREEN_INSPECTOR_EVIDENCE.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+__ TestDependencyInventory.test_the_committed_inventory_matches_the_generator __
+
+self = <test_windows_offline_kit.TestDependencyInventory object at 0x7f3bd2bde190>
+
+    def test_the_committed_inventory_matches_the_generator(self):
+        assert inventory_dependencies.generate() == (
+>           (ROOT / "docs" / "windows" / "DEPENDENCY_INVENTORY.md")
+            .read_text(encoding="utf-8"))
+
+tests/unit/test_windows_offline_kit.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/windows/DEPENDENCY_INVENTORY.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/windows/DEPENDENCY_INVENTORY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+=============================== warnings summary ===============================
+tests/unit/test_analyst_csv_export_columns.py:9
+  {worktree-base}/tests/unit/test_analyst_csv_export_columns.py:9: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_bandit_count_gate.py:21
+  {worktree-base}/tests/unit/test_bandit_count_gate.py:21: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_bandit_count_gate.py:33
+  {worktree-base}/tests/unit/test_bandit_count_gate.py:33: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_bandit_count_gate.py:47
+  {worktree-base}/tests/unit/test_bandit_count_gate.py:47: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_bandit_count_gate.py:58
+  {worktree-base}/tests/unit/test_bandit_count_gate.py:58: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_file_action_button_i18n.py:15
+tests/unit/test_file_action_button_i18n.py:15
+  {worktree-base}/tests/unit/test_file_action_button_i18n.py:15: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_export_surfaces_i18n.py:22
+  {worktree-base}/tests/unit/test_export_surfaces_i18n.py:22: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_interface_registry_i18n.py:21
+  {worktree-base}/tests/unit/test_interface_registry_i18n.py:21: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_job_event_storage_vocabulary.py:26
+  {worktree-base}/tests/unit/test_job_event_storage_vocabulary.py:26: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_js_api_urls_resolve.py:24
+  {worktree-base}/tests/unit/test_js_api_urls_resolve.py:24: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_lexis_cosmos_i18n.py:39
+  {worktree-base}/tests/unit/test_lexis_cosmos_i18n.py:39: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_map_viewer_i18n.py:22
+  {worktree-base}/tests/unit/test_map_viewer_i18n.py:22: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_no_remote_runtime_resources.py:69
+  {worktree-base}/tests/unit/test_no_remote_runtime_resources.py:69: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_structured_folder_export.py:13
+  {worktree-base}/tests/unit/test_structured_folder_export.py:13: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_action_toolbar.py::TestTheMigratedPagesRenderTheContract::test_the_served_page_renders_the_no_selection_state[/sources-sourcesActionBar-sources-source-bulk_ids0-sources-list-page.js-source-checkbox-server]
+  {venv}/lib/python3.11/site-packages/platformdirs/api.py:459: RuntimeDirWarning: XDG_RUNTIME_DIR is not set, falling back to {tmp}
+    return Path(self.user_runtime_dir)
+
+tests/unit/test_catalog_extraction.py::TestNoTranslationCallPassesALookupKey::test_no_translation_call_is_given_a_key_it_looks_up_at_runtime
+  {worktree-base}/database/__init__.py:1190: DeprecationWarning: invalid escape sequence '\.'
+    file_types_query = """
+
+tests/unit/test_catalog_extraction.py::TestNoTranslationCallPassesALookupKey::test_no_translation_call_is_given_a_key_it_looks_up_at_runtime
+  {worktree-base}/scripts/cleanup_cache.py:18: DeprecationWarning: invalid escape sequence '\S'
+    """
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:920: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+    ParserElement.enablePackrat()
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:957: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    decimal_literal.setParseAction(lambda t: int(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:961: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    octal_literal.setParseAction(lambda t: int(t[0], base=8))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:965: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    hex_literal.setParseAction(lambda t: int(t[0], base=16))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:977: PyparsingDeprecationWarning: 'escQuote' argument is deprecated, use 'esc_quote'
+    quoted_string = QuotedString('"', escQuote='""')
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:978: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    quoted_string.setParseAction(lambda t: str(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1059: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    vba_chr.setParseAction(vba_chr_tostr)
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1067: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    vba_asc.setParseAction(lambda t: ord(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1075: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    vba_val.setParseAction(lambda t: int(t[0].strip()))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1082: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    strReverse.setParseAction(lambda t: VbaExpressionString(str(t[0])[::-1]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1089: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    environ.setParseAction(lambda t: VbaExpressionString('%%%s%%' % t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1099: PyparsingDeprecationWarning: 'initChars' argument is deprecated, use 'init_chars'
+    latin_identifier = Word(initChars=alphas, bodyChars=alphanums + '_')
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1099: PyparsingDeprecationWarning: 'bodyChars' argument is deprecated, use 'body_chars'
+    latin_identifier = Word(initChars=alphas, bodyChars=alphanums + '_')
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1108: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    quoted_hex_string.setParseAction(lambda t: str(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1112: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    hex_function_call.setParseAction(lambda t: VbaExpressionString(binascii.a2b_hex(t.hex_string)))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1122: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    quoted_base64_string.setParseAction(lambda t: str(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1126: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    base64_function_call.setParseAction(lambda t: VbaExpressionString(binascii.a2b_base64(t.base64_string)))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1143: PyparsingDeprecationWarning: 'infixNotation' deprecated - use 'infix_notation'
+    vba_expr_str <<= infixNotation(vba_expr_str_item,
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1198: PyparsingDeprecationWarning: 'infixNotation' deprecated - use 'infix_notation'
+    vba_expr_int <<= infixNotation(vba_expr_int_item,
+
+tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_document_embeds_both_generated_blocks
+  {venv}/lib/python3.11/site-packages/_pytest/fixtures.py:1313: PytestRemovedIn10Warning: Class-scoped fixture defined as instance method is deprecated.
+  Instance attributes set in this fixture will NOT be visible to test methods,
+  as each test gets a new instance while the fixture runs only once per class.
+  Use @classmethod decorator and set attributes on cls instead.
+  See https://docs.pytest.org/en/stable/deprecations.html#class-scoped-fixture-as-instance-method
+    fixturefunc = resolve_fixture_function(fixturedef, request)
+
+tests/unit/test_logger_shadowing.py::test_no_function_reads_logger_before_binding_it
+  <unknown>:1190: DeprecationWarning: invalid escape sequence '\.'
+
+tests/unit/test_logger_shadowing.py::test_no_function_reads_logger_before_binding_it
+  <unknown>:18: DeprecationWarning: invalid escape sequence '\S'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/unit/test_action_lifecycle_components.py::TestTheyAreDeclaredComponents::test_the_documentation_is_regenerated_from_the_library[confirm_dialog]
+FAILED tests/unit/test_action_lifecycle_components.py::TestTheyAreDeclaredComponents::test_the_documentation_is_regenerated_from_the_library[toast]
+FAILED tests/unit/test_action_surface_audit.py::TestTheDocumentIsGenerated::test_the_document_is_what_the_product_now_says
+FAILED tests/unit/test_action_surface_audit.py::TestTheDocumentIsGenerated::test_the_document_explains_itself_without_a_count_in_prose
+FAILED tests/unit/test_architecture_diagrams.py::test_architecture_has_mermaid_diagrams
+FAILED tests/unit/test_architecture_diagrams.py::test_job_state_diagram_matches_transitions
+FAILED tests/unit/test_component_library.py::TestTheStateVocabularyIsComplete::test_the_document_calls_them_not_yet_rather_than_implying_coverage
+FAILED tests/unit/test_component_library.py::TestTheDocumentCannotDrift::test_the_generated_section_matches_the_components
+FAILED tests/unit/test_component_library.py::TestTheDocumentCannotDrift::test_the_document_states_the_rules
+FAILED tests/unit/test_component_library.py::TestAdoption::test_the_audit_counts_the_hand_written_markup
+FAILED tests/unit/test_content_vs_identity.py::test_identity_metadata_does_not_displace_real_content
+FAILED tests/unit/test_content_vs_identity.py::test_forensic_text_is_content_and_is_still_joined
+FAILED tests/unit/test_experience_contract.py::TestTheDocumentCannotDrift::test_the_generated_block_matches
+FAILED tests/unit/test_experience_contract.py::TestTheDocumentCannotDrift::test_the_document_has_no_hand_typed_counts
+FAILED tests/unit/test_identifiers_intel.py::test_detects_email_phone_ipv4_and_links_to_sentence
+FAILED tests/unit/test_identifiers_intel.py::test_email_not_double_counted_as_ipv4_fragment
+FAILED tests/unit/test_install_cli_config.py::test_an_installed_environment_reports_no_missing_packages
+FAILED tests/unit/test_interface_docs.py::TestOtherDocuments::test_the_productization_map_points_at_the_registry
+FAILED tests/unit/test_interface_docs.py::TestOtherDocuments::test_the_domain_model_exists
+FAILED tests/unit/test_interface_lifecycle.py::TestAllFiveConsumersAgree::test_the_generated_documentation_states_the_policy
+FAILED tests/unit/test_interface_lifecycle.py::TestTheRegistryIsFrozen::test_the_freeze_is_written_down
+FAILED tests/unit/test_licensing.py::test_installed_dependencies_are_agpl_compatible
+FAILED tests/unit/test_licensing.py::test_checker_cli_exits_zero_on_this_environment
+FAILED tests/unit/test_no_machine_paths.py::test_no_machine_specific_paths_or_hosts
+FAILED tests/unit/test_ocr_provenance_docs.py::test_every_stored_ocr_field_is_documented
+FAILED tests/unit/test_ocr_provenance_docs.py::test_every_documented_ocr_field_is_stored
+FAILED tests/unit/test_reference_docs.py::test_reference_docs_are_current - A...
+FAILED tests/unit/test_screen_inspector.py::TestTheEvidenceIsMeasuredNotWritten::test_the_document_is_what_the_product_now_says
+FAILED tests/unit/test_screen_inspector.py::TestTheEvidenceIsMeasuredNotWritten::test_the_document_explains_itself_without_a_count_in_prose
+FAILED tests/unit/test_windows_offline_kit.py::TestDependencyInventory::test_the_committed_inventory_matches_the_generator
+ERROR tests/unit/test_interface_docs.py::TestGeneratedBlock::test_the_document_embeds_a_generated_block
+ERROR tests/unit/test_interface_docs.py::TestGeneratedBlock::test_the_block_matches_the_registry
+ERROR tests/unit/test_interface_docs.py::TestGeneratedBlock::test_regeneration_is_idempotent
+ERROR tests/unit/test_interface_docs.py::TestGeneratedBlock::test_splicing_preserves_the_prose
+ERROR tests/unit/test_interface_docs.py::TestCountsAreGenerated::test_the_document_states_no_endpoint_count_of_its_own
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_document_embeds_both_generated_blocks
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_registry_half_matches_the_registry
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_regeneration_is_idempotent
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_every_required_evidence_item_is_present
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_coverage_claim_is_stated_as_zero_unmanaged
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_document_reports_what_remains_legacy
