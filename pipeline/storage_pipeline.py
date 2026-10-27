@@ -1539,6 +1539,24 @@ class StoragePipeline:
         if scale:
             provenance["scale"] = scale
 
+        # ---- container forensics ----
+        # PDF incremental updates are a *count* (how many times the file was
+        # appended to, so how many earlier revisions are still inside it), not
+        # a name and not a sentence. Round 17 recorded this key as dropped
+        # text; measuring the reader showed there is no text in it, so it is
+        # stored here as structure instead of being pushed into the body where
+        # "3" would be noise.
+        forensics: Dict[str, Any] = {}
+        revisions = content.get("revisions")
+        if isinstance(revisions, dict) and revisions:
+            forensics["revisions"] = {
+                key: revisions.get(key) for key in
+                ("incremental_updates", "eof_markers", "scan_bytes", "scan_truncated")
+                if revisions.get(key) is not None
+            }
+        if forensics:
+            provenance["forensics"] = forensics
+
         # ---- extraction diagnostics ----
         info = content.get("extraction_info")
         if isinstance(info, dict) and info:
@@ -1964,6 +1982,21 @@ class StoragePipeline:
                         pdf_metadata_parts.append(f"Creator: {meta['creator']}")
                     if meta.get('producer'):
                         pdf_metadata_parts.append(f"Producer: {meta['producer']}")
+                    # The rest of the document information dictionary. Keywords
+                    # are words an analyst searches for and the two dates say
+                    # when the document was written and last changed; all five
+                    # were read by the reader and dropped here. Labelled, so a
+                    # consumer can tell them from body text.
+                    for key, label in (("keywords", "Keywords"),
+                                       ("creationDate", "Created"),
+                                       ("modDate", "Modified"),
+                                       ("format", "PDF version"),
+                                       ("trapped", "Trapped")):
+                        value = meta.get(key)
+                        if isinstance(value, (list, tuple)):
+                            value = ", ".join(str(item) for item in value if item)
+                        if value and str(value).strip():
+                            pdf_metadata_parts.append(f"{label}: {str(value).strip()}")
                 
                 if pdf_metadata_parts:
                     # Metadata at position 0 (before all pages)
