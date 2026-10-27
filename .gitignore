@@ -117,3 +117,4 @@ sample_data/
 audit_report/*/archive/records.jsonl
 audit_report/*/final/records.jsonl
 audit_report/*/archive/text/
+audit_report/*/final/text/

@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import gzip
 import json
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
@@ -26,8 +27,17 @@ GOOD = {"COMPLETE", "NEAR-COMPLETE", "PARTIAL", "OK-NO-ORACLE", "EMPTY-PLAUSIBLE
 
 
 def load(path: Path) -> Dict[str, Dict[str, Any]]:
+    """Read a record set, gzipped or not.
+
+    The tracked artefact of a run is records.jsonl.gz (the uncompressed file is
+    ~130 MB and is deliberately not committed), so a baseline from an earlier
+    round is only available compressed. Diffing against it is the whole point of
+    the regression gate.
+    """
     records = {}
-    with Path(path).open(encoding="utf-8") as handle:
+    path = Path(path)
+    opener = gzip.open if path.suffix == ".gz" else open
+    with opener(path, "rt", encoding="utf-8") as handle:
         for line in handle:
             line = line.strip()
             if not line:
