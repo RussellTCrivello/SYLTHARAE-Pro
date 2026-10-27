@@ -1,0 +1,569 @@
+[
+  {
+    "path": "/",
+    "system": "light",
+    "mode": "light",
+    "title": "Comprehensive File Analytics",
+    "lightSurfaces": [
+      {
+        "element": "ol.breadcrumb.mb-0",
+        "bg": "rgb(255, 255, 255)",
+        "area": 42852
+      },
+      {
+        "element": "div#opsWidget.card.shadow-sm.mb-3",
+        "bg": "rgb(255, 255, 255)",
+        "area": 221640
+      },
+      {
+        "element": "div.card-header.d-flex.justify-content-between",
+        "bg": "rgb(248, 250, 252)",
+        "area": 44536
+      },
+      {
+        "element": "table.table.table-sm.mb-0",
+        "bg": "rgb(255, 255, 255)",
+        "area": 45733
+      },
+      {
+        "element": "div.page-header",
+        "bg": "rgb(255, 255, 255)",
+        "area": 122793
+      },
+      {
+        "element": "div.tips-warning",
+        "bg": "rgba(254, 226, 226, 0.7)",
+        "area": 78780
+      },
+      {
+        "element": "div.dashboard-navigation.section-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 86839
+      },
+      {
+        "element": "div.stat-card.primary",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.success",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.warning",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.info",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.primary",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.warning",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.success",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.info",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.section-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 1003770
+      },
+      {
+        "element": "button.btn-control",
+        "bg": "rgb(255, 255, 255)",
+        "area": 2769
+      },
+      {
+        "element": "div.chart-container.large",
+        "bg": "rgb(255, 255, 255)",
+        "area": 792400
+      },
+      {
+        "element": "div.chart-controls-wrapper",
+        "bg": "rgba(255, 255, 255, 0.6)",
+        "area": 68166
+      },
+      {
+        "element": "select#chartTypeSelect_timelineChart.chart-type-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 32893
+      },
+      {
+        "element": "div.section-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 425279
+      },
+      {
+        "element": "div.chart-container",
+        "bg": "rgb(255, 255, 255)",
+        "area": 317400
+      },
+      {
+        "element": "div.section-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 425279
+      },
+      {
+        "element": "div.chart-container",
+        "bg": "rgb(255, 255, 255)",
+        "area": 317400
+      }
+    ],
+    "lowContrast": [
+      {
+        "element": "span.sidebar-nav-badge",
+        "ink": "rgb(15, 23, 42)",
+        "bg": "rgb(30, 41, 59)",
+        "ratio": 1.22,
+        "need": 4.5,
+        "text": "Deprecated"
+      },
+      {
+        "element": "span.text-muted.small.topbar-page-identity",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "Dashboard"
+      },
+      {
+        "element": "span#opsActive.small.text-muted",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "0 active \u00b7"
+      },
+      {
+        "element": "a.btn.btn-sm.btn-primary",
+        "ink": "rgb(255, 255, 255)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 1,
+        "need": 4.5,
+        "text": "New Ingestion"
+      },
+      {
+        "element": "div#filesChange.change.positive",
+        "ink": "rgb(16, 185, 129)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 2.54,
+        "need": 4.5,
+        "text": "0 this week"
+      },
+      {
+        "element": "p",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 2.56,
+        "need": 4.5,
+        "text": "No categories with files found. Categori"
+      }
+    ],
+    "counts": {
+      "lightSurfaces": 24,
+      "lowContrast": 6
+    }
+  },
+  {
+    "path": "/files",
+    "system": "light",
+    "mode": "light",
+    "title": "File Library",
+    "lightSurfaces": [
+      {
+        "element": "ol.breadcrumb.mb-0",
+        "bg": "rgb(255, 255, 255)",
+        "area": 42820
+      },
+      {
+        "element": "div.page-header",
+        "bg": "rgb(255, 255, 255)",
+        "area": 102152
+      },
+      {
+        "element": "div.stat-card.stat-card-total",
+        "bg": "rgb(255, 255, 255)",
+        "area": 32341
+      },
+      {
+        "element": "div.stat-card.stat-card-analyzed",
+        "bg": "rgb(255, 255, 255)",
+        "area": 32341
+      },
+      {
+        "element": "div.stat-card.stat-card-pending",
+        "bg": "rgb(255, 255, 255)",
+        "area": 32341
+      },
+      {
+        "element": "div.stat-card.stat-card-selected",
+        "bg": "rgb(255, 255, 255)",
+        "area": 32341
+      },
+      {
+        "element": "div.file-filters-section",
+        "bg": "rgb(255, 255, 255)",
+        "area": 388631
+      },
+      {
+        "element": "input#smartSearch.form-control.search-input",
+        "bg": "rgb(255, 255, 255)",
+        "area": 56200
+      },
+      {
+        "element": "select#sourceFilter.form-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8268
+      },
+      {
+        "element": "select#sideFilter.form-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8268
+      },
+      {
+        "element": "button.msdd-trigger.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 6144
+      },
+      {
+        "element": "select#statusFilter.form-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8268
+      },
+      {
+        "element": "div.action-bar",
+        "bg": "rgb(248, 250, 252)",
+        "area": 78715
+      },
+      {
+        "element": "div.view-mode-toggle",
+        "bg": "rgb(248, 250, 252)",
+        "area": 2592
+      },
+      {
+        "element": "div.files-display-container",
+        "bg": "rgb(255, 255, 255)",
+        "area": 491631
+      },
+      {
+        "element": "select#filesTablePerPage.form-select.form-select-sm.ut-per-page-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 3600
+      },
+      {
+        "element": "table#filesTable.table.table-hover.align-middle",
+        "bg": "rgb(255, 255, 255)",
+        "area": 341947
+      },
+      {
+        "element": "thead.ut-head",
+        "bg": "rgb(248, 250, 252)",
+        "area": 56100
+      },
+      {
+        "element": "th.ut-col.ut-col-index",
+        "bg": "rgb(248, 250, 252)",
+        "area": 3119
+      },
+      {
+        "element": "th.ut-col.ut-col-name.ut-sortable",
+        "bg": "rgb(248, 250, 252)",
+        "area": 7152
+      },
+      {
+        "element": "th.ut-col.ut-col-type",
+        "bg": "rgb(248, 250, 252)",
+        "area": 5420
+      },
+      {
+        "element": "th.ut-col.ut-col-size.ut-sortable",
+        "bg": "rgb(248, 250, 252)",
+        "area": 5482
+      },
+      {
+        "element": "th.ut-col.ut-col-source",
+        "bg": "rgb(248, 250, 252)",
+        "area": 7301
+      },
+      {
+        "element": "th.ut-col.ut-col-side",
+        "bg": "rgb(248, 250, 252)",
+        "area": 7250
+      },
+      {
+        "element": "th.ut-col.ut-col-status",
+        "bg": "rgb(248, 250, 252)",
+        "area": 6340
+      },
+      {
+        "element": "th.ut-col.ut-col-date.ut-sortable",
+        "bg": "rgb(248, 250, 252)",
+        "area": 6435
+      },
+      {
+        "element": "th.ut-col.ut-col-actions",
+        "bg": "rgb(248, 250, 252)",
+        "area": 5420
+      }
+    ],
+    "lowContrast": [
+      {
+        "element": "span.sidebar-nav-badge",
+        "ink": "rgb(15, 23, 42)",
+        "bg": "rgb(30, 41, 59)",
+        "ratio": 1.22,
+        "need": 4.5,
+        "text": "Deprecated"
+      },
+      {
+        "element": "span.text-muted.small.topbar-page-identity",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "File Library"
+      },
+      {
+        "element": "p",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 2.56,
+        "need": 4.5,
+        "text": "No files found."
+      },
+      {
+        "element": "a.btn.btn-primary",
+        "ink": "rgb(255, 255, 255)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 1,
+        "need": 4.5,
+        "text": "Upload your first file"
+      }
+    ],
+    "counts": {
+      "lightSurfaces": 27,
+      "lowContrast": 4
+    }
+  },
+  {
+    "path": "/archives",
+    "system": "light",
+    "mode": "light",
+    "title": "Archives - File Analysis System",
+    "lightSurfaces": [
+      {
+        "element": "ol.breadcrumb.mb-0",
+        "bg": "rgb(255, 255, 255)",
+        "area": 37089
+      },
+      {
+        "element": "div.page-header",
+        "bg": "rgb(255, 255, 255)",
+        "area": 127814
+      },
+      {
+        "element": "div.analysis-view-navigation",
+        "bg": "rgb(248, 250, 252)",
+        "area": 77447
+      },
+      {
+        "element": "div.navigation-bar",
+        "bg": "rgb(255, 255, 255)",
+        "area": 103312
+      },
+      {
+        "element": "input#globalSearch",
+        "bg": "rgb(255, 255, 255)",
+        "area": 9750
+      },
+      {
+        "element": "select#sortBy.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8977
+      },
+      {
+        "element": "select#perPageSection.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 3760
+      },
+      {
+        "element": "div.view-toggle",
+        "bg": "rgb(241, 245, 249)",
+        "area": 2888
+      },
+      {
+        "element": "div#fileManagerSidebar.file-manager-sidebar",
+        "bg": "rgb(248, 250, 252)",
+        "area": 156960
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div#unifiedContentView.unified-content-view",
+        "bg": "rgb(255, 255, 255)",
+        "area": 591192
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      }
+    ],
+    "lowContrast": [
+      {
+        "element": "span.sidebar-nav-badge",
+        "ink": "rgb(15, 23, 42)",
+        "bg": "rgb(30, 41, 59)",
+        "ratio": 1.22,
+        "need": 4.5,
+        "text": "Deprecated"
+      },
+      {
+        "element": "span.text-muted.small.topbar-page-identity",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "File Management and Analysis"
+      },
+      {
+        "element": "a.btn.btn-outline-primary.analysis-view-btn",
+        "ink": "rgb(255, 255, 255)",
+        "bg": "rgb(102, 126, 234)",
+        "ratio": 3.66,
+        "need": 4.5,
+        "text": "File Analysis"
+      }
+    ],
+    "counts": {
+      "lightSurfaces": 26,
+      "lowContrast": 3
+    }
+  },
+  {
+    "path": "/",
+    "system": "dark",
+    "mode": "dark",
+    "title": "Comprehensive File Analytics",
+    "lightSurfaces": [],
+    "lowContrast": [],
+    "counts": {
+      "lightSurfaces": 0,
+      "lowContrast": 0
+    }
+  },
+  {
+    "path": "/files",
+    "system": "dark",
+    "mode": "dark",
+    "title": "File Library",
+    "lightSurfaces": [],
+    "lowContrast": [],
+    "counts": {
+      "lightSurfaces": 0,
+      "lowContrast": 0
+    }
+  },
+  {
+    "path": "/archives",
+    "system": "dark",
+    "mode": "dark",
+    "title": "Archives - File Analysis System",
+    "lightSurfaces": [],
+    "lowContrast": [],
+    "counts": {
+      "lightSurfaces": 0,
+      "lowContrast": 0
+    }
+  }
+]

@@ -10,6 +10,10 @@
     <meta name="asset-version" content="20261015e">
     {#- Runs data-on-<event> handlers without inline script (RES-CSP-01).
         Synchronous and first, so every control drawn below is live. -#}
+    {#- Theme mode, before the first style is applied: <html> carries
+        data-theme-mode so a dark-mode reader never sees a white flash.
+        The full module (menu, system listener) is loaded further down. -#}
+    <script src="{{ url_for('static', filename='js/theme-mode-init.js') }}?v=20261026a"></script>
     <script src="{{ url_for('static', filename='js/modules/core/declarative-events.js') }}"></script>
     {#- Static sidebar: in-application navigations swap only the main
         content, so the sidebar element is never redrawn; its state is also
@@ -58,6 +62,10 @@
     
     <!-- Page Tips Component Styles -->
     <link href="{{ url_for('static', filename='css/page-tips.css') }}" rel="stylesheet" crossorigin="anonymous">
+
+    <!-- Theme mode (light / dark / follow the system) - loaded last on purpose:
+         it re-maps the surfaces the component sheets write with literal colours -->
+    <link href="{{ url_for('static', filename='css/theme-mode.css') }}?v=20261026a" rel="stylesheet" crossorigin="anonymous">
     {% block head_extra %}{% endblock %}
     
     <!-- Common Component Styles (loaded for all pages) -->
@@ -427,6 +435,33 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuBtn">
                                 <li>
+                                    <button type="button" class="dropdown-item d-flex align-items-center gap-2"
+                                            id="themeModeItem" aria-haspopup="true" aria-expanded="false"
+                                            title="{{ _('Light, dark, or follow the system') }}">
+                                        <i class="bi bi-circle-half me-2" aria-hidden="true"></i>
+                                        <span>{{ _('Appearance') }}</span>
+                                        <span class="badge text-bg-secondary ms-auto" id="themeModeBadge">{{ _('Auto') }}</span>
+                                    </button>
+                                </li>
+                                <li id="themeModeChoices" class="px-3 pb-2" hidden>
+                                    <div class="btn-group btn-group-sm w-100" role="group"
+                                         aria-label="{{ _('Appearance') }}">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                                data-theme-choice="auto" aria-pressed="true">
+                                            <i class="bi bi-display" aria-hidden="true"></i> {{ _('Auto') }}
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary"
+                                                data-theme-choice="light" aria-pressed="false">
+                                            <i class="bi bi-sun" aria-hidden="true"></i> {{ _('Light') }}
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary"
+                                                data-theme-choice="dark" aria-pressed="false">
+                                            <i class="bi bi-moon-stars" aria-hidden="true"></i> {{ _('Dark') }}
+                                        </button>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
                                     <button type="button" class="dropdown-item" id="changePasswordItem">
                                         <i class="bi bi-key me-2" aria-hidden="true"></i>{{ _('Change Password') }}
                                     </button>
@@ -573,6 +608,7 @@
     
     <!-- Universal Page Initializer (Load Last) -->
     <!-- User account menu (logout / change password) -->
+    <script type="module" src="{{ url_for('static', filename='js/modules/ui/theme-mode.js') }}?v=20261026a" defer></script>
     <script src="{{ url_for('static', filename='js/user-menu.js') }}" defer></script>
     <script type="module" src="{{ url_for('static', filename='js/pages/universal-initializer.js') }}" defer></script>
 </body>
