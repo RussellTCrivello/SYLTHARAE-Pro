@@ -1,7 +1,7 @@
 # Round 21 — i18n term names: verification record and closeout
 
 Branch `arena/d19d9293-syltharae-pro`. Base for every comparison:
-`445982b` (the commit round 20 diffed from). **Final head: `29ef577`** unless a
+`445982b` (the commit round 20 diffed from). **Final head: `dc6a413`** unless a
 later commit is named.
 
 | label | meaning |
@@ -32,7 +32,7 @@ the commit that produced it. Numbers whose raw artifact is gone are not here.
 | 11 | Browser walk on the dev stack (locale switch incl. RTL, Arabic query → English-named category, English query under Arabic UI, Names tab, CSV import with an error row) | **met, evidence at an earlier head** | `python tools/audit/browser_i18n_terms.py --base http://{base-url} --password-file {tmp}/r18_bootstrap.json` | `0410775`, `d901d6d` |
 | 12 | Partial-write fault injection | **met** | `pytest tests/integration/test_term_names_faults.py` | `1f5035b` |
 | 13 | Generated docs regenerated once at the end, diff shown | **met** | `tools/docs/generate_reference.py`, `core.interfaces.evidence`, `test_schema_reference` with `INFORAXIS_WRITE_EVIDENCE=1` | `152b747` + `9a180e5` |
-| 14 | Full unit + integration at base and at the committed head, fresh worktrees, every failing id classified | **met** | §3 | `29ef577` |
+| 14 | Full unit + integration at base and at the committed head, fresh worktrees, every failing id classified | **met** | §3 | `dc6a413` |
 | 15 | Environment parity: install the OCR fallback engine and re-run both sides | **met** — rapidocr present in the one shared venv both sides ran in | §3.1 |
 
 ### 1.1 Two fixes this round that the criteria did not ask for but the gates did
@@ -101,18 +101,26 @@ is the pair the round-20 record referred to.
 | head unit | `29ef577` | `pytest tests/unit` in the head worktree | 3 565 tests, **35 failing/erroring** (34 pre-existing + 1 new id), 11 skipped |
 | head integration | `29ef577` | `pytest tests/integration` | 1 406 tests, **4 failing** (all pre-existing), 29 skipped |
 
-The head half was re-run twice: at `29ef577` (the last commit that changes
-source or tests) and again at `96d7ab0` (which changes only
-`tools/audit/sanitize_artifacts.py`). `pair2_head_rerun_environment.txt` records
-the commit and the `pip freeze` hash of each run; the hash is identical to
-`pair2_environment.txt`. The base half was not re-run: nothing at base changed.
+The head half was run three times as the branch moved: `29ef577` (last source
+change), `96d7ab0` (sanitiser rules), and finally `dc6a413` — the pair reported
+here, base and head in one run, one suite at a time, `pair2_environment.txt`
+recording both commits and one `pip freeze` hash. Only the final run is used for
+the classification; the earlier two are kept because they show which id changed
+at which commit.
 
-The head run at `96d7ab0` differs from the `29ef577` run in exactly one id:
+One id moved between runs and is worth naming:
 `test_artifact_portability::test_no_new_artifact_names_a_home_directory_or_a_loopback_port`
-still failed, because the committed `browser_evidence.json` (from the earlier
-round-21 commit) still names the dev-stack port `5055` - the sanitizer had been
-run on the working tree, not on the committed artefact. That is now fixed in the
-artefacts themselves, and the same id passes at the evidence commit.
+is a **new** id (the module post-dates base, `caa4687`) and failed in each run
+whose worktree still held artefacts naming a machine path. It is measured
+passing on the final tree, after the sanitiser ran over the committed artefacts:
+
+```
+pytest tests/unit/test_artifact_portability.py   -> 5 passed
+pytest tests/unit/test_no_machine_paths.py       -> 2 failed, 1 passed
+```
+
+so no regression is left unexplained and the two remaining failures are the
+frozen records of §6.1.
 
 Raw: `junit_final_{base,head}_{unit,integration}.xml`, `log_final_*.txt`,
 `pair2_environment.txt`, `pair2_head_rerun_environment.txt`.
@@ -369,7 +377,7 @@ false results elsewhere:
 1. **Each pytest session leaks a ~50 MB pgserver data directory in `/tmp`.**
    After ~180 single-id runs the disk was full (12 MB free) and `initdb` started
    failing; the suite then *skipped* with "No reachable PostgreSQL" instead of
-   failing, which looks like a pass at a glance. 343 stale `/tmp/pgdata_*`
+   failing, which looks like a pass at a glance. 343 stale `{tmp}/pgdata_*`
    directories were removed (16 GB freed) and the affected ids re-run.
 2. **A skipped integration test is not evidence.** `-q` output for a skipped
    module is silent; only `-rs` shows why. Every "all green" claim in this

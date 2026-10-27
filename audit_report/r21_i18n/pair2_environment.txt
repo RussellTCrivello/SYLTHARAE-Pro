@@ -1,6 +1,6 @@
-pair started 2026-10-27T13:17:53+00:00
+pair started 2026-10-27T14:14:37+00:00
 base  445982b89dfd10a4b9f373163f46ef18b3c0480a
-head  152b74729f9d21a9807a8e3fbf897bb2191e5b35
+head  dc6a413185260985cfdaa5472555fe4c54b5ff1e
 venv  {venv}  python Python 3.11.2
 pip-freeze-sha256 4269d42bb6ec7d3e1d0fd0c4fae749c32be316479d8621bb1f2def026cc2e038
 rapidocr present

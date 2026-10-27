@@ -107,7 +107,7 @@ tests/unit/test_interface_docs.py:24: AssertionError
 =================================== FAILURES ===================================
 _ TestTheyAreDeclaredComponents.test_the_documentation_is_regenerated_from_the_library[confirm_dialog] _
 
-self = <test_action_lifecycle_components.TestTheyAreDeclaredComponents object at 0x7fdfc6e7c1d0>
+self = <test_action_lifecycle_components.TestTheyAreDeclaredComponents object at 0x7f2c94053ed0>
 name = 'confirm_dialog'
 
     @pytest.mark.parametrize("name", ("confirm_dialog", "toast"))
@@ -140,7 +140,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_hea
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 _ TestTheyAreDeclaredComponents.test_the_documentation_is_regenerated_from_the_library[toast] _
 
-self = <test_action_lifecycle_components.TestTheyAreDeclaredComponents object at 0x7fdfc6e7c410>
+self = <test_action_lifecycle_components.TestTheyAreDeclaredComponents object at 0x7f2c94078150>
 name = 'toast'
 
     @pytest.mark.parametrize("name", ("confirm_dialog", "toast"))
@@ -173,7 +173,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_hea
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 __ TestTheDocumentIsGenerated.test_the_document_is_what_the_product_now_says ___
 
-self = <test_action_surface_audit.TestTheDocumentIsGenerated object at 0x7fdfc6defcd0>
+self = <test_action_surface_audit.TestTheDocumentIsGenerated object at 0x7f2c93fe7450>
 
     def test_the_document_is_what_the_product_now_says(self):
 >       assert _generated_block().strip() == reference_markdown().strip()
@@ -207,7 +207,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_hea
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 _ TestTheDocumentIsGenerated.test_the_document_explains_itself_without_a_count_in_prose _
 
-self = <test_action_surface_audit.TestTheDocumentIsGenerated object at 0x7fdfc6defa50>
+self = <test_action_surface_audit.TestTheDocumentIsGenerated object at 0x7f2c93fe7650>
 
     def test_the_document_explains_itself_without_a_count_in_prose(self):
 >       head, _ = DOC.read_text(encoding="utf-8").split(BEGIN, 1)
@@ -307,32 +307,13 @@ ________ test_no_new_artifact_names_a_home_directory_or_a_loopback_port ________
 >       assert not findings, "\n".join(
             f"{item['file']}:{item['line']} {item['kind']} {item['match']}"
             for item in findings[:20])
-E       AssertionError: audit_report/r21_i18n/browser/browser_evidence.json:5 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:14 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:23 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:33 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:52 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:69 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:88 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:100 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:106 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:112 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:118 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:124 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:130 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:136 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:142 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:148 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:154 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:160 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:166 loopback-with-port {loopback}
-E         audit_report/r21_i18n/browser/browser_evidence.json:172 loopback-with-port {loopback}
-E       assert not [{'file': 'audit_report/r21_i18n/browser/browser_evidence.json', 'line': 5, 'kind': 'loopback-with-port', 'match': '12...ort/r21_i18n/browser/browser_evidence.json', 'line': 69, 'kind': 'loopback-with-port', 'match': '{loopback}'}, ...]
+E       AssertionError: audit_report/r21_i18n/REPORT.md:372 temp-path {tmp}
+E       assert not [{'file': 'audit_report/r21_i18n/REPORT.md', 'line': 372, 'kind': 'temp-path', 'match': '{tmp}'}]
 
 tests/unit/test_artifact_portability.py:25: AssertionError
 _ TestTheStateVocabularyIsComplete.test_the_document_calls_them_not_yet_rather_than_implying_coverage _
 
-self = <test_component_library.TestTheStateVocabularyIsComplete object at 0x7fdfc41b2810>
+self = <test_component_library.TestTheStateVocabularyIsComplete object at 0x7f2c913a80d0>
 
     def test_the_document_calls_them_not_yet_rather_than_implying_coverage(self):
 >       text = LIBRARY_DOC.read_text()
@@ -363,7 +344,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_hea
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 _ TestTheDocumentCannotDrift.test_the_generated_section_matches_the_components _
 
-self = <test_component_library.TestTheDocumentCannotDrift object at 0x7fdfc4191e50>
+self = <test_component_library.TestTheDocumentCannotDrift object at 0x7f2c9138edd0>
 
     def test_the_generated_section_matches_the_components(self):
 >       text = LIBRARY_DOC.read_text()
@@ -394,7 +375,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_hea
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 ________ TestTheDocumentCannotDrift.test_the_document_states_the_rules _________
 
-self = <test_component_library.TestTheDocumentCannotDrift object at 0x7fdfc4191610>
+self = <test_component_library.TestTheDocumentCannotDrift object at 0x7f2c9138dbd0>
 
     def test_the_document_states_the_rules(self):
 >       text = LIBRARY_DOC.read_text()
@@ -425,7 +406,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_hea
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 __________ TestAdoption.test_the_audit_counts_the_hand_written_markup __________
 
-self = <test_component_library.TestAdoption object at 0x7fdfc4181ed0>
+self = <test_component_library.TestAdoption object at 0x7f2c9137e8d0>
 
     def test_the_audit_counts_the_hand_written_markup(self):
         """The measure of this phase is a number, not an impression."""
@@ -485,7 +466,7 @@ tests/unit/test_content_vs_identity.py:72: AssertionError
 ERROR    pipeline.storage_pipeline:storage_pipeline.py:2695 Error extracting text: 'NoneType' object has no attribute '_media_metadata_text'
 _________ TestTheDocumentCannotDrift.test_the_generated_block_matches __________
 
-self = <test_experience_contract.TestTheDocumentCannotDrift object at 0x7fdfb2fe02d0>
+self = <test_experience_contract.TestTheDocumentCannotDrift object at 0x7f2c801cfe90>
 
     def test_the_generated_block_matches(self):
 >       document = DOC.read_text()
@@ -516,7 +497,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_hea
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 ____ TestTheDocumentCannotDrift.test_the_document_has_no_hand_typed_counts _____
 
-self = <test_experience_contract.TestTheDocumentCannotDrift object at 0x7fdfb2fe0150>
+self = <test_experience_contract.TestTheDocumentCannotDrift object at 0x7f2c801cff10>
 
     def test_the_document_has_no_hand_typed_counts(self):
         """The same rule the registry document already follows."""
@@ -574,7 +555,7 @@ E         Use -v to get more diff
 tests/unit/test_identifiers_intel.py:20: AssertionError
 ____ TestOtherDocuments.test_the_productization_map_points_at_the_registry _____
 
-self = <test_interface_docs.TestOtherDocuments object at 0x7fdfb3134790>
+self = <test_interface_docs.TestOtherDocuments object at 0x7f2c802d9ed0>
 
     def test_the_productization_map_points_at_the_registry(self):
 >       text = (PROJECT_ROOT / "docs/PRODUCTIZATION_MAP.md").read_text()
@@ -605,7 +586,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_hea
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 _______________ TestOtherDocuments.test_the_domain_model_exists ________________
 
-self = <test_interface_docs.TestOtherDocuments object at 0x7fdfb3137990>
+self = <test_interface_docs.TestOtherDocuments object at 0x7f2c802da950>
 
     def test_the_domain_model_exists(self):
 >       assert (PROJECT_ROOT / "docs/DOMAIN_MODEL.md").exists()
@@ -616,7 +597,7 @@ E        +    where exists = (PosixPath('{tmp}/final_head') / 'docs/DOMAIN_MODEL
 tests/unit/test_interface_docs.py:101: AssertionError
 ______ TestRegistryEvidence.test_the_document_reports_what_remains_legacy ______
 
-self = <test_interface_docs.TestRegistryEvidence object at 0x7fdfb3134b90>
+self = <test_interface_docs.TestRegistryEvidence object at 0x7f2c802db410>
 evidence = '# Registry evidence\n\n_Generated by `core.interfaces.evidence` from the registry and from the running\napplication. ...ons.translation_management_page`\n\nMarked active on this page: `index`\n<!-- END GENERATED APPLICATION EVIDENCE -->\n'
 
     def test_the_document_reports_what_remains_legacy(self, evidence):
@@ -626,7 +607,7 @@ E       AssertionError: assert 'INTERFACE_METADATA' in '# Registry evidence\n\n_
 tests/unit/test_interface_docs.py:165: AssertionError
 _ TestAllFiveConsumersAgree.test_the_generated_documentation_states_the_policy _
 
-self = <test_interface_lifecycle.TestAllFiveConsumersAgree object at 0x7fdfb2b45ad0>
+self = <test_interface_lifecycle.TestAllFiveConsumersAgree object at 0x7f2c7fd456d0>
 
     def test_the_generated_documentation_states_the_policy(self):
         """The reference shows each interface's status, from the same registry."""
@@ -660,7 +641,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_hea
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 ___________ TestTheRegistryIsFrozen.test_the_freeze_is_written_down ____________
 
-self = <test_interface_lifecycle.TestTheRegistryIsFrozen object at 0x7fdfb2b2db50>
+self = <test_interface_lifecycle.TestTheRegistryIsFrozen object at 0x7f2c7fd32550>
 
     def test_the_freeze_is_written_down(self):
 >       text = (PROJECT_ROOT / "docs/INTERFACE_REGISTRY.md").read_text().lower()
@@ -734,8 +715,8 @@ ___________________ test_no_machine_specific_paths_or_hosts ____________________
 E       AssertionError: audit_report/R10_VERIFICATION.md:234: pgserver temporary socket: {tmp}
 E         audit_report/evidence_r6/suite_of_record_r6.md:14: pgserver temporary socket: {tmp}
 E         audit_report/evidence_r6/suite_of_record_r6.md:20: pgserver temporary socket: {tmp}
-E         audit_report/r21_i18n/migration_backfill_cycle.txt:2: pgserver temporary socket: {tmp}
-E       assert not ['audit_report/R10_VERIFICATION.md:234: pgserver temporary socket: {tmp}', 'audit_report/evidence_r6/suite_of_r...socket: {tmp}', 'audit_report/r21_i18n/migration_backfill_cycle.txt:2: pgserver temporary socket: {tmp}']
+E         audit_report/r21_i18n/REPORT.md:372: pgserver temporary socket: {tmp}
+E       assert not ['audit_report/R10_VERIFICATION.md:234: pgserver temporary socket: {tmp}', 'audit_report/evidence_r6/suite_of_r...server temporary socket: {tmp}', 'audit_report/r21_i18n/REPORT.md:372: pgserver temporary socket: {tmp}']
 
 tests/unit/test_no_machine_paths.py:94: AssertionError
 __________________ test_every_stored_ocr_field_is_documented ___________________
@@ -804,7 +785,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_hea
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 _ TestTheEvidenceIsMeasuredNotWritten.test_the_document_is_what_the_product_now_says _
 
-self = <test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten object at 0x7fdfb1bf3110>
+self = <test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten object at 0x7f2c7edfe310>
 
     def test_the_document_is_what_the_product_now_says(self):
 >       document = (PROJECT_ROOT / "docs/SCREEN_INSPECTOR_EVIDENCE.md").read_text(
@@ -835,7 +816,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_hea
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 _ TestTheEvidenceIsMeasuredNotWritten.test_the_document_explains_itself_without_a_count_in_prose _
 
-self = <test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten object at 0x7fdfb1bf3690>
+self = <test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten object at 0x7f2c7edff5d0>
 
     def test_the_document_explains_itself_without_a_count_in_prose(self):
 >       head, _ = (PROJECT_ROOT / "docs/SCREEN_INSPECTOR_EVIDENCE.md").read_text(
@@ -866,7 +847,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_hea
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 __ TestDependencyInventory.test_the_committed_inventory_matches_the_generator __
 
-self = <test_windows_offline_kit.TestDependencyInventory object at 0x7fdfb2162690>
+self = <test_windows_offline_kit.TestDependencyInventory object at 0x7f2c7f613750>
 
     def test_the_committed_inventory_matches_the_generator(self):
         assert inventory_dependencies.generate() == (

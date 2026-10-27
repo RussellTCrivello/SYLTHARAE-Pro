@@ -515,8 +515,7 @@ tests.unit.test_content_markers::test_ordinary_content_untouched[Slide 4 covers 
 tests.unit.test_content_markers::test_ordinary_content_untouched[The quarterly revenue grew by 12%.],pass,pass,stable
 tests.unit.test_content_markers::test_whole_line_markers_are_removed[--- Content ---],pass,pass,stable
 tests.unit.test_content_markers::test_whole_line_markers_are_removed[--- Message Content ---],pass,pass,stable
-tests.unit.test_content_markers::test_whole_line_markers_are_removed[Attachments Folder: {tmp}],absent,pass,stable
-tests.unit.test_content_markers::test_whole_line_markers_are_removed[Attachments Folder: {tmp}],pass,absent,stable
+tests.unit.test_content_markers::test_whole_line_markers_are_removed[Attachments Folder: {tmp}],pass,pass,stable
 tests.unit.test_content_markers::test_whole_line_markers_are_removed[Attachments: 2],pass,pass,stable
 tests.unit.test_content_markers::test_whole_line_markers_are_removed[Chapter ID: ch5],pass,pass,stable
 tests.unit.test_content_markers::test_whole_line_markers_are_removed[Chapters: 9],pass,pass,stable
@@ -3481,12 +3480,11 @@ tests.unit.test_windows_path_safety::test_hostile_paths_are_still_rejected[../es
 tests.unit.test_windows_path_safety::test_hostile_paths_are_still_rejected[..],pass,pass,stable
 tests.unit.test_windows_path_safety::test_hostile_paths_are_still_rejected[.],pass,pass,stable
 tests.unit.test_windows_path_safety::test_hostile_paths_are_still_rejected[//server/share/x.txt],pass,pass,stable
-tests.unit.test_windows_path_safety::test_hostile_paths_are_still_rejected[{tmp}],absent,pass,stable
+tests.unit.test_windows_path_safety::test_hostile_paths_are_still_rejected[{tmp}],pass,pass,stable
 tests.unit.test_windows_path_safety::test_hostile_paths_are_still_rejected[C:\\Windows\\system32\\x.txt],pass,pass,stable
 tests.unit.test_windows_path_safety::test_hostile_paths_are_still_rejected[\\\\server\\share\\x.txt],pass,pass,stable
 tests.unit.test_windows_path_safety::test_hostile_paths_are_still_rejected[],pass,pass,stable
 tests.unit.test_windows_path_safety::test_hostile_paths_are_still_rejected[a\x00b.txt],pass,pass,stable
-tests.unit.test_windows_path_safety::test_hostile_paths_are_still_rejected[{tmp}],pass,absent,stable
 tests.unit.test_windows_path_safety::test_long_but_acceptable_name_is_untouched,pass,pass,stable
 tests.unit.test_windows_path_safety::test_ordinary_and_unicode_names_pass_through_unchanged[\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442.docx],pass,pass,stable
 tests.unit.test_windows_path_safety::test_ordinary_and_unicode_names_pass_through_unchanged[a/b/c/deeply/nested/file.txt],pass,pass,stable

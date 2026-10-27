@@ -18,7 +18,7 @@ s............................................ssssssssssssssssssssssssss. [ 66%]
 =================================== FAILURES ===================================
 __________________ test_stored_rows_preserve_exact_positions ___________________
 
-ingested = {'xlsx': 41, 'csv': 39, 'eml': 40}
+ingested = {'xlsx': 40, 'csv': 39, 'eml': 41}
 
     def test_stored_rows_preserve_exact_positions(ingested):
         from Api.utils.utils import load_text_content
@@ -34,9 +34,9 @@ ingested = {'xlsx': 41, 'csv': 39, 'eml': 40}
         assert data[1] == "EMEA\t4400"                 # row 2
         # row 3 is blank (kept as a whitespace-only line: empty cells, no data)
 >       assert data[2].strip() == "" and "\t" not in data[2].strip()
-E       AssertionError: assert ('AZUREHERON181c5459 value' == ''
+E       AssertionError: assert ('AZUREHERON89d45f89 value' == ''
 E         
-E         + AZUREHERON181c5459 value)
+E         + AZUREHERON89d45f89 value)
 
 tests/integration/test_cell_locations_and_recipients.py:162: AssertionError
 ---------------------------- Captured stdout setup -----------------------------
@@ -48,39 +48,39 @@ Found 3 files
   🖼️  Image files: 0 (will be processed last)
 
 📄 PHASE 1: Processing 3 priority files...
-✓ No attachments found in {pytest-tmp}/cells_corpus0/broadcast-181c5459.eml
+✓ No attachments found in {pytest-tmp}/cells_corpus0/broadcast-89d45f89.eml
 ----------------------------------------
-Task: Reading file: broadcast-181c5459.eml
-Elapsed time: 5.34 milliseconds
+Task: Reading file: broadcast-89d45f89.eml
+Elapsed time: 5.47 milliseconds
 ----------------------------------------
 ----------------------------------------
-Task: Reading file: table-181c5459.csv
-Elapsed time: 6.44 milliseconds
+Task: Reading file: table-89d45f89.csv
+Elapsed time: 5.39 milliseconds
 ----------------------------------------
 
 [33m📈 File Metrics:[0m
-  File:     table-181c5459.csv
+  File:     table-89d45f89.csv
   Size:     50 B
   Status:   [32m✓ Success[0m
-  Time:     0.0078 seconds
+  Time:     0.0068 seconds
 
 ----------------------------------------
-Task: Reading file: cells-181c5459.xlsx
-Elapsed time: 17.01 milliseconds
+Task: Reading file: cells-89d45f89.xlsx
+Elapsed time: 17.98 milliseconds
 ----------------------------------------
 
 [33m📈 File Metrics:[0m
-  File:     cells-181c5459.xlsx
+  File:     cells-89d45f89.xlsx
   Size:     5.25 KB
   Status:   [32m✓ Success[0m
-  Time:     0.0180 seconds
+  Time:     0.0200 seconds
 
 
 [33m📈 File Metrics:[0m
-  File:     broadcast-181c5459.eml
+  File:     broadcast-89d45f89.eml
   Size:     464 B
   Status:   [32m✓ Success[0m
-  Time:     0.0366 seconds
+  Time:     0.0410 seconds
 
 ✅ PHASE 1 complete: 3 priority files processed
 
@@ -93,15 +93,15 @@ Elapsed time: 17.01 milliseconds
    Files already recorded (nothing new written): 1
    Storage failures: 0
 ------------------------------ Captured log setup ------------------------------
-WARNING  database.services.contents_db_service:contents_db_service.py:1532 Detector places could not run for 'table-181c5459.csv' (path_id=39): no gazetteer is loaded (migration m0001 not applied?)
-WARNING  pipeline.storage_pipeline:storage_pipeline.py:895 [STORAGE] ⚠️  'table-181c5459.csv' stored with degraded data: places detector unavailable: no gazetteer is loaded (migration m0001 not applied?)
-WARNING  database.services.contents_db_service:contents_db_service.py:1532 Detector places could not run for 'broadcast-181c5459.eml' (path_id=40): no gazetteer is loaded (migration m0001 not applied?)
-WARNING  database.services.contents_db_service:contents_db_service.py:1532 Detector places could not run for 'cells-181c5459.xlsx' (path_id=41): no gazetteer is loaded (migration m0001 not applied?)
-WARNING  pipeline.storage_pipeline:storage_pipeline.py:895 [STORAGE] ⚠️  'broadcast-181c5459.eml' stored with degraded data: places detector unavailable: no gazetteer is loaded (migration m0001 not applied?)
-WARNING  pipeline.storage_pipeline:storage_pipeline.py:895 [STORAGE] ⚠️  'cells-181c5459.xlsx' stored with degraded data: places detector unavailable: no gazetteer is loaded (migration m0001 not applied?)
+WARNING  database.services.contents_db_service:contents_db_service.py:1532 Detector places could not run for 'table-89d45f89.csv' (path_id=39): no gazetteer is loaded (migration m0001 not applied?)
+WARNING  pipeline.storage_pipeline:storage_pipeline.py:895 [STORAGE] ⚠️  'table-89d45f89.csv' stored with degraded data: places detector unavailable: no gazetteer is loaded (migration m0001 not applied?)
+WARNING  database.services.contents_db_service:contents_db_service.py:1532 Detector places could not run for 'cells-89d45f89.xlsx' (path_id=40): no gazetteer is loaded (migration m0001 not applied?)
+WARNING  pipeline.storage_pipeline:storage_pipeline.py:895 [STORAGE] ⚠️  'cells-89d45f89.xlsx' stored with degraded data: places detector unavailable: no gazetteer is loaded (migration m0001 not applied?)
+WARNING  database.services.contents_db_service:contents_db_service.py:1532 Detector places could not run for 'broadcast-89d45f89.eml' (path_id=41): no gazetteer is loaded (migration m0001 not applied?)
+WARNING  pipeline.storage_pipeline:storage_pipeline.py:895 [STORAGE] ⚠️  'broadcast-89d45f89.eml' stored with degraded data: places detector unavailable: no gazetteer is loaded (migration m0001 not applied?)
 _____________________ test_search_results_cite_exact_cell ______________________
 
-ingested = {'xlsx': 41, 'csv': 39, 'eml': 40}
+ingested = {'xlsx': 40, 'csv': 39, 'eml': 41}
 
     def test_search_results_cite_exact_cell(ingested):
         from Api.services.search_service import SearchService
@@ -124,7 +124,7 @@ E         ?           ^
 tests/integration/test_cell_locations_and_recipients.py:188: AssertionError
 ____ TestTheEvidenceReport.test_the_evidence_report_matches_the_application ____
 
-self = <test_interface_coverage.TestTheEvidenceReport object at 0x7f30ab4a7d50>
+self = <test_interface_coverage.TestTheEvidenceReport object at 0x7f700251c590>
 app = <Flask 'apps.web.app'>
 admin_client = <FlaskClient <Flask 'apps.web.app'>>
 

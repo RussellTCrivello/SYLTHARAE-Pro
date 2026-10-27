@@ -105,7 +105,7 @@ E        +    where exists = PosixPath('{tmp}/final_base/docs/INTERFACE_REGISTRY
 tests/unit/test_interface_docs.py:24: AssertionError
 _ ERROR at setup of TestRegistryEvidence.test_the_document_embeds_both_generated_blocks _
 
-self = <test_interface_docs.TestRegistryEvidence object at 0x7f37169b0c50>
+self = <test_interface_docs.TestRegistryEvidence object at 0x7fe332d72a50>
 
     @pytest.fixture(scope="class")
     def evidence(self):
@@ -114,12 +114,12 @@ E       AssertionError: the registry evidence document is missing
 E       assert False
 E        +  where False = exists()
 E        +    where exists = PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md').exists
-E        +      where PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f37169b0c50>.DOC
+E        +      where PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7fe332d72a50>.DOC
 
 tests/unit/test_interface_docs.py:116: AssertionError
 _ ERROR at setup of TestRegistryEvidence.test_the_registry_half_matches_the_registry _
 
-self = <test_interface_docs.TestRegistryEvidence object at 0x7f37169b0c50>
+self = <test_interface_docs.TestRegistryEvidence object at 0x7fe332d72a50>
 
     @pytest.fixture(scope="class")
     def evidence(self):
@@ -128,12 +128,12 @@ E       AssertionError: the registry evidence document is missing
 E       assert False
 E        +  where False = exists()
 E        +    where exists = PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md').exists
-E        +      where PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f37169b0c50>.DOC
+E        +      where PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7fe332d72a50>.DOC
 
 tests/unit/test_interface_docs.py:116: AssertionError
 ____ ERROR at setup of TestRegistryEvidence.test_regeneration_is_idempotent ____
 
-self = <test_interface_docs.TestRegistryEvidence object at 0x7f37169b0c50>
+self = <test_interface_docs.TestRegistryEvidence object at 0x7fe332d72a50>
 
     @pytest.fixture(scope="class")
     def evidence(self):
@@ -142,12 +142,12 @@ E       AssertionError: the registry evidence document is missing
 E       assert False
 E        +  where False = exists()
 E        +    where exists = PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md').exists
-E        +      where PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f37169b0c50>.DOC
+E        +      where PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7fe332d72a50>.DOC
 
 tests/unit/test_interface_docs.py:116: AssertionError
 _ ERROR at setup of TestRegistryEvidence.test_every_required_evidence_item_is_present _
 
-self = <test_interface_docs.TestRegistryEvidence object at 0x7f37169b0c50>
+self = <test_interface_docs.TestRegistryEvidence object at 0x7fe332d72a50>
 
     @pytest.fixture(scope="class")
     def evidence(self):
@@ -156,12 +156,12 @@ E       AssertionError: the registry evidence document is missing
 E       assert False
 E        +  where False = exists()
 E        +    where exists = PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md').exists
-E        +      where PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f37169b0c50>.DOC
+E        +      where PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7fe332d72a50>.DOC
 
 tests/unit/test_interface_docs.py:116: AssertionError
 _ ERROR at setup of TestRegistryEvidence.test_the_coverage_claim_is_stated_as_zero_unmanaged _
 
-self = <test_interface_docs.TestRegistryEvidence object at 0x7f37169b0c50>
+self = <test_interface_docs.TestRegistryEvidence object at 0x7fe332d72a50>
 
     @pytest.fixture(scope="class")
     def evidence(self):
@@ -170,12 +170,12 @@ E       AssertionError: the registry evidence document is missing
 E       assert False
 E        +  where False = exists()
 E        +    where exists = PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md').exists
-E        +      where PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f37169b0c50>.DOC
+E        +      where PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7fe332d72a50>.DOC
 
 tests/unit/test_interface_docs.py:116: AssertionError
 _ ERROR at setup of TestRegistryEvidence.test_the_document_reports_what_remains_legacy _
 
-self = <test_interface_docs.TestRegistryEvidence object at 0x7f37169b0c50>
+self = <test_interface_docs.TestRegistryEvidence object at 0x7fe332d72a50>
 
     @pytest.fixture(scope="class")
     def evidence(self):
@@ -184,13 +184,13 @@ E       AssertionError: the registry evidence document is missing
 E       assert False
 E        +  where False = exists()
 E        +    where exists = PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md').exists
-E        +      where PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f37169b0c50>.DOC
+E        +      where PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7fe332d72a50>.DOC
 
 tests/unit/test_interface_docs.py:116: AssertionError
 =================================== FAILURES ===================================
 _ TestTheyAreDeclaredComponents.test_the_documentation_is_regenerated_from_the_library[confirm_dialog] _
 
-self = <test_action_lifecycle_components.TestTheyAreDeclaredComponents object at 0x7f371d45bf10>
+self = <test_action_lifecycle_components.TestTheyAreDeclaredComponents object at 0x7fe346b58e90>
 name = 'confirm_dialog'
 
     @pytest.mark.parametrize("name", ("confirm_dialog", "toast"))
@@ -223,7 +223,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_bas
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 _ TestTheyAreDeclaredComponents.test_the_documentation_is_regenerated_from_the_library[toast] _
 
-self = <test_action_lifecycle_components.TestTheyAreDeclaredComponents object at 0x7f371d47c190>
+self = <test_action_lifecycle_components.TestTheyAreDeclaredComponents object at 0x7fe346b58c50>
 name = 'toast'
 
     @pytest.mark.parametrize("name", ("confirm_dialog", "toast"))
@@ -256,7 +256,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_bas
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 __ TestTheDocumentIsGenerated.test_the_document_is_what_the_product_now_says ___
 
-self = <test_action_surface_audit.TestTheDocumentIsGenerated object at 0x7f371d3ec050>
+self = <test_action_surface_audit.TestTheDocumentIsGenerated object at 0x7fe346ab7110>
 
     def test_the_document_is_what_the_product_now_says(self):
 >       assert _generated_block().strip() == reference_markdown().strip()
@@ -290,7 +290,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_bas
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 _ TestTheDocumentIsGenerated.test_the_document_explains_itself_without_a_count_in_prose _
 
-self = <test_action_surface_audit.TestTheDocumentIsGenerated object at 0x7f371d3ec1d0>
+self = <test_action_surface_audit.TestTheDocumentIsGenerated object at 0x7fe346ab7c50>
 
     def test_the_document_explains_itself_without_a_count_in_prose(self):
 >       head, _ = DOC.read_text(encoding="utf-8").split(BEGIN, 1)
@@ -385,7 +385,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_bas
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 _ TestTheStateVocabularyIsComplete.test_the_document_calls_them_not_yet_rather_than_implying_coverage _
 
-self = <test_component_library.TestTheStateVocabularyIsComplete object at 0x7f371a784f90>
+self = <test_component_library.TestTheStateVocabularyIsComplete object at 0x7fe343b78890>
 
     def test_the_document_calls_them_not_yet_rather_than_implying_coverage(self):
 >       text = LIBRARY_DOC.read_text()
@@ -416,7 +416,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_bas
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 _ TestTheDocumentCannotDrift.test_the_generated_section_matches_the_components _
 
-self = <test_component_library.TestTheDocumentCannotDrift object at 0x7f371a764c10>
+self = <test_component_library.TestTheDocumentCannotDrift object at 0x7fe343b59690>
 
     def test_the_generated_section_matches_the_components(self):
 >       text = LIBRARY_DOC.read_text()
@@ -447,7 +447,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_bas
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 ________ TestTheDocumentCannotDrift.test_the_document_states_the_rules _________
 
-self = <test_component_library.TestTheDocumentCannotDrift object at 0x7f371a764390>
+self = <test_component_library.TestTheDocumentCannotDrift object at 0x7fe343b59d90>
 
     def test_the_document_states_the_rules(self):
 >       text = LIBRARY_DOC.read_text()
@@ -478,7 +478,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_bas
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 __________ TestAdoption.test_the_audit_counts_the_hand_written_markup __________
 
-self = <test_component_library.TestAdoption object at 0x7f371a75b1d0>
+self = <test_component_library.TestAdoption object at 0x7fe343b4e8d0>
 
     def test_the_audit_counts_the_hand_written_markup(self):
         """The measure of this phase is a number, not an impression."""
@@ -538,7 +538,7 @@ tests/unit/test_content_vs_identity.py:72: AssertionError
 ERROR    pipeline.storage_pipeline:storage_pipeline.py:2688 Error extracting text: 'NoneType' object has no attribute '_media_metadata_text'
 _________ TestTheDocumentCannotDrift.test_the_generated_block_matches __________
 
-self = <test_experience_contract.TestTheDocumentCannotDrift object at 0x7f37095d2310>
+self = <test_experience_contract.TestTheDocumentCannotDrift object at 0x7fe332cc9150>
 
     def test_the_generated_block_matches(self):
 >       document = DOC.read_text()
@@ -569,7 +569,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_bas
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 ____ TestTheDocumentCannotDrift.test_the_document_has_no_hand_typed_counts _____
 
-self = <test_experience_contract.TestTheDocumentCannotDrift object at 0x7f37095d2ed0>
+self = <test_experience_contract.TestTheDocumentCannotDrift object at 0x7fe332ccacd0>
 
     def test_the_document_has_no_hand_typed_counts(self):
         """The same rule the registry document already follows."""
@@ -627,7 +627,7 @@ E         Use -v to get more diff
 tests/unit/test_identifiers_intel.py:20: AssertionError
 ____ TestOtherDocuments.test_the_productization_map_points_at_the_registry _____
 
-self = <test_interface_docs.TestOtherDocuments object at 0x7f37097fb190>
+self = <test_interface_docs.TestOtherDocuments object at 0x7fe332d71dd0>
 
     def test_the_productization_map_points_at_the_registry(self):
 >       text = (PROJECT_ROOT / "docs/PRODUCTIZATION_MAP.md").read_text()
@@ -658,7 +658,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_bas
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 _______________ TestOtherDocuments.test_the_domain_model_exists ________________
 
-self = <test_interface_docs.TestOtherDocuments object at 0x7f37097fbad0>
+self = <test_interface_docs.TestOtherDocuments object at 0x7fe332d71350>
 
     def test_the_domain_model_exists(self):
 >       assert (PROJECT_ROOT / "docs/DOMAIN_MODEL.md").exists()
@@ -669,7 +669,7 @@ E        +    where exists = (PosixPath('{tmp}/final_base') / 'docs/DOMAIN_MODEL
 tests/unit/test_interface_docs.py:101: AssertionError
 _ TestAllFiveConsumersAgree.test_the_generated_documentation_states_the_policy _
 
-self = <test_interface_lifecycle.TestAllFiveConsumersAgree object at 0x7f37094b5350>
+self = <test_interface_lifecycle.TestAllFiveConsumersAgree object at 0x7fe332da73d0>
 
     def test_the_generated_documentation_states_the_policy(self):
         """The reference shows each interface's status, from the same registry."""
@@ -703,7 +703,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_bas
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 ___________ TestTheRegistryIsFrozen.test_the_freeze_is_written_down ____________
 
-self = <test_interface_lifecycle.TestTheRegistryIsFrozen object at 0x7f37096bdd50>
+self = <test_interface_lifecycle.TestTheRegistryIsFrozen object at 0x7fe332986c50>
 
     def test_the_freeze_is_written_down(self):
 >       text = (PROJECT_ROOT / "docs/INTERFACE_REGISTRY.md").read_text().lower()
@@ -863,50 +863,50 @@ E           docs/reference/python/reader_file.md
 E           docs/reference/python/services.md
 E           docs/reference/python/tools.md
 E           docs/reference/HTTP_ROUTES.md
-E         3
-E         2026-10-27 13:24:43 INFO core.resource_coordinator:   CPU cores: 2
-E         2026-10-27 13:24:43 INFO core.resource_coordinator:   Total memory: 3.8 GB
-E         2026-10-27 13:24:43 INFO core.resource_coordinator:   Allocated workers: 1
-E         2026-10-27 13:24:43 INFO core.resource_coordinator:   Allocated DB pool: 10
-E         2026-10-27 13:24:43 INFO database.database.config: DB pool size adjusted by resource coordinator: 25 -> 10
-E         2026-10-27 13:24:43 INFO database.database.database: Shared connection pool initialized: 2-10 connections
-E         2026-10-27 13:24:43 INFO apps.web.app: ✅ Notification service initialized at system level
-E         2026-10-27 13:24:43 INFO apps.web.app: ✅ SECRET_KEY loaded from environment variable
-E         2026-10-27 13:24:43 INFO apps.web.app: ✅ SECRET_KEY configured (length: 45)
-E         2026-10-27 13:24:43 INFO apps.web.app: ✅ CSRF protection enabled
-E         2026-10-27 13:24:43 INFO database.database.config: DB pool size adjusted by resource coordinator: 25 -> 10
-E         2026-10-27 13:24:43 WARNING apps.web.app: Job scheduler not started: ImportError: cannot import name 'Scheduler' from 'services.scheduling.scheduler' ({tmp}/final_base/services/scheduling/scheduler.py)
-E         2026-10-27 13:24:43 INFO apps.web.app: ✅ Rate limiting enabled (default 60/min, 600/hour per client)
-E         2026-10-27 13:24:43 INFO apps.web.app: ✅ Gzip compression enabled
-E         2026-10-27 13:24:43 INFO apps.web.app: ✅ Secure error handlers registered (client-safe messages)
-E         2026-10-27 13:24:43 INFO apps.web.app: ✅ Authentication middleware active (all routes default-deny)
-E         2026-10-27 13:24:43 INFO apps.web.app: ✅ Disclosure register active (DATA_EXPORTED, fail-closed)
-E         2026-10-27 13:24:43 INFO apps.web.app: ✅ Authentication routes registered
-E         2026-10-27 13:24:43 INFO apps.web.app: ✅ Setup routes registered (first)
-E         2026-10-27 13:24:43 INFO apps.web.app: ✅ Content analysis API registered
-E         2026-10-27 13:24:45 INFO settings.routes: ✅ Settings API routes and page route registered
-E         2026-10-27 13:24:45 INFO Api.routes.performance: Performance monitoring routes registered
-E         2026-10-27 13:24:45 INFO apps.web.app: ✅ File Analysis API registered
-E         2026-10-27 13:24:45 INFO apps.web.app: ✅ Cursor-based pagination API registered
-E         2026-10-27 13:24:45 INFO apps.web.app: ✅ Concurrency monitoring dashboard registered
-E         2026-10-27 13:24:45 INFO Api.routes.translations: ✅ Translation API routes registered
-E         2026-10-27 13:24:45 INFO apps.web.app: ✅ Translation API routes registered
-E         2026-10-27 13:24:45 INFO Api.routes.health: ✅ Health check endpoint registered at /health
-E         2026-10-27 13:24:45 INFO apps.web.app: ✅ Error monitoring dashboard API registered
-E         2026-10-27 13:24:45 INFO apps.web.app: ✅ Interface registry views registered
-E         2026-10-27 13:24:45 INFO apps.web.app: ✅ Experience contract views registered
-E         2026-10-27 13:24:45 INFO apps.web.app: ✅ List export views registered
-E         2026-10-27 13:24:45 INFO Api.routes.map_api: Map viewer routes registered
-E         2026-10-27 13:24:45 INFO apps.web.app: ✅ Map viewer registered
-E         2026-10-27 13:24:45 INFO apps.web.app: ✅ File operation views registered
+E         5
+E         2026-10-27 14:21:25 INFO core.resource_coordinator:   CPU cores: 2
+E         2026-10-27 14:21:25 INFO core.resource_coordinator:   Total memory: 3.8 GB
+E         2026-10-27 14:21:25 INFO core.resource_coordinator:   Allocated workers: 1
+E         2026-10-27 14:21:25 INFO core.resource_coordinator:   Allocated DB pool: 10
+E         2026-10-27 14:21:25 INFO database.database.config: DB pool size adjusted by resource coordinator: 25 -> 12
+E         2026-10-27 14:21:25 INFO database.database.database: Shared connection pool initialized: 2-12 connections
+E         2026-10-27 14:21:25 INFO apps.web.app: ✅ Notification service initialized at system level
+E         2026-10-27 14:21:25 INFO apps.web.app: ✅ SECRET_KEY loaded from environment variable
+E         2026-10-27 14:21:25 INFO apps.web.app: ✅ SECRET_KEY configured (length: 45)
+E         2026-10-27 14:21:25 INFO apps.web.app: ✅ CSRF protection enabled
+E         2026-10-27 14:21:25 INFO database.database.config: DB pool size adjusted by resource coordinator: 25 -> 10
+E         2026-10-27 14:21:25 WARNING apps.web.app: Job scheduler not started: ImportError: cannot import name 'Scheduler' from 'services.scheduling.scheduler' ({tmp}/final_base/services/scheduling/scheduler.py)
+E         2026-10-27 14:21:25 INFO apps.web.app: ✅ Rate limiting enabled (default 60/min, 600/hour per client)
+E         2026-10-27 14:21:25 INFO apps.web.app: ✅ Gzip compression enabled
+E         2026-10-27 14:21:25 INFO apps.web.app: ✅ Secure error handlers registered (client-safe messages)
+E         2026-10-27 14:21:25 INFO apps.web.app: ✅ Authentication middleware active (all routes default-deny)
+E         2026-10-27 14:21:25 INFO apps.web.app: ✅ Disclosure register active (DATA_EXPORTED, fail-closed)
+E         2026-10-27 14:21:25 INFO apps.web.app: ✅ Authentication routes registered
+E         2026-10-27 14:21:25 INFO apps.web.app: ✅ Setup routes registered (first)
+E         2026-10-27 14:21:25 INFO apps.web.app: ✅ Content analysis API registered
+E         2026-10-27 14:21:26 INFO settings.routes: ✅ Settings API routes and page route registered
+E         2026-10-27 14:21:27 INFO Api.routes.performance: Performance monitoring routes registered
+E         2026-10-27 14:21:27 INFO apps.web.app: ✅ File Analysis API registered
+E         2026-10-27 14:21:27 INFO apps.web.app: ✅ Cursor-based pagination API registered
+E         2026-10-27 14:21:27 INFO apps.web.app: ✅ Concurrency monitoring dashboard registered
+E         2026-10-27 14:21:27 INFO Api.routes.translations: ✅ Translation API routes registered
+E         2026-10-27 14:21:27 INFO apps.web.app: ✅ Translation API routes registered
+E         2026-10-27 14:21:27 INFO Api.routes.health: ✅ Health check endpoint registered at /health
+E         2026-10-27 14:21:27 INFO apps.web.app: ✅ Error monitoring dashboard API registered
+E         2026-10-27 14:21:27 INFO apps.web.app: ✅ Interface registry views registered
+E         2026-10-27 14:21:27 INFO apps.web.app: ✅ Experience contract views registered
+E         2026-10-27 14:21:27 INFO apps.web.app: ✅ List export views registered
+E         2026-10-27 14:21:27 INFO Api.routes.map_api: Map viewer routes registered
+E         2026-10-27 14:21:27 INFO apps.web.app: ✅ Map viewer registered
+E         2026-10-27 14:21:27 INFO apps.web.app: ✅ File operation views registered
 E         
 E       assert 1 == 0
-E        +  where 1 = CompletedProcess(args=['{venv}/bin/python', 'tools/docs/generate_reference.py', '--check'], returncode=1, stdout='sta...NFO apps.web.app: ✅ Map viewer registered\n2026-10-27 13:24:45 INFO apps.web.app: ✅ File operation views registered\n").returncode
+E        +  where 1 = CompletedProcess(args=['{venv}/bin/python', 'tools/docs/generate_reference.py', '--check'], returncode=1, stdout='sta...NFO apps.web.app: ✅ Map viewer registered\n2026-10-27 14:21:27 INFO apps.web.app: ✅ File operation views registered\n").returncode
 
 tests/unit/test_reference_docs.py:21: AssertionError
 _ TestTheEvidenceIsMeasuredNotWritten.test_the_document_is_what_the_product_now_says _
 
-self = <test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten object at 0x7f37081c73d0>
+self = <test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten object at 0x7fe3318c2810>
 
     def test_the_document_is_what_the_product_now_says(self):
 >       document = (PROJECT_ROOT / "docs/SCREEN_INSPECTOR_EVIDENCE.md").read_text(
@@ -937,7 +937,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_bas
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 _ TestTheEvidenceIsMeasuredNotWritten.test_the_document_explains_itself_without_a_count_in_prose _
 
-self = <test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten object at 0x7f37081c71d0>
+self = <test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten object at 0x7fe3318c36d0>
 
     def test_the_document_explains_itself_without_a_count_in_prose(self):
 >       head, _ = (PROJECT_ROOT / "docs/SCREEN_INSPECTOR_EVIDENCE.md").read_text(
@@ -968,7 +968,7 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_bas
 /usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
 __ TestDependencyInventory.test_the_committed_inventory_matches_the_generator __
 
-self = <test_windows_offline_kit.TestDependencyInventory object at 0x7f3708780690>
+self = <test_windows_offline_kit.TestDependencyInventory object at 0x7fe331f65bd0>
 
     def test_the_committed_inventory_matches_the_generator(self):
         assert inventory_dependencies.generate() == (
