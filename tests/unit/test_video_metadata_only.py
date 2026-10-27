@@ -147,3 +147,82 @@ def test_the_opencv_path_also_says_no_speech_was_extracted():
 
 def test_probing_a_missing_file_returns_nothing_rather_than_raising(tmp_path):
     assert probe_container_metadata(str(tmp_path / "absent.mp4")) == {}
+
+
+# --------------------------------------------------------------------------- #
+# 3. The metadata has to survive the storage boundary
+# --------------------------------------------------------------------------- #
+def _stored_text(reader_result):
+    from pipeline.storage_pipeline import StoragePipeline
+
+    content = reader_result.get("content", reader_result)
+    return StoragePipeline._extract_text_from_content.__get__(
+        object.__new__(StoragePipeline))(content) or ""
+
+
+def test_video_metadata_reaches_the_stored_text():
+    """The readers reported duration and codec; the store kept 0 characters."""
+    _require(SAMPLE)
+    result = VideoFileReader().read_video_file(SAMPLE)
+    stored = _stored_text(result)
+    assert stored, "a media read that yields metadata stored nothing"
+    assert f"Resolution: {result['width']}x{result['height']}" in stored
+    assert "Duration:" in stored
+    assert "Codec" in stored or "codec" in stored.lower()
+
+
+def test_the_stored_text_says_that_speech_was_not_extracted():
+    _require(SAMPLE)
+    stored = _stored_text(VideoFileReader().read_video_file(SAMPLE))
+    assert "Speech: not extracted" in stored
+
+
+def test_container_tags_are_stored_when_present(tmp_path):
+    if ffmpeg_path() is None:
+        pytest.skip("no ffmpeg binary available")
+    import imageio_ffmpeg
+
+    clip = tmp_path / "tagged.mp4"
+    completed = subprocess.run(
+        [imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-hide_banner", "-loglevel", "error",
+         "-f", "lavfi", "-i", "testsrc=size=160x120:rate=5", "-t", "1",
+         "-pix_fmt", "yuv420p", "-metadata", "title=Evidence clip", str(clip)],
+        capture_output=True, text=True)
+    if completed.returncode != 0 or not clip.exists():
+        pytest.skip(f"could not build a fixture clip: {completed.stderr[:200]}")
+    stored = _stored_text(VideoFileReader().read_video_file(str(clip)))
+    assert "Tag title: Evidence clip" in stored, stored
+
+
+def test_media_metadata_is_in_provenance_not_only_in_text():
+    from pipeline.storage_pipeline import StoragePipeline
+
+    _require(SAMPLE)
+    result = VideoFileReader().read_video_file(SAMPLE)
+    provenance = StoragePipeline._build_extraction_provenance.__get__(
+        object.__new__(StoragePipeline))(result)
+    media = (provenance or {}).get("media") or {}
+    assert media.get("speech_extracted") is False
+    assert media.get("resolution")
+    assert media.get("duration_seconds")
+
+
+def test_a_decoder_failure_falls_back_to_the_container():
+    """moviepy refuses several containers; the read is not a failure because of it.
+
+    Called on the fallback itself, because whether moviepy is installed decides
+    which path a corpus file takes and the corpus contains both kinds: an
+    audio-only MP4 and several QuickTime containers raise inside moviepy today.
+    """
+    _require(SAMPLE)
+    if ffmpeg_path() is None:
+        pytest.skip("no ffmpeg binary available")
+    reader = VideoFileReader()
+    result = {"filepath": SAMPLE, "format": ".mp4"}
+    recovered = reader._container_metadata_fallback(
+        SAMPLE, result, reason="decoder failed: first frame unreadable")
+    assert recovered is True
+    assert result["metadata_only"] is True
+    assert result["speech_extracted"] is False
+    assert "decoder failed" in result["extraction_note"]
+    assert result["resolution"]

@@ -1557,6 +1557,24 @@ class StoragePipeline:
         if forensics:
             provenance["forensics"] = forensics
 
+        # ---- media containers ----
+        # Duration, streams and the container's own tags are structure, so they
+        # are queryable here; the searchable copy is in the text channel (see
+        # _media_metadata_text). speech_extracted is recorded even when it is
+        # False: "we read the container and not the speech" is a fact about the
+        # artifact that must survive storage.
+        media: Dict[str, Any] = {}
+        for key in ("duration_seconds", "duration_formatted", "resolution",
+                    "width", "height", "codec", "fps", "audio_codec",
+                    "audio_sample_rate", "has_audio", "metadata_source",
+                    "metadata_only", "speech_extracted", "missing_dependency"):
+            if content.get(key) is not None:
+                media[key] = content.get(key)
+        if isinstance(content.get("tags"), dict) and content["tags"]:
+            media["tags"] = content["tags"]
+        if media:
+            provenance["media"] = media
+
         # ---- extraction diagnostics ----
         info = content.get("extraction_info")
         if isinstance(info, dict) and info:
@@ -1805,6 +1823,69 @@ class StoragePipeline:
         
         return str(title)
     
+    #: Reader keys that describe a media container rather than text inside it.
+    _MEDIA_FIELDS = (
+        ("duration_formatted", "Duration"),
+        ("resolution", "Resolution"),
+        ("codec", "Video codec"),
+        ("fps", "Frame rate"),
+        ("frame_count", "Frame count"),
+        ("audio_codec", "Audio codec"),
+        ("audio_sample_rate", "Audio sample rate"),
+        ("has_audio", "Has audio"),
+        ("quality", "Quality"),
+        ("file_size_formatted", "File size"),
+        ("metadata_source", "Metadata source"),
+    )
+
+    def _media_metadata_text(self, content: Dict) -> str:
+        """The container facts of an audio/video artifact, as stored text.
+
+        A video or audio read produces metadata, not prose, and the text
+        builder used to drop all of it: the readers reported duration,
+        resolution, codec and container tags, and the store kept zero
+        characters for every media file in the corpus. Duration and codec are
+        facts an examiner searches for, so they are stored as labelled lines;
+        the honest scope of the read is stored with them.
+        """
+        if not isinstance(content, dict):
+            return ""
+        if not (content.get("extraction_scope") == "container_metadata"
+                or content.get("duration_seconds") is not None
+                or content.get("resolution")
+                or content.get("audio_codec")):
+            return ""
+        if any(isinstance(content.get(key), list) and content.get(key)
+               for key in ("pages", "slides", "sheets", "paragraphs")):
+            # A container that also yielded text (an embedded transcript, for
+            # instance) is handled by its own branch; the metadata is added
+            # alongside, not instead.
+            pass
+        parts: List[str] = []
+        lines: List[str] = []
+        for key, label in self._MEDIA_FIELDS:
+            value = content.get(key)
+            if value in (None, "", False) and key != "has_audio":
+                continue
+            if key == "has_audio" and value is None:
+                continue
+            if key == "duration_formatted" and content.get("duration_seconds"):
+                value = f"{value} ({content['duration_seconds']:.2f} s)"
+            lines.append(f"{label}: {value}")
+        tags = content.get("tags")
+        if isinstance(tags, dict):
+            for key, value in tags.items():
+                if value:
+                    lines.append(f"Tag {key}: {value}")
+        if content.get("speech_extracted") is False:
+            lines.append("Speech: not extracted (no transcription engine)")
+        if lines:
+            parts.append("\n".join(lines))
+        note = content.get("extraction_note")
+        if isinstance(note, str) and note.strip():
+            parts.append(note.strip())
+        return "\n".join(parts)
+
     def _extract_text_from_content(self, content: Dict) -> str:
         """
         Extract text from content dictionary (all types)
@@ -1832,7 +1913,13 @@ class StoragePipeline:
             # spatial_position: numeric value for sorting (page_number * 1000000 + y_coord * 1000 + x_coord)
             # coordinates: optional dict with x, y, width, height for spatial reference
             ordered_content = []
-            
+
+            # 0. MEDIA CONTAINER METADATA
+            # Before any body text: a media artifact's facts are its content.
+            media_text = self._media_metadata_text(content)
+            if media_text:
+                ordered_content.append((-1, 'media_metadata', 0, media_text, None))
+
             # 1. IMAGES (OCR text only - no metadata)
             # Store ONLY the OCR text, preserving formatting
             # Detect images by checking for OCR-related keys (ocr_attempted, ocr_successful, ocr_language)

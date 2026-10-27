@@ -282,6 +282,12 @@ class VideoFileReader(BaseReader):
                     result["codec"] = "Unknown"
             
             cap.release()
+            # OpenCV decodes frames but says nothing about the container's own
+            # tags (title, creation_time, encoder) or about the audio stream.
+            # One ffmpeg probe fills those in and never overrides what the
+            # decoder measured.
+            for key, value in probe_container_metadata(filepath).items():
+                result.setdefault(key, value)
             result["extraction_scope"] = EXTRACTION_SCOPE
             result["speech_extracted"] = False
             result["extraction_note"] = NO_SPEECH_NOTE
@@ -343,25 +349,9 @@ class VideoFileReader(BaseReader):
             # resolution, codec and creation time are stored is worth more than
             # an error record, and the result says plainly which part was
             # skipped, so it is not mistaken for a full read.
-            probed = probe_container_metadata(filepath)
-            if probed:
-                result.update(probed)
-                if result.get("width") and result.get("height"):
-                    result["resolution"] = f"{result['width']}x{result['height']}"
-                    _add_quality(result)
-                if result.get("duration_seconds"):
-                    result["duration_formatted"] = self._format_duration(
-                        result["duration_seconds"])
-                result["metadata_only"] = True
-                result["extraction_scope"] = EXTRACTION_SCOPE
-                result["speech_extracted"] = False
-                result["extraction_note"] = (
-                    "Container metadata recovered with ffmpeg; no video decoder "
-                    "(opencv-python or moviepy) is installed, so frames were not "
-                    "decoded. " + NO_SPEECH_NOTE
-                )
-                result["missing_dependency"] = (
-                    "opencv-python or moviepy: frame-level extraction unavailable")
+            recovered = self._container_metadata_fallback(
+                filepath, result, reason="no video decoder installed")
+            if recovered:
                 return result
             error_msg = (
                 "No video library installed and no ffmpeg available: container "
@@ -391,6 +381,17 @@ class VideoFileReader(BaseReader):
                         return audio
                 except Exception:
                     pass
+            # A decoder that refuses a file is not the same as a file with no
+            # metadata. moviepy raises on an audio-only MP4 and on several
+            # QuickTime containers, and every one of those reads used to end as
+            # an error with no duration, no resolution and no codec - though
+            # ffmpeg describes all of them. The container is probed before the
+            # read is declared a failure, and the decoder's complaint is kept
+            # so the partial read is not mistaken for a successful decode.
+            if self._container_metadata_fallback(
+                    filepath, result, reason=f"decoder failed: {err_text[:160]}"):
+                result["decoder_error"] = err_text[:500]
+                return result
             error_msg = f"Error reading video file: {err_text}"
             handle_error(
                 e,
@@ -400,6 +401,32 @@ class VideoFileReader(BaseReader):
             )
             result["error"] = error_msg
             return result
+
+    def _container_metadata_fallback(self, filepath: str, result: Dict[str, Any],
+                                     reason: str) -> bool:
+        """Fill ``result`` from ffmpeg's view of the container; False if impossible."""
+        probed = probe_container_metadata(filepath)
+        if not probed:
+            return False
+        # A decoder may have got as far as the stream geometry before failing;
+        # ffmpeg's reading is the container's own and replaces it.
+        result.update(probed)
+        if result.get("width") and result.get("height"):
+            result["resolution"] = f"{result['width']}x{result['height']}"
+            _add_quality(result)
+        if result.get("duration_seconds"):
+            result["duration_formatted"] = self._format_duration(
+                result["duration_seconds"])
+        result["metadata_only"] = True
+        result["extraction_scope"] = EXTRACTION_SCOPE
+        result["speech_extracted"] = False
+        result["extraction_note"] = (
+            f"Container metadata recovered with ffmpeg ({reason}); frames were "
+            "not decoded. " + NO_SPEECH_NOTE
+        )
+        result["missing_dependency"] = (
+            f"{reason}: frame-level extraction unavailable")
+        return True
     
     def _format_duration(self, seconds):
         """Format duration in HH:MM:SS"""
