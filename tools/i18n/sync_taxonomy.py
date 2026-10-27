@@ -313,7 +313,14 @@ def apply_plan(conn, workbook: rules.Workbook, plan: Plan,
     state = rules.desired_state(workbook)
 
     def word_id(text: str) -> int:
-        found = _scalar(conn, "SELECT id FROM words WHERE word = %s", (text,))
+        # ``words.word`` is UNIQUE case-sensitively, while the planner compares
+        # words case-insensitively. Matching the same way here keeps the two
+        # halves of the tool consistent: a row written by a lowercasing writer
+        # is reused, not duplicated. An exact match wins when both exist.
+        found = _scalar(
+            conn,
+            "SELECT id FROM words WHERE lower(word) = lower(%s)"
+            " ORDER BY (word = %s) DESC, id LIMIT 1", (text, text))
         if found:
             return int(found)
         row = _query(conn, "INSERT INTO words (word) VALUES (%s) RETURNING id", (text,))
@@ -324,7 +331,8 @@ def apply_plan(conn, workbook: rules.Workbook, plan: Plan,
         found = _scalar(
             conn,
             "SELECT c.id FROM categorys c JOIN words w ON w.id = c.word_id"
-            " WHERE w.word = %s", (name,))
+            " WHERE lower(w.word) = lower(%s) ORDER BY (w.word = %s) DESC, c.id LIMIT 1",
+            (name, name))
         if found:
             return int(found)
         if not create:

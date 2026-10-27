@@ -382,3 +382,50 @@ def test_the_reported_counts_match_the_database(conn):
     # a new category contributes its own words (its name) plus the two terms
     assert after["words"] - before["words"] == written["words_created"]
     assert written["words_created"] >= 3
+
+
+def test_a_lowercase_row_is_reused_rather_than_duplicated(conn):
+    """The importer lowercases; the sync tool keeps the workbook's spelling.
+
+    ``words.word`` is UNIQUE case-sensitively, so matching exactly would make a
+    capitalised worksheet term insert a second row beside an existing lowercase
+    one - and, because ``categorys.word_id`` is a different word id, a second
+    category with the same name. The stored row is reused instead.
+    """
+    suffix = token()
+    name = f"Zeta Case {suffix}"
+    term = f"Alpha{suffix}"
+    with conn.cursor() as cur:
+        cur.execute("INSERT INTO words (word) VALUES (%s)", (term.lower(),))
+    conn.commit()
+
+    path = build(workbook_path(), {name: {"terms": [term]}})
+    _, plan, written = sync_workbook(conn, path)
+
+    assert plan.create_words == [], "the plan already knew the word exists"
+    assert scalar(conn, "SELECT count(*) FROM words WHERE lower(word) = lower(%s)",
+                  (term,)) == 1
+    # a category stores its whole name as one word row, so the only new word
+    # is that name; the term was reused
+    assert written["words_created"] == 1, "the term was inserted a second time"
+    with conn.cursor() as cur:
+        cur.execute("SELECT tw.word FROM words_categorys wc"
+                    " JOIN categorys c ON c.id = wc.category_id"
+                    " JOIN words cw ON cw.id = c.word_id"
+                    " JOIN words tw ON tw.id = wc.word_id WHERE cw.word = %s", (name,))
+        assert [row[0] for row in cur.fetchall()] == [term.lower()], (
+            "the link points at the stored spelling")
+
+
+def test_the_same_workbook_twice_creates_one_category_per_case(conn):
+    """A category name in another casing must not become a second category."""
+    suffix = token()
+    path = build(workbook_path(), {f"Zeta Cased {suffix}": {"terms": [f"Alpha{suffix}"]}})
+    sync_workbook(conn, path)
+
+    lower = build(workbook_path(),
+                  {f"zeta cased {suffix}": {"terms": [f"alpha{suffix}"]}})
+    workbook = rules.read(str(lower))
+    plan = sync.build_plan(conn, workbook)
+    assert plan.create_categories == []
+    assert plan.rename_categories == [], "a casing change is not a rename by itself"

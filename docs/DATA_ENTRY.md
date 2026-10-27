@@ -113,10 +113,12 @@ review — the test failing is the tool telling you what your edit did.
 * **Arabic names.** A term's Arabic name is not in this workbook; it lives in
   `term_names` and is not machine-translated. See
   [REGISTRY_EVIDENCE.md](REGISTRY_EVIDENCE.md).
-* **Case variants across sheets.** `Server` and `server` in two different sheets
-  are two words in `words`. The import lower-cases; the sync tool keeps the
-  workbook's spelling, which is what the interface displays. Keep the spelling
-  consistent within a file.
+* **Case.** The spelling in the workbook is the spelling the interface shows, so
+  it is kept: the sync tool stores it as written, and the importer reuses an
+  existing row whatever its casing rather than adding a twin. Because
+  `words.word` is unique case-**sensitively**, two spellings could still exist
+  side by side if an older build created both; both tools then pick the
+  spelling you typed. Keep one spelling per file.
 * **Phrase ownership beyond one category.** The schema stores a keyword once, so
   a phrase in two sheets belongs to one of them. `_Keyword Owners` records which;
   the other sheet's claim is reported, not stored.
