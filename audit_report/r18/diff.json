@@ -1,0 +1,838 @@
+{
+ "baseline_files": 698,
+ "final_files": 698,
+ "only_in_baseline": [],
+ "only_in_final": [],
+ "verdict_counts_baseline": {
+  "COMPLETE": 331,
+  "OK-NO-ORACLE": 148,
+  "EMPTY-PLAUSIBLE": 140,
+  "ERROR": 52,
+  "UNVERIFIABLE": 20,
+  "NEAR-COMPLETE": 5,
+  "PARTIAL": 1,
+  "EMPTY-AGREED": 1
+ },
+ "verdict_counts_final": {
+  "COMPLETE": 337,
+  "OK-NO-ORACLE": 209,
+  "EMPTY-PLAUSIBLE": 88,
+  "ERROR": 43,
+  "UNVERIFIABLE": 20,
+  "EMPTY-AGREED": 1
+ },
+ "verdict_changes": [
+  {
+   "path": "Audio/ShortAudioSampleFrench.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/de-DE_(We_Are_At_School_x2).mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/en-AU_(A_Little_Bottle_Of_Water).mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/en-GB_(A_Little_Bottle_Of_Water).mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/en-US_(A_Little_Bottle_Of_Water).mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/it-IT_(We_Are_Having_Class_x2).mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/ja-JP_(We_Are_At_School).mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/ko-KR_(We_Are_Having_Class_x2).mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/pt-BR_(We_Are_At_School).mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/test2.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testAAC.aac",
+   "baseline": "ERROR",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testAACid3.aac",
+   "baseline": "ERROR",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testFLAC.flac",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testFLAC_commentAndNativePicture.flac",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testFLAC_coverArt.flac",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testFLAC_twoCovers.flac",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3_coverArt.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3_id3_false_aac.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3_twoCovers.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3cbrInfoTag.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3i18n.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3i18n_truncated.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3id3v1.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3id3v1_v2.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3id3v2.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3id3v24.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3lyrics.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3mpeg2.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3noid3.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3v23_twoCovers.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP3vbr.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP4.m4a",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP4_coverArt.m4a",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP4_drm.m4a",
+   "baseline": "ERROR",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP4_drm_frma.m4a",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP4_esdsFlags.m4a",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP4_truncated.m4a",
+   "baseline": "ERROR",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP4_twoCovers.m4a",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testMP4_twoSampleEntries.m4a",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testNakedUTF16BOM.mp3",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testVORBIS.ogg",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testVORBIS_coverArt.ogg",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testVORBIS_twoCovers.ogg",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testWAV.wav",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Audio/testWMA.wma",
+   "baseline": "ERROR",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Documents/testNPEOpenDocument.odt",
+   "baseline": "NEAR-COMPLETE",
+   "final": "COMPLETE",
+   "baseline_recall": 0.99,
+   "final_recall": 1.0
+  },
+  {
+   "path": "Documents/testODFwithOOo3.odt",
+   "baseline": "PARTIAL",
+   "final": "COMPLETE",
+   "baseline_recall": 0.9434,
+   "final_recall": 1.0
+  },
+  {
+   "path": "Documents/testODT-TIKA-6000.odt",
+   "baseline": "NEAR-COMPLETE",
+   "final": "COMPLETE",
+   "baseline_recall": 0.9712,
+   "final_recall": 1.0
+  },
+  {
+   "path": "Documents/testODTStyles3.odt",
+   "baseline": "NEAR-COMPLETE",
+   "final": "COMPLETE",
+   "baseline_recall": 0.9826,
+   "final_recall": 1.0
+  },
+  {
+   "path": "Presentations/testPPT_various2.pptx",
+   "baseline": "NEAR-COMPLETE",
+   "final": "COMPLETE",
+   "baseline_recall": 0.9767,
+   "final_recall": 1.0
+  },
+  {
+   "path": "Spreadsheets/CVLKRA-KYC_Download_File_Structure_V3.1.xlsx",
+   "baseline": "NEAR-COMPLETE",
+   "final": "COMPLETE",
+   "baseline_recall": 0.9947,
+   "final_recall": 1.0
+  },
+  {
+   "path": "Videos/en-US_(Hi).mp4",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/ko-KR_(Annyeonghaseyo).mp4",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testFLV.flv",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testMKV.mkv",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testMP4AudioOnly.mp4",
+   "baseline": "ERROR",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testMP4Video.mp4",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testMP4VideoAudio.mp4",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testMP4_QuickTimeMetadata.mov",
+   "baseline": "ERROR",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testMP4_StillImageTimeZero.mov",
+   "baseline": "ERROR",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testMP4_encv.mp4",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testMP4_udtaLocation.mp4",
+   "baseline": "ERROR",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testVideoMp4.mp4",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testVideo_3s.mp4",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testWEBM.webm",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testWMV.wmv",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Videos/testWMV_WMV2.wmv",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "OK-NO-ORACLE",
+   "baseline_recall": null,
+   "final_recall": null
+  }
+ ],
+ "recall_changes": [
+  {
+   "path": "Documents/testODFwithOOo3.odt",
+   "baseline": 0.9434,
+   "final": 1.0,
+   "delta": 0.0566
+  },
+  {
+   "path": "Documents/testODT-TIKA-6000.odt",
+   "baseline": 0.9712,
+   "final": 1.0,
+   "delta": 0.0288
+  },
+  {
+   "path": "Presentations/testPPT_various2.pptx",
+   "baseline": 0.9767,
+   "final": 1.0,
+   "delta": 0.0233
+  },
+  {
+   "path": "Documents/testODTStyles3.odt",
+   "baseline": 0.9826,
+   "final": 1.0,
+   "delta": 0.0174
+  },
+  {
+   "path": "Documents/testNPEOpenDocument.odt",
+   "baseline": 0.99,
+   "final": 1.0,
+   "delta": 0.01
+  },
+  {
+   "path": "Spreadsheets/CVLKRA-KYC_Download_File_Structure_V3.1.xlsx",
+   "baseline": 0.9947,
+   "final": 1.0,
+   "delta": 0.0053
+  }
+ ],
+ "recall_regressions": [],
+ "storage_changes": [
+  {
+   "path": "Spreadsheets/testEXCEL_poi-61034.xlsx",
+   "baseline": 4556,
+   "final": 227,
+   "delta_pct": -95.0
+  },
+  {
+   "path": "Spreadsheets/CVLKRA-KYC_Download_File_Structure_V3.1.xlsx",
+   "baseline": 286007,
+   "final": 38973,
+   "delta_pct": -86.4
+  },
+  {
+   "path": "Documents/testPDF_deeplyEmbeddedAttachments.pdf",
+   "baseline": 155,
+   "final": 243,
+   "delta_pct": 56.8
+  },
+  {
+   "path": "Documents/testExtraSpaces.pdf",
+   "baseline": 176,
+   "final": 264,
+   "delta_pct": 50.0
+  },
+  {
+   "path": "Documents/testPDF_Version.11.x.PDFA-1b.pdf",
+   "baseline": 195,
+   "final": 283,
+   "delta_pct": 45.1
+  },
+  {
+   "path": "Documents/testPDF_bom.pdf",
+   "baseline": 206,
+   "final": 294,
+   "delta_pct": 42.7
+  },
+  {
+   "path": "Documents/testPDF_Version.4.x.pdf",
+   "baseline": 207,
+   "final": 295,
+   "delta_pct": 42.5
+  },
+  {
+   "path": "Documents/testPDF_Version.5.x.pdf",
+   "baseline": 207,
+   "final": 295,
+   "delta_pct": 42.5
+  },
+  {
+   "path": "Documents/testPDF_Version.6.x.pdf",
+   "baseline": 207,
+   "final": 295,
+   "delta_pct": 42.5
+  },
+  {
+   "path": "Documents/testPDF_Version.7.x.pdf",
+   "baseline": 207,
+   "final": 295,
+   "delta_pct": 42.5
+  },
+  {
+   "path": "Documents/testPDF_Version.8.x.pdf",
+   "baseline": 207,
+   "final": 295,
+   "delta_pct": 42.5
+  },
+  {
+   "path": "Documents/testPDF_twoAuthors.pdf",
+   "baseline": 207,
+   "final": 295,
+   "delta_pct": 42.5
+  },
+  {
+   "path": "Documents/testPDF_AdobeIllustrator.pdf",
+   "baseline": 210,
+   "final": 298,
+   "delta_pct": 41.9
+  },
+  {
+   "path": "Documents/testColorRendering.pdf",
+   "baseline": 130,
+   "final": 184,
+   "delta_pct": 41.5
+  },
+  {
+   "path": "Documents/testPDF_diffTitles.pdf",
+   "baseline": 214,
+   "final": 302,
+   "delta_pct": 41.1
+  },
+  {
+   "path": "Documents/testFlashInPDF.pdf",
+   "baseline": 200,
+   "final": 282,
+   "delta_pct": 41.0
+  },
+  {
+   "path": "Documents/testPDF_Version.10.x.pdf",
+   "baseline": 229,
+   "final": 317,
+   "delta_pct": 38.4
+  },
+  {
+   "path": "Documents/testPDF_Version.9.x.pdf",
+   "baseline": 231,
+   "final": 319,
+   "delta_pct": 38.1
+  },
+  {
+   "path": "Documents/testPopupAnnotation.pdf",
+   "baseline": 233,
+   "final": 321,
+   "delta_pct": 37.8
+  },
+  {
+   "path": "Documents/testOCR.pdf",
+   "baseline": 236,
+   "final": 324,
+   "delta_pct": 37.3
+  },
+  {
+   "path": "Documents/testPDF_incrementalUpdates.pdf",
+   "baseline": 236,
+   "final": 318,
+   "delta_pct": 34.7
+  },
+  {
+   "path": "Documents/testPDF_JBIG2.pdf",
+   "baseline": 262,
+   "final": 350,
+   "delta_pct": 33.6
+  },
+  {
+   "path": "Documents/testPDFFileEmbInAnnotation_noContents.pdf",
+   "baseline": 266,
+   "final": 354,
+   "delta_pct": 33.1
+  },
+  {
+   "path": "Documents/testOptionalHyphen.pdf",
+   "baseline": 233,
+   "final": 307,
+   "delta_pct": 31.8
+  },
+  {
+   "path": "Documents/testComment.pdf",
+   "baseline": 238,
+   "final": 312,
+   "delta_pct": 31.1
+  },
+  {
+   "path": "Documents/testPageNumber.pdf",
+   "baseline": 241,
+   "final": 315,
+   "delta_pct": 30.7
+  },
+  {
+   "path": "Documents/testAnnotations.pdf",
+   "baseline": 300,
+   "final": 388,
+   "delta_pct": 29.3
+  },
+  {
+   "path": "Documents/testPDFTwoTextBoxes.pdf",
+   "baseline": 266,
+   "final": 340,
+   "delta_pct": 27.8
+  },
+  {
+   "path": "Documents/testPDFFileEmbInAnnotation.pdf",
+   "baseline": 321,
+   "final": 409,
+   "delta_pct": 27.4
+  },
+  {
+   "path": "Documents/testPDF_bookmarks.pdf",
+   "baseline": 315,
+   "final": 397,
+   "delta_pct": 26.0
+  },
+  {
+   "path": "Documents/testLinkAnnotationsButNoContents.pdf",
+   "baseline": 88,
+   "final": 109,
+   "delta_pct": 23.9
+  },
+  {
+   "path": "Documents/testPDF_jsActionOnPage.pdf",
+   "baseline": 88,
+   "final": 109,
+   "delta_pct": 23.9
+  },
+  {
+   "path": "Documents/testPDF_malformedXFA.pdf",
+   "baseline": 88,
+   "final": 109,
+   "delta_pct": 23.9
+  },
+  {
+   "path": "Documents/test-pdf-with-print-ticket-header.pdf",
+   "baseline": 375,
+   "final": 463,
+   "delta_pct": 23.5
+  },
+  {
+   "path": "Spreadsheets/testEXCEL_1img.xlsx",
+   "baseline": 416,
+   "final": 330,
+   "delta_pct": -20.7
+  },
+  {
+   "path": "Spreadsheets/testEXCEL_embeded.xlsx",
+   "baseline": 416,
+   "final": 330,
+   "delta_pct": -20.7
+  },
+  {
+   "path": "Documents/testMicrosoftIRMServices.pdf",
+   "baseline": 438,
+   "final": 526,
+   "delta_pct": 20.1
+  },
+  {
+   "path": "Documents/testPDF-custommetadata.pdf",
+   "baseline": 274,
+   "final": 328,
+   "delta_pct": 19.7
+  },
+  {
+   "path": "Documents/testAppleSingleFile.pdf",
+   "baseline": 127,
+   "final": 148,
+   "delta_pct": 16.5
+  },
+  {
+   "path": "Documents/testPDFTripleLangTitle.pdf",
+   "baseline": 127,
+   "final": 148,
+   "delta_pct": 16.5
+  },
+  {
+   "path": "Documents/testPDF_no_extract_no_accessibility_owner_empty.pdf",
+   "baseline": 127,
+   "final": 148,
+   "delta_pct": 16.5
+  },
+  {
+   "path": "Documents/testPDF_no_extract_yes_accessibility_owner_empty.pdf",
+   "baseline": 127,
+   "final": 148,
+   "delta_pct": 16.5
+  },
+  {
+   "path": "Documents/testPDF_sigflags.pdf",
+   "baseline": 131,
+   "final": 152,
+   "delta_pct": 16.0
+  },
+  {
+   "path": "Documents/testPDF_multiFormatEmbFiles.pdf",
+   "baseline": 138,
+   "final": 159,
+   "delta_pct": 15.2
+  },
+  {
+   "path": "Documents/testPDF_XMPBasicSchema.pdf",
+   "baseline": 145,
+   "final": 166,
+   "delta_pct": 14.5
+  },
+  {
+   "path": "Documents/testOverlappingText.pdf",
+   "baseline": 152,
+   "final": 173,
+   "delta_pct": 13.8
+  },
+  {
+   "path": "Documents/testPDF_PDFEncodedStringInXMP.pdf",
+   "baseline": 155,
+   "final": 176,
+   "delta_pct": 13.5
+  },
+  {
+   "path": "Documents/testContentStreamSpaceGlyphs.pdf",
+   "baseline": 160,
+   "final": 181,
+   "delta_pct": 13.1
+  },
+  {
+   "path": "Documents/testPDFPackage.pdf",
+   "baseline": 674,
+   "final": 762,
+   "delta_pct": 13.1
+  },
+  {
+   "path": "Documents/testPDF_acroform3.pdf",
+   "baseline": 773,
+   "final": 861,
+   "delta_pct": 11.4
+  }
+ ],
+ "stored_chars_baseline": 13558676,
+ "stored_chars_final": 13346728
+}
