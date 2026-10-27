@@ -1,0 +1,9 @@
+# Schema-freeze diff: 445982b (base) -> HEAD
+# command: git diff --stat 445982b HEAD -- database/migrations
+ database/migrations/m0005_term_names.py | 99 +++++++++++++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
+
+# command: git diff --name-status 445982b HEAD -- database/migrations
+A	database/migrations/m0005_term_names.py
+
+# m0001-m0004 byte-identical? (empty = identical)
