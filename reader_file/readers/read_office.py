@@ -1942,6 +1942,8 @@ class OfficeFileReader(BaseReader):
 
                 sheet_cells = 0
                 grid_cells = 0
+                padding_cells_trimmed = 0
+                empty_rows_skipped = 0
                 max_sheet_cells = sheet_cell_cap()
                 max_workbook_cells = workbook_cell_cap()
                 max_grid_cells = sheet_grid_cap()
@@ -1957,9 +1959,13 @@ class OfficeFileReader(BaseReader):
                     # still to read - so only populated cells are counted and
                     # only they are stored.
                     row = list(row)
+                    trimmed = 0
                     while row and (row[-1] is None or row[-1] == ""):
                         row.pop()
+                        trimmed += 1
+                    padding_cells_trimmed += trimmed
                     if not row:
+                        empty_rows_skipped += 1
                         continue
                     grid_cells += padded
                     if grid_cells > max_grid_cells:
@@ -1998,6 +2004,15 @@ class OfficeFileReader(BaseReader):
 
                 if not sheet_data.get("truncated"):
                     sheet_data["cells_read"] = sheet_cells
+                # Why a stored character count can fall without content being
+                # lost: these were never content. Recorded so a smaller body is
+                # a number to check rather than a mystery (testEXCEL_poi-61034
+                # is formulas with no cached values - 410 declared rows, no
+                # values at all - and stored 4,556 characters of separators).
+                if padding_cells_trimmed:
+                    sheet_data["padding_cells_trimmed"] = padding_cells_trimmed
+                if empty_rows_skipped:
+                    sheet_data["empty_rows_skipped"] = empty_rows_skipped
                 if len(sheet_data.get("data") or []) == (sheet.max_row or 0):
                     sheet_data.pop("row_numbers", None)
                 sheet_data["cells_available"] = (

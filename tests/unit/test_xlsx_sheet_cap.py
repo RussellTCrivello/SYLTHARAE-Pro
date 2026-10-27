@@ -106,3 +106,40 @@ def test_the_corpus_sheet_is_not_truncated_by_padding():
     assert not sheet.get("truncated"), sheet.get("truncated_reason")
     # 23 data rows + a header in the source; the padded read used to stop at 15.
     assert len(sheet["data"]) >= 16
+
+
+def test_dropped_padding_is_counted_not_silent(tmp_path):
+    """A smaller body must be a number to check, not a mystery.
+
+    `testEXCEL_poi-61034.xlsx` is formulas with no cached values: 410 declared
+    rows, nothing to read, and round 17 stored 4,556 characters of tab
+    separators for it. Those characters were never content, and a stored-body
+    count that falls therefore has to say why.
+    """
+    from openpyxl import Workbook
+    from openpyxl.styles import Font
+
+    path = tmp_path / "empties.xlsx"
+    wb = Workbook()
+    ws = wb.active
+    ws.cell(row=1, column=1, value="header")
+    # A styled but valueless cell: it stretches the used range the way a stray
+    # format does in real exports, without adding content.
+    ws.cell(row=3, column=5).font = Font(bold=True)
+    wb.save(str(path))
+    sheet = _read(path)["sheets"][ws.title]
+    assert sheet.get("padding_cells_trimmed", 0) > 0
+    assert sheet.get("empty_rows_skipped", 0) >= 1
+    assert sheet["data"] == [["header"]]
+
+
+def test_the_corpus_formula_only_workbook_reports_its_padding():
+    import os
+
+    path = os.path.join(os.path.dirname(__file__), "..", "..", "test-doc",
+                        "Spreadsheets", "testEXCEL_poi-61034.xlsx")
+    if not os.path.exists(path):
+        pytest.skip("corpus file missing")
+    sheets = _read(path)["sheets"]
+    assert sum(s.get("padding_cells_trimmed", 0) for s in sheets.values()) > 2000
+    assert sum(s.get("empty_rows_skipped", 0) for s in sheets.values()) > 400
