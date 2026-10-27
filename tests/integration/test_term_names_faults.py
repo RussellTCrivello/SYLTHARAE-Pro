@@ -189,6 +189,28 @@ class TestTheImportReportsRatherThanStops:
         assert report["inserted"] == 0, "a dry run wrote a row"
 
 
+class TestTheUploadEnvelopeIsNotTheFile:
+    """A browser posts ``multipart/form-data``; the CSV is one part of it."""
+
+    def test_a_multipart_upload_is_imported(self, admin_client, subject):
+        body = ("word,language,name,name_type\n"
+                f"{subject['name']},he,פוליטי{_in(_HEBREW)},alternate\n")
+        response = admin_client.post(
+            "/api/term-names/import",
+            data={"file": (io.BytesIO(body.encode("utf-8")), "names.csv")},
+            content_type="multipart/form-data")
+        assert response.status_code == 200, response.get_data(as_text=True)
+        assert response.get_json()["accepted"] == 1, response.get_data(as_text=True)
+
+    def test_the_raw_body_still_works(self, admin_client, subject):
+        body = ("word,language,name,name_type\n"
+                f"{subject['name']},he,פוליטי{_in(_HEBREW)},alternate\n")
+        response = admin_client.post("/api/term-names/import", data=body,
+                                     content_type="text/csv")
+        assert response.status_code == 200, response.get_data(as_text=True)
+        assert response.get_json()["accepted"] == 1
+
+
 class TestServerErrorsDoNotLeak:
     def _assert_clean(self, response, status, code):
         assert response.status_code == status, response.get_data(as_text=True)

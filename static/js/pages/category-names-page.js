@@ -102,11 +102,14 @@
         var input = document.getElementById('nameCsvFile');
         var report = document.getElementById('nameCsvReport');
         if (!input || !input.files || !input.files.length) return;
-        var body = new FormData();
-        body.append('file', input.files[0]);
+        // The endpoint reads the CSV as text; multipart boundaries are not
+        // part of the file. Sending ``text/csv`` directly keeps the bytes the
+        // user chose and avoids a parser having to strip a form envelope.
+        var text = await input.files[0].text();
         var response = await fetch('/api/term-names/import' + (apply ? '?apply=1' : ''),
-                                   {method: 'POST', body: body,
-                                    headers: {'X-CSRFToken': csrfToken()}});
+                                   {method: 'POST', body: text,
+                                    headers: {'Content-Type': 'text/csv',
+                                              'X-CSRFToken': csrfToken()}});
         var data = await response.json().catch(function () { return {}; });
         report.classList.remove('d-none');
         report.textContent = JSON.stringify(data, null, 2);

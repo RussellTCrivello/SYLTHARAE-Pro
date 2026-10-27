@@ -201,7 +201,13 @@ def register_i18n_term_routes(app) -> None:
     @app.route("/api/term-names/import", methods=["POST"])
     def api_term_names_import():
         """Dry-run by default; ``?apply=1`` writes the valid rows."""
-        raw = request.get_data(cache=False) or b""
+        # A browser file input sends multipart/form-data; ``curl -F`` and the
+        # page's own script may send the CSV as the raw body. Both are read
+        # here, because the first version read only the body and a multipart
+        # upload therefore failed as "the header must contain ..." - a file
+        # the user could see was fine, refused for a reason about boundaries.
+        upload = request.files.get("file")
+        raw = upload.read() if upload else (request.get_data(cache=False) or b"")
         text = raw.decode("utf-8-sig", errors="replace")
         if not text.strip():
             return _error("VALIDATION_FAILED", "the upload is empty", 400)
