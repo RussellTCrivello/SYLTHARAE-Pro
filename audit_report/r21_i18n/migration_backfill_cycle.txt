@@ -1,5 +1,5 @@
 # Backfill cycle against the real taxonomy (10 566 words), 2026-10-27T13:02:28Z
-# command: DB_HOST=/tmp/pgdata_taxonomy_t0oxy2yp DB_NAME=taxonomy_scratch python -m tools.i18n.backfill_term_names <mode>
+# command: DB_HOST={tmp} DB_NAME=taxonomy_scratch python -m tools.i18n.backfill_term_names <mode>
 
 === backfill_term_names --rollback
 {
@@ -197,7 +197,7 @@ rc=0
 rc=0
 
 === m0005 upgrade -> downgrade -> re-upgrade on the populated taxonomy
-# command: python /tmp/m0005_cycle.py (uses database.migrations.m0005_term_names directly)
+# command: python {tmp} (uses database.migrations.m0005_term_names directly)
 {
   "versions_before": [
     "0001",

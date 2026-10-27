@@ -1,0 +1,2026 @@
+....FF.........................................................FF....... [  2%]
+........................................................................ [  4%]
+........................FF.............................................. [  6%]
+........................................................................ [  8%]
+....................................................F................... [ 10%]
+.........FF.....F....................................................... [ 12%]
+........................................................................ [ 14%]
+.........................................FF............................. [ 16%]
+..................................FFFFFF................................ [ 18%]
+........................................................................ [ 20%]
+........................................................................ [ 22%]
+.........FFFF..FFFF.....................................FF.............. [ 24%]
+........................................................................ [ 26%]
+........................................................................ [ 28%]
+........................................................................ [ 31%]
+...............................................................FF....... [ 33%]
+....................................................EEEE...EFFEEEEEE.... [ 35%]
+............F.............F............................................. [ 37%]
+....................................sss................................. [ 39%]
+........................................................................ [ 41%]
+..................ss..........................F.........F............... [ 43%]
+........................................................................ [ 45%]
+.................................s..........................F........... [ 47%]
+.....................................................................FFF [ 49%]
+..................................................FsFFsssssssF.F.ssF.s.. [ 51%]
+................FF...........F.F........................................ [ 53%]
+........................................................................ [ 55%]
+.......................FF.s.......................................FFFF.. [ 57%]
+....................................................s................... [ 59%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+........................................................................ [ 66%]
+.............F.......................................................... [ 68%]
+........................................................................ [ 70%]
+..........................................s........................FF... [ 72%]
+........................................................................ [ 74%]
+........................................................................ [ 76%]
+........................................................................ [ 78%]
+........................................................................ [ 80%]
+........................................................................ [ 82%]
+........................................................................ [ 84%]
+........................................................................ [ 86%]
+........................................................................ [ 88%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 95%]
+............................................F......F.................... [ 97%]
+...................................................................s.... [ 99%]
+..ss......................                                               [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of TestGeneratedBlock.test_the_document_embeds_a_generated_block _
+
+    @pytest.fixture(scope="module")
+    def document():
+>       assert DOC.exists(), "the registry document is missing"
+E       AssertionError: the registry document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md').exists
+
+tests/unit/test_interface_docs.py:24: AssertionError
+___ ERROR at setup of TestGeneratedBlock.test_the_block_matches_the_registry ___
+
+    @pytest.fixture(scope="module")
+    def document():
+>       assert DOC.exists(), "the registry document is missing"
+E       AssertionError: the registry document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md').exists
+
+tests/unit/test_interface_docs.py:24: AssertionError
+_____ ERROR at setup of TestGeneratedBlock.test_regeneration_is_idempotent _____
+
+    @pytest.fixture(scope="module")
+    def document():
+>       assert DOC.exists(), "the registry document is missing"
+E       AssertionError: the registry document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md').exists
+
+tests/unit/test_interface_docs.py:24: AssertionError
+____ ERROR at setup of TestGeneratedBlock.test_splicing_preserves_the_prose ____
+
+    @pytest.fixture(scope="module")
+    def document():
+>       assert DOC.exists(), "the registry document is missing"
+E       AssertionError: the registry document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md').exists
+
+tests/unit/test_interface_docs.py:24: AssertionError
+_ ERROR at setup of TestCountsAreGenerated.test_the_document_states_no_endpoint_count_of_its_own _
+
+    @pytest.fixture(scope="module")
+    def document():
+>       assert DOC.exists(), "the registry document is missing"
+E       AssertionError: the registry document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md').exists
+
+tests/unit/test_interface_docs.py:24: AssertionError
+_ ERROR at setup of TestRegistryEvidence.test_the_document_embeds_both_generated_blocks _
+
+self = <test_interface_docs.TestRegistryEvidence object at 0x7f4d6021a7d0>
+
+    @pytest.fixture(scope="class")
+    def evidence(self):
+>       assert self.DOC.exists(), "the registry evidence document is missing"
+E       AssertionError: the registry evidence document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md').exists
+E        +      where PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f4d6021a7d0>.DOC
+
+tests/unit/test_interface_docs.py:116: AssertionError
+_ ERROR at setup of TestRegistryEvidence.test_the_registry_half_matches_the_registry _
+
+self = <test_interface_docs.TestRegistryEvidence object at 0x7f4d6021a7d0>
+
+    @pytest.fixture(scope="class")
+    def evidence(self):
+>       assert self.DOC.exists(), "the registry evidence document is missing"
+E       AssertionError: the registry evidence document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md').exists
+E        +      where PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f4d6021a7d0>.DOC
+
+tests/unit/test_interface_docs.py:116: AssertionError
+____ ERROR at setup of TestRegistryEvidence.test_regeneration_is_idempotent ____
+
+self = <test_interface_docs.TestRegistryEvidence object at 0x7f4d6021a7d0>
+
+    @pytest.fixture(scope="class")
+    def evidence(self):
+>       assert self.DOC.exists(), "the registry evidence document is missing"
+E       AssertionError: the registry evidence document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md').exists
+E        +      where PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f4d6021a7d0>.DOC
+
+tests/unit/test_interface_docs.py:116: AssertionError
+_ ERROR at setup of TestRegistryEvidence.test_every_required_evidence_item_is_present _
+
+self = <test_interface_docs.TestRegistryEvidence object at 0x7f4d6021a7d0>
+
+    @pytest.fixture(scope="class")
+    def evidence(self):
+>       assert self.DOC.exists(), "the registry evidence document is missing"
+E       AssertionError: the registry evidence document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md').exists
+E        +      where PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f4d6021a7d0>.DOC
+
+tests/unit/test_interface_docs.py:116: AssertionError
+_ ERROR at setup of TestRegistryEvidence.test_the_coverage_claim_is_stated_as_zero_unmanaged _
+
+self = <test_interface_docs.TestRegistryEvidence object at 0x7f4d6021a7d0>
+
+    @pytest.fixture(scope="class")
+    def evidence(self):
+>       assert self.DOC.exists(), "the registry evidence document is missing"
+E       AssertionError: the registry evidence document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md').exists
+E        +      where PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f4d6021a7d0>.DOC
+
+tests/unit/test_interface_docs.py:116: AssertionError
+_ ERROR at setup of TestRegistryEvidence.test_the_document_reports_what_remains_legacy _
+
+self = <test_interface_docs.TestRegistryEvidence object at 0x7f4d6021a7d0>
+
+    @pytest.fixture(scope="class")
+    def evidence(self):
+>       assert self.DOC.exists(), "the registry evidence document is missing"
+E       AssertionError: the registry evidence document is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md').exists
+E        +      where PosixPath('{worktree-base}/docs/REGISTRY_EVIDENCE.md') = <test_interface_docs.TestRegistryEvidence object at 0x7f4d6021a7d0>.DOC
+
+tests/unit/test_interface_docs.py:116: AssertionError
+=================================== FAILURES ===================================
+_ TestTheyAreDeclaredComponents.test_the_documentation_is_regenerated_from_the_library[confirm_dialog] _
+
+self = <test_action_lifecycle_components.TestTheyAreDeclaredComponents object at 0x7f4d7424d490>
+name = 'confirm_dialog'
+
+    @pytest.mark.parametrize("name", ("confirm_dialog", "toast"))
+    def test_the_documentation_is_regenerated_from_the_library(self, name):
+>       document = (PROJECT_ROOT / "docs/COMPONENT_LIBRARY.md").read_text(encoding="utf-8")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_action_lifecycle_components.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/COMPONENT_LIBRARY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/COMPONENT_LIBRARY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_ TestTheyAreDeclaredComponents.test_the_documentation_is_regenerated_from_the_library[toast] _
+
+self = <test_action_lifecycle_components.TestTheyAreDeclaredComponents object at 0x7f4d7424d250>
+name = 'toast'
+
+    @pytest.mark.parametrize("name", ("confirm_dialog", "toast"))
+    def test_the_documentation_is_regenerated_from_the_library(self, name):
+>       document = (PROJECT_ROOT / "docs/COMPONENT_LIBRARY.md").read_text(encoding="utf-8")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_action_lifecycle_components.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/COMPONENT_LIBRARY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/COMPONENT_LIBRARY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+__ TestTheDocumentIsGenerated.test_the_document_is_what_the_product_now_says ___
+
+self = <test_action_surface_audit.TestTheDocumentIsGenerated object at 0x7f4d741b98d0>
+
+    def test_the_document_is_what_the_product_now_says(self):
+>       assert _generated_block().strip() == reference_markdown().strip()
+               ^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_action_surface_audit.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/unit/test_action_surface_audit.py:48: in _generated_block
+    document = DOC.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/ACTION_SURFACE_AUDIT.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/ACTION_SURFACE_AUDIT.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_ TestTheDocumentIsGenerated.test_the_document_explains_itself_without_a_count_in_prose _
+
+self = <test_action_surface_audit.TestTheDocumentIsGenerated object at 0x7f4d741b8310>
+
+    def test_the_document_explains_itself_without_a_count_in_prose(self):
+>       head, _ = DOC.read_text(encoding="utf-8").split(BEGIN, 1)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_action_surface_audit.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/ACTION_SURFACE_AUDIT.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/ACTION_SURFACE_AUDIT.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+____________________ test_architecture_has_mermaid_diagrams ____________________
+
+    def test_architecture_has_mermaid_diagrams():
+>       kinds = {block.split("\n", 1)[0].split()[0] for block in _mermaid_blocks()}
+                                                                 ^^^^^^^^^^^^^^^^^
+
+tests/unit/test_architecture_diagrams.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/unit/test_architecture_diagrams.py:11: in _mermaid_blocks
+    return re.findall(r"```mermaid\n(.*?)```", DOC.read_text(encoding="utf-8"), re.S)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/ARCHITECTURE.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/ARCHITECTURE.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+__________________ test_job_state_diagram_matches_transitions __________________
+
+    def test_job_state_diagram_matches_transitions():
+>       block = next(b for b in _mermaid_blocks() if b.startswith("stateDiagram-v2"))
+                                ^^^^^^^^^^^^^^^^^
+
+tests/unit/test_architecture_diagrams.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/unit/test_architecture_diagrams.py:11: in _mermaid_blocks
+    return re.findall(r"```mermaid\n(.*?)```", DOC.read_text(encoding="utf-8"), re.S)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/ARCHITECTURE.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/ARCHITECTURE.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_ TestTheStateVocabularyIsComplete.test_the_document_calls_them_not_yet_rather_than_implying_coverage _
+
+self = <test_component_library.TestTheStateVocabularyIsComplete object at 0x7f4d7155f2d0>
+
+    def test_the_document_calls_them_not_yet_rather_than_implying_coverage(self):
+>       text = LIBRARY_DOC.read_text()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_component_library.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/COMPONENT_LIBRARY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/COMPONENT_LIBRARY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_ TestTheDocumentCannotDrift.test_the_generated_section_matches_the_components _
+
+self = <test_component_library.TestTheDocumentCannotDrift object at 0x7f4d71549a10>
+
+    def test_the_generated_section_matches_the_components(self):
+>       text = LIBRARY_DOC.read_text()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_component_library.py:427: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/COMPONENT_LIBRARY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/COMPONENT_LIBRARY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+________ TestTheDocumentCannotDrift.test_the_document_states_the_rules _________
+
+self = <test_component_library.TestTheDocumentCannotDrift object at 0x7f4d715483d0>
+
+    def test_the_document_states_the_rules(self):
+>       text = LIBRARY_DOC.read_text()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_component_library.py:438: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/COMPONENT_LIBRARY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/COMPONENT_LIBRARY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+__________ TestAdoption.test_the_audit_counts_the_hand_written_markup __________
+
+self = <test_component_library.TestAdoption object at 0x7f4d71543f90>
+
+    def test_the_audit_counts_the_hand_written_markup(self):
+        """The measure of this phase is a number, not an impression."""
+        from core.frontend.component_audit import counts, users
+    
+        assert counts()["pattern_empty_state"] == len(users(
+            next(p for p in __import__(
+                "core.frontend.component_audit", fromlist=["PATTERNS"]
+            ).PATTERNS if p.key == "empty_state")))
+        assert counts()["pattern_empty_state"] < 7, (
+            "adoption has not started; the baseline was seven templates")
+        assert counts()["pattern_empty_state"] == 3, (
+            "the raw empty-state blocks the card grids carried went with the "
+            "grids when sources and sides moved onto record_table; what is "
+            "left are the three dashboards that have not been migrated")
+        # The seven list interfaces render through record_table now, and the
+        # File Types dashboard's formats list has followed (its documents
+        # panel embeds the shared file-library table); what is left
+        # hand-writing table markup are the dashboards and screens the table
+        # migration has not reached, named by the audit: analysis_batch,
+        # dashboard, analyst_categorization, job_detail, jobs, settings,
+        # translation_manager, auth/users and email_words.
+        #
+        # Not counted, and deliberately: `components/table.html` is the
+        # component itself, and `components/operations_widget.html` renders a
+        # `<table>` its script fills - a mount, like the pagination mounts the
+        # audit counts separately. `users()` reports user-facing templates.
+>       assert counts()["pattern_table"] == 9
+E       assert 12 == 9
+
+tests/unit/test_component_library.py:512: AssertionError
+____________ test_identity_metadata_does_not_displace_real_content _____________
+
+    def test_identity_metadata_does_not_displace_real_content():
+        content = _detection_payload()
+        content["content"] = "the only real sentence"
+        text = _text(content)
+>       assert "the only real sentence" in text
+E       AssertionError: assert 'the only real sentence' in ''
+
+tests/unit/test_content_vs_identity.py:61: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    pipeline.storage_pipeline:storage_pipeline.py:2688 Error extracting text: 'NoneType' object has no attribute '_media_metadata_text'
+______________ test_forensic_text_is_content_and_is_still_joined _______________
+
+    def test_forensic_text_is_content_and_is_still_joined():
+        """Comments, tracked changes and formulas are content, not metadata."""
+        content = _detection_payload()
+        content["content"] = "body text"
+        content["forensic_text"] = "deleted paragraph: payments to the ministry"
+        text = _text(content)
+>       assert "deleted paragraph" in text
+E       AssertionError: assert 'deleted paragraph' in ''
+
+tests/unit/test_content_vs_identity.py:72: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    pipeline.storage_pipeline:storage_pipeline.py:2688 Error extracting text: 'NoneType' object has no attribute '_media_metadata_text'
+______________ test_standalone_rotated_image_text_extraction[90] _______________
+
+tmp_path = PosixPath('{pytest-tmp}/test_standalone_rotated_image_0')
+angle = 90
+
+    @pytest.mark.parametrize("angle", [90, 180, 270])
+    def test_standalone_rotated_image_text_extraction(tmp_path, angle):
+        """Rotated image text extraction must succeed across candidate angles."""
+        img = Image.new("RGB", (1000, 300), "white")
+        draw = ImageDraw.Draw(img)
+        marker = f"ROTATEDIMAGE_{angle}_9911"
+        draw.text((60, 100), marker, fill="black")
+    
+        rot_img = img.rotate(angle, expand=True)
+        img_path = tmp_path / f"rot_{angle}.png"
+        rot_img.save(img_path)
+    
+        reader = ImageFileReader()
+        res = reader.read_image_file_fast(str(img_path))
+        extracted_text = res.get("text", "")
+>       assert "9911" in extracted_text.replace(" ", ""), f"Angle {angle}° failed: {extracted_text}"
+E       AssertionError: Angle 90° failed: 
+E       assert '9911' in ''
+E        +  where '' = <built-in method replace of str object at 0xa618e0>(' ', '')
+E        +    where <built-in method replace of str object at 0xa618e0> = ''.replace
+
+tests/unit/test_date_and_orientation.py:87: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:959 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: rot_90.png
+______________ test_standalone_rotated_image_text_extraction[180] ______________
+
+tmp_path = PosixPath('{pytest-tmp}/test_standalone_rotated_image_1')
+angle = 180
+
+    @pytest.mark.parametrize("angle", [90, 180, 270])
+    def test_standalone_rotated_image_text_extraction(tmp_path, angle):
+        """Rotated image text extraction must succeed across candidate angles."""
+        img = Image.new("RGB", (1000, 300), "white")
+        draw = ImageDraw.Draw(img)
+        marker = f"ROTATEDIMAGE_{angle}_9911"
+        draw.text((60, 100), marker, fill="black")
+    
+        rot_img = img.rotate(angle, expand=True)
+        img_path = tmp_path / f"rot_{angle}.png"
+        rot_img.save(img_path)
+    
+        reader = ImageFileReader()
+        res = reader.read_image_file_fast(str(img_path))
+        extracted_text = res.get("text", "")
+>       assert "9911" in extracted_text.replace(" ", ""), f"Angle {angle}° failed: {extracted_text}"
+E       AssertionError: Angle 180° failed: 
+E       assert '9911' in ''
+E        +  where '' = <built-in method replace of str object at 0xa618e0>(' ', '')
+E        +    where <built-in method replace of str object at 0xa618e0> = ''.replace
+
+tests/unit/test_date_and_orientation.py:87: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: rot_180.png
+______________ test_standalone_rotated_image_text_extraction[270] ______________
+
+tmp_path = PosixPath('{pytest-tmp}/test_standalone_rotated_image_2')
+angle = 270
+
+    @pytest.mark.parametrize("angle", [90, 180, 270])
+    def test_standalone_rotated_image_text_extraction(tmp_path, angle):
+        """Rotated image text extraction must succeed across candidate angles."""
+        img = Image.new("RGB", (1000, 300), "white")
+        draw = ImageDraw.Draw(img)
+        marker = f"ROTATEDIMAGE_{angle}_9911"
+        draw.text((60, 100), marker, fill="black")
+    
+        rot_img = img.rotate(angle, expand=True)
+        img_path = tmp_path / f"rot_{angle}.png"
+        rot_img.save(img_path)
+    
+        reader = ImageFileReader()
+        res = reader.read_image_file_fast(str(img_path))
+        extracted_text = res.get("text", "")
+>       assert "9911" in extracted_text.replace(" ", ""), f"Angle {angle}° failed: {extracted_text}"
+E       AssertionError: Angle 270° failed: 
+E       assert '9911' in ''
+E        +  where '' = <built-in method replace of str object at 0xa618e0>(' ', '')
+E        +    where <built-in method replace of str object at 0xa618e0> = ''.replace
+
+tests/unit/test_date_and_orientation.py:87: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: rot_270.png
+_______________ test_pdf_page_rotated_image_text_extraction[90] ________________
+
+tmp_path = PosixPath('{pytest-tmp}/test_pdf_page_rotated_image_te0')
+angle = 90
+
+    @pytest.mark.parametrize("angle", [90, 180, 270])
+    def test_pdf_page_rotated_image_text_extraction(tmp_path, angle):
+        """Scanned PDF page with rotated image must be auto-oriented and extracted."""
+        pymupdf = pytest.importorskip("pymupdf")
+    
+        img = Image.new("RGB", (1000, 300), "white")
+        draw = ImageDraw.Draw(img)
+        marker = f"PDFROTATED_{angle}_7744"
+        draw.text((60, 100), marker, fill="black")
+    
+        rot_img = img.rotate(angle, expand=True)
+        png_buf = io.BytesIO()
+        rot_img.save(png_buf, format="PNG")
+    
+        doc = pymupdf.open()
+        page = doc.new_page(width=400, height=1100)
+        page.insert_image(pymupdf.Rect(0, 0, 400, 1100), stream=png_buf.getvalue())
+        pdf_bytes = doc.tobytes()
+        doc.close()
+    
+        pdf_path = tmp_path / f"pdf_rot_{angle}.pdf"
+        pdf_path.write_bytes(pdf_bytes)
+    
+        reader = PDFFileReader()
+        res = reader.read_pdf_file(str(pdf_path))
+        assert res.get("pages") and len(res["pages"]) > 0
+        extracted_text = res["pages"][0]["text"]
+>       assert "7744" in extracted_text.replace(" ", ""), f"PDF Angle {angle}° failed: {extracted_text}"
+E       AssertionError: PDF Angle 90° failed: 
+E       assert '7744' in ''
+E        +  where '' = <built-in method replace of str object at 0xa618e0>(' ', '')
+E        +    where <built-in method replace of str object at 0xa618e0> = ''.replace
+
+tests/unit/test_date_and_orientation.py:117: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  reader_file.readers.read_img_fast:read_img_fast.py:682 Tesseract OCR not installed or not in PATH. Image OCR will be skipped.
+ERROR    reader_file.readers.read_pdf:read_pdf.py:738 OCR required but no engine is available for pdf_rot_90.pdf; native text layers will be preserved
+_______________ test_pdf_page_rotated_image_text_extraction[180] _______________
+
+tmp_path = PosixPath('{pytest-tmp}/test_pdf_page_rotated_image_te1')
+angle = 180
+
+    @pytest.mark.parametrize("angle", [90, 180, 270])
+    def test_pdf_page_rotated_image_text_extraction(tmp_path, angle):
+        """Scanned PDF page with rotated image must be auto-oriented and extracted."""
+        pymupdf = pytest.importorskip("pymupdf")
+    
+        img = Image.new("RGB", (1000, 300), "white")
+        draw = ImageDraw.Draw(img)
+        marker = f"PDFROTATED_{angle}_7744"
+        draw.text((60, 100), marker, fill="black")
+    
+        rot_img = img.rotate(angle, expand=True)
+        png_buf = io.BytesIO()
+        rot_img.save(png_buf, format="PNG")
+    
+        doc = pymupdf.open()
+        page = doc.new_page(width=400, height=1100)
+        page.insert_image(pymupdf.Rect(0, 0, 400, 1100), stream=png_buf.getvalue())
+        pdf_bytes = doc.tobytes()
+        doc.close()
+    
+        pdf_path = tmp_path / f"pdf_rot_{angle}.pdf"
+        pdf_path.write_bytes(pdf_bytes)
+    
+        reader = PDFFileReader()
+        res = reader.read_pdf_file(str(pdf_path))
+        assert res.get("pages") and len(res["pages"]) > 0
+        extracted_text = res["pages"][0]["text"]
+>       assert "7744" in extracted_text.replace(" ", ""), f"PDF Angle {angle}° failed: {extracted_text}"
+E       AssertionError: PDF Angle 180° failed: 
+E       assert '7744' in ''
+E        +  where '' = <built-in method replace of str object at 0xa618e0>(' ', '')
+E        +    where <built-in method replace of str object at 0xa618e0> = ''.replace
+
+tests/unit/test_date_and_orientation.py:117: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_pdf:read_pdf.py:738 OCR required but no engine is available for pdf_rot_180.pdf; native text layers will be preserved
+_______________ test_pdf_page_rotated_image_text_extraction[270] _______________
+
+tmp_path = PosixPath('{pytest-tmp}/test_pdf_page_rotated_image_te2')
+angle = 270
+
+    @pytest.mark.parametrize("angle", [90, 180, 270])
+    def test_pdf_page_rotated_image_text_extraction(tmp_path, angle):
+        """Scanned PDF page with rotated image must be auto-oriented and extracted."""
+        pymupdf = pytest.importorskip("pymupdf")
+    
+        img = Image.new("RGB", (1000, 300), "white")
+        draw = ImageDraw.Draw(img)
+        marker = f"PDFROTATED_{angle}_7744"
+        draw.text((60, 100), marker, fill="black")
+    
+        rot_img = img.rotate(angle, expand=True)
+        png_buf = io.BytesIO()
+        rot_img.save(png_buf, format="PNG")
+    
+        doc = pymupdf.open()
+        page = doc.new_page(width=400, height=1100)
+        page.insert_image(pymupdf.Rect(0, 0, 400, 1100), stream=png_buf.getvalue())
+        pdf_bytes = doc.tobytes()
+        doc.close()
+    
+        pdf_path = tmp_path / f"pdf_rot_{angle}.pdf"
+        pdf_path.write_bytes(pdf_bytes)
+    
+        reader = PDFFileReader()
+        res = reader.read_pdf_file(str(pdf_path))
+        assert res.get("pages") and len(res["pages"]) > 0
+        extracted_text = res["pages"][0]["text"]
+>       assert "7744" in extracted_text.replace(" ", ""), f"PDF Angle {angle}° failed: {extracted_text}"
+E       AssertionError: PDF Angle 270° failed: 
+E       assert '7744' in ''
+E        +  where '' = <built-in method replace of str object at 0xa618e0>(' ', '')
+E        +    where <built-in method replace of str object at 0xa618e0> = ''.replace
+
+tests/unit/test_date_and_orientation.py:117: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_pdf:read_pdf.py:738 OCR required but no engine is available for pdf_rot_270.pdf; native text layers will be preserved
+____________________ test_docx_embedded_image_is_extracted _____________________
+
+reader = <reader_file.readers.read_office.OfficeFileReader object at 0x7f4d4c389d50>
+docx_with_image = '{pytest-tmp}/test_docx_embedded_image_is_ex0/report.docx'
+
+    def test_docx_embedded_image_is_extracted(reader, docx_with_image):
+        """Before the fix this returned an empty list, silently."""
+        result = reader.read_file({"path": docx_with_image, "extension": ".docx"})
+        assert result.get("error") is None, result.get("error")
+        images = result.get("extracted_images") or []
+>       assert len(images) == 1, f"expected one embedded image, got {len(images)}"
+E       AssertionError: expected one embedded image, got 0
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests/unit/test_embedded_images.py:123: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: image1.png
+____________________ test_docx_embedded_image_text_was_ocrd ____________________
+
+reader = <reader_file.readers.read_office.OfficeFileReader object at 0x7f4d4c388410>
+docx_with_image = '{pytest-tmp}/test_docx_embedded_image_text_0/report.docx'
+
+    def test_docx_embedded_image_text_was_ocrd(reader, docx_with_image):
+        result = reader.read_file({"path": docx_with_image, "extension": ".docx"})
+        image = (result.get("extracted_images") or [{}])[0]
+        text = (image.get("text") or "").replace("\n", " ")
+>       assert "EMBEDOCR" in text and "4412" in text, repr(image.get("text"))
+E       AssertionError: None
+E       assert ('EMBEDOCR' in '')
+
+tests/unit/test_embedded_images.py:130: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: image1.png
+_______________ test_docx_embedded_image_carries_ocr_provenance ________________
+
+reader = <reader_file.readers.read_office.OfficeFileReader object at 0x7f4d4c376b50>
+docx_with_image = '{pytest-tmp}/test_docx_embedded_image_carri0/report.docx'
+
+    def test_docx_embedded_image_carries_ocr_provenance(reader, docx_with_image):
+        """An OCR-derived image must not be indistinguishable from a text image."""
+        result = reader.read_file({"path": docx_with_image, "extension": ".docx"})
+        image = (result.get("extracted_images") or [{}])[0]
+>       assert image.get("ocr_derived") is True, image
+E       AssertionError: {}
+E       assert None is True
+E        +  where None = <built-in method get of dict object at 0x7f4d4c3b72c0>('ocr_derived')
+E        +    where <built-in method get of dict object at 0x7f4d4c3b72c0> = {}.get
+
+tests/unit/test_embedded_images.py:137: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: image1.png
+_________________ test_docx_embedded_image_keeps_its_part_name _________________
+
+reader = <reader_file.readers.read_office.OfficeFileReader object at 0x7f4d4c388090>
+docx_with_image = '{pytest-tmp}/test_docx_embedded_image_keeps0/report.docx'
+
+    def test_docx_embedded_image_keeps_its_part_name(reader, docx_with_image):
+        """The part name is the only identifier of where in the package it came from."""
+        result = reader.read_file({"path": docx_with_image, "extension": ".docx"})
+        image = (result.get("extracted_images") or [{}])[0]
+>       assert image.get("name") == "image1.png", image.get("name")
+E       AssertionError: None
+E       assert None == 'image1.png'
+E        +  where None = <built-in method get of dict object at 0x7f4d4c280740>('name')
+E        +    where <built-in method get of dict object at 0x7f4d4c280740> = {}.get
+
+tests/unit/test_embedded_images.py:146: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: image1.png
+____________________ test_pptx_embedded_image_is_extracted _____________________
+
+reader = <reader_file.readers.read_office.OfficeFileReader object at 0x7f4d4c5f75d0>
+tmp_path = PosixPath('{pytest-tmp}/test_pptx_embedded_image_is_ex0')
+png_file = '{pytest-tmp}/test_pptx_embedded_image_is_ex0/source.png'
+
+    def test_pptx_embedded_image_is_extracted(reader, tmp_path, png_file):
+        pptx = pytest.importorskip("pptx")
+        util = pytest.importorskip("pptx.util")
+        path = tmp_path / "deck.pptx"
+        prs = pptx.Presentation()
+        slide = prs.slides.add_slide(prs.slide_layouts[5])
+        slide.shapes.add_picture(png_file, util.Inches(1), util.Inches(1),
+                                 width=util.Inches(4))
+        prs.save(str(path))
+        result = reader.read_file({"path": str(path), "extension": ".pptx"})
+        assert result.get("error") is None, result.get("error")
+        images = result.get("extracted_images") or []
+>       assert len(images) >= 1, f"no embedded image found in {sorted(result)}"
+E       AssertionError: no embedded image found in ['artifact_metadata', 'extracted_images', 'filepath', 'forensic_features', 'forensic_text', 'format_identification', 'presentation_notes', 'slides', 'total_slides', 'xml_backfill']
+E       assert 0 >= 1
+E        +  where 0 = len([])
+
+tests/unit/test_embedded_images.py:181: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: image1.png
+____________________ test_xlsx_embedded_image_is_extracted _____________________
+
+reader = <reader_file.readers.read_office.OfficeFileReader object at 0x7f4d4c375790>
+tmp_path = PosixPath('{pytest-tmp}/test_xlsx_embedded_image_is_ex0')
+png_file = '{pytest-tmp}/test_xlsx_embedded_image_is_ex0/source.png'
+
+    def test_xlsx_embedded_image_is_extracted(reader, tmp_path, png_file):
+        openpyxl = pytest.importorskip("openpyxl")
+        drawing = pytest.importorskip("openpyxl.drawing.image")
+        path = tmp_path / "book.xlsx"
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws["A1"] = "Marker EMBEDSHEETTEXT"
+        ws.add_image(drawing.Image(png_file), "C3")
+        wb.save(str(path))
+        result = reader.read_file({"path": str(path), "extension": ".xlsx"})
+        assert result.get("error") is None, result.get("error")
+        images = result.get("extracted_images") or []
+>       assert len(images) >= 1, f"no embedded image found in {sorted(result)}"
+E       AssertionError: no embedded image found in ['artifact_metadata', 'cells_read', 'extracted_images', 'extraction_path', 'filepath', 'forensic_features', 'format_identification', 'sheet_names', 'sheets', 'total_sheets']
+E       assert 0 >= 1
+E        +  where 0 = len([])
+
+tests/unit/test_embedded_images.py:197: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: image1.png
+_______ test_reader_publishes_extraction_path_so_the_router_can_recurse ________
+
+reader = <reader_file.readers.read_office.OfficeFileReader object at 0x7f4d4c37b5d0>
+docx_with_image = '{pytest-tmp}/test_reader_publishes_extracti0/report.docx'
+
+    def test_reader_publishes_extraction_path_so_the_router_can_recurse(reader, docx_with_image):
+        """EMBED-02: the reader now hands the router a directory to descend into.
+    
+        Before this the image was extracted and OCR'd but returned only inside
+        extracted_images, so it never became an object - no paths row, no hash, no
+        parent_path_id, no hierarchy_path. The reader cannot create those rows
+        itself; it publishes extraction_path and the ordinary pipeline does the rest.
+        tests/integration/test_universal_recursion.py proves the other end.
+        """
+        result = reader.read_file({"path": docx_with_image, "extension": ".docx"})
+>       assert result.get("extracted_images"), "precondition: image was extracted"
+E       AssertionError: precondition: image was extracted
+E       assert []
+E        +  where [] = <built-in method get of dict object at 0x7f4d4c3c5280>('extracted_images')
+E        +    where <built-in method get of dict object at 0x7f4d4c3c5280> = {'filepath': '{pytest-tmp}/test_reader_publishes_extracti0/report.docx', 'elements': [{'type': 'paragr...ormal', ...}], 'paragraphs': [{'text': 'Marker EMBEDDOCTEXT visible paragraph', 'style': 'Normal'}], 'tables': [], ...}.get
+
+tests/unit/test_embedded_images.py:212: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: image1.png
+__________ test_pptx_publishes_extraction_path_without_a_result_dict ___________
+
+reader = <reader_file.readers.read_office.OfficeFileReader object at 0x7f4d4c3e6650>
+tmp_path = PosixPath('{pytest-tmp}/test_pptx_publishes_extraction0')
+png_file = '{pytest-tmp}/test_pptx_publishes_extraction0/source.png'
+
+    def test_pptx_publishes_extraction_path_without_a_result_dict(reader, tmp_path, png_file):
+        """The PPTX helper returns a bare list, so it has no result dict to stamp.
+    
+        Regression: the shared helper referenced `result` unconditionally and raised
+        NameError inside the site's except handler, which logged "Failed to process
+        embedded image ppt/media/image1.png" and dropped the image entirely.
+        """
+        pptx = pytest.importorskip("pptx")
+        util = pytest.importorskip("pptx.util")
+        path = tmp_path / "deck2.pptx"
+        prs = pptx.Presentation()
+        slide = prs.slides.add_slide(prs.slide_layouts[5])
+        slide.shapes.add_picture(png_file, util.Inches(1), util.Inches(1),
+                                 width=util.Inches(4))
+        prs.save(str(path))
+        result = reader.read_file({"path": str(path), "extension": ".pptx"})
+        assert result.get("error") is None, result.get("error")
+>       assert result.get("extracted_images"), sorted(result)
+E       AssertionError: ['artifact_metadata', 'extracted_images', 'filepath', 'forensic_features', 'forensic_text', 'format_identification', ...]
+E       assert []
+E        +  where [] = <built-in method get of dict object at 0x7f4d4c36ed00>('extracted_images')
+E        +    where <built-in method get of dict object at 0x7f4d4c36ed00> = {'filepath': '{pytest-tmp}/test_pptx_publishes_extraction0/deck2.pptx', 'slides': [{'slide_number': 1,...ial_order': (914400, 914400), ...}], 'texts': [], 'notes': None, ...}], 'total_slides': 1, 'extracted_images': [], ...}.get
+
+tests/unit/test_embedded_images.py:238: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: image1.png
+_________ TestTheDocumentCannotDrift.test_the_generated_block_matches __________
+
+self = <test_experience_contract.TestTheDocumentCannotDrift object at 0x7f4d6039db90>
+
+    def test_the_generated_block_matches(self):
+>       document = DOC.read_text()
+                   ^^^^^^^^^^^^^^^
+
+tests/unit/test_experience_contract.py:313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/EXPERIENCE_CONTRACT.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/EXPERIENCE_CONTRACT.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+____ TestTheDocumentCannotDrift.test_the_document_has_no_hand_typed_counts _____
+
+self = <test_experience_contract.TestTheDocumentCannotDrift object at 0x7f4d6039ea10>
+
+    def test_the_document_has_no_hand_typed_counts(self):
+        """The same rule the registry document already follows."""
+>       document = DOC.read_text().split(BEGIN, 1)[0]
+                   ^^^^^^^^^^^^^^^
+
+tests/unit/test_experience_contract.py:322: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/EXPERIENCE_CONTRACT.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/EXPERIENCE_CONTRACT.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_____________ test_detects_email_phone_ipv4_and_links_to_sentence ______________
+
+    def test_detects_email_phone_ipv4_and_links_to_sentence():
+        text = "Contact alice@example.org or +1 (415) 555-0199. Server 192.168.0.1."
+        result = ii.detect(text)
+        by_type = {s.signal_type: s for s in result.signals}
+>       assert by_type["email"].value == "alice@example.org"
+               ^^^^^^^^^^^^^^^^
+E       KeyError: 'email'
+
+tests/unit/test_identifiers_intel.py:10: KeyError
+________________ test_email_not_double_counted_as_ipv4_fragment ________________
+
+    def test_email_not_double_counted_as_ipv4_fragment():
+        text = "Write to user@mail.co.uk today."
+        types = {s.signal_type for s in ii.detect(text).signals}
+>       assert types == {"email"}
+E       AssertionError: assert {'identifier'} == {'email'}
+E         
+E         Extra items in the left set:
+E         'identifier'
+E         Extra items in the right set:
+E         'email'
+E         Use -v to get more diff
+
+tests/unit/test_identifiers_intel.py:20: AssertionError
+____ TestOtherDocuments.test_the_productization_map_points_at_the_registry _____
+
+self = <test_interface_docs.TestOtherDocuments object at 0x7f4d6021bf90>
+
+    def test_the_productization_map_points_at_the_registry(self):
+>       text = (PROJECT_ROOT / "docs/PRODUCTIZATION_MAP.md").read_text()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_interface_docs.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/PRODUCTIZATION_MAP.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/PRODUCTIZATION_MAP.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_______________ TestOtherDocuments.test_the_domain_model_exists ________________
+
+self = <test_interface_docs.TestOtherDocuments object at 0x7f4d6021a810>
+
+    def test_the_domain_model_exists(self):
+>       assert (PROJECT_ROOT / "docs/DOMAIN_MODEL.md").exists()
+E       AssertionError: assert False
+E        +  where False = exists()
+E        +    where exists = (PosixPath('{worktree-base}') / 'docs/DOMAIN_MODEL.md').exists
+
+tests/unit/test_interface_docs.py:101: AssertionError
+_ TestAllFiveConsumersAgree.test_the_generated_documentation_states_the_policy _
+
+self = <test_interface_lifecycle.TestAllFiveConsumersAgree object at 0x7f4d602900d0>
+
+    def test_the_generated_documentation_states_the_policy(self):
+        """The reference shows each interface's status, from the same registry."""
+        from core.interfaces import REGISTRY
+    
+>       text = (PROJECT_ROOT / "docs/INTERFACE_REGISTRY.md").read_text()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_interface_lifecycle.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/INTERFACE_REGISTRY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+___________ TestTheRegistryIsFrozen.test_the_freeze_is_written_down ____________
+
+self = <test_interface_lifecycle.TestTheRegistryIsFrozen object at 0x7f4d60072610>
+
+    def test_the_freeze_is_written_down(self):
+>       text = (PROJECT_ROOT / "docs/INTERFACE_REGISTRY.md").read_text().lower()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_interface_lifecycle.py:286: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/INTERFACE_REGISTRY.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/INTERFACE_REGISTRY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_______________ test_installed_dependencies_are_agpl_compatible ________________
+
+    def test_installed_dependencies_are_agpl_compatible():
+        findings = checker.check(include_extras=True)
+        assert len([f for f in findings if f.verdict == "compatible"]) > 20
+        problems = [f"{f.name} {f.version}: {f.expression or '?'} ({f.detail})"
+                    for f in findings if f.verdict in ("incompatible", "unknown")]
+>       assert not problems, "\n".join(problems)
+E       AssertionError: pymupdf-layout 2.0: ? (no usable licence metadata)
+E         pymupdf4llm 2.0: ? (no usable licence metadata)
+E       assert not ['pymupdf-layout 2.0: ? (no usable licence metadata)', 'pymupdf4llm 2.0: ? (no usable licence metadata)']
+
+tests/unit/test_licensing.py:116: AssertionError
+_______________ test_checker_cli_exits_zero_on_this_environment ________________
+
+    def test_checker_cli_exits_zero_on_this_environment():
+        result = subprocess.run([sys.executable, "tools/licenses/check_licenses.py", "--quiet"],
+                                cwd=ROOT, capture_output=True, text=True)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FAIL pymupdf-layout               2.0          -                                             [unrecognised: License='' classifiers=[]]  no usable licence metadata
+E         FAIL pymupdf4llm                  2.0          -                                             [unrecognised: License='' classifiers=[]]  no usable licence metadata
+E         
+E         AGPL-3.0-or-later: 116 compatible, 0 incompatible, 2 unknown, 0 not installed
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['{venv}/bin/python', 'tools/licenses/check_licenses.py', '--quiet'], returncode=1, stdout="FAI...usable licence metadata\n\nAGPL-3.0-or-later: 116 compatible, 0 incompatible, 2 unknown, 0 not installed\n", stderr='').returncode
+
+tests/unit/test_licensing.py:169: AssertionError
+___________________ test_no_machine_specific_paths_or_hosts ____________________
+
+    def test_no_machine_specific_paths_or_hosts():
+        this_file = Path(__file__).resolve()
+        hits = []
+        for path in _shipped_text_files():
+            if path.resolve() == this_file:
+                continue
+            text = _read(path)
+            for what, pattern in FORBIDDEN.items():
+                for match in pattern.finditer(text):
+                    line = text.count("\n", 0, match.start()) + 1
+                    hits.append(f"{path.relative_to(ROOT)}:{line}: {what}: {match.group(0)}")
+>       assert not hits, "\n".join(hits)
+E       AssertionError: audit_report/R10_VERIFICATION.md:234: pgserver temporary socket: {tmp}
+E         audit_report/evidence_r6/suite_of_record_r6.md:14: pgserver temporary socket: {tmp}
+E         audit_report/evidence_r6/suite_of_record_r6.md:20: pgserver temporary socket: {tmp}
+E       assert not ['audit_report/R10_VERIFICATION.md:234: pgserver temporary socket: {tmp}', 'audit_report/evidence_r6/suite_of_r...ry socket: {tmp}', 'audit_report/evidence_r6/suite_of_record_r6.md:20: pgserver temporary socket: {tmp}']
+
+tests/unit/test_no_machine_paths.py:94: AssertionError
+______ TestImageReaderOcr.test_printed_text_is_extracted_with_provenance _______
+
+self = <test_ocr_engines.TestImageReaderOcr object at 0x7f4d5f927f10>
+reader = <reader_file.readers.read_img_fast.ImageFileReader object at 0x7f4d2fd86cd0>
+tmp_path = PosixPath('{pytest-tmp}/test_printed_text_is_extracted0')
+
+    def test_printed_text_is_extracted_with_provenance(self, reader, tmp_path):
+        path = make_text_image(tmp_path, "SCAN PROVENANCE MARKER 5521")
+        out = reader.read_file({"path": str(path), "effective_extension": ".png"})
+    
+>       assert out["ocr_attempted"] is True
+E       assert False is True
+
+tests/unit/test_ocr_engines.py:392: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:959 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: scan.png
+___________ TestImageReaderOcr.test_blocks_carry_confidence_and_bbox ___________
+
+self = <test_ocr_engines.TestImageReaderOcr object at 0x7f4d5f933990>
+reader = <reader_file.readers.read_img_fast.ImageFileReader object at 0x7f4d37b52650>
+tmp_path = PosixPath('{pytest-tmp}/test_blocks_carry_confidence_a0')
+
+    def test_blocks_carry_confidence_and_bbox(self, reader, tmp_path):
+        path = make_text_image(tmp_path, "BLOCK COORDINATES 7781")
+        out = reader.read_file({"path": str(path), "effective_extension": ".png"})
+        blocks = out.get("ocr_coordinates") or []
+>       assert blocks, "expected per-block results"
+E       AssertionError: expected per-block results
+E       assert []
+
+tests/unit/test_ocr_engines.py:406: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:959 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: scan.png
+___ TestImageReaderOcr.test_blank_image_yields_no_text_and_no_hallucination ____
+
+self = <test_ocr_engines.TestImageReaderOcr object at 0x7f4d5f932d10>
+reader = <reader_file.readers.read_img_fast.ImageFileReader object at 0x7f4d37b52d50>
+tmp_path = PosixPath('{pytest-tmp}/test_blank_image_yields_no_tex0')
+
+    def test_blank_image_yields_no_text_and_no_hallucination(self, reader, tmp_path):
+        Image = pytest.importorskip("PIL.Image")
+        path = tmp_path / "blank.png"
+        Image.new("RGB", (800, 400), "white").save(path)
+        out = reader.read_file({"path": str(path), "effective_extension": ".png"})
+>       assert out["ocr_attempted"] is True
+E       assert False is True
+
+tests/unit/test_ocr_engines.py:416: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:959 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: blank.png
+_____________ TestOrdinaryText.test_extracted_with_full_provenance _____________
+
+self = <test_ocr_matrix.TestOrdinaryText object at 0x7f4d5ff54d90>
+image_reader = <reader_file.readers.read_img_fast.ImageFileReader object at 0x7f4d3786e610>
+tmp_path = PosixPath('{pytest-tmp}/test_extracted_with_full_prove0')
+
+    def test_extracted_with_full_provenance(self, image_reader, tmp_path):
+        path = make_image(tmp_path, "ORDINARY PRINTED TEXT 1043")
+        out = read_image(image_reader, path)
+>       assert "ORDINARY PRINTED TEXT 1043" in out["text"]
+E       AssertionError: assert 'ORDINARY PRINTED TEXT 1043' in ''
+
+tests/unit/test_ocr_matrix.py:153: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:959 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: case.png
+_____________________ TestResolution.test_high_resolution ______________________
+
+self = <test_ocr_matrix.TestResolution object at 0x7f4d5fdaf9d0>
+image_reader = <reader_file.readers.read_img_fast.ImageFileReader object at 0x7f4d37cca050>
+tmp_path = PosixPath('{pytest-tmp}/test_high_resolution0')
+
+    def test_high_resolution(self, image_reader, tmp_path):
+        path = make_image(tmp_path, "HIGHRES MARKER 6620", font_size=60,
+                          canvas=(1600, 360), scale=3, name="hi.png")
+        out = read_image(image_reader, path)
+>       assert out["ocr_successful"] is True
+E       assert False is True
+
+tests/unit/test_ocr_matrix.py:179: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:959 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: hi.png
+_____________ TestResolution.test_very_large_image_is_not_refused ______________
+
+self = <test_ocr_matrix.TestResolution object at 0x7f4d5fdadfd0>
+image_reader = <reader_file.readers.read_img_fast.ImageFileReader object at 0x7f4d4c343d50>
+tmp_path = PosixPath('{pytest-tmp}/test_very_large_image_is_not_r0')
+
+    def test_very_large_image_is_not_refused(self, image_reader, tmp_path):
+        """§15 asks for documented limits; verify a large image still works."""
+        path = make_image(tmp_path, "VERYLARGE 8801", font_size=120,
+                          canvas=(3000, 700), scale=3, name="big.png")
+        out = read_image(image_reader, path)
+>       assert out["ocr_successful"] is True
+E       assert False is True
+
+tests/unit/test_ocr_matrix.py:187: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:959 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: big.png
+______________ TestMultiPagePdf.test_every_page_is_ocrd_in_order _______________
+
+self = <test_ocr_matrix.TestMultiPagePdf object at 0x7f4d605b4a10>
+pdf_reader = <reader_file.readers.read_pdf.PDFFileReader object at 0x7f4d37e68790>
+tmp_path = PosixPath('{pytest-tmp}/test_every_page_is_ocrd_in_ord0')
+
+    def test_every_page_is_ocrd_in_order(self, pdf_reader, tmp_path):
+        markers = ["PAGEONEMARKER 111", "PAGETWOMARKER 222", "PAGETHREEMARKER 333"]
+        out = read_pdf(pdf_reader, scanned_pdf_bytes(markers), tmp_path)
+    
+        assert out["num_pages"] == 3
+        assert [p["page_number"] for p in out["pages"]] == [1, 2, 3]
+        for page, marker in zip(out["pages"], markers, strict=True):
+            assert page["method"].startswith("ocr_"), page["method"]
+>           assert page["ocr_derived"] is True
+                   ^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'ocr_derived'
+
+tests/unit/test_ocr_matrix.py:283: KeyError
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:959 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_pdf:read_pdf.py:738 OCR required but no engine is available for doc.pdf; native text layers will be preserved
+____________________ TestMixedPdf.test_both_layers_survive _____________________
+
+self = <test_ocr_matrix.TestMixedPdf object at 0x7f4d5fdac250>
+pdf_reader = <reader_file.readers.read_pdf.PDFFileReader object at 0x7f4d4c343b10>
+tmp_path = PosixPath('{pytest-tmp}/test_both_layers_survive0')
+
+    def test_both_layers_survive(self, pdf_reader, tmp_path):
+        pymupdf = pytest.importorskip("pymupdf")
+        Image = pytest.importorskip("PIL.Image")
+        ImageDraw = pytest.importorskip("PIL.ImageDraw")
+        ImageFont = pytest.importorskip("PIL.ImageFont")
+    
+        native = ("NATIVETEXTLAYER marker on page one of a mixed document "
+                  "that also contains a scanned page")
+        img = Image.new("RGB", (1100, 300), "white")
+        ImageDraw.Draw(img).text((60, 120), "SCANNEDPAGEMARKER 444",
+                                 font=ImageFont.truetype(FONT, 44), fill="black")
+        png = io.BytesIO()
+        img.save(png, format="PNG")
+    
+        doc = pymupdf.open()
+        doc.new_page().insert_text((72, 72), native, fontsize=12)
+        page2 = doc.new_page()
+        page2.insert_image(pymupdf.Rect(0, 0, 595, 162), stream=png.getvalue())
+        data = doc.tobytes()
+        doc.close()
+    
+        out = read_pdf(pdf_reader, data, tmp_path, "mixed.pdf")
+        methods = {p["method"] for p in out["pages"]}
+    
+        assert out["pages"][0]["method"] == "direct_extraction"
+        assert out["pages"][1]["method"].startswith("ocr_")
+        # Neither layer lost.
+        assert "NATIVETEXTLAYER" in out["pages"][0]["text"]
+>       assert "SCANNEDPAGEMARKER" in out["pages"][1]["text"].replace(" ", "")
+E       AssertionError: assert 'SCANNEDPAGEMARKER' in ''
+E        +  where '' = <built-in method replace of str object at 0xa618e0>(' ', '')
+E        +    where <built-in method replace of str object at 0xa618e0> = ''.replace
+
+tests/unit/test_ocr_matrix.py:325: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:959 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_pdf:read_pdf.py:738 OCR required but no engine is available for mixed.pdf; native text layers will be preserved
+__________________ TestNoText.test_blank_image_yields_nothing __________________
+
+self = <test_ocr_matrix.TestNoText object at 0x7f4d5ffaf690>
+image_reader = <reader_file.readers.read_img_fast.ImageFileReader object at 0x7f4d340e9910>
+tmp_path = PosixPath('{pytest-tmp}/test_blank_image_yields_nothin0')
+
+    def test_blank_image_yields_nothing(self, image_reader, tmp_path):
+        Image = pytest.importorskip("PIL.Image")
+        path = tmp_path / "blank.png"
+        Image.new("RGB", (800, 400), "white").save(path)
+        out = read_image(image_reader, path)
+>       assert out["ocr_attempted"] is True
+E       assert False is True
+
+tests/unit/test_ocr_matrix.py:391: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:959 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: blank.png
+__________________ test_every_stored_ocr_field_is_documented ___________________
+
+    def test_every_stored_ocr_field_is_documented():
+>       missing = _stored_fields() - _documented_fields()
+                                     ^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_ocr_provenance_docs.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/unit/test_ocr_provenance_docs.py:19: in _documented_fields
+    text = DOC.read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/DOMAIN_MODEL.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/DOMAIN_MODEL.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+__________________ test_every_documented_ocr_field_is_stored ___________________
+
+    def test_every_documented_ocr_field_is_stored():
+>       invented = _documented_fields() - _stored_fields()
+                   ^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_ocr_provenance_docs.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/unit/test_ocr_provenance_docs.py:19: in _documented_fields
+    text = DOC.read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/DOMAIN_MODEL.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/DOMAIN_MODEL.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+___ TestRequire.test_the_fallback_engine_passes_when_it_is_the_one_required ____
+
+self = <test_ocr_selfcheck.TestRequire object at 0x7f4d70349290>
+without_tesseract = None
+tmp_path = PosixPath('{pytest-tmp}/test_the_fallback_engine_passe0')
+
+    def test_the_fallback_engine_passes_when_it_is_the_one_required(self, without_tesseract, tmp_path):
+        report_path = tmp_path / "report.json"
+>       assert ocr_selfcheck.main(["--require", "rapidocr", "--json", str(report_path)]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7f4d5fc7e5c0>(['--require', 'rapidocr', '--json', '{pytest-tmp}/test_the_fallback_engine_passe0/report.json'])
+E        +    where <function main at 0x7f4d5fc7e5c0> = ocr_selfcheck.main
+
+tests/unit/test_ocr_selfcheck.py:98: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[engines] tesseract: unavailable (tesseract binary not usable: forced by the test)
+[engines] rapidocr: unavailable (rapidocr_onnxruntime not usable: ImportError: libGL.so.1: cannot open shared object file: No such file or directory)
+[engines] selected for ingestion: none
+[languages] requested heb,eng,ara; missing: n/a (tesseract unavailable)
+[samples] upright: unavailable engine=none text='' confidence=none rotation=0 scale=None input=None (No OCR engine available)
+          remediation: Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+[samples] turned 90: unavailable engine=none text='' confidence=none rotation=0 scale=None input=None (No OCR engine available)
+          remediation: Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+[samples] turned 180: unavailable engine=none text='' confidence=none rotation=0 scale=None input=None (No OCR engine available)
+          remediation: Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+[samples] turned 270: unavailable engine=none text='' confidence=none rotation=0 scale=None input=None (No OCR engine available)
+          remediation: Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+[samples] small text (12px): unavailable engine=none text='' confidence=none rotation=0 scale=None input=None (No OCR engine available)
+          remediation: Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+[FAIL] engines: unavailable: rapidocr: rapidocr_onnxruntime not usable: ImportError: libGL.so.1: cannot open shared object file: No such file or directory. Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+[FAIL] samples: unavailable: upright: No OCR engine available. Install an OCR engine: the tesseract-ocr system package with the tesseract-ocr-heb and tesseract-ocr-ara language packs (docs/CONFIGURATION.md), or the rapidocr_onnxruntime Python package.
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:959 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: upright.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: turned_90.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: turned_180.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: turned_270.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: small_text_12px_.png
+___________________ test_the_host_engine_reads_every_sample ____________________
+
+fresh_selection = None
+
+    def test_the_host_engine_reads_every_sample(fresh_selection):
+        """End to end on whatever engine this host selects (tesseract in CI):
+        the same samples, the same reader and the same confidence as ingestion."""
+        report = ocr_selfcheck.run()
+        samples = {s["sample"]: s for s in report["stages"]["samples"]}
+        assert set(samples) == {"upright", "turned 90", "turned 180", "turned 270", "small text (12px)"}
+        for name, sample in samples.items():
+>           assert sample["status"] == "success", (name, sample)
+E           AssertionError: ('upright', {'sample': 'upright', 'status': 'unavailable', 'detail': 'No OCR engine available', 'engine': 'none', ...})
+E           assert 'unavailable' == 'success'
+E             
+E             - success
+E             + unavailable
+
+tests/unit/test_ocr_selfcheck.py:128: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    core.ocr.engines:engines.py:959 No OCR engine available; image and scanned-PDF processing will be marked retryable
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: upright.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: turned_90.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: turned_180.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: turned_270.png
+ERROR    reader_file.readers.read_img_fast:read_img_fast.py:411 [EXTRACTION] OCR required but no engine is available for: small_text_12px_.png
+________________ test_broken_text_layer_page_is_replaced_by_ocr ________________
+
+tmp_path = PosixPath('{pytest-tmp}/test_broken_text_layer_page_is0')
+
+    def test_broken_text_layer_page_is_replaced_by_ocr(tmp_path):
+        path = _mixed_pdf(tmp_path, garbage_layer=True)
+        reader = _StubReader()
+        content = _content(reader.read_file({"path": str(path), "extension": ".pdf"}))
+    
+>       assert [c["page"] for c in reader.calls] == [1], reader.calls
+E       AssertionError: []
+E       assert [] == [1]
+E         
+E         Right contains one more item: 1
+E         Use -v to get more diff
+
+tests/unit/test_pdf_mixed_pages.py:104: AssertionError
+____________ test_corrupt_layer_is_not_kept_when_ocr_finds_nothing _____________
+
+tmp_path = PosixPath('{pytest-tmp}/test_corrupt_layer_is_not_kept0')
+
+    def test_corrupt_layer_is_not_kept_when_ocr_finds_nothing(tmp_path):
+        """A failed OCR must not destroy the little the layer had."""
+        path = _mixed_pdf(tmp_path, garbage_layer=True)
+        reader = _StubReader(fail=True)
+        content = _content(reader.read_file({"path": str(path), "extension": ".pdf"}))
+>       assert reader.calls, "fallback was never attempted"
+E       AssertionError: fallback was never attempted
+E       assert []
+E        +  where [] = <test_pdf_mixed_pages._StubReader object at 0x7f4d2f326d90>.calls
+
+tests/unit/test_pdf_mixed_pages.py:117: AssertionError
+__ TestScannedPdfUsesFallbackEngine.test_engine_exists_so_ocr_is_not_skipped ___
+
+self = <test_pdf_text_layer.TestScannedPdfUsesFallbackEngine object at 0x7f4d5faf03d0>
+reader = <reader_file.readers.read_pdf.PDFFileReader object at 0x7f4d3774ab90>
+tesseract_absent = None
+
+    def test_engine_exists_so_ocr_is_not_skipped(self, reader, tesseract_absent):
+        engine = reader_module.get_ocr_engine()
+>       assert engine is not None, (
+            "no OCR engine installed; this test proves the fallback path and "
+            "needs rapidocr-onnxruntime (or tesseract) available"
+        )
+E       AssertionError: no OCR engine installed; this test proves the fallback path and needs rapidocr-onnxruntime (or tesseract) available
+E       assert None is not None
+
+tests/unit/test_pdf_text_layer.py:285: AssertionError
+_ TestScannedPdfUsesFallbackEngine.test_scanned_page_yields_recognised_text_with_provenance _
+
+self = <test_pdf_text_layer.TestScannedPdfUsesFallbackEngine object at 0x7f4d5faf3190>
+reader = <reader_file.readers.read_pdf.PDFFileReader object at 0x7f4d3774ab90>
+tesseract_absent = None
+
+    def test_scanned_page_yields_recognised_text_with_provenance(
+        self, reader, tesseract_absent
+    ):
+        marker = "SCANNED INVOICE 8842"
+        result = read_pdf_bytes(reader, build_scanned_pdf(marker))
+        page = result["pages"][0]
+    
+>       assert page["text_length"] > 0, page
+E       AssertionError: {'page_number': 1, 'text': '', 'text_length': 0, 'method': 'ocr_required_engine_unavailable', ...}
+E       assert 0 > 0
+
+tests/unit/test_pdf_text_layer.py:297: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_pdf:read_pdf.py:738 OCR required but no engine is available for tmp_57k980y.pdf; native text layers will be preserved
+__ TestScannedPdfUsesFallbackEngine.test_document_is_not_flagged_as_no_engine __
+
+self = <test_pdf_text_layer.TestScannedPdfUsesFallbackEngine object at 0x7f4d5faf0e50>
+reader = <reader_file.readers.read_pdf.PDFFileReader object at 0x7f4d3774ab90>
+tesseract_absent = None
+
+    def test_document_is_not_flagged_as_no_engine(self, reader, tesseract_absent):
+        result = read_pdf_bytes(reader, build_scanned_pdf("ANYTHING 1234"))
+>       assert result.get("ocr_status") != "ocr_required_engine_unavailable"
+E       AssertionError: assert 'ocr_required_engine_unavailable' != 'ocr_required_engine_unavailable'
+E        +  where 'ocr_required_engine_unavailable' = <built-in method get of dict object at 0x7f4d37662100>('ocr_status')
+E        +    where <built-in method get of dict object at 0x7f4d37662100> = {'filepath': '{tmp}', 'num_pages': 1, 'is_encrypted': False, 'metadata': {'format': 'PDF 1.7', 'title': '', 'author': '', 'subject': '', ...}, ...}.get
+
+tests/unit/test_pdf_text_layer.py:311: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_pdf:read_pdf.py:738 OCR required but no engine is available for tmpe4urw3xi.pdf; native text layers will be preserved
+_ TestScannedPdfUsesFallbackEngine.test_blank_scanned_page_falls_back_without_hallucinating _
+
+self = <test_pdf_text_layer.TestScannedPdfUsesFallbackEngine object at 0x7f4d5faf2b10>
+reader = <reader_file.readers.read_pdf.PDFFileReader object at 0x7f4d3774ab90>
+tesseract_absent = None
+
+    def test_blank_scanned_page_falls_back_without_hallucinating(
+        self, reader, tesseract_absent
+    ):
+        """A scanned page with no text must not invent content."""
+        import pymupdf
+        Image = pytest.importorskip("PIL.Image")
+    
+        png = io.BytesIO()
+        Image.new("RGB", (800, 400), "white").save(png, format="PNG")
+        doc = pymupdf.open()
+        page = doc.new_page()
+        page.insert_image(pymupdf.Rect(0, 0, 595, 296), stream=png.getvalue())
+        data = doc.tobytes()
+        doc.close()
+    
+        result = read_pdf_bytes(reader, data)
+        page_result = result["pages"][0]
+        assert page_result["text"] == ""
+>       assert page_result["ocr_status"] == "ocr_no_text"
+E       AssertionError: assert 'ocr_required...e_unavailable' == 'ocr_no_text'
+E         
+E         - ocr_no_text
+E         + ocr_required_engine_unavailable
+
+tests/unit/test_pdf_text_layer.py:332: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    reader_file.readers.read_pdf:read_pdf.py:738 OCR required but no engine is available for tmpyva71n31.pdf; native text layers will be preserved
+_______________________ test_reference_docs_are_current ________________________
+
+tmp_path = PosixPath('{pytest-tmp}/test_reference_docs_are_curren0')
+
+    def test_reference_docs_are_current(tmp_path):
+        env = dict(os.environ, APP_DATA_DIR=str(tmp_path))
+        result = subprocess.run(
+            [sys.executable, "tools/docs/generate_reference.py", "--check"],
+            cwd=ROOT, env=env, capture_output=True, text=True, timeout=300)
+>       assert result.returncode == 0, result.stdout[-3000:] + result.stderr[-3000:]
+E       AssertionError: stale reference docs (run python3 tools/docs/generate_reference.py):
+E           docs/reference/README.md
+E           docs/reference/python/Api.md
+E           docs/reference/python/core.md
+E           docs/reference/python/database.md
+E           docs/reference/python/reader_file.md
+E           docs/reference/python/services.md
+E           docs/reference/python/tools.md
+E           docs/reference/HTTP_ROUTES.md
+E         3100564
+E         2026-10-27 11:29:24 INFO core.resource_coordinator:   CPU cores: 2
+E         2026-10-27 11:29:24 INFO core.resource_coordinator:   Total memory: 3.8 GB
+E         2026-10-27 11:29:24 INFO core.resource_coordinator:   Allocated workers: 1
+E         2026-10-27 11:29:24 INFO core.resource_coordinator:   Allocated DB pool: 10
+E         2026-10-27 11:29:24 INFO database.database.config: DB pool size adjusted by resource coordinator: 25 -> 12
+E         2026-10-27 11:29:24 INFO database.database.database: Shared connection pool initialized: 2-12 connections
+E         2026-10-27 11:29:24 INFO apps.web.app: ✅ Notification service initialized at system level
+E         2026-10-27 11:29:24 INFO apps.web.app: ✅ SECRET_KEY loaded from environment variable
+E         2026-10-27 11:29:24 INFO apps.web.app: ✅ SECRET_KEY configured (length: 45)
+E         2026-10-27 11:29:24 INFO apps.web.app: ✅ CSRF protection enabled
+E         2026-10-27 11:29:24 INFO database.database.config: DB pool size adjusted by resource coordinator: 25 -> 10
+E         2026-10-27 11:29:24 WARNING apps.web.app: Job scheduler not started: ImportError: cannot import name 'Scheduler' from 'services.scheduling.scheduler' ({worktree-base}/services/scheduling/scheduler.py)
+E         2026-10-27 11:29:24 INFO apps.web.app: ✅ Rate limiting enabled (default 60/min, 600/hour per client)
+E         2026-10-27 11:29:24 INFO apps.web.app: ✅ Gzip compression enabled
+E         2026-10-27 11:29:24 INFO apps.web.app: ✅ Secure error handlers registered (client-safe messages)
+E         2026-10-27 11:29:24 INFO apps.web.app: ✅ Authentication middleware active (all routes default-deny)
+E         2026-10-27 11:29:24 INFO apps.web.app: ✅ Disclosure register active (DATA_EXPORTED, fail-closed)
+E         2026-10-27 11:29:24 INFO apps.web.app: ✅ Authentication routes registered
+E         2026-10-27 11:29:24 INFO apps.web.app: ✅ Setup routes registered (first)
+E         2026-10-27 11:29:24 INFO apps.web.app: ✅ Content analysis API registered
+E         2026-10-27 11:29:25 INFO settings.routes: ✅ Settings API routes and page route registered
+E         2026-10-27 11:29:25 INFO Api.routes.performance: Performance monitoring routes registered
+E         2026-10-27 11:29:25 INFO apps.web.app: ✅ File Analysis API registered
+E         2026-10-27 11:29:25 INFO apps.web.app: ✅ Cursor-based pagination API registered
+E         2026-10-27 11:29:25 INFO apps.web.app: ✅ Concurrency monitoring dashboard registered
+E         2026-10-27 11:29:25 INFO Api.routes.translations: ✅ Translation API routes registered
+E         2026-10-27 11:29:25 INFO apps.web.app: ✅ Translation API routes registered
+E         2026-10-27 11:29:25 INFO Api.routes.health: ✅ Health check endpoint registered at /health
+E         2026-10-27 11:29:25 INFO apps.web.app: ✅ Error monitoring dashboard API registered
+E         2026-10-27 11:29:25 INFO apps.web.app: ✅ Interface registry views registered
+E         2026-10-27 11:29:25 INFO apps.web.app: ✅ Experience contract views registered
+E         2026-10-27 11:29:25 INFO apps.web.app: ✅ List export views registered
+E         2026-10-27 11:29:25 INFO Api.routes.map_api: Map viewer routes registered
+E         2026-10-27 11:29:25 INFO apps.web.app: ✅ Map viewer registered
+E         2026-10-27 11:29:25 INFO apps.web.app: ✅ File operation views registered
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['{venv}/bin/python', 'tools/docs/generate_reference.py', '--check'], returncode=1, stdout='sta...NFO apps.web.app: ✅ Map viewer registered\n2026-10-27 11:29:25 INFO apps.web.app: ✅ File operation views registered\n").returncode
+
+tests/unit/test_reference_docs.py:21: AssertionError
+_ TestTheEvidenceIsMeasuredNotWritten.test_the_document_is_what_the_product_now_says _
+
+self = <test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten object at 0x7f4d5efc2c50>
+
+    def test_the_document_is_what_the_product_now_says(self):
+>       document = (PROJECT_ROOT / "docs/SCREEN_INSPECTOR_EVIDENCE.md").read_text(
+            encoding="utf-8")
+
+tests/unit/test_screen_inspector.py:742: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/SCREEN_INSPECTOR_EVIDENCE.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/SCREEN_INSPECTOR_EVIDENCE.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_ TestTheEvidenceIsMeasuredNotWritten.test_the_document_explains_itself_without_a_count_in_prose _
+
+self = <test_screen_inspector.TestTheEvidenceIsMeasuredNotWritten object at 0x7f4d5efc37d0>
+
+    def test_the_document_explains_itself_without_a_count_in_prose(self):
+>       head, _ = (PROJECT_ROOT / "docs/SCREEN_INSPECTOR_EVIDENCE.md").read_text(
+            encoding="utf-8").split(audit.BEGIN, 1)
+
+tests/unit/test_screen_inspector.py:749: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/SCREEN_INSPECTOR_EVIDENCE.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/SCREEN_INSPECTOR_EVIDENCE.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+____________ test_the_opencv_path_also_says_no_speech_was_extracted ____________
+
+    def test_the_opencv_path_also_says_no_speech_was_extracted():
+        _require(SAMPLE)
+>       pytest.importorskip("cv2")
+
+tests/unit/test_video_metadata_only.py:140: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1206: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1178: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1149: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:676: in _load_unlocked
+    ???
+<frozen importlib._bootstrap>:573: in module_from_spec
+    ???
+<frozen importlib._bootstrap_external>:1233: in create_module
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+f = <built-in function create_dynamic>
+args = (ModuleSpec(name='cv2', loader=<_frozen_importlib_external.ExtensionFileLoader object at 0x7f4d35724510>, origin='{venv}/lib/python3.11/site-packages/cv2/cv2.abi3.so'),)
+kwds = {}
+
+>   ???
+E   ImportError: libGL.so.1: cannot open shared object file: No such file or directory
+
+<frozen importlib._bootstrap>:241: ImportError
+__ TestDependencyInventory.test_the_committed_inventory_matches_the_generator __
+
+self = <test_windows_offline_kit.TestDependencyInventory object at 0x7f4d5f8bb390>
+
+    def test_the_committed_inventory_matches_the_generator(self):
+        assert inventory_dependencies.generate() == (
+>           (ROOT / "docs" / "windows" / "DEPENDENCY_INVENTORY.md")
+            .read_text(encoding="utf-8"))
+
+tests/unit/test_windows_offline_kit.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-base}/docs/windows/DEPENDENCY_INVENTORY.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-base}/docs/windows/DEPENDENCY_INVENTORY.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+=============================== warnings summary ===============================
+database/__init__.py:1190
+tests/unit/test_catalog_extraction.py::TestNoTranslationCallPassesALookupKey::test_no_translation_call_is_given_a_key_it_looks_up_at_runtime
+  {worktree-base}/database/__init__.py:1190: DeprecationWarning: invalid escape sequence '\.'
+    file_types_query = """
+
+tests/unit/test_analyst_csv_export_columns.py:9
+  {worktree-base}/tests/unit/test_analyst_csv_export_columns.py:9: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_bandit_count_gate.py:21
+  {worktree-base}/tests/unit/test_bandit_count_gate.py:21: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_bandit_count_gate.py:33
+  {worktree-base}/tests/unit/test_bandit_count_gate.py:33: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_bandit_count_gate.py:47
+  {worktree-base}/tests/unit/test_bandit_count_gate.py:47: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_bandit_count_gate.py:58
+  {worktree-base}/tests/unit/test_bandit_count_gate.py:58: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_file_action_button_i18n.py:15
+tests/unit/test_file_action_button_i18n.py:15
+  {worktree-base}/tests/unit/test_file_action_button_i18n.py:15: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_export_surfaces_i18n.py:22
+  {worktree-base}/tests/unit/test_export_surfaces_i18n.py:22: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_interface_registry_i18n.py:21
+  {worktree-base}/tests/unit/test_interface_registry_i18n.py:21: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_job_event_storage_vocabulary.py:26
+  {worktree-base}/tests/unit/test_job_event_storage_vocabulary.py:26: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_js_api_urls_resolve.py:24
+  {worktree-base}/tests/unit/test_js_api_urls_resolve.py:24: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_lexis_cosmos_i18n.py:39
+  {worktree-base}/tests/unit/test_lexis_cosmos_i18n.py:39: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_map_viewer_i18n.py:22
+  {worktree-base}/tests/unit/test_map_viewer_i18n.py:22: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_no_remote_runtime_resources.py:69
+  {worktree-base}/tests/unit/test_no_remote_runtime_resources.py:69: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.unit
+
+tests/unit/test_structured_folder_export.py:13
+  {worktree-base}/tests/unit/test_structured_folder_export.py:13: PytestUnknownMarkWarning: Unknown pytest.mark.unit - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.unit
+
+tests/unit/test_action_toolbar.py::TestTheMigratedPagesRenderTheContract::test_the_served_page_renders_the_no_selection_state[/sources-sourcesActionBar-sources-source-bulk_ids0-sources-list-page.js-source-checkbox-server]
+  {venv}/lib/python3.11/site-packages/platformdirs/api.py:459: RuntimeDirWarning: XDG_RUNTIME_DIR is not set, falling back to {tmp}
+    return Path(self.user_runtime_dir)
+
+tests/unit/test_catalog_extraction.py::TestNoTranslationCallPassesALookupKey::test_no_translation_call_is_given_a_key_it_looks_up_at_runtime
+  {worktree-base}/scripts/cleanup_cache.py:18: DeprecationWarning: invalid escape sequence '\S'
+    """
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:920: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+    ParserElement.enablePackrat()
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:957: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    decimal_literal.setParseAction(lambda t: int(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:961: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    octal_literal.setParseAction(lambda t: int(t[0], base=8))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:965: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    hex_literal.setParseAction(lambda t: int(t[0], base=16))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:977: PyparsingDeprecationWarning: 'escQuote' argument is deprecated, use 'esc_quote'
+    quoted_string = QuotedString('"', escQuote='""')
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:978: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    quoted_string.setParseAction(lambda t: str(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1059: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    vba_chr.setParseAction(vba_chr_tostr)
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1067: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    vba_asc.setParseAction(lambda t: ord(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1075: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    vba_val.setParseAction(lambda t: int(t[0].strip()))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1082: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    strReverse.setParseAction(lambda t: VbaExpressionString(str(t[0])[::-1]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1089: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    environ.setParseAction(lambda t: VbaExpressionString('%%%s%%' % t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1099: PyparsingDeprecationWarning: 'initChars' argument is deprecated, use 'init_chars'
+    latin_identifier = Word(initChars=alphas, bodyChars=alphanums + '_')
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1099: PyparsingDeprecationWarning: 'bodyChars' argument is deprecated, use 'body_chars'
+    latin_identifier = Word(initChars=alphas, bodyChars=alphanums + '_')
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1108: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    quoted_hex_string.setParseAction(lambda t: str(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1112: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    hex_function_call.setParseAction(lambda t: VbaExpressionString(binascii.a2b_hex(t.hex_string)))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1122: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    quoted_base64_string.setParseAction(lambda t: str(t[0]))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1126: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    base64_function_call.setParseAction(lambda t: VbaExpressionString(binascii.a2b_base64(t.base64_string)))
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1143: PyparsingDeprecationWarning: 'infixNotation' deprecated - use 'infix_notation'
+    vba_expr_str <<= infixNotation(vba_expr_str_item,
+
+tests/unit/test_forensic_extraction.py::TestMacroExtraction::test_macro_project_is_hashed_even_when_it_cannot_be_decompressed
+  {venv}/lib/python3.11/site-packages/oletools/olevba.py:1198: PyparsingDeprecationWarning: 'infixNotation' deprecated - use 'infix_notation'
+    vba_expr_int <<= infixNotation(vba_expr_int_item,
+
+tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_document_embeds_both_generated_blocks
+  {venv}/lib/python3.11/site-packages/_pytest/fixtures.py:1313: PytestRemovedIn10Warning: Class-scoped fixture defined as instance method is deprecated.
+  Instance attributes set in this fixture will NOT be visible to test methods,
+  as each test gets a new instance while the fixture runs only once per class.
+  Use @classmethod decorator and set attributes on cls instead.
+  See https://docs.pytest.org/en/stable/deprecations.html#class-scoped-fixture-as-instance-method
+    fixturefunc = resolve_fixture_function(fixturedef, request)
+
+tests/unit/test_logger_shadowing.py::test_no_function_reads_logger_before_binding_it
+  <unknown>:1190: DeprecationWarning: invalid escape sequence '\.'
+
+tests/unit/test_logger_shadowing.py::test_no_function_reads_logger_before_binding_it
+  <unknown>:18: DeprecationWarning: invalid escape sequence '\S'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/unit/test_action_lifecycle_components.py::TestTheyAreDeclaredComponents::test_the_documentation_is_regenerated_from_the_library[confirm_dialog]
+FAILED tests/unit/test_action_lifecycle_components.py::TestTheyAreDeclaredComponents::test_the_documentation_is_regenerated_from_the_library[toast]
+FAILED tests/unit/test_action_surface_audit.py::TestTheDocumentIsGenerated::test_the_document_is_what_the_product_now_says
+FAILED tests/unit/test_action_surface_audit.py::TestTheDocumentIsGenerated::test_the_document_explains_itself_without_a_count_in_prose
+FAILED tests/unit/test_architecture_diagrams.py::test_architecture_has_mermaid_diagrams
+FAILED tests/unit/test_architecture_diagrams.py::test_job_state_diagram_matches_transitions
+FAILED tests/unit/test_component_library.py::TestTheStateVocabularyIsComplete::test_the_document_calls_them_not_yet_rather_than_implying_coverage
+FAILED tests/unit/test_component_library.py::TestTheDocumentCannotDrift::test_the_generated_section_matches_the_components
+FAILED tests/unit/test_component_library.py::TestTheDocumentCannotDrift::test_the_document_states_the_rules
+FAILED tests/unit/test_component_library.py::TestAdoption::test_the_audit_counts_the_hand_written_markup
+FAILED tests/unit/test_content_vs_identity.py::test_identity_metadata_does_not_displace_real_content
+FAILED tests/unit/test_content_vs_identity.py::test_forensic_text_is_content_and_is_still_joined
+FAILED tests/unit/test_date_and_orientation.py::test_standalone_rotated_image_text_extraction[90]
+FAILED tests/unit/test_date_and_orientation.py::test_standalone_rotated_image_text_extraction[180]
+FAILED tests/unit/test_date_and_orientation.py::test_standalone_rotated_image_text_extraction[270]
+FAILED tests/unit/test_date_and_orientation.py::test_pdf_page_rotated_image_text_extraction[90]
+FAILED tests/unit/test_date_and_orientation.py::test_pdf_page_rotated_image_text_extraction[180]
+FAILED tests/unit/test_date_and_orientation.py::test_pdf_page_rotated_image_text_extraction[270]
+FAILED tests/unit/test_embedded_images.py::test_docx_embedded_image_is_extracted
+FAILED tests/unit/test_embedded_images.py::test_docx_embedded_image_text_was_ocrd
+FAILED tests/unit/test_embedded_images.py::test_docx_embedded_image_carries_ocr_provenance
+FAILED tests/unit/test_embedded_images.py::test_docx_embedded_image_keeps_its_part_name
+FAILED tests/unit/test_embedded_images.py::test_pptx_embedded_image_is_extracted
+FAILED tests/unit/test_embedded_images.py::test_xlsx_embedded_image_is_extracted
+FAILED tests/unit/test_embedded_images.py::test_reader_publishes_extraction_path_so_the_router_can_recurse
+FAILED tests/unit/test_embedded_images.py::test_pptx_publishes_extraction_path_without_a_result_dict
+FAILED tests/unit/test_experience_contract.py::TestTheDocumentCannotDrift::test_the_generated_block_matches
+FAILED tests/unit/test_experience_contract.py::TestTheDocumentCannotDrift::test_the_document_has_no_hand_typed_counts
+FAILED tests/unit/test_identifiers_intel.py::test_detects_email_phone_ipv4_and_links_to_sentence
+FAILED tests/unit/test_identifiers_intel.py::test_email_not_double_counted_as_ipv4_fragment
+FAILED tests/unit/test_interface_docs.py::TestOtherDocuments::test_the_productization_map_points_at_the_registry
+FAILED tests/unit/test_interface_docs.py::TestOtherDocuments::test_the_domain_model_exists
+FAILED tests/unit/test_interface_lifecycle.py::TestAllFiveConsumersAgree::test_the_generated_documentation_states_the_policy
+FAILED tests/unit/test_interface_lifecycle.py::TestTheRegistryIsFrozen::test_the_freeze_is_written_down
+FAILED tests/unit/test_licensing.py::test_installed_dependencies_are_agpl_compatible
+FAILED tests/unit/test_licensing.py::test_checker_cli_exits_zero_on_this_environment
+FAILED tests/unit/test_no_machine_paths.py::test_no_machine_specific_paths_or_hosts
+FAILED tests/unit/test_ocr_engines.py::TestImageReaderOcr::test_printed_text_is_extracted_with_provenance
+FAILED tests/unit/test_ocr_engines.py::TestImageReaderOcr::test_blocks_carry_confidence_and_bbox
+FAILED tests/unit/test_ocr_engines.py::TestImageReaderOcr::test_blank_image_yields_no_text_and_no_hallucination
+FAILED tests/unit/test_ocr_matrix.py::TestOrdinaryText::test_extracted_with_full_provenance
+FAILED tests/unit/test_ocr_matrix.py::TestResolution::test_high_resolution - ...
+FAILED tests/unit/test_ocr_matrix.py::TestResolution::test_very_large_image_is_not_refused
+FAILED tests/unit/test_ocr_matrix.py::TestMultiPagePdf::test_every_page_is_ocrd_in_order
+FAILED tests/unit/test_ocr_matrix.py::TestMixedPdf::test_both_layers_survive
+FAILED tests/unit/test_ocr_matrix.py::TestNoText::test_blank_image_yields_nothing
+FAILED tests/unit/test_ocr_provenance_docs.py::test_every_stored_ocr_field_is_documented
+FAILED tests/unit/test_ocr_provenance_docs.py::test_every_documented_ocr_field_is_stored
+FAILED tests/unit/test_ocr_selfcheck.py::TestRequire::test_the_fallback_engine_passes_when_it_is_the_one_required
+FAILED tests/unit/test_ocr_selfcheck.py::test_the_host_engine_reads_every_sample
+FAILED tests/unit/test_pdf_mixed_pages.py::test_broken_text_layer_page_is_replaced_by_ocr
+FAILED tests/unit/test_pdf_mixed_pages.py::test_corrupt_layer_is_not_kept_when_ocr_finds_nothing
+FAILED tests/unit/test_pdf_text_layer.py::TestScannedPdfUsesFallbackEngine::test_engine_exists_so_ocr_is_not_skipped
+FAILED tests/unit/test_pdf_text_layer.py::TestScannedPdfUsesFallbackEngine::test_scanned_page_yields_recognised_text_with_provenance
+FAILED tests/unit/test_pdf_text_layer.py::TestScannedPdfUsesFallbackEngine::test_document_is_not_flagged_as_no_engine
+FAILED tests/unit/test_pdf_text_layer.py::TestScannedPdfUsesFallbackEngine::test_blank_scanned_page_falls_back_without_hallucinating
+FAILED tests/unit/test_reference_docs.py::test_reference_docs_are_current - A...
+FAILED tests/unit/test_screen_inspector.py::TestTheEvidenceIsMeasuredNotWritten::test_the_document_is_what_the_product_now_says
+FAILED tests/unit/test_screen_inspector.py::TestTheEvidenceIsMeasuredNotWritten::test_the_document_explains_itself_without_a_count_in_prose
+FAILED tests/unit/test_video_metadata_only.py::test_the_opencv_path_also_says_no_speech_was_extracted
+FAILED tests/unit/test_windows_offline_kit.py::TestDependencyInventory::test_the_committed_inventory_matches_the_generator
+ERROR tests/unit/test_interface_docs.py::TestGeneratedBlock::test_the_document_embeds_a_generated_block
+ERROR tests/unit/test_interface_docs.py::TestGeneratedBlock::test_the_block_matches_the_registry
+ERROR tests/unit/test_interface_docs.py::TestGeneratedBlock::test_regeneration_is_idempotent
+ERROR tests/unit/test_interface_docs.py::TestGeneratedBlock::test_splicing_preserves_the_prose
+ERROR tests/unit/test_interface_docs.py::TestCountsAreGenerated::test_the_document_states_no_endpoint_count_of_its_own
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_document_embeds_both_generated_blocks
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_registry_half_matches_the_registry
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_regeneration_is_idempotent
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_every_required_evidence_item_is_present
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_coverage_claim_is_stated_as_zero_unmanaged
+ERROR tests/unit/test_interface_docs.py::TestRegistryEvidence::test_the_document_reports_what_remains_legacy

@@ -441,8 +441,8 @@ built, the row says so instead of renaming the plan after the fact.
 | T3 display | done | `1c9c1ae` | `test_term_names_display.py`, `test_term_names_catalog.py` (11) |
 | T4 search expansion | done — six entry points | `e990c6c` | `test_term_names_search.py`; `taxonomy_matrix.csv` (3 342 rows, 0 wrong) |
 | T5 curation (CSV first, then UI) | done | `c432acf`, `1f5035b` | `category_names.html`, `test_term_names_faults.py` |
-| T6 scale + EXPLAIN | **partly** | `357a105` | `taxonomy_plans.csv` (14 plans on 10 566 words); **no 100 000-row fixture** — see the gap below |
-| T7 generated artefacts | done once, at the end | round-21 docs commit | `docs/reference/HTTP_ROUTES.md` 484 → 509 routes |
+| T6 scale + EXPLAIN | **partly** | `357a105`, `6e2e596` | `taxonomy_plans.csv` (14 plans on 10 566 words), `scale_100k.csv` (110 566 words, rolled back); the two ordered sites still cost more when expanded — see gap 1 |
+| T7 generated artefacts | done once, at the end | `152b747` | `docs/endpoint_inventory.json` 501 → 508 endpoints; `DATABASE_SCHEMA.md` 42 → 43 tables; `docs/REGISTRY_EVIDENCE.md` created (absent at base) |
 
 ### Where the plan's file names and the shipped tests differ
 
@@ -460,11 +460,20 @@ Recorded here rather than silently renaming:
 
 ### Gaps this plan promised and the round did not close
 
-1. **100 000-word scale test.** The largest measured dataset is the operator's
-   taxonomy: 10 566 words, 56 categories, 11 054 links
-   (`audit_report/r21_i18n/taxonomy_plans.csv`, `taxonomy_matrix.csv`). The
-   100 k fixture and its p95 latency are unmeasured. The one-query-per-page
-   property *is* asserted, against a fake cursor.
+1. **100 000-word scale test — closed, with a caveat.** Two datasets were
+   measured: the operator's taxonomy (10 566 words, 56 categories, 11 054 links;
+   `audit_report/r21_i18n/taxonomy_plans.csv`) and a 110 566-word synthetic set
+   inserted inside a transaction that was rolled back
+   (`audit_report/r21_i18n/scale_100k.csv`, `scale_100k_rollback.txt`). At 100 k
+   the expanded predicates cost 0.03-0.12 ms at the word-picker, keyword and
+   file-analysis sites and 53.7 / 59.2 ms at the two ordered sites
+   (category list, category tree) against a 45 ms text-only floor: the floor is
+   the pre-existing, unindexable ``ILIKE '%term%'``. The union rewrite was
+   measured and rejected (63.7 ms, no better; `scale_variants.json`). The real
+   fix is a trigram index, which **cannot be tested here**: this sandbox's
+   PostgreSQL ships without `pg_trgm` (`scale_variants.json`,
+   `ENV-BLOCKED`). One-query-per-page is still asserted only against a fake
+   cursor, not against a 100 k fixture.
 2. **No enforcing test for the label surface scan.** The scan runs and prints
    (`tools/audit/scan_term_label_surface.py`), nothing fails when a new
    English-only label site appears.

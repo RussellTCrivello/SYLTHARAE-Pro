@@ -1,0 +1,11 @@
+{
+  "_note": "Second 100k run, while the base/head suites were also running (CPU contended): absolute numbers are higher than scale_100k.csv, the ordering and the verdict are the same. Script: {tmp}, reproduced in REPORT.md.",
+  "_db": "taxonomy_scratch, transaction rolled back; 110 566 words, 100 056 categories",
+  "_env_blocked": "CREATE EXTENSION pg_trgm -> FeatureNotSupported: extension \"pg_trgm\" is not available (this pgserver build ships no contrib modules)",
+  "list/current-or": {"exec_ms": 35.233, "rows": 1, "index": "idx_categorys_word_id", "node": "Limit"},
+  "list/union-ids":  {"exec_ms": 63.668, "rows": 1, "index": "words_pkey", "node": "Limit"},
+  "list/text-only":  {"exec_ms": 49.849, "rows": 0, "index": "idx_categorys_word_id", "node": "Limit"},
+  "tree/current-or": {"exec_ms": 64.403, "rows": 1, "index": "", "node": "Limit"},
+  "tree/union-ids":  {"exec_ms": 64.208, "rows": 1, "index": "words_pkey", "node": "Limit"},
+  "tree/text-only":  {"exec_ms": 49.242, "rows": 0, "index": "idx_categorys_word_id", "node": "Limit"}
+}

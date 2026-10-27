@@ -1,0 +1,378 @@
+........................................................................ [  5%]
+.......................................................................s [ 10%]
+........................................................................ [ 16%]
+........................................................................ [ 21%]
+..........................................................s............. [ 26%]
+........................................................................ [ 32%]
+......................................................................F. [ 37%]
+...F...................FFFF............................................. [ 43%]
+........................................................................ [ 48%]
+.......................EE............................................... [ 53%]
+..............................s......................................... [ 59%]
+...ssssssssssssssssssssssssss........................................... [ 64%]
+...................................F.................................... [ 70%]
+........................................................................ [ 75%]
+........................................................................ [ 80%]
+.F...................................................................... [ 86%]
+........................................................................ [ 91%]
+......FFFF.............................................................. [ 97%]
+.......................................                                  [100%]
+==================================== ERRORS ====================================
+__ ERROR at setup of test_downgrade_restores_the_old_rule_and_changes_no_rows __
+
+pg_db = {'host': '{tmp}', 'port': 5432, 'user': 'postgres', 'password': '', ...}
+
+    @pytest.fixture(scope="module")
+    def populated_db(pg_db):
+        """An empty database, migrated, then filled with a five-level tree."""
+        from database.bootstrap import bootstrap_database
+        from database.migration_runner import current_version
+    
+        name = f"{pg_db['database']}_m0004_roundtrip"
+        admin = psycopg2.connect(
+            host=pg_db["host"], port=pg_db["port"], user=pg_db["user"],
+            password=pg_db["password"], dbname="postgres",
+        )
+        admin.autocommit = True
+        try:
+            with admin.cursor() as cur:
+                cur.execute("SELECT pg_terminate_backend(pid) FROM pg_stat_activity"
+                            " WHERE datname = %s AND pid <> pg_backend_pid()", (name,))
+                cur.execute(f'DROP DATABASE IF EXISTS "{name}"')
+                cur.execute(f'CREATE DATABASE "{name}"')
+        finally:
+            admin.close()
+    
+        cfg = {k: pg_db[k] for k in ("host", "port", "user", "password")}
+        cfg["database"] = name
+        bootstrap_database(cfg)
+    
+        conn = _connect(cfg)
+        try:
+            with conn.cursor() as cur:
+>               assert current_version(conn) == "0004"
+E               AssertionError: assert '0005' == '0004'
+E                 
+E                 - 0004
+E                 ?    ^
+E                 + 0005
+E                 ?    ^
+
+tests/integration/test_m0004_downgrade_upgrade.py:69: AssertionError
+_ ERROR at setup of test_upgrade_restores_the_cycle_guard_and_changes_no_rows __
+
+pg_db = {'host': '{tmp}', 'port': 5432, 'user': 'postgres', 'password': '', ...}
+
+    @pytest.fixture(scope="module")
+    def populated_db(pg_db):
+        """An empty database, migrated, then filled with a five-level tree."""
+        from database.bootstrap import bootstrap_database
+        from database.migration_runner import current_version
+    
+        name = f"{pg_db['database']}_m0004_roundtrip"
+        admin = psycopg2.connect(
+            host=pg_db["host"], port=pg_db["port"], user=pg_db["user"],
+            password=pg_db["password"], dbname="postgres",
+        )
+        admin.autocommit = True
+        try:
+            with admin.cursor() as cur:
+                cur.execute("SELECT pg_terminate_backend(pid) FROM pg_stat_activity"
+                            " WHERE datname = %s AND pid <> pg_backend_pid()", (name,))
+                cur.execute(f'DROP DATABASE IF EXISTS "{name}"')
+                cur.execute(f'CREATE DATABASE "{name}"')
+        finally:
+            admin.close()
+    
+        cfg = {k: pg_db[k] for k in ("host", "port", "user", "password")}
+        cfg["database"] = name
+        bootstrap_database(cfg)
+    
+        conn = _connect(cfg)
+        try:
+            with conn.cursor() as cur:
+>               assert current_version(conn) == "0004"
+E               AssertionError: assert '0005' == '0004'
+E                 
+E                 - 0004
+E                 ?    ^
+E                 + 0005
+E                 ?    ^
+
+tests/integration/test_m0004_downgrade_upgrade.py:69: AssertionError
+=================================== FAILURES ===================================
+________ TestCoverage.test_every_user_facing_page_has_exactly_one_owner ________
+
+self = <test_interface_coverage.TestCoverage object at 0x7fb41b131f50>
+app = <Flask 'apps.web.app'>
+
+    def test_every_user_facing_page_has_exactly_one_owner(self, app):
+        records = build_inventory(app)
+        unowned = unowned_user_interfaces(records)
+>       assert unowned == [], (
+            "Unregistered user-facing page endpoint(s): "
+            + ", ".join(r.endpoint for r in unowned))
+E       AssertionError: Unregistered user-facing page endpoint(s): category_names
+E       assert [EndpointReco...ternal=False)] == []
+E         
+E         Left contains one more item: EndpointRecord(endpoint='category_names', rule='/categories/<int:category_id>/names', methods=('GET',), blueprint='(app)', module='categories', classification=<EndpointClass.USER_INTERFACE: 'USER_INTERFACE'>, owned_by=None, internal=False)
+E         Use -v to get more diff
+
+tests/integration/test_interface_coverage.py:60: AssertionError
+_______________ TestCoverage.test_coverage_numbers_are_generated _______________
+
+self = <test_interface_coverage.TestCoverage object at 0x7fb41b131190>
+app = <Flask 'apps.web.app'>
+
+    def test_coverage_numbers_are_generated(self, app):
+        coverage = registry_coverage(build_inventory(app))
+        assert coverage["page_endpoints"] > 0
+>       assert coverage["unowned_user_interface"] == []
+E       AssertionError: assert ['category_names'] == []
+E         
+E         Left contains one more item: 'category_names'
+E         Use -v to get more diff
+
+tests/integration/test_interface_coverage.py:110: AssertionError
+___________ TestTheRegistryView.test_the_inventory_can_be_inspected ____________
+
+self = <test_interface_coverage.TestTheRegistryView object at 0x7fb41b4e4690>
+admin_client = <FlaskClient <Flask 'apps.web.app'>>
+
+    def test_the_inventory_can_be_inspected(self, admin_client):
+        body = admin_client.get("/api/interfaces/inventory").get_json()
+>       assert body["counts"]["UNOWNED_USER_INTERFACE"] == 0
+E       assert 1 == 0
+
+tests/integration/test_interface_coverage.py:425: AssertionError
+_________________ TestTheRegistryView.test_coverage_is_served __________________
+
+self = <test_interface_coverage.TestTheRegistryView object at 0x7fb41b4e7610>
+admin_client = <FlaskClient <Flask 'apps.web.app'>>
+
+    def test_coverage_is_served(self, admin_client):
+        coverage = admin_client.get("/api/interfaces/coverage").get_json()["coverage"]
+>       assert coverage["unowned_user_interface"] == []
+E       AssertionError: assert ['category_names'] == []
+E         
+E         Left contains one more item: 'category_names'
+E         Use -v to get more diff
+
+tests/integration/test_interface_coverage.py:430: AssertionError
+____ TestTheEvidenceReport.test_the_evidence_report_matches_the_application ____
+
+self = <test_interface_coverage.TestTheEvidenceReport object at 0x7fb41b35e5d0>
+app = <Flask 'apps.web.app'>
+admin_client = <FlaskClient <Flask 'apps.web.app'>>
+
+    def test_the_evidence_report_matches_the_application(self, app, admin_client):
+        from core.interfaces.evidence import (
+            BEGIN_APPLICATION,
+            END_APPLICATION,
+            application_block,
+            navigation_observation,
+        )
+    
+>       document = self.REPORT.read_text()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_interface_coverage.py:464: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{tmp}/final_head/docs/REGISTRY_EVIDENCE.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_head/docs/REGISTRY_EVIDENCE.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+__ TestTheEvidenceReport.test_the_endpoint_inventory_matches_the_application ___
+
+self = <test_interface_coverage.TestTheEvidenceReport object at 0x7fb41b35edd0>
+app = <Flask 'apps.web.app'>
+
+    def test_the_endpoint_inventory_matches_the_application(self, app):
+        from core.interfaces.evidence import endpoint_inventory
+    
+        generated = endpoint_inventory(app)
+    
+        if self._writing():
+            self.INVENTORY.write_text(generated)
+            pytest.skip("endpoint inventory regenerated")
+    
+        assert self.INVENTORY.exists(), (
+            "docs/endpoint_inventory.json is missing; regenerate with "
+            "INFORAXIS_WRITE_EVIDENCE=1")
+>       assert self.INVENTORY.read_text() == generated, (
+            "docs/endpoint_inventory.json is out of date with the application; "
+            "regenerate with INFORAXIS_WRITE_EVIDENCE=1")
+E       AssertionError: docs/endpoint_inventory.json is out of date with the application; regenerate with INFORAXIS_WRITE_EVIDENCE=1
+E       assert '[\n  {\n    ...lse\n  }\n]\n' == '[\n  {\n    ...lse\n  }\n]\n'
+E         
+E         Skipping 37207 identical leading characters in diff, use -v to show
+E         - nt": "api_term_labels",
+E         -     "rule": "/api/i18n/term-labels",
+E         -     "methods": [
+E         -       "GET"
+E         -     ],...
+E         
+E         ...Full output truncated (4447 lines hidden), use '-vv' to show
+
+tests/integration/test_interface_coverage.py:498: AssertionError
+_____________ test_schema_reference_matches_the_migrated_database ______________
+
+fresh_schema_db = {'host': '{tmp}', 'port': 5432, 'user': 'postgres', 'password': '', ...}
+
+    def test_schema_reference_matches_the_migrated_database(fresh_schema_db):
+        db = fresh_schema_db
+        connection = psycopg2.connect(host=db["host"], port=db["port"], user=db["user"],
+                                      password=db["password"], dbname=db["database"])
+        try:
+            generated = generate(connection)
+        finally:
+            connection.close()
+        if os.environ.get("INFORAXIS_WRITE_EVIDENCE") == "1":
+            TARGET.parent.mkdir(parents=True, exist_ok=True)
+            TARGET.write_text(generated, encoding="utf-8")
+            pytest.skip("schema reference regenerated")
+        assert TARGET.exists(), "run python3 tools/docs/generate_schema.py"
+>       assert TARGET.read_text(encoding="utf-8") == generated, (
+            "docs/reference/DATABASE_SCHEMA.md is stale; run python3 tools/docs/generate_schema.py")
+E       AssertionError: docs/reference/DATABASE_SCHEMA.md is stale; run python3 tools/docs/generate_schema.py
+E       assert '# Database s...e (word_id)\n' == '# Database s...e (word_id)\n'
+E         
+E         Skipping 227 identical leading characters in diff, use -v to show
+E         - rchy_depth, `0005` term_names.
+E         + rchy_depth.
+E           
+E         - 43 tables:
+E         ?  ^...
+E         
+E         ...Full output truncated (1130 lines hidden), use '-vv' to show
+
+tests/integration/test_schema_reference.py:68: AssertionError
+_______________ TestTheDryRun.test_it_shows_what_it_would_insert _______________
+
+self = <test_term_names_backfill.TestTheDryRun object at 0x7fb41ab48250>
+backfill_db = (<connection object at 0x7fb3e070d6c0; dsn: 'user=postgres password=xxx dbname=file_analysis_test_75122 host={tmp} port=5432', closed: 0>, {'political': 15886, 'economic': 15887, 'social': 15888}, 'a57f0eb4')
+
+    def test_it_shows_what_it_would_insert(self, backfill_db):
+        from tools.i18n.backfill_term_names import backfill
+    
+        conn, words, suffix = backfill_db
+        report = backfill(conn, dry_run=True)
+        sample_words = {row["word"] for row in report["sample"]}
+>       assert f"political-{suffix}" in sample_words
+E       AssertionError: assert 'political-a57f0eb4' in {'7788', 'nestedlineage', 'scan.png', 'smartword8f5cfae7', 'smartwordec3dfb5a'}
+
+tests/integration/test_term_names_backfill.py:83: AssertionError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[ar] __________________
+
+lang = 'ar'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [ar] 309 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[he] __________________
+
+lang = 'he'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [he] 284 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[fa] __________________
+
+lang = 'fa'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [fa] 284 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[hr] __________________
+
+lang = 'hr'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [hr] 359 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+=============================== warnings summary ===============================
+tests/integration/test_admin_password_recovery.py::test_list_names_the_accounts_that_can_log_in
+  {venv}/lib/python3.11/site-packages/platformdirs/api.py:459: RuntimeDirWarning: XDG_RUNTIME_DIR is not set, falling back to {tmp}
+    return Path(self.user_runtime_dir)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_interface_coverage.py::TestCoverage::test_every_user_facing_page_has_exactly_one_owner
+FAILED tests/integration/test_interface_coverage.py::TestCoverage::test_coverage_numbers_are_generated
+FAILED tests/integration/test_interface_coverage.py::TestTheRegistryView::test_the_inventory_can_be_inspected
+FAILED tests/integration/test_interface_coverage.py::TestTheRegistryView::test_coverage_is_served
+FAILED tests/integration/test_interface_coverage.py::TestTheEvidenceReport::test_the_evidence_report_matches_the_application
+FAILED tests/integration/test_interface_coverage.py::TestTheEvidenceReport::test_the_endpoint_inventory_matches_the_application
+FAILED tests/integration/test_schema_reference.py::test_schema_reference_matches_the_migrated_database
+FAILED tests/integration/test_term_names_backfill.py::TestTheDryRun::test_it_shows_what_it_would_insert
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[ar]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[he]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[fa]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[hr]
+ERROR tests/integration/test_m0004_downgrade_upgrade.py::test_downgrade_restores_the_old_rule_and_changes_no_rows
+ERROR tests/integration/test_m0004_downgrade_upgrade.py::test_upgrade_restores_the_cycle_guard_and_changes_no_rows

@@ -1,0 +1,147 @@
+....................................................................ssss [  5%]
+sssssssssssssssssssssss................................................s [ 11%]
+........................................................................ [ 17%]
+........................................................................ [ 23%]
+..........................................................s............. [ 29%]
+......................................ssssssssssssssss.................. [ 35%]
+.sssssssss.s............................................................ [ 41%]
+.........................F.............................................. [ 46%]
+........................................................................ [ 52%]
+..............................ssssss.................................... [ 58%]
+..............................s..ssssssss............................... [ 64%]
+...ssssssssssssssssssssssssss........................................... [ 70%]
+........................................................................ [ 76%]
+........................................................................ [ 82%]
+........................................................................ [ 88%]
+.........................................FFFF........................... [ 93%]
+....................................sssssssssssss......ss.ss............ [ 99%]
+..                                                                       [100%]
+=================================== FAILURES ===================================
+____ TestTheEvidenceReport.test_the_evidence_report_matches_the_application ____
+
+self = <test_interface_coverage.TestTheEvidenceReport object at 0x7fba87ee9c10>
+app = <Flask 'apps.web.app'>
+admin_client = <FlaskClient <Flask 'apps.web.app'>>
+
+    def test_the_evidence_report_matches_the_application(self, app, admin_client):
+        from core.interfaces.evidence import (
+            BEGIN_APPLICATION,
+            END_APPLICATION,
+            application_block,
+            navigation_observation,
+        )
+    
+>       document = self.REPORT.read_text()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_interface_coverage.py:464: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{worktree-head}/docs/REGISTRY_EVIDENCE.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{worktree-head}/docs/REGISTRY_EVIDENCE.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[ar] __________________
+
+lang = 'ar'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [ar] 309 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[he] __________________
+
+lang = 'he'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [he] 284 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[fa] __________________
+
+lang = 'fa'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [fa] 284 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[hr] __________________
+
+lang = 'hr'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [hr] 359 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+=============================== warnings summary ===============================
+tests/integration/test_admin_password_recovery.py::test_list_names_the_accounts_that_can_log_in
+  {venv}/lib/python3.11/site-packages/platformdirs/api.py:459: RuntimeDirWarning: XDG_RUNTIME_DIR is not set, falling back to {tmp}
+    return Path(self.user_runtime_dir)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_interface_coverage.py::TestTheEvidenceReport::test_the_evidence_report_matches_the_application
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[ar]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[he]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[fa]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[hr]

@@ -2,16 +2,16 @@
   "steps": [
     {
       "step": "login",
-      "url": "http://127.0.0.1:5055/",
-      "dir": "rtl",
-      "lang": "ar",
-      "h1": "تحليلات الملفات الشاملة",
-      "text": "الانتقال إلى المحتوى الرئيسي\nSYLTHARAE System\nالعمل\nلوحة التحكم\nاكتشاف\nمكتبة الملفات\nالبحث\nالمصادر\nالجوانب\nالكلمات المفتاحية\nالكلمات\nالفئات\nكلمات البريد\nالإشعارات\nالأفق ومستكشف الإشارات\nالمراقبة\nإدخال\nالإدخال / الاستيعاب\nمركز الاستيراد\nتحليل\nإدارة وتحليل الملفات\nتحليل المسار\nعارض الخريطة\nالتحليل المجمع\nتصنيف\nلكسيس كوزموس\nفئات المحلل\nالتصنيف\nتقارير\nلوحة التحكم الشاملة\nالتقارير\nلوحة التقارير\nالجداول الزمنية\nلوحة معلومات الرسوم البيانية\nتشغيل\nالكشف\nالمهام\nالاستيراد / التصدير\nDeprecated\nالإدارة\nالاح",
+      "url": "http://{base-url}/",
+      "dir": "ltr",
+      "lang": "en",
+      "h1": "Comprehensive File Analytics",
+      "text": "Skip to main content\nSYLTHARAE System\nWORK\nDashboard\nDISCOVER\nFile Library\nSearch\nSources\nSides\nKeywords\nWords\nCategories\nEmail Words\nNotifications\nHorizon & Signal Explorer\nMonitoring\nINGEST\nInput / Ingestion\nImport Center\nANALYZE\nFile Management and Analysis\nPath Analysis\nMap Viewer\nBatch Analysis\nCLASSIFY\nLEXIS Cosmos\nAnalyst Categories\nClassification\nREPORT\nComprehensive Dashboard\nReports\nReports Dashboard\nSchedules\nCharts Dashboard\nOPERATE\nDetection\nJobs\nImport/Export\nDeprecated\nADMINISTRAT",
       "httpStatus": 200
     },
     {
       "step": "categories-en",
-      "url": "http://127.0.0.1:5055/categories",
+      "url": "http://{base-url}/categories",
       "dir": "ltr",
       "lang": "en",
       "h1": "Categories Management (1)",
@@ -20,7 +20,7 @@
     },
     {
       "step": "arabic-ui",
-      "url": "http://127.0.0.1:5055/categories",
+      "url": "http://{base-url}/categories",
       "dir": "rtl",
       "lang": "ar",
       "h1": "إدارة المصادر (1)",
@@ -30,7 +30,7 @@
     },
     {
       "step": "arabic-query",
-      "url": "http://127.0.0.1:5055/categories?search=%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%B4%D8%B9%D8%AA%D8%AF",
+      "url": "http://{base-url}/categories?search=%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%AB%D8%BA%D8%A8%D8%B8",
       "dir": "rtl",
       "lang": "ar",
       "h1": "إدارة المصادر (1)",
@@ -40,7 +40,7 @@
         "count": 1,
         "matched": true,
         "names": [
-          "#1\t\nاختبارشعتد\n\tMain Category\t0\t0\t\nعرض\nإضافة"
+          "#1\t\nاختبارثغبظ\n\tMain Category\t0\t0\t\nعرض\nإضافة"
         ],
         "sources": [
           "translated"
@@ -49,7 +49,7 @@
     },
     {
       "step": "english-query-under-arabic-ui",
-      "url": "http://127.0.0.1:5055/categories?search=e2e-e37848",
+      "url": "http://{base-url}/categories?search=e2e-9b710b",
       "dir": "rtl",
       "lang": "ar",
       "h1": "إدارة المصادر (1)",
@@ -66,10 +66,10 @@
     },
     {
       "step": "names-tab",
-      "url": "http://127.0.0.1:5055/categories/1/names",
+      "url": "http://{base-url}/categories/1/names",
       "dir": "rtl",
       "lang": "ar",
-      "h1": "الاسم:\ne2e-e37848",
+      "h1": "الاسم:\ne2e-9b710b",
       "text": "الانتقال إلى المحتوى الرئيسي\nSYLTHARAE System\nالعمل\nلوحة التحكم\nاكتشاف\nمكتبة الملفات\nالبحث\nالمصادر\nالجوانب\nالكلمات المفتاحية\nالكلمات\nالفئات\nكلمات البريد\nالإشعارات\nالأفق ومستكشف الإشارات\nالمراقبة\nإدخال\nالإدخال / الاستيعاب\nمركز الاستيراد\nتحليل\nإدارة وتحليل الملفات\nتحليل المسار\nعارض الخريطة\nالتحليل المجمع\nتصنيف\nلكسيس كوزموس\nفئات المحلل\nالتصنيف\nتقارير\nلوحة التحكم الشاملة\nالتقارير\nلوحة التقارير\nالجداول الزمنية\nلوحة معلومات الرسوم البيانية\nتشغيل\nالكشف\nالمهام\nالاستيراد / التصدير\nDeprecated\nالإدارة\nالاح",
       "httpStatus": 200,
       "page": {
@@ -85,447 +85,447 @@
     },
     {
       "step": "csv-import",
-      "url": "http://127.0.0.1:5055/categories/1/names",
+      "url": "http://{base-url}/categories/1/names",
       "dir": "rtl",
       "lang": "ar",
-      "h1": "الاسم:\ne2e-e37848",
+      "h1": "الاسم:\ne2e-9b710b",
       "text": "الانتقال إلى المحتوى الرئيسي\nSYLTHARAE System\nالعمل\nلوحة التحكم\nاكتشاف\nمكتبة الملفات\nالبحث\nالمصادر\nالجوانب\nالكلمات المفتاحية\nالكلمات\nالفئات\nكلمات البريد\nالإشعارات\nالأفق ومستكشف الإشارات\nالمراقبة\nإدخال\nالإدخال / الاستيعاب\nمركز الاستيراد\nتحليل\nإدارة وتحليل الملفات\nتحليل المسار\nعارض الخريطة\nالتحليل المجمع\nتصنيف\nلكسيس كوزموس\nفئات المحلل\nالتصنيف\nتقارير\nلوحة التحكم الشاملة\nالتقارير\nلوحة التقارير\nالجداول الزمنية\nلوحة معلومات الرسوم البيانية\nتشغيل\nالكشف\nالمهام\nالاستيراد / التصدير\nDeprecated\nالإدارة\nالاح",
       "httpStatus": 200,
-      "report": "{\n  \"accepted\": 2,\n  \"applied\": false,\n  \"inserted\": 0,\n  \"rejected\": [\n    {\n      \"code\": \"UNKNOWN_WORD\",\n      \"line\": 4,\n      \"reason\": \"no term named 'no-such-term'\",\n      \"word\": \"no-such-term\"\n    }\n  ],\n  \"rows\": 3,\n  \"sample\": [\n    {\n      \"existing_id\": null,\n      \"key\": \"e2e-e37848\",\n      \"language\": \"en\",\n      \"line\": 2,\n      \"name\": \"e2e-e37848\",\n      \"name_type\": \"alternate\",\n      \"word\": \"e2e-e37848\",\n      \"word_id\": 1\n    },\n    {\n      \"existing_id\": null,\n      \"key\": \"פוליטי\",\n      \"language\": \"he\",\n      \"line\": 3,\n      \"name\": \"פוליטי\",\n      \"name_type\": \"alternate\",\n      \"word\": \"e2e-e37848\",\n      \"word_id\": 1\n    }\n  ],\n  \"success\": true,\n  \"updated\": 0\n}"
+      "report": "{\n  \"accepted\": 2,\n  \"applied\": false,\n  \"inserted\": 0,\n  \"rejected\": [\n    {\n      \"code\": \"UNKNOWN_WORD\",\n      \"line\": 4,\n      \"reason\": \"no term named 'no-such-term'\",\n      \"word\": \"no-such-term\"\n    }\n  ],\n  \"rows\": 3,\n  \"sample\": [\n    {\n      \"existing_id\": null,\n      \"key\": \"e2e-9b710b\",\n      \"language\": \"en\",\n      \"line\": 2,\n      \"name\": \"e2e-9b710b\",\n      \"name_type\": \"alternate\",\n      \"word\": \"e2e-9b710b\",\n      \"word_id\": 1\n    },\n    {\n      \"existing_id\": null,\n      \"key\": \"פוליטי\",\n      \"language\": \"he\",\n      \"line\": 3,\n      \"name\": \"פוליטי\",\n      \"name_type\": \"alternate\",\n      \"word\": \"e2e-9b710b\",\n      \"word_id\": 1\n    }\n  ],\n  \"success\": true,\n  \"updated\": 0\n}"
     }
   ],
   "exchanges": [
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/i18n/catalog?locale=ar",
+      "url": "http://{base-url}/api/i18n/catalog?locale=en",
       "status": 200,
-      "body": "{\"count\":4179,\"locale\":\"ar\",\"success\":true,\"translations\":{\" \\u00b7 Page {n}\":\" \\u00b7 \\u0627\\u0644\\u0635\\u0641\\u062d\\u0629 {n}\",\" \\u00b7 Slide {n}\":\" \\u00b7 \\u0627\\u0644\\u0634\\u0631\\u064a\\u062d\\u0629 {n}\",\" \\u00b7 line {line}\":\" \\u00b7 \\u0627\\u0644\\u0633\\u0637\\u0631 {line}\",\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\":\"%(analysable)s \\u0645\\u062d\\u062a\\u0648\\u0649 \\u0644\\u062f\\u064a\\u0647 \\u0646\\u0635 \\u0645\\u062e\\u0632\\u064e\\u0651\\u0646\\u061b %(stale)s \\u0645\\u0646\\u0647\\u0627 \\u0645\\u062a\\u0642\\u0627\\u062f\\u0645 \\u0644\\u0643\\u0627\\u0634\\u0641 \\u0648\\u0627\\u062d\\u062f \\u0639\\u0644\\u0649 \\u0627\\u0644\\u0623\\u0642\\u0644. \\u0623\\u0639\\u062f\\u0627\\u062f \\u062f\\u0642\\u064a\\u0642\\u0629 \\u0645\\u0646 \\u0644\\u0642\\u0637\\u0629 \\u0648\\u0627\\u062d\\u062f\\u0629 \\u0644\\u0642\\u0627\\u0639\\u062f\\u0629 \\u0627\\u0644\\u0628\\u064a\\u0627\\u0646\\u0627\\u062a \\u0623\\u064f\\u062e\\u0630\\u062a \\u0641\\u064a %(at)s.\",\"%(count)s existing tables\":\"%(count)s \\u062c\\u062f\\u0648\\u0644 \\u0645\\u0648\\u062c\\u0648\\u062f\",\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\":\"%(coun"
+      "body": "{\"count\":3982,\"locale\":\"en\",\"success\":true,\"translations\":{\" \\u00b7 Page {n}\":\" \\u00b7 Page {n}\",\" \\u00b7 Slide {n}\":\" \\u00b7 Slide {n}\",\" \\u00b7 line {line}\":\" \\u00b7 line {line}\",\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\":\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\",\"%(count)d results for \\\"%(query)s\\\"\":\"%(count)d results for \\\"%(query)s\\\"\",\"%(count)s existing tables\":\"%(count)s existing tables\",\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\":\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\",\"%(count)s further matches in %(groups)s groups (notification limit per evaluation reached)\":\"%(count)s further matches in %(groups)s groups (notification limit per evaluation reached)\",\"%(count)s new matches\":\"%(count)s new matches\",\"%(count)s new matches since the last digest\":\"%(count)s new matches since the last digest\",\"%(count)s new matches: %(label)s\":\"%(count)s new matches: %(label)s\",\"%("
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/api-client.js",
-      "status": 200,
-      "body": "/**\n * API Client\n * Fetch wrapper with error handling and CSRF token support\n */\n\nimport { getCSRFToken, getCSRFTokenAsync } from '../core/utils.js';\n\n/**\n * Make an API request with automatic CSRF token handling and timeout\n * @param {string} url - API endpoint URL\n * @param {Object} options - Fetch options\n * @param {number} timeout - Request timeout in milliseconds (default: 30000)\n * @returns {Promise<Response>} Fetch response\n */\nexport async function apiRequest(url, options = {}, timeout = 30000) {\n    const method = (options.method || 'GET').toUpperCase();\n    const needsCSRF = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);\n    \n    // Get CSRF token - always fetch async for POST/PUT/DELETE to ensure it's fresh\n    let csrfToken = '';\n    if (needsCSRF) {\n        // Try sync first for speed\n        csrfToken = getCSRFToken();\n        \n        // If no token or empty, fetch it async\n        if (!csrfToken || csrfToken.trim() === '') {\n            try {\n                csrfToken = await getCSRFTokenAsync();\n            } catch (error) {\n                console.warn('Failed to fetch CSRF token async:', error);\n                // Try sync one more time as fallback\n       "
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/endpoints.js",
+      "url": "http://{base-url}/static/js/modules/api/endpoints.js",
       "status": 200,
       "body": "/**\n * API Endpoint Definitions\n * Centralized API URL builders\n */\n\n/**\n * Build API endpoint URLs\n */\nexport const endpoints = {\n    // Search endpoints\n    search: (params) => {\n        const url = new URL('/api/search', window.location.origin);\n        Object.entries(params || {}).forEach(([key, value]) => {\n            if (value !== null && value !== undefined && value !== '') {\n                url.searchParams.set(key, value);\n            }\n        });\n        return url.toString();\n    },\n    \n    searchHistory: (limit = 10) => `/api/search/history?limit=${limit}`,\n    searchSaved: () => '/api/search/saved',\n    searchSavedById: (id) => `/api/search/saved/${id}`,\n    searchExport: () => '/api/search/export',\n    searchRipgrepStatus: () => '/api/search/ripgrep-status',\n    searchSnippets: () => '/api/search/snippets',\n    searchCancel: () => '/api/search/cancel',\n    searchMetrics: () => '/api/search/metrics',\n    \n    // File endpoints\n    fileDetails: (fileId) => `/file/${fileId}`,\n    fileExport: (fileId) => `/api/files/${fileId}/export`,\n    fileDelete: (fileId) => `/file/${fileId}/delete`,\n    filePreview: (fileId, maxWidth = 1200, maxHeight = 800) => \n        `/api/prev"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/static/js/modules/api/api-client.js",
+      "status": 200,
+      "body": "/**\n * API Client\n * Fetch wrapper with error handling and CSRF token support\n */\n\nimport { getCSRFToken, getCSRFTokenAsync } from '../core/utils.js';\n\n/**\n * Make an API request with automatic CSRF token handling and timeout\n * @param {string} url - API endpoint URL\n * @param {Object} options - Fetch options\n * @param {number} timeout - Request timeout in milliseconds (default: 30000)\n * @returns {Promise<Response>} Fetch response\n */\nexport async function apiRequest(url, options = {}, timeout = 30000) {\n    const method = (options.method || 'GET').toUpperCase();\n    const needsCSRF = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);\n    \n    // Get CSRF token - always fetch async for POST/PUT/DELETE to ensure it's fresh\n    let csrfToken = '';\n    if (needsCSRF) {\n        // Try sync first for speed\n        csrfToken = getCSRFToken();\n        \n        // If no token or empty, fetch it async\n        if (!csrfToken || csrfToken.trim() === '') {\n            try {\n                csrfToken = await getCSRFTokenAsync();\n            } catch (error) {\n                console.warn('Failed to fetch CSRF token async:', error);\n                // Try sync one more time as fallback\n       "
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/api/settings/theme",
       "status": 200,
       "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/i18n/catalog?locale=ar",
+      "url": "http://{base-url}/api/i18n/catalog?locale=en",
       "status": 200,
-      "body": "{\"count\":4179,\"locale\":\"ar\",\"success\":true,\"translations\":{\" \\u00b7 Page {n}\":\" \\u00b7 \\u0627\\u0644\\u0635\\u0641\\u062d\\u0629 {n}\",\" \\u00b7 Slide {n}\":\" \\u00b7 \\u0627\\u0644\\u0634\\u0631\\u064a\\u062d\\u0629 {n}\",\" \\u00b7 line {line}\":\" \\u00b7 \\u0627\\u0644\\u0633\\u0637\\u0631 {line}\",\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\":\"%(analysable)s \\u0645\\u062d\\u062a\\u0648\\u0649 \\u0644\\u062f\\u064a\\u0647 \\u0646\\u0635 \\u0645\\u062e\\u0632\\u064e\\u0651\\u0646\\u061b %(stale)s \\u0645\\u0646\\u0647\\u0627 \\u0645\\u062a\\u0642\\u0627\\u062f\\u0645 \\u0644\\u0643\\u0627\\u0634\\u0641 \\u0648\\u0627\\u062d\\u062f \\u0639\\u0644\\u0649 \\u0627\\u0644\\u0623\\u0642\\u0644. \\u0623\\u0639\\u062f\\u0627\\u062f \\u062f\\u0642\\u064a\\u0642\\u0629 \\u0645\\u0646 \\u0644\\u0642\\u0637\\u0629 \\u0648\\u0627\\u062d\\u062f\\u0629 \\u0644\\u0642\\u0627\\u0639\\u062f\\u0629 \\u0627\\u0644\\u0628\\u064a\\u0627\\u0646\\u0627\\u062a \\u0623\\u064f\\u062e\\u0630\\u062a \\u0641\\u064a %(at)s.\",\"%(count)s existing tables\":\"%(count)s \\u062c\\u062f\\u0648\\u0644 \\u0645\\u0648\\u062c\\u0648\\u062f\",\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\":\"%(coun"
+      "body": "{\"count\":3982,\"locale\":\"en\",\"success\":true,\"translations\":{\" \\u00b7 Page {n}\":\" \\u00b7 Page {n}\",\" \\u00b7 Slide {n}\":\" \\u00b7 Slide {n}\",\" \\u00b7 line {line}\":\" \\u00b7 line {line}\",\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\":\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\",\"%(count)d results for \\\"%(query)s\\\"\":\"%(count)d results for \\\"%(query)s\\\"\",\"%(count)s existing tables\":\"%(count)s existing tables\",\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\":\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\",\"%(count)s further matches in %(groups)s groups (notification limit per evaluation reached)\":\"%(count)s further matches in %(groups)s groups (notification limit per evaluation reached)\",\"%(count)s new matches\":\"%(count)s new matches\",\"%(count)s new matches since the last digest\":\"%(count)s new matches since the last digest\",\"%(count)s new matches: %(label)s\":\"%(count)s new matches: %(label)s\",\"%("
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/system",
+      "url": "http://{base-url}/api/settings/system",
       "status": 200,
-      "body": "{\"category\":\"system\",\"settings\":{\"action_logging_enabled\":true,\"animations_enabled\":true,\"app_icon\":\"bi-file-earmark-text\",\"app_logo\":\"\",\"app_name\":\"SYLTHARAE System\",\"auto_save\":true,\"compact_mode\":false,\"confirm_actions\":true,\"date_format\":\"YYYY-MM-DD\",\"debug_mode\":false,\"default_sort\":\"date_creation\",\"items_per_page\":50,\"language\":\"ar\",\"log_file\":null,\"log_level\":\"INFO\",\"notifications_enabled\":true,\"screen_inspector\":false,\"show_breadcrumbs\":true,\"sort_direction\":\"desc\",\"theme\":\"light\",\"time_format\":\"24h\",\"timezone\":\"UTC\"},\"success\":true}\n"
+      "body": "{\"category\":\"system\",\"settings\":{\"action_logging_enabled\":true,\"animations_enabled\":true,\"app_icon\":\"bi-file-earmark-text\",\"app_logo\":\"\",\"app_name\":\"SYLTHARAE System\",\"auto_save\":true,\"compact_mode\":false,\"confirm_actions\":true,\"date_format\":\"YYYY-MM-DD\",\"debug_mode\":false,\"default_sort\":\"date_creation\",\"items_per_page\":50,\"language\":\"en\",\"log_file\":null,\"log_level\":\"INFO\",\"notifications_enabled\":true,\"screen_inspector\":false,\"show_breadcrumbs\":true,\"sort_direction\":\"desc\",\"theme\":\"light\",\"time_format\":\"24h\",\"timezone\":\"UTC\"},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/notifications/stats",
+      "url": "http://{base-url}/api/notifications/stats",
       "status": 200,
       "body": "{\"stats\":{\"by_priority\":{},\"by_type\":{},\"total\":0,\"unread\":0,\"upcoming_events\":0},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/jobs/summary",
-      "status": 200,
-      "body": "{\"active\":0,\"counts\":{},\"success\":true}\n"
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/api/analytics/timeline-data?period=month",
+      "url": "http://{base-url}/api/analytics/timeline-data?period=month",
       "status": 200,
       "body": "{\"fileCount\":[],\"labels\":[],\"processedCount\":[],\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/api/jobs/summary",
       "status": 200,
-      "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
+      "body": "{\"active\":0,\"counts\":{},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/analytics/category-distribution",
+      "url": "http://{base-url}/api/analytics/category-distribution",
       "status": 200,
       "body": "{\"labels\":[],\"success\":true,\"values\":[]}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/analytics/dashboard-summary",
+      "url": "http://{base-url}/api/analytics/file-type-distribution",
+      "status": 200,
+      "body": "{\"success\":true,\"types\":[]}\n"
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/api/settings/theme",
+      "status": 200,
+      "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/api/analytics/dashboard-summary",
       "status": 200,
       "body": "{\"databaseSize\":10498531,\"processedFiles\":0,\"processingRate\":0,\"recentFiles\":0,\"success\":true,\"totalCategories\":1,\"totalFiles\":0,\"totalKeywords\":0,\"totalSize\":0,\"totalWords\":1,\"uniqueTypes\":0}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/jobs?limit=5",
+      "url": "http://{base-url}/api/jobs?limit=5",
       "status": 200,
       "body": "{\"jobs\":[],\"success\":true}\n"
     },
     {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/api/analytics/file-type-distribution",
-      "status": 200,
-      "body": "{\"success\":true,\"types\":[]}\n"
-    },
-    {
       "method": "POST",
-      "url": "http://127.0.0.1:5055/api/settings/system/language",
+      "url": "http://{base-url}/api/settings/system/language",
       "status": 200,
       "body": "{\"key\":\"system.language\",\"message\":\"Setting system.language updated successfully\",\"success\":true,\"value\":\"en\"}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/endpoints.js",
-      "status": 304,
-      "body": "/**\n * API Endpoint Definitions\n * Centralized API URL builders\n */\n\n/**\n * Build API endpoint URLs\n */\nexport const endpoints = {\n    // Search endpoints\n    search: (params) => {\n        const url = new URL('/api/search', window.location.origin);\n        Object.entries(params || {}).forEach(([key, value]) => {\n            if (value !== null && value !== undefined && value !== '') {\n                url.searchParams.set(key, value);\n            }\n        });\n        return url.toString();\n    },\n    \n    searchHistory: (limit = 10) => `/api/search/history?limit=${limit}`,\n    searchSaved: () => '/api/search/saved',\n    searchSavedById: (id) => `/api/search/saved/${id}`,\n    searchExport: () => '/api/search/export',\n    searchRipgrepStatus: () => '/api/search/ripgrep-status',\n    searchSnippets: () => '/api/search/snippets',\n    searchCancel: () => '/api/search/cancel',\n    searchMetrics: () => '/api/search/metrics',\n    \n    // File endpoints\n    fileDetails: (fileId) => `/file/${fileId}`,\n    fileExport: (fileId) => `/api/files/${fileId}/export`,\n    fileDelete: (fileId) => `/file/${fileId}/delete`,\n    filePreview: (fileId, maxWidth = 1200, maxHeight = 800) => \n        `/api/prev"
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/api-client.js",
+      "url": "http://{base-url}/static/js/modules/api/api-client.js",
       "status": 304,
       "body": "/**\n * API Client\n * Fetch wrapper with error handling and CSRF token support\n */\n\nimport { getCSRFToken, getCSRFTokenAsync } from '../core/utils.js';\n\n/**\n * Make an API request with automatic CSRF token handling and timeout\n * @param {string} url - API endpoint URL\n * @param {Object} options - Fetch options\n * @param {number} timeout - Request timeout in milliseconds (default: 30000)\n * @returns {Promise<Response>} Fetch response\n */\nexport async function apiRequest(url, options = {}, timeout = 30000) {\n    const method = (options.method || 'GET').toUpperCase();\n    const needsCSRF = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);\n    \n    // Get CSRF token - always fetch async for POST/PUT/DELETE to ensure it's fresh\n    let csrfToken = '';\n    if (needsCSRF) {\n        // Try sync first for speed\n        csrfToken = getCSRFToken();\n        \n        // If no token or empty, fetch it async\n        if (!csrfToken || csrfToken.trim() === '') {\n            try {\n                csrfToken = await getCSRFTokenAsync();\n            } catch (error) {\n                console.warn('Failed to fetch CSRF token async:', error);\n                // Try sync one more time as fallback\n       "
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/static/js/modules/api/endpoints.js",
+      "status": 304,
+      "body": "/**\n * API Endpoint Definitions\n * Centralized API URL builders\n */\n\n/**\n * Build API endpoint URLs\n */\nexport const endpoints = {\n    // Search endpoints\n    search: (params) => {\n        const url = new URL('/api/search', window.location.origin);\n        Object.entries(params || {}).forEach(([key, value]) => {\n            if (value !== null && value !== undefined && value !== '') {\n                url.searchParams.set(key, value);\n            }\n        });\n        return url.toString();\n    },\n    \n    searchHistory: (limit = 10) => `/api/search/history?limit=${limit}`,\n    searchSaved: () => '/api/search/saved',\n    searchSavedById: (id) => `/api/search/saved/${id}`,\n    searchExport: () => '/api/search/export',\n    searchRipgrepStatus: () => '/api/search/ripgrep-status',\n    searchSnippets: () => '/api/search/snippets',\n    searchCancel: () => '/api/search/cancel',\n    searchMetrics: () => '/api/search/metrics',\n    \n    // File endpoints\n    fileDetails: (fileId) => `/file/${fileId}`,\n    fileExport: (fileId) => `/api/files/${fileId}/export`,\n    fileDelete: (fileId) => `/file/${fileId}/delete`,\n    filePreview: (fileId, maxWidth = 1200, maxHeight = 800) => \n        `/api/prev"
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/api/settings/theme",
       "status": 200,
       "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/i18n/catalog?locale=en",
+      "url": "http://{base-url}/api/i18n/catalog?locale=en",
       "status": 200,
       "body": "{\"count\":3982,\"locale\":\"en\",\"success\":true,\"translations\":{\" \\u00b7 Page {n}\":\" \\u00b7 Page {n}\",\" \\u00b7 Slide {n}\":\" \\u00b7 Slide {n}\",\" \\u00b7 line {line}\":\" \\u00b7 line {line}\",\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\":\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\",\"%(count)d results for \\\"%(query)s\\\"\":\"%(count)d results for \\\"%(query)s\\\"\",\"%(count)s existing tables\":\"%(count)s existing tables\",\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\":\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\",\"%(count)s further matches in %(groups)s groups (notification limit per evaluation reached)\":\"%(count)s further matches in %(groups)s groups (notification limit per evaluation reached)\",\"%(count)s new matches\":\"%(count)s new matches\",\"%(count)s new matches since the last digest\":\"%(count)s new matches since the last digest\",\"%(count)s new matches: %(label)s\":\"%(count)s new matches: %(label)s\",\"%("
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/notifications/stats",
-      "status": 200,
-      "body": "{\"stats\":{\"by_priority\":{},\"by_type\":{},\"total\":0,\"unread\":0,\"upcoming_events\":0},\"success\":true}\n"
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/system",
+      "url": "http://{base-url}/api/settings/system",
       "status": 200,
       "body": "{\"category\":\"system\",\"settings\":{\"action_logging_enabled\":true,\"animations_enabled\":true,\"app_icon\":\"bi-file-earmark-text\",\"app_logo\":\"\",\"app_name\":\"SYLTHARAE System\",\"auto_save\":true,\"compact_mode\":false,\"confirm_actions\":true,\"date_format\":\"YYYY-MM-DD\",\"debug_mode\":false,\"default_sort\":\"date_creation\",\"items_per_page\":50,\"language\":\"en\",\"log_file\":null,\"log_level\":\"INFO\",\"notifications_enabled\":true,\"screen_inspector\":false,\"show_breadcrumbs\":true,\"sort_direction\":\"desc\",\"theme\":\"light\",\"time_format\":\"24h\",\"timezone\":\"UTC\"},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/api/notifications/stats",
       "status": 200,
-      "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
+      "body": "{\"stats\":{\"by_priority\":{},\"by_type\":{},\"total\":0,\"unread\":0,\"upcoming_events\":0},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/jobs/summary",
+      "url": "http://{base-url}/api/jobs/summary",
       "status": 200,
       "body": "{\"active\":0,\"counts\":{},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/analytics/dashboard-summary",
+      "url": "http://{base-url}/api/settings/theme",
       "status": 200,
-      "body": "{\"databaseSize\":10498531,\"processedFiles\":0,\"processingRate\":0,\"recentFiles\":0,\"success\":true,\"totalCategories\":1,\"totalFiles\":0,\"totalKeywords\":0,\"totalSize\":0,\"totalWords\":1,\"uniqueTypes\":0}\n"
+      "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/analytics/timeline-data?period=month",
-      "status": 200,
-      "body": "{\"fileCount\":[],\"labels\":[],\"processedCount\":[],\"success\":true}\n"
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/api/analytics/file-type-distribution",
-      "status": 200,
-      "body": "{\"success\":true,\"types\":[]}\n"
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/api/analytics/category-distribution",
+      "url": "http://{base-url}/api/analytics/category-distribution",
       "status": 200,
       "body": "{\"labels\":[],\"success\":true,\"values\":[]}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/jobs?limit=5",
+      "url": "http://{base-url}/api/analytics/dashboard-summary",
+      "status": 200,
+      "body": "{\"databaseSize\":10498531,\"processedFiles\":0,\"processingRate\":0,\"recentFiles\":0,\"success\":true,\"totalCategories\":1,\"totalFiles\":0,\"totalKeywords\":0,\"totalSize\":0,\"totalWords\":1,\"uniqueTypes\":0}\n"
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/api/analytics/file-type-distribution",
+      "status": 200,
+      "body": "{\"success\":true,\"types\":[]}\n"
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/api/jobs?limit=5",
       "status": 200,
       "body": "{\"jobs\":[],\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/api-client.js",
+      "url": "http://{base-url}/api/analytics/timeline-data?period=month",
+      "status": 200,
+      "body": "{\"fileCount\":[],\"labels\":[],\"processedCount\":[],\"success\":true}\n"
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/static/js/modules/api/api-client.js",
       "status": 304,
       "body": "/**\n * API Client\n * Fetch wrapper with error handling and CSRF token support\n */\n\nimport { getCSRFToken, getCSRFTokenAsync } from '../core/utils.js';\n\n/**\n * Make an API request with automatic CSRF token handling and timeout\n * @param {string} url - API endpoint URL\n * @param {Object} options - Fetch options\n * @param {number} timeout - Request timeout in milliseconds (default: 30000)\n * @returns {Promise<Response>} Fetch response\n */\nexport async function apiRequest(url, options = {}, timeout = 30000) {\n    const method = (options.method || 'GET').toUpperCase();\n    const needsCSRF = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);\n    \n    // Get CSRF token - always fetch async for POST/PUT/DELETE to ensure it's fresh\n    let csrfToken = '';\n    if (needsCSRF) {\n        // Try sync first for speed\n        csrfToken = getCSRFToken();\n        \n        // If no token or empty, fetch it async\n        if (!csrfToken || csrfToken.trim() === '') {\n            try {\n                csrfToken = await getCSRFTokenAsync();\n            } catch (error) {\n                console.warn('Failed to fetch CSRF token async:', error);\n                // Try sync one more time as fallback\n       "
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/endpoints.js",
+      "url": "http://{base-url}/static/js/modules/api/endpoints.js",
       "status": 304,
       "body": "/**\n * API Endpoint Definitions\n * Centralized API URL builders\n */\n\n/**\n * Build API endpoint URLs\n */\nexport const endpoints = {\n    // Search endpoints\n    search: (params) => {\n        const url = new URL('/api/search', window.location.origin);\n        Object.entries(params || {}).forEach(([key, value]) => {\n            if (value !== null && value !== undefined && value !== '') {\n                url.searchParams.set(key, value);\n            }\n        });\n        return url.toString();\n    },\n    \n    searchHistory: (limit = 10) => `/api/search/history?limit=${limit}`,\n    searchSaved: () => '/api/search/saved',\n    searchSavedById: (id) => `/api/search/saved/${id}`,\n    searchExport: () => '/api/search/export',\n    searchRipgrepStatus: () => '/api/search/ripgrep-status',\n    searchSnippets: () => '/api/search/snippets',\n    searchCancel: () => '/api/search/cancel',\n    searchMetrics: () => '/api/search/metrics',\n    \n    // File endpoints\n    fileDetails: (fileId) => `/file/${fileId}`,\n    fileExport: (fileId) => `/api/files/${fileId}/export`,\n    fileDelete: (fileId) => `/file/${fileId}/delete`,\n    filePreview: (fileId, maxWidth = 1200, maxHeight = 800) => \n        `/api/prev"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/api/settings/theme",
       "status": 200,
       "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/i18n/catalog?locale=en",
+      "url": "http://{base-url}/api/i18n/catalog?locale=en",
       "status": 200,
       "body": "{\"count\":3982,\"locale\":\"en\",\"success\":true,\"translations\":{\" \\u00b7 Page {n}\":\" \\u00b7 Page {n}\",\" \\u00b7 Slide {n}\":\" \\u00b7 Slide {n}\",\" \\u00b7 line {line}\":\" \\u00b7 line {line}\",\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\":\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\",\"%(count)d results for \\\"%(query)s\\\"\":\"%(count)d results for \\\"%(query)s\\\"\",\"%(count)s existing tables\":\"%(count)s existing tables\",\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\":\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\",\"%(count)s further matches in %(groups)s groups (notification limit per evaluation reached)\":\"%(count)s further matches in %(groups)s groups (notification limit per evaluation reached)\",\"%(count)s new matches\":\"%(count)s new matches\",\"%(count)s new matches since the last digest\":\"%(count)s new matches since the last digest\",\"%(count)s new matches: %(label)s\":\"%(count)s new matches: %(label)s\",\"%("
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/notifications/stats",
+      "url": "http://{base-url}/api/notifications/stats",
       "status": 200,
       "body": "{\"stats\":{\"by_priority\":{},\"by_type\":{},\"total\":0,\"unread\":0,\"upcoming_events\":0},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/system",
+      "url": "http://{base-url}/api/settings/system",
       "status": 200,
       "body": "{\"category\":\"system\",\"settings\":{\"action_logging_enabled\":true,\"animations_enabled\":true,\"app_icon\":\"bi-file-earmark-text\",\"app_logo\":\"\",\"app_name\":\"SYLTHARAE System\",\"auto_save\":true,\"compact_mode\":false,\"confirm_actions\":true,\"date_format\":\"YYYY-MM-DD\",\"debug_mode\":false,\"default_sort\":\"date_creation\",\"items_per_page\":50,\"language\":\"en\",\"log_file\":null,\"log_level\":\"INFO\",\"notifications_enabled\":true,\"screen_inspector\":false,\"show_breadcrumbs\":true,\"sort_direction\":\"desc\",\"theme\":\"light\",\"time_format\":\"24h\",\"timezone\":\"UTC\"},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/api/settings/theme",
       "status": 200,
       "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
     },
     {
       "method": "POST",
-      "url": "http://127.0.0.1:5055/api/settings/system/language",
+      "url": "http://{base-url}/api/settings/system/language",
       "status": 200,
       "body": "{\"key\":\"system.language\",\"message\":\"Setting system.language updated successfully\",\"success\":true,\"value\":\"ar\"}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/endpoints.js",
+      "url": "http://{base-url}/static/js/modules/api/endpoints.js",
       "status": 304,
       "body": "/**\n * API Endpoint Definitions\n * Centralized API URL builders\n */\n\n/**\n * Build API endpoint URLs\n */\nexport const endpoints = {\n    // Search endpoints\n    search: (params) => {\n        const url = new URL('/api/search', window.location.origin);\n        Object.entries(params || {}).forEach(([key, value]) => {\n            if (value !== null && value !== undefined && value !== '') {\n                url.searchParams.set(key, value);\n            }\n        });\n        return url.toString();\n    },\n    \n    searchHistory: (limit = 10) => `/api/search/history?limit=${limit}`,\n    searchSaved: () => '/api/search/saved',\n    searchSavedById: (id) => `/api/search/saved/${id}`,\n    searchExport: () => '/api/search/export',\n    searchRipgrepStatus: () => '/api/search/ripgrep-status',\n    searchSnippets: () => '/api/search/snippets',\n    searchCancel: () => '/api/search/cancel',\n    searchMetrics: () => '/api/search/metrics',\n    \n    // File endpoints\n    fileDetails: (fileId) => `/file/${fileId}`,\n    fileExport: (fileId) => `/api/files/${fileId}/export`,\n    fileDelete: (fileId) => `/file/${fileId}/delete`,\n    filePreview: (fileId, maxWidth = 1200, maxHeight = 800) => \n        `/api/prev"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/api-client.js",
+      "url": "http://{base-url}/static/js/modules/api/api-client.js",
       "status": 304,
       "body": "/**\n * API Client\n * Fetch wrapper with error handling and CSRF token support\n */\n\nimport { getCSRFToken, getCSRFTokenAsync } from '../core/utils.js';\n\n/**\n * Make an API request with automatic CSRF token handling and timeout\n * @param {string} url - API endpoint URL\n * @param {Object} options - Fetch options\n * @param {number} timeout - Request timeout in milliseconds (default: 30000)\n * @returns {Promise<Response>} Fetch response\n */\nexport async function apiRequest(url, options = {}, timeout = 30000) {\n    const method = (options.method || 'GET').toUpperCase();\n    const needsCSRF = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);\n    \n    // Get CSRF token - always fetch async for POST/PUT/DELETE to ensure it's fresh\n    let csrfToken = '';\n    if (needsCSRF) {\n        // Try sync first for speed\n        csrfToken = getCSRFToken();\n        \n        // If no token or empty, fetch it async\n        if (!csrfToken || csrfToken.trim() === '') {\n            try {\n                csrfToken = await getCSRFTokenAsync();\n            } catch (error) {\n                console.warn('Failed to fetch CSRF token async:', error);\n                // Try sync one more time as fallback\n       "
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/api/settings/theme",
       "status": 200,
       "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/i18n/catalog?locale=ar",
+      "url": "http://{base-url}/api/i18n/catalog?locale=ar",
       "status": 200,
       "body": "{\"count\":4179,\"locale\":\"ar\",\"success\":true,\"translations\":{\" \\u00b7 Page {n}\":\" \\u00b7 \\u0627\\u0644\\u0635\\u0641\\u062d\\u0629 {n}\",\" \\u00b7 Slide {n}\":\" \\u00b7 \\u0627\\u0644\\u0634\\u0631\\u064a\\u062d\\u0629 {n}\",\" \\u00b7 line {line}\":\" \\u00b7 \\u0627\\u0644\\u0633\\u0637\\u0631 {line}\",\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\":\"%(analysable)s \\u0645\\u062d\\u062a\\u0648\\u0649 \\u0644\\u062f\\u064a\\u0647 \\u0646\\u0635 \\u0645\\u062e\\u0632\\u064e\\u0651\\u0646\\u061b %(stale)s \\u0645\\u0646\\u0647\\u0627 \\u0645\\u062a\\u0642\\u0627\\u062f\\u0645 \\u0644\\u0643\\u0627\\u0634\\u0641 \\u0648\\u0627\\u062d\\u062f \\u0639\\u0644\\u0649 \\u0627\\u0644\\u0623\\u0642\\u0644. \\u0623\\u0639\\u062f\\u0627\\u062f \\u062f\\u0642\\u064a\\u0642\\u0629 \\u0645\\u0646 \\u0644\\u0642\\u0637\\u0629 \\u0648\\u0627\\u062d\\u062f\\u0629 \\u0644\\u0642\\u0627\\u0639\\u062f\\u0629 \\u0627\\u0644\\u0628\\u064a\\u0627\\u0646\\u0627\\u062a \\u0623\\u064f\\u062e\\u0630\\u062a \\u0641\\u064a %(at)s.\",\"%(count)s existing tables\":\"%(count)s \\u062c\\u062f\\u0648\\u0644 \\u0645\\u0648\\u062c\\u0648\\u062f\",\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\":\"%(coun"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/system",
+      "url": "http://{base-url}/api/settings/system",
       "status": 200,
       "body": "{\"category\":\"system\",\"settings\":{\"action_logging_enabled\":true,\"animations_enabled\":true,\"app_icon\":\"bi-file-earmark-text\",\"app_logo\":\"\",\"app_name\":\"SYLTHARAE System\",\"auto_save\":true,\"compact_mode\":false,\"confirm_actions\":true,\"date_format\":\"YYYY-MM-DD\",\"debug_mode\":false,\"default_sort\":\"date_creation\",\"items_per_page\":50,\"language\":\"ar\",\"log_file\":null,\"log_level\":\"INFO\",\"notifications_enabled\":true,\"screen_inspector\":false,\"show_breadcrumbs\":true,\"sort_direction\":\"desc\",\"theme\":\"light\",\"time_format\":\"24h\",\"timezone\":\"UTC\"},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/notifications/stats",
+      "url": "http://{base-url}/api/notifications/stats",
       "status": 200,
       "body": "{\"stats\":{\"by_priority\":{},\"by_type\":{},\"total\":0,\"unread\":0,\"upcoming_events\":0},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/api/settings/theme",
       "status": 200,
       "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/api-client.js",
+      "url": "http://{base-url}/static/js/modules/api/api-client.js",
       "status": 304,
       "body": "/**\n * API Client\n * Fetch wrapper with error handling and CSRF token support\n */\n\nimport { getCSRFToken, getCSRFTokenAsync } from '../core/utils.js';\n\n/**\n * Make an API request with automatic CSRF token handling and timeout\n * @param {string} url - API endpoint URL\n * @param {Object} options - Fetch options\n * @param {number} timeout - Request timeout in milliseconds (default: 30000)\n * @returns {Promise<Response>} Fetch response\n */\nexport async function apiRequest(url, options = {}, timeout = 30000) {\n    const method = (options.method || 'GET').toUpperCase();\n    const needsCSRF = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);\n    \n    // Get CSRF token - always fetch async for POST/PUT/DELETE to ensure it's fresh\n    let csrfToken = '';\n    if (needsCSRF) {\n        // Try sync first for speed\n        csrfToken = getCSRFToken();\n        \n        // If no token or empty, fetch it async\n        if (!csrfToken || csrfToken.trim() === '') {\n            try {\n                csrfToken = await getCSRFTokenAsync();\n            } catch (error) {\n                console.warn('Failed to fetch CSRF token async:', error);\n                // Try sync one more time as fallback\n       "
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/endpoints.js",
+      "url": "http://{base-url}/static/js/modules/api/endpoints.js",
       "status": 304,
       "body": "/**\n * API Endpoint Definitions\n * Centralized API URL builders\n */\n\n/**\n * Build API endpoint URLs\n */\nexport const endpoints = {\n    // Search endpoints\n    search: (params) => {\n        const url = new URL('/api/search', window.location.origin);\n        Object.entries(params || {}).forEach(([key, value]) => {\n            if (value !== null && value !== undefined && value !== '') {\n                url.searchParams.set(key, value);\n            }\n        });\n        return url.toString();\n    },\n    \n    searchHistory: (limit = 10) => `/api/search/history?limit=${limit}`,\n    searchSaved: () => '/api/search/saved',\n    searchSavedById: (id) => `/api/search/saved/${id}`,\n    searchExport: () => '/api/search/export',\n    searchRipgrepStatus: () => '/api/search/ripgrep-status',\n    searchSnippets: () => '/api/search/snippets',\n    searchCancel: () => '/api/search/cancel',\n    searchMetrics: () => '/api/search/metrics',\n    \n    // File endpoints\n    fileDetails: (fileId) => `/file/${fileId}`,\n    fileExport: (fileId) => `/api/files/${fileId}/export`,\n    fileDelete: (fileId) => `/file/${fileId}/delete`,\n    filePreview: (fileId, maxWidth = 1200, maxHeight = 800) => \n        `/api/prev"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/api/settings/theme",
       "status": 200,
       "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/i18n/catalog?locale=ar",
+      "url": "http://{base-url}/api/i18n/catalog?locale=ar",
       "status": 200,
       "body": "{\"count\":4179,\"locale\":\"ar\",\"success\":true,\"translations\":{\" \\u00b7 Page {n}\":\" \\u00b7 \\u0627\\u0644\\u0635\\u0641\\u062d\\u0629 {n}\",\" \\u00b7 Slide {n}\":\" \\u00b7 \\u0627\\u0644\\u0634\\u0631\\u064a\\u062d\\u0629 {n}\",\" \\u00b7 line {line}\":\" \\u00b7 \\u0627\\u0644\\u0633\\u0637\\u0631 {line}\",\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\":\"%(analysable)s \\u0645\\u062d\\u062a\\u0648\\u0649 \\u0644\\u062f\\u064a\\u0647 \\u0646\\u0635 \\u0645\\u062e\\u0632\\u064e\\u0651\\u0646\\u061b %(stale)s \\u0645\\u0646\\u0647\\u0627 \\u0645\\u062a\\u0642\\u0627\\u062f\\u0645 \\u0644\\u0643\\u0627\\u0634\\u0641 \\u0648\\u0627\\u062d\\u062f \\u0639\\u0644\\u0649 \\u0627\\u0644\\u0623\\u0642\\u0644. \\u0623\\u0639\\u062f\\u0627\\u062f \\u062f\\u0642\\u064a\\u0642\\u0629 \\u0645\\u0646 \\u0644\\u0642\\u0637\\u0629 \\u0648\\u0627\\u062d\\u062f\\u0629 \\u0644\\u0642\\u0627\\u0639\\u062f\\u0629 \\u0627\\u0644\\u0628\\u064a\\u0627\\u0646\\u0627\\u062a \\u0623\\u064f\\u062e\\u0630\\u062a \\u0641\\u064a %(at)s.\",\"%(count)s existing tables\":\"%(count)s \\u062c\\u062f\\u0648\\u0644 \\u0645\\u0648\\u062c\\u0648\\u062f\",\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\":\"%(coun"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/system",
+      "url": "http://{base-url}/api/settings/system",
       "status": 200,
       "body": "{\"category\":\"system\",\"settings\":{\"action_logging_enabled\":true,\"animations_enabled\":true,\"app_icon\":\"bi-file-earmark-text\",\"app_logo\":\"\",\"app_name\":\"SYLTHARAE System\",\"auto_save\":true,\"compact_mode\":false,\"confirm_actions\":true,\"date_format\":\"YYYY-MM-DD\",\"debug_mode\":false,\"default_sort\":\"date_creation\",\"items_per_page\":50,\"language\":\"ar\",\"log_file\":null,\"log_level\":\"INFO\",\"notifications_enabled\":true,\"screen_inspector\":false,\"show_breadcrumbs\":true,\"sort_direction\":\"desc\",\"theme\":\"light\",\"time_format\":\"24h\",\"timezone\":\"UTC\"},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/notifications/stats",
+      "url": "http://{base-url}/api/notifications/stats",
       "status": 200,
       "body": "{\"stats\":{\"by_priority\":{},\"by_type\":{},\"total\":0,\"unread\":0,\"upcoming_events\":0},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/api/settings/theme",
       "status": 200,
       "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/api-client.js",
-      "status": 304,
-      "body": "/**\n * API Client\n * Fetch wrapper with error handling and CSRF token support\n */\n\nimport { getCSRFToken, getCSRFTokenAsync } from '../core/utils.js';\n\n/**\n * Make an API request with automatic CSRF token handling and timeout\n * @param {string} url - API endpoint URL\n * @param {Object} options - Fetch options\n * @param {number} timeout - Request timeout in milliseconds (default: 30000)\n * @returns {Promise<Response>} Fetch response\n */\nexport async function apiRequest(url, options = {}, timeout = 30000) {\n    const method = (options.method || 'GET').toUpperCase();\n    const needsCSRF = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);\n    \n    // Get CSRF token - always fetch async for POST/PUT/DELETE to ensure it's fresh\n    let csrfToken = '';\n    if (needsCSRF) {\n        // Try sync first for speed\n        csrfToken = getCSRFToken();\n        \n        // If no token or empty, fetch it async\n        if (!csrfToken || csrfToken.trim() === '') {\n            try {\n                csrfToken = await getCSRFTokenAsync();\n            } catch (error) {\n                console.warn('Failed to fetch CSRF token async:', error);\n                // Try sync one more time as fallback\n       "
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/endpoints.js",
+      "url": "http://{base-url}/static/js/modules/api/endpoints.js",
       "status": 304,
       "body": "/**\n * API Endpoint Definitions\n * Centralized API URL builders\n */\n\n/**\n * Build API endpoint URLs\n */\nexport const endpoints = {\n    // Search endpoints\n    search: (params) => {\n        const url = new URL('/api/search', window.location.origin);\n        Object.entries(params || {}).forEach(([key, value]) => {\n            if (value !== null && value !== undefined && value !== '') {\n                url.searchParams.set(key, value);\n            }\n        });\n        return url.toString();\n    },\n    \n    searchHistory: (limit = 10) => `/api/search/history?limit=${limit}`,\n    searchSaved: () => '/api/search/saved',\n    searchSavedById: (id) => `/api/search/saved/${id}`,\n    searchExport: () => '/api/search/export',\n    searchRipgrepStatus: () => '/api/search/ripgrep-status',\n    searchSnippets: () => '/api/search/snippets',\n    searchCancel: () => '/api/search/cancel',\n    searchMetrics: () => '/api/search/metrics',\n    \n    // File endpoints\n    fileDetails: (fileId) => `/file/${fileId}`,\n    fileExport: (fileId) => `/api/files/${fileId}/export`,\n    fileDelete: (fileId) => `/file/${fileId}/delete`,\n    filePreview: (fileId, maxWidth = 1200, maxHeight = 800) => \n        `/api/prev"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
-      "status": 200,
-      "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/api/i18n/catalog?locale=ar",
-      "status": 200,
-      "body": "{\"count\":4179,\"locale\":\"ar\",\"success\":true,\"translations\":{\" \\u00b7 Page {n}\":\" \\u00b7 \\u0627\\u0644\\u0635\\u0641\\u062d\\u0629 {n}\",\" \\u00b7 Slide {n}\":\" \\u00b7 \\u0627\\u0644\\u0634\\u0631\\u064a\\u062d\\u0629 {n}\",\" \\u00b7 line {line}\":\" \\u00b7 \\u0627\\u0644\\u0633\\u0637\\u0631 {line}\",\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\":\"%(analysable)s \\u0645\\u062d\\u062a\\u0648\\u0649 \\u0644\\u062f\\u064a\\u0647 \\u0646\\u0635 \\u0645\\u062e\\u0632\\u064e\\u0651\\u0646\\u061b %(stale)s \\u0645\\u0646\\u0647\\u0627 \\u0645\\u062a\\u0642\\u0627\\u062f\\u0645 \\u0644\\u0643\\u0627\\u0634\\u0641 \\u0648\\u0627\\u062d\\u062f \\u0639\\u0644\\u0649 \\u0627\\u0644\\u0623\\u0642\\u0644. \\u0623\\u0639\\u062f\\u0627\\u062f \\u062f\\u0642\\u064a\\u0642\\u0629 \\u0645\\u0646 \\u0644\\u0642\\u0637\\u0629 \\u0648\\u0627\\u062d\\u062f\\u0629 \\u0644\\u0642\\u0627\\u0639\\u062f\\u0629 \\u0627\\u0644\\u0628\\u064a\\u0627\\u0646\\u0627\\u062a \\u0623\\u064f\\u062e\\u0630\\u062a \\u0641\\u064a %(at)s.\",\"%(count)s existing tables\":\"%(count)s \\u062c\\u062f\\u0648\\u0644 \\u0645\\u0648\\u062c\\u0648\\u062f\",\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\":\"%(coun"
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/system",
-      "status": 200,
-      "body": "{\"category\":\"system\",\"settings\":{\"action_logging_enabled\":true,\"animations_enabled\":true,\"app_icon\":\"bi-file-earmark-text\",\"app_logo\":\"\",\"app_name\":\"SYLTHARAE System\",\"auto_save\":true,\"compact_mode\":false,\"confirm_actions\":true,\"date_format\":\"YYYY-MM-DD\",\"debug_mode\":false,\"default_sort\":\"date_creation\",\"items_per_page\":50,\"language\":\"ar\",\"log_file\":null,\"log_level\":\"INFO\",\"notifications_enabled\":true,\"screen_inspector\":false,\"show_breadcrumbs\":true,\"sort_direction\":\"desc\",\"theme\":\"light\",\"time_format\":\"24h\",\"timezone\":\"UTC\"},\"success\":true}\n"
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/api/notifications/stats",
-      "status": 200,
-      "body": "{\"stats\":{\"by_priority\":{},\"by_type\":{},\"total\":0,\"unread\":0,\"upcoming_events\":0},\"success\":true}\n"
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
-      "status": 200,
-      "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/api-client.js",
+      "url": "http://{base-url}/static/js/modules/api/api-client.js",
       "status": 304,
       "body": "/**\n * API Client\n * Fetch wrapper with error handling and CSRF token support\n */\n\nimport { getCSRFToken, getCSRFTokenAsync } from '../core/utils.js';\n\n/**\n * Make an API request with automatic CSRF token handling and timeout\n * @param {string} url - API endpoint URL\n * @param {Object} options - Fetch options\n * @param {number} timeout - Request timeout in milliseconds (default: 30000)\n * @returns {Promise<Response>} Fetch response\n */\nexport async function apiRequest(url, options = {}, timeout = 30000) {\n    const method = (options.method || 'GET').toUpperCase();\n    const needsCSRF = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);\n    \n    // Get CSRF token - always fetch async for POST/PUT/DELETE to ensure it's fresh\n    let csrfToken = '';\n    if (needsCSRF) {\n        // Try sync first for speed\n        csrfToken = getCSRFToken();\n        \n        // If no token or empty, fetch it async\n        if (!csrfToken || csrfToken.trim() === '') {\n            try {\n                csrfToken = await getCSRFTokenAsync();\n            } catch (error) {\n                console.warn('Failed to fetch CSRF token async:', error);\n                // Try sync one more time as fallback\n       "
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/endpoints.js",
-      "status": 304,
-      "body": "/**\n * API Endpoint Definitions\n * Centralized API URL builders\n */\n\n/**\n * Build API endpoint URLs\n */\nexport const endpoints = {\n    // Search endpoints\n    search: (params) => {\n        const url = new URL('/api/search', window.location.origin);\n        Object.entries(params || {}).forEach(([key, value]) => {\n            if (value !== null && value !== undefined && value !== '') {\n                url.searchParams.set(key, value);\n            }\n        });\n        return url.toString();\n    },\n    \n    searchHistory: (limit = 10) => `/api/search/history?limit=${limit}`,\n    searchSaved: () => '/api/search/saved',\n    searchSavedById: (id) => `/api/search/saved/${id}`,\n    searchExport: () => '/api/search/export',\n    searchRipgrepStatus: () => '/api/search/ripgrep-status',\n    searchSnippets: () => '/api/search/snippets',\n    searchCancel: () => '/api/search/cancel',\n    searchMetrics: () => '/api/search/metrics',\n    \n    // File endpoints\n    fileDetails: (fileId) => `/file/${fileId}`,\n    fileExport: (fileId) => `/api/files/${fileId}/export`,\n    fileDelete: (fileId) => `/file/${fileId}/delete`,\n    filePreview: (fileId, maxWidth = 1200, maxHeight = 800) => \n        `/api/prev"
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/api/settings/theme",
       "status": 200,
       "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/i18n/catalog?locale=ar",
+      "url": "http://{base-url}/api/i18n/catalog?locale=ar",
       "status": 200,
       "body": "{\"count\":4179,\"locale\":\"ar\",\"success\":true,\"translations\":{\" \\u00b7 Page {n}\":\" \\u00b7 \\u0627\\u0644\\u0635\\u0641\\u062d\\u0629 {n}\",\" \\u00b7 Slide {n}\":\" \\u00b7 \\u0627\\u0644\\u0634\\u0631\\u064a\\u062d\\u0629 {n}\",\" \\u00b7 line {line}\":\" \\u00b7 \\u0627\\u0644\\u0633\\u0637\\u0631 {line}\",\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\":\"%(analysable)s \\u0645\\u062d\\u062a\\u0648\\u0649 \\u0644\\u062f\\u064a\\u0647 \\u0646\\u0635 \\u0645\\u062e\\u0632\\u064e\\u0651\\u0646\\u061b %(stale)s \\u0645\\u0646\\u0647\\u0627 \\u0645\\u062a\\u0642\\u0627\\u062f\\u0645 \\u0644\\u0643\\u0627\\u0634\\u0641 \\u0648\\u0627\\u062d\\u062f \\u0639\\u0644\\u0649 \\u0627\\u0644\\u0623\\u0642\\u0644. \\u0623\\u0639\\u062f\\u0627\\u062f \\u062f\\u0642\\u064a\\u0642\\u0629 \\u0645\\u0646 \\u0644\\u0642\\u0637\\u0629 \\u0648\\u0627\\u062d\\u062f\\u0629 \\u0644\\u0642\\u0627\\u0639\\u062f\\u0629 \\u0627\\u0644\\u0628\\u064a\\u0627\\u0646\\u0627\\u062a \\u0623\\u064f\\u062e\\u0630\\u062a \\u0641\\u064a %(at)s.\",\"%(count)s existing tables\":\"%(count)s \\u062c\\u062f\\u0648\\u0644 \\u0645\\u0648\\u062c\\u0648\\u062f\",\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\":\"%(coun"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/system",
+      "url": "http://{base-url}/api/settings/system",
       "status": 200,
       "body": "{\"category\":\"system\",\"settings\":{\"action_logging_enabled\":true,\"animations_enabled\":true,\"app_icon\":\"bi-file-earmark-text\",\"app_logo\":\"\",\"app_name\":\"SYLTHARAE System\",\"auto_save\":true,\"compact_mode\":false,\"confirm_actions\":true,\"date_format\":\"YYYY-MM-DD\",\"debug_mode\":false,\"default_sort\":\"date_creation\",\"items_per_page\":50,\"language\":\"ar\",\"log_file\":null,\"log_level\":\"INFO\",\"notifications_enabled\":true,\"screen_inspector\":false,\"show_breadcrumbs\":true,\"sort_direction\":\"desc\",\"theme\":\"light\",\"time_format\":\"24h\",\"timezone\":\"UTC\"},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/notifications/stats",
-      "status": 200,
-      "body": "{\"stats\":{\"by_priority\":{},\"by_type\":{},\"total\":0,\"unread\":0,\"upcoming_events\":0},\"success\":true}\n"
-    },
-    {
-      "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/api/settings/theme",
       "status": 200,
       "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/api-client.js",
+      "url": "http://{base-url}/api/notifications/stats",
+      "status": 200,
+      "body": "{\"stats\":{\"by_priority\":{},\"by_type\":{},\"total\":0,\"unread\":0,\"upcoming_events\":0},\"success\":true}\n"
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/static/js/modules/api/api-client.js",
       "status": 304,
       "body": "/**\n * API Client\n * Fetch wrapper with error handling and CSRF token support\n */\n\nimport { getCSRFToken, getCSRFTokenAsync } from '../core/utils.js';\n\n/**\n * Make an API request with automatic CSRF token handling and timeout\n * @param {string} url - API endpoint URL\n * @param {Object} options - Fetch options\n * @param {number} timeout - Request timeout in milliseconds (default: 30000)\n * @returns {Promise<Response>} Fetch response\n */\nexport async function apiRequest(url, options = {}, timeout = 30000) {\n    const method = (options.method || 'GET').toUpperCase();\n    const needsCSRF = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);\n    \n    // Get CSRF token - always fetch async for POST/PUT/DELETE to ensure it's fresh\n    let csrfToken = '';\n    if (needsCSRF) {\n        // Try sync first for speed\n        csrfToken = getCSRFToken();\n        \n        // If no token or empty, fetch it async\n        if (!csrfToken || csrfToken.trim() === '') {\n            try {\n                csrfToken = await getCSRFTokenAsync();\n            } catch (error) {\n                console.warn('Failed to fetch CSRF token async:', error);\n                // Try sync one more time as fallback\n       "
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/static/js/modules/api/endpoints.js",
+      "url": "http://{base-url}/static/js/modules/api/endpoints.js",
       "status": 304,
       "body": "/**\n * API Endpoint Definitions\n * Centralized API URL builders\n */\n\n/**\n * Build API endpoint URLs\n */\nexport const endpoints = {\n    // Search endpoints\n    search: (params) => {\n        const url = new URL('/api/search', window.location.origin);\n        Object.entries(params || {}).forEach(([key, value]) => {\n            if (value !== null && value !== undefined && value !== '') {\n                url.searchParams.set(key, value);\n            }\n        });\n        return url.toString();\n    },\n    \n    searchHistory: (limit = 10) => `/api/search/history?limit=${limit}`,\n    searchSaved: () => '/api/search/saved',\n    searchSavedById: (id) => `/api/search/saved/${id}`,\n    searchExport: () => '/api/search/export',\n    searchRipgrepStatus: () => '/api/search/ripgrep-status',\n    searchSnippets: () => '/api/search/snippets',\n    searchCancel: () => '/api/search/cancel',\n    searchMetrics: () => '/api/search/metrics',\n    \n    // File endpoints\n    fileDetails: (fileId) => `/file/${fileId}`,\n    fileExport: (fileId) => `/api/files/${fileId}/export`,\n    fileDelete: (fileId) => `/file/${fileId}/delete`,\n    filePreview: (fileId, maxWidth = 1200, maxHeight = 800) => \n        `/api/prev"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/api/settings/theme",
       "status": 200,
       "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/i18n/catalog?locale=ar",
+      "url": "http://{base-url}/api/i18n/catalog?locale=ar",
       "status": 200,
       "body": "{\"count\":4179,\"locale\":\"ar\",\"success\":true,\"translations\":{\" \\u00b7 Page {n}\":\" \\u00b7 \\u0627\\u0644\\u0635\\u0641\\u062d\\u0629 {n}\",\" \\u00b7 Slide {n}\":\" \\u00b7 \\u0627\\u0644\\u0634\\u0631\\u064a\\u062d\\u0629 {n}\",\" \\u00b7 line {line}\":\" \\u00b7 \\u0627\\u0644\\u0633\\u0637\\u0631 {line}\",\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\":\"%(analysable)s \\u0645\\u062d\\u062a\\u0648\\u0649 \\u0644\\u062f\\u064a\\u0647 \\u0646\\u0635 \\u0645\\u062e\\u0632\\u064e\\u0651\\u0646\\u061b %(stale)s \\u0645\\u0646\\u0647\\u0627 \\u0645\\u062a\\u0642\\u0627\\u062f\\u0645 \\u0644\\u0643\\u0627\\u0634\\u0641 \\u0648\\u0627\\u062d\\u062f \\u0639\\u0644\\u0649 \\u0627\\u0644\\u0623\\u0642\\u0644. \\u0623\\u0639\\u062f\\u0627\\u062f \\u062f\\u0642\\u064a\\u0642\\u0629 \\u0645\\u0646 \\u0644\\u0642\\u0637\\u0629 \\u0648\\u0627\\u062d\\u062f\\u0629 \\u0644\\u0642\\u0627\\u0639\\u062f\\u0629 \\u0627\\u0644\\u0628\\u064a\\u0627\\u0646\\u0627\\u062a \\u0623\\u064f\\u062e\\u0630\\u062a \\u0641\\u064a %(at)s.\",\"%(count)s existing tables\":\"%(count)s \\u062c\\u062f\\u0648\\u0644 \\u0645\\u0648\\u062c\\u0648\\u062f\",\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\":\"%(coun"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/system",
+      "url": "http://{base-url}/api/settings/system",
       "status": 200,
       "body": "{\"category\":\"system\",\"settings\":{\"action_logging_enabled\":true,\"animations_enabled\":true,\"app_icon\":\"bi-file-earmark-text\",\"app_logo\":\"\",\"app_name\":\"SYLTHARAE System\",\"auto_save\":true,\"compact_mode\":false,\"confirm_actions\":true,\"date_format\":\"YYYY-MM-DD\",\"debug_mode\":false,\"default_sort\":\"date_creation\",\"items_per_page\":50,\"language\":\"ar\",\"log_file\":null,\"log_level\":\"INFO\",\"notifications_enabled\":true,\"screen_inspector\":false,\"show_breadcrumbs\":true,\"sort_direction\":\"desc\",\"theme\":\"light\",\"time_format\":\"24h\",\"timezone\":\"UTC\"},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/notifications/stats",
+      "url": "http://{base-url}/api/settings/theme",
+      "status": 200,
+      "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/api/notifications/stats",
       "status": 200,
       "body": "{\"stats\":{\"by_priority\":{},\"by_type\":{},\"total\":0,\"unread\":0,\"upcoming_events\":0},\"success\":true}\n"
     },
     {
       "method": "GET",
-      "url": "http://127.0.0.1:5055/api/settings/theme",
+      "url": "http://{base-url}/static/js/modules/api/api-client.js",
+      "status": 304,
+      "body": "/**\n * API Client\n * Fetch wrapper with error handling and CSRF token support\n */\n\nimport { getCSRFToken, getCSRFTokenAsync } from '../core/utils.js';\n\n/**\n * Make an API request with automatic CSRF token handling and timeout\n * @param {string} url - API endpoint URL\n * @param {Object} options - Fetch options\n * @param {number} timeout - Request timeout in milliseconds (default: 30000)\n * @returns {Promise<Response>} Fetch response\n */\nexport async function apiRequest(url, options = {}, timeout = 30000) {\n    const method = (options.method || 'GET').toUpperCase();\n    const needsCSRF = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);\n    \n    // Get CSRF token - always fetch async for POST/PUT/DELETE to ensure it's fresh\n    let csrfToken = '';\n    if (needsCSRF) {\n        // Try sync first for speed\n        csrfToken = getCSRFToken();\n        \n        // If no token or empty, fetch it async\n        if (!csrfToken || csrfToken.trim() === '') {\n            try {\n                csrfToken = await getCSRFTokenAsync();\n            } catch (error) {\n                console.warn('Failed to fetch CSRF token async:', error);\n                // Try sync one more time as fallback\n       "
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/static/js/modules/api/endpoints.js",
+      "status": 304,
+      "body": "/**\n * API Endpoint Definitions\n * Centralized API URL builders\n */\n\n/**\n * Build API endpoint URLs\n */\nexport const endpoints = {\n    // Search endpoints\n    search: (params) => {\n        const url = new URL('/api/search', window.location.origin);\n        Object.entries(params || {}).forEach(([key, value]) => {\n            if (value !== null && value !== undefined && value !== '') {\n                url.searchParams.set(key, value);\n            }\n        });\n        return url.toString();\n    },\n    \n    searchHistory: (limit = 10) => `/api/search/history?limit=${limit}`,\n    searchSaved: () => '/api/search/saved',\n    searchSavedById: (id) => `/api/search/saved/${id}`,\n    searchExport: () => '/api/search/export',\n    searchRipgrepStatus: () => '/api/search/ripgrep-status',\n    searchSnippets: () => '/api/search/snippets',\n    searchCancel: () => '/api/search/cancel',\n    searchMetrics: () => '/api/search/metrics',\n    \n    // File endpoints\n    fileDetails: (fileId) => `/file/${fileId}`,\n    fileExport: (fileId) => `/api/files/${fileId}/export`,\n    fileDelete: (fileId) => `/file/${fileId}/delete`,\n    filePreview: (fileId, maxWidth = 1200, maxHeight = 800) => \n        `/api/prev"
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/api/settings/theme",
       "status": 200,
       "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/api/i18n/catalog?locale=ar",
+      "status": 200,
+      "body": "{\"count\":4179,\"locale\":\"ar\",\"success\":true,\"translations\":{\" \\u00b7 Page {n}\":\" \\u00b7 \\u0627\\u0644\\u0635\\u0641\\u062d\\u0629 {n}\",\" \\u00b7 Slide {n}\":\" \\u00b7 \\u0627\\u0644\\u0634\\u0631\\u064a\\u062d\\u0629 {n}\",\" \\u00b7 line {line}\":\" \\u00b7 \\u0627\\u0644\\u0633\\u0637\\u0631 {line}\",\"%(analysable)s contents have stored text; %(stale)s are stale for at least one detector. Exact counts from one database snapshot taken %(at)s.\":\"%(analysable)s \\u0645\\u062d\\u062a\\u0648\\u0649 \\u0644\\u062f\\u064a\\u0647 \\u0646\\u0635 \\u0645\\u062e\\u0632\\u064e\\u0651\\u0646\\u061b %(stale)s \\u0645\\u0646\\u0647\\u0627 \\u0645\\u062a\\u0642\\u0627\\u062f\\u0645 \\u0644\\u0643\\u0627\\u0634\\u0641 \\u0648\\u0627\\u062d\\u062f \\u0639\\u0644\\u0649 \\u0627\\u0644\\u0623\\u0642\\u0644. \\u0623\\u0639\\u062f\\u0627\\u062f \\u062f\\u0642\\u064a\\u0642\\u0629 \\u0645\\u0646 \\u0644\\u0642\\u0637\\u0629 \\u0648\\u0627\\u062d\\u062f\\u0629 \\u0644\\u0642\\u0627\\u0639\\u062f\\u0629 \\u0627\\u0644\\u0628\\u064a\\u0627\\u0646\\u0627\\u062a \\u0623\\u064f\\u062e\\u0630\\u062a \\u0641\\u064a %(at)s.\",\"%(count)s existing tables\":\"%(count)s \\u062c\\u062f\\u0648\\u0644 \\u0645\\u0648\\u062c\\u0648\\u062f\",\"%(count)s further contents entered notified outcomes (notification limit per evaluation reached)\":\"%(coun"
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/api/settings/system",
+      "status": 200,
+      "body": "{\"category\":\"system\",\"settings\":{\"action_logging_enabled\":true,\"animations_enabled\":true,\"app_icon\":\"bi-file-earmark-text\",\"app_logo\":\"\",\"app_name\":\"SYLTHARAE System\",\"auto_save\":true,\"compact_mode\":false,\"confirm_actions\":true,\"date_format\":\"YYYY-MM-DD\",\"debug_mode\":false,\"default_sort\":\"date_creation\",\"items_per_page\":50,\"language\":\"ar\",\"log_file\":null,\"log_level\":\"INFO\",\"notifications_enabled\":true,\"screen_inspector\":false,\"show_breadcrumbs\":true,\"sort_direction\":\"desc\",\"theme\":\"light\",\"time_format\":\"24h\",\"timezone\":\"UTC\"},\"success\":true}\n"
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/api/settings/theme",
+      "status": 200,
+      "body": "{\"success\":true,\"theme\":{\"bg_light\":\"#f8fafc\",\"bg_section\":\"#f8fafc\",\"bg_white\":\"#ffffff\",\"border_color\":\"#e2e8f0\",\"border_dark\":\"#cbd5e1\",\"border_light\":\"#f1f5f9\",\"border_radius_lg\":\"0.5rem\",\"border_radius_md\":\"0.375rem\",\"border_radius_sm\":\"0.25rem\",\"border_radius_xl\":\"0.75rem\",\"btn_primary\":\"#4f46e5\",\"btn_primary_hover\":\"#4338ca\",\"btn_secondary\":\"#06b6d4\",\"btn_secondary_hover\":\"#0891b2\",\"custom_css\":\"\",\"danger_color\":\"#ef4444\",\"font_size_2xl\":\"1.5rem\",\"font_size_3xl\":\"1.875rem\",\"font_size_base\":\"1rem\",\"font_size_lg\":\"1.125rem\",\"font_size_sm\":\"0.875rem\",\"font_size_xl\":\"1.25rem\",\"font_size_xs\":\"0.75rem\",\"font_weight_bold\":\"700\",\"font_weight_medium\":\"500\",\"font_weight_normal\":\"400\",\"font_weight_semibold\":\"600\",\"gradient_direction\":\"135deg\",\"gradient_end\":\"#06b6d4\",\"gradient_start\":\"#4f46e5\",\"icon_size_lg\":\"2rem\",\"icon_size_md\":\"1.5rem\",\"icon_size_sm\":\"1rem\",\"icon_size_xl\":\"2.5rem\",\"info_color\":\"#3b82f6\",\"primary_color\":\"#4f46e5\",\"secondary_color\":\"#06b6d4\",\"shadow_lg\":\"0 10px 15px -3px rgba(0, 0, 0, 0.1)\",\"shadow_md\":\"0 4px 6px -1px rgba(0, 0, 0, 0.1)\",\"shadow_sm\":\"0 1px 2px 0 rgba(0, 0, 0, 0.05)\",\"shadow_xl\":\"0 20px 25px -5px rgba(0, 0, 0, 0.1)\",\"sidebar_active\":\"#4f46e5\",\"sidebar_"
+    },
+    {
+      "method": "GET",
+      "url": "http://{base-url}/api/notifications/stats",
+      "status": 200,
+      "body": "{\"stats\":{\"by_priority\":{},\"by_type\":{},\"total\":0,\"unread\":0,\"upcoming_events\":0},\"success\":true}\n"
     },
     {
       "method": "POST",
-      "url": "http://127.0.0.1:5055/api/term-names/import",
+      "url": "http://{base-url}/api/term-names/import",
       "status": 200,
-      "body": "{\"accepted\":2,\"applied\":false,\"inserted\":0,\"rejected\":[{\"code\":\"UNKNOWN_WORD\",\"line\":4,\"reason\":\"no term named 'no-such-term'\",\"word\":\"no-such-term\"}],\"rows\":3,\"sample\":[{\"existing_id\":null,\"key\":\"e2e-e37848\",\"language\":\"en\",\"line\":2,\"name\":\"e2e-e37848\",\"name_type\":\"alternate\",\"word\":\"e2e-e37848\",\"word_id\":1},{\"existing_id\":null,\"key\":\"\\u05e4\\u05d5\\u05dc\\u05d9\\u05d8\\u05d9\",\"language\":\"he\",\"line\":3,\"name\":\"\\u05e4\\u05d5\\u05dc\\u05d9\\u05d8\\u05d9\",\"name_type\":\"alternate\",\"word\":\"e2e-e37848\",\"word_id\":1}],\"success\":true,\"updated\":0}\n"
+      "body": "{\"accepted\":2,\"applied\":false,\"inserted\":0,\"rejected\":[{\"code\":\"UNKNOWN_WORD\",\"line\":4,\"reason\":\"no term named 'no-such-term'\",\"word\":\"no-such-term\"}],\"rows\":3,\"sample\":[{\"existing_id\":null,\"key\":\"e2e-9b710b\",\"language\":\"en\",\"line\":2,\"name\":\"e2e-9b710b\",\"name_type\":\"alternate\",\"word\":\"e2e-9b710b\",\"word_id\":1},{\"existing_id\":null,\"key\":\"\\u05e4\\u05d5\\u05dc\\u05d9\\u05d8\\u05d9\",\"language\":\"he\",\"line\":3,\"name\":\"\\u05e4\\u05d5\\u05dc\\u05d9\\u05d8\\u05d9\",\"name_type\":\"alternate\",\"word\":\"e2e-9b710b\",\"word_id\":1}],\"success\":true,\"updated\":0}\n"
     }
   ]
 }
