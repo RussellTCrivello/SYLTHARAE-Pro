@@ -79,3 +79,25 @@ def test_an_internal_fault_inside_the_worker_is_still_opaque(pg_db, monkeypatch)
     errors = mgr.get(job["job_id"])["errors"]
     assert len(errors) == 1 and errors[0].startswith("Internal error (ERR-")
     assert "hunter2" not in errors[0]
+
+
+def test_the_preview_of_the_committed_workbook_counts_what_the_sheets_hold(pg_db):
+    """The Import Center's dry run must see the two columns, not one pile.
+
+    A preview that reported the workbook as one undifferentiated list is how
+    the term/keyword distinction would be lost without anybody noticing: the
+    import would still "succeed". Run through a synchronous job so the preview
+    result is read here rather than skipped.
+    """
+    from apps.importing.validators import workbook_rules as rules
+
+    workbook = rules.read("classification/domain_data.xlsx")
+    mgr = JobManager(synchronous=True)
+    job = mgr.create_job("domain_import", source="t",
+                         options={"data_file": "domain_data.xlsx", "dry_run": True})
+    stored = mgr.get(job["job_id"])
+    assert stored["status"] == job_state.COMPLETED, stored["errors"]
+    stats = stored["stats"] or {}
+    assert stats["categories"] == len(workbook.categories)
+    assert stats["words"] == workbook.total_terms()
+    assert stats["keywords"] == workbook.total_keywords()
