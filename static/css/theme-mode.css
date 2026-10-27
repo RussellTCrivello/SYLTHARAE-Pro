@@ -732,6 +732,55 @@
     color: #15193a !important;
 }
 
+/* Small icon controls are drawn with a hard-coded white background in
+   fmas.css, which the surface pass never counted because they are 36x36.
+   Found by the lightControls check on /archives and /files. */
+[data-theme-mode="dark"] .nav-btn,
+[data-theme-mode="dark"] .view-toggle-btn {
+    background: var(--dm-surface-raised) !important;
+    border-color: var(--dm-border-strong) !important;
+    color: var(--dm-ink) !important;
+}
+
+[data-theme-mode="dark"] .nav-btn:hover:not(:disabled),
+[data-theme-mode="dark"] .view-toggle-btn:hover {
+    background: #223055 !important;
+    border-color: var(--dm-accent) !important;
+    color: #ffffff !important;
+}
+
+[data-theme-mode="dark"] .nav-btn:disabled {
+    background: #16203a !important;
+    color: var(--dm-ink-muted) !important;
+}
+
+[data-theme-mode="dark"] .view-toggle-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: #ffffff !important;
+}
+
+[data-theme-mode="dark"] .btn-outline-warning,
+[data-theme-mode="dark"] .btn-action.btn-outline-warning,
+[data-theme-mode="dark"] .btn-action.btn-outline-warning.btn-action-icon-only {
+    background-color: var(--dm-surface-raised) !important;
+    border-color: #b98900 !important;
+    color: #f0c000 !important;
+}
+
+/* File-type chips pair --primary-color ink with an -info background; both are
+   tuned for light, and the pair only reaches 2.49:1 once the background turns
+   dark (measured on /files). */
+[data-theme-mode="dark"] .badge-type,
+[data-theme-mode="dark"] .badge-size {
+    color: #c7d2fe !important;
+    background: #16233f !important;
+}
+
+[data-theme-mode="dark"] .btn-outline-warning:hover {
+    background-color: #3a2f00;
+    color: #ffd84d;
+}
+
 /* Logos and brand marks are drawn for a light background; do not invert them. */
 [data-theme-mode="dark"] .brand-logo,
 [data-theme-mode="dark"] .app-logo,

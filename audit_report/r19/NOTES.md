@@ -108,3 +108,22 @@ the round-17 record without that qualifier — 5,020 tests were reported then,
   tree at `67ab01c`'s parent, before the record commits.
 * The `test_identifiers_intel` pair was not triaged to a conclusion; it is
   recorded as failing, not as understood.
+
+## Theme: what the surface pass could not see (measured)
+
+`theme_audit.py` counted only surfaces above 2500 px2, so four white icon
+buttons on `/archives` (36x36 `.nav-btn`, `.view-toggle-btn`) passed the gate
+while being plainly white in a dark page. The audit now also counts light
+*controls* (button/select/input with a painted background, >= 300 px2) and
+gates on them.
+
+| run | artefact | /files dark | /archives dark |
+| --- | --- | --- | --- |
+| surfaces only, before | `theme_audit.json` (previous revision) | 0 | 0 |
+| surfaces + controls, before the CSS fix | measured this session | 1 control (`#removeSameContextDuplicatesBtn`) | 4 controls (`#archiveNavBackBtn`, `#archiveNavForwardBtn`, `.nav-btn`, `.view-toggle-btn`) |
+| after the CSS fix | `theme_audit.json` (this revision) | 0 / 0 / 0 | 0 / 0 / 0 |
+
+Final dark-mode counts across `/ /files /archives /lexis /settings`:
+light surfaces 0, light controls 0, low-contrast text 0. Two low-contrast
+findings on `/files` were real: `.badge-type` chips paired `--primary-color`
+ink with a dark `--alert-info-bg` and measured 2.49:1.

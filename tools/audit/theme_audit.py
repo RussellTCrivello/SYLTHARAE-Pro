@@ -7,7 +7,10 @@ actually sees. This walks a list of pages in a real browser twice — once with
   * surfaces whose computed background is light while the mode is dark
     (a patch of the light theme left behind), and
   * visible text whose contrast against its own background is below the WCAG AA
-    threshold for its size (4.5:1, or 3:1 for large text).
+    threshold for its size (4.5:1, or 3:1 for large text), and
+  * light *controls*: buttons, selects and inputs that keep a light background
+    in dark mode. They are smaller than the surface threshold, so an audit that
+    only counted panels missed four white icon buttons on /archives.
 
 Only elements with a painted background and enough area are counted, so a
 transparent wrapper is not reported as a defect. Output is a table plus an
@@ -97,6 +100,7 @@ EVALUATE = r"""
     return true;
   };
   const lightSurfaces = [];
+  const lightControls = [];
   const lowContrast = [];
   const mode = document.documentElement.getAttribute('data-theme-mode');
   const all = document.querySelectorAll('body *');
@@ -108,6 +112,19 @@ EVALUATE = r"""
     if (bg && bg.a > 0.55 && lum(bg) > 0.6 && rect.width * rect.height > 2500) {
       lightSurfaces.push({ element: describe(el), bg: style.backgroundColor,
                            area: Math.round(rect.width * rect.height) });
+    }
+    // Controls are small on purpose: 36x36 icon buttons sit below the 2500 px2
+    // surface threshold, so they need their own, lower bar.
+    const tag = el.tagName.toLowerCase();
+    const isControl = tag === 'button' || tag === 'select' || tag === 'input'
+      || (el.classList && (el.classList.contains('btn') || el.getAttribute('role') === 'button'));
+    if (isControl) {
+      const own = parse(style.backgroundColor);
+      if (own && own.a > 0.4 && lum(own) > 0.6 && rect.width * rect.height >= 300) {
+        lightControls.push({ element: describe(el), bg: style.backgroundColor,
+                             area: Math.round(rect.width * rect.height),
+                             text: (el.textContent || '').trim().slice(0, 30) });
+      }
     }
     const hasText = Array.from(el.childNodes).some((n) => n.nodeType === 3 && n.textContent.trim().length > 1);
     if (hasText) {
@@ -129,8 +146,10 @@ EVALUATE = r"""
   }
   return { mode, title: document.title,
            lightSurfaces: lightSurfaces.slice(0, 40),
+           lightControls: lightControls.slice(0, 40),
            lowContrast: lowContrast.slice(0, 40),
-           counts: { lightSurfaces: lightSurfaces.length, lowContrast: lowContrast.length } };
+           counts: { lightSurfaces: lightSurfaces.length, lightControls: lightControls.length,
+                     lowContrast: lowContrast.length } };
 }
 """
 
@@ -170,6 +189,7 @@ def main() -> int:
                 data = page.evaluate(EVALUATE)
                 rows.append({"path": path, "system": mode, **data})
                 print(f"{mode:5} {path:12} surfaces={data['counts']['lightSurfaces']:>3} "
+                      f"controls={data['counts']['lightControls']:>3} "
                       f"low-contrast={data['counts']['lowContrast']:>3}")
         browser.close()
 
@@ -178,12 +198,17 @@ def main() -> int:
     out.write_text(json.dumps(rows, indent=2), encoding="utf-8")
     print("written:", out)
 
-    # The gate: in dark mode no light surface should remain.
-    bad = [row for row in rows if row["system"] == "dark" and row["counts"]["lightSurfaces"]]
+    # The gate: in dark mode neither a light surface nor a light control remains.
+    bad = [row for row in rows if row["system"] == "dark"
+           and (row["counts"]["lightSurfaces"] or row["counts"]["lightControls"])]
     for row in bad:
-        print(f"  {row['path']}: {row['counts']['lightSurfaces']} light surfaces")
+        print(f"  {row['path']}: {row['counts']['lightSurfaces']} light surfaces, "
+              f"{row['counts']['lightControls']} light controls")
         for item in row["lightSurfaces"][:6]:
-            print(f"     {item['element']} {item['bg']} area={item['area']}")
+            print(f"     surface {item['element']} {item['bg']} area={item['area']}")
+        for item in row["lightControls"][:6]:
+            print(f"     control {item['element']} {item['bg']} area={item['area']} "
+                  f"text={item['text']!r}")
     return 1 if bad else 0
 
 
