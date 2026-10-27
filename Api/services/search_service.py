@@ -84,7 +84,7 @@ def _spreadsheet_row_map(lines):
     Columns: metadata lines are skipped, interior blank lines count as rows,
     and a single blank line right before the next sheet header is the block
     separator. Returns {line_index: (sheet_name_or_None, row_number)} for
-    tab-delimited data lines.
+    every data line - a line without a tab is a one-cell row in column A.
     """
     locations = {}
     current_sheet = None
@@ -107,10 +107,11 @@ def _spreadsheet_row_map(lines):
         if _SHEET_META_RE.match(stripped):
             continue
 
-        if "\t" not in line:
-            # Not a data row (e.g. explanatory text) - does not advance rows
-            continue
-
+        # Every remaining line is a row of the sheet, including a row whose
+        # cells collapsed to a single value: the "Notes" sheet of a workbook
+        # with A1="Author" and B2="..." was read as one row too few, so the
+        # B2 value was cited as B1. A line without a tab is column A.
+        #
         # Blank lines immediately before a DATA row are interior blank rows
         # of the sheet (mirrors the display parser: cell B5 stays B5).
         if pending_blanks:

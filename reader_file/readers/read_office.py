@@ -304,7 +304,59 @@ def _pptx_cover_remaining(slides: List[Dict[str, Any]], filepath: str) -> Dict[s
     return result
 
 
-def _odf_node_text(node):
+def _ods_repeat(node, attribute: str, *, default: int = 1, cap: int = 16384) -> int:
+    """The repeat/span count an ODF cell or row declares, within bounds.
+
+    ODF writes a run of identical nodes once and records the length:
+    ``number-rows-repeated="2"`` is two rows, ``number-columns-repeated="3"``
+    is three cells. A reader that takes the node as one row moves every address
+    below it upwards - a value in B4 was reported in B3 and the *columns* of a
+    row shifted the same way. Capped because writers pad sheets to the sheet
+    limit with enormous empty repeats.
+    """
+    raw = node.getAttribute(attribute)
+    try:
+        value = int(raw)
+    except (TypeError, ValueError):
+        return default
+    if value < 1:
+        return 1
+    return min(value, cap)
+
+
+def _ods_row_cells(row) -> list:
+    """One ODF table row as a list of cell texts, repeats and spans expanded.
+
+    Trailing empty runs are not materialised: a padded sheet declares thousands
+    of empty cells per row and none of them carry an address that matters. They
+    are held back and flushed only when a cell with text follows, which keeps
+    every populated cell in its true column.
+    """
+    from odf.table import TableCell
+
+    cells = []
+    pending_empty = 0
+    for cell in row.getElementsByType(TableCell):
+        text = ""
+        for para in cell.childNodes:
+            if hasattr(para, "data"):
+                text += para.data
+            elif hasattr(para, "childNodes") and para.childNodes:
+                text += _odf_node_text(para)
+        text = text.strip()
+        width = max(_ods_repeat(cell, "numbercolumnsrepeated"),
+                    _ods_repeat(cell, "numbercolumnsspanned"))
+        if not text:
+            pending_empty += width
+            continue
+        if pending_empty:
+            cells.extend([""] * pending_empty)
+            pending_empty = 0
+        cells.extend([text] * min(width, 100))
+    return cells
+
+
+def _odf_node_text(node) -> str:
     """All text under an ODF node, in document order.
 
     ``para.childNodes[0].data`` reads one run, and in ODF a run is usually a
@@ -3404,18 +3456,25 @@ class OfficeFileReader(BaseReader):
                     "data": []
                 }
                 
+                # Repeated rows and cells are runs, not single nodes: the
+                # blank rows 2-3 of a sheet are written once with
+                # number-rows-repeated="2", and empty cells the same way.
+                # Collapsing them moved every address above the gap.
+                pending_blank_rows = 0
                 for row in table.getElementsByType(TableRow):
-                    row_data = []
-                    for cell in row.getElementsByType(TableCell):
-                        cell_text = ""
-                        # Get text from all paragraphs in cell
-                        for para in cell.childNodes:
-                            if hasattr(para, 'data'):
-                                cell_text += para.data
-                            elif hasattr(para, 'childNodes') and para.childNodes:
-                                cell_text += _odf_node_text(para)
-                        row_data.append(cell_text)
-                    sheet_data["data"].append(row_data)
+                    row_data = _ods_row_cells(row)
+                    repeat = _ods_repeat(row, "numberrowsrepeated", cap=100000)
+                    if not any(row_data):
+                        # Held back so a sheet padded to its limit does not
+                        # become a hundred thousand empty rows; flushed when a
+                        # row with content follows.
+                        pending_blank_rows += repeat
+                        continue
+                    while pending_blank_rows:
+                        sheet_data["data"].append([])
+                        pending_blank_rows -= 1
+                    for _ in range(min(repeat, 100000)):
+                        sheet_data["data"].append(list(row_data))
                 
                 result["sheets"][sheet_name] = sheet_data
             

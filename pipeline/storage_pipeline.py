@@ -2163,7 +2163,14 @@ class StoragePipeline:
                         # Extract data if available - ensure row order is preserved
                         sheet_text = ""
                         if 'data' in sheet_data:
-                            sheet_text = self._extract_sheet_text(sheet_data['data'])
+                            # Blank rows are not stored as rows (they are not
+                            # content), but they are addresses: the reader
+                            # records which row numbers it kept so the gap can
+                            # be written back as empty lines. Without it a value
+                            # in Sheet1!D6 was cited as Sheet1!D4 - the shift
+                            # is exactly the number of blank rows above it.
+                            sheet_text = self._extract_sheet_text(
+                                sheet_data['data'], sheet_data.get('row_numbers'))
                         
                         # Combine all parts
                         combined_sheet_text = sheet_header + headers_text + sheet_text
@@ -2761,17 +2768,22 @@ class StoragePipeline:
             text = re.sub(r'[\r\n\t]+', ' ', text)
         return text
 
-    def _extract_sheet_text(self, data: List[List]) -> str:
-        """
-        Extract text from Excel/ODS sheet data - comprehensive extraction
-        Uses tab delimiters for clear cell separation to enable accurate display
+    def _extract_sheet_text(self, data: List[List], row_numbers: Optional[List[int]] = None) -> str:
+        """Extract text from a sheet grid, one line per row, tab-delimited.
+
+        ``row_numbers`` are the sheet's own 1-based row numbers for ``data``
+        (when the reader skipped entirely empty rows). They are used to write
+        the skipped rows back as empty lines, because the address of every
+        cell below them depends on those lines existing. A format that keeps
+        empty rows in the grid simply passes nothing.
         """
         text_parts = []
         
         if not data:
             return ""
-        
-        for row in data:
+
+        previous_number = 0
+        for position, row in enumerate(data):
             # Handle both list of cells and other formats
             if isinstance(row, (list, tuple)):
                 # Convert to strings; a cell never spans a line
@@ -2783,9 +2795,19 @@ class StoragePipeline:
                 # Single value row
                 row_text = self._cell_text(row)
             
+            number = None
+            if row_numbers and position < len(row_numbers):
+                try:
+                    number = int(row_numbers[position])
+                except (TypeError, ValueError):
+                    number = None
+            if number is not None and number > previous_number + 1:
+                text_parts.extend([''] * (number - previous_number - 1))
             # Include all rows (even empty ones) to preserve structure
             text_parts.append(row_text)
-        
+            if number is not None:
+                previous_number = number
+
         return '\n'.join(text_parts)
     
     def _extract_table_text(self, rows: List[List]) -> str:
