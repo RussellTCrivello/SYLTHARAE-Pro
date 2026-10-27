@@ -77,9 +77,24 @@ def register_categories_routes(app):
             # nothing after it.
             parent_names = _parent_names_for(categories)
 
+            # Names in the reader's language, in one query (services/i18n).
+            # With no term_names rows for these words every label comes back
+            # as ``canonical`` and the page renders exactly as before.
+            try:
+                from Api.utils import execute_query as _run
+                from services.i18n.term_labels import labels_for_categories
+                from Api.routes.i18n_terms import resolve_label_locale
+                term_labels = labels_for_categories(
+                    _run, [row['id'] for row in categories], resolve_label_locale())
+            except Exception as _exc:  # noqa: BLE001 - labels are not critical
+                logger.warning("category labels unavailable: %s: %s",
+                               type(_exc).__name__, _exc)
+                term_labels = {}
+
             return render_template('Category/categories_list.html',
                                  categories=categories,
                                  parent_names=parent_names,
+                                 term_labels=term_labels,
                                  page=page,
                                  per_page=per_page,
                                  total_pages=total_pages,
@@ -105,6 +120,32 @@ def register_categories_routes(app):
 
 
 
+
+    @app.route('/categories/<int:category_id>/names')
+    def category_names(category_id):
+        """Names of one category's word in every supported language.
+
+        Read-only page plus a modal that writes through /api/term-names; the
+        page itself exists so a curator can see coverage at a glance and import
+        a glossary CSV without a command line.
+        """
+        from services.i18n.term_names import TermNameError, list_names
+        from settings.languages import SUPPORTED_LANGUAGES
+
+        category = get_category(category_id)
+        if not category:
+            return render_template('404.html'), 404
+        try:
+            names = list_names(execute_query, category_id=category_id)
+        except TermNameError:
+            names = []
+        from Api.routes.i18n_terms import resolve_label_locale
+        return render_template(
+            'Category/category_names.html',
+            category=category,
+            names=names,
+            languages=list(SUPPORTED_LANGUAGES.items()),
+            interface_language=resolve_label_locale() or 'en')
 
     @app.route('/categories/<int:category_id>/documents')
     def category_documents(category_id):

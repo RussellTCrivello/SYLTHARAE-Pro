@@ -525,6 +525,12 @@ from Api.routes.experience_api import register_experience_routes
 register_experience_routes(app)
 logger.info("✅ Experience contract views registered")
 
+# Register term names: the label read endpoint page scripts call, and the
+# curation API (list/create/update/delete/CSV import).
+from Api.routes.i18n_terms import register_i18n_term_routes
+register_i18n_term_routes(app)
+logger.info("✅ Term-name routes registered")
+
 # Register the shared list exports (one endpoint, every list interface)
 from Api.routes.exports import register_exports_routes
 register_exports_routes(app)

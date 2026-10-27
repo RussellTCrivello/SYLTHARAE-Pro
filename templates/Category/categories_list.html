@@ -173,18 +173,36 @@
         append=True,
         pager=True) %}
     {% for category in categories %}
+    {#- The name in the reader's language. ``source`` says where it came from
+        (translated / base-language / default-language / canonical) so a name
+        that has not been translated yet is marked rather than passed off as
+        translated. -#}
+    {%- set label = (term_labels or {}).get(category.id) -%}
+    {%- set display_name = label.name if label else category.name -%}
+    {%- set name_source = label.source if label else 'canonical' -%}
     <tr class="category-item{% if category.parent_id %} subcategory{% endif %}"
         data-category-id="{{ category.id }}"
-        data-name="{{ category.name|lower }}"
+        data-name="{{ display_name|lower }}"
+        data-term-source="{{ name_source }}"
         data-parent-id="{{ category.parent_id or '' }}">
         <td class="ut-index-cell"><span class="ut-badge ut-badge-neutral">#{{ category.id }}</span></td>
-        <td data-ut-value="{{ category.name|lower }}">
+        <td data-ut-value="{{ display_name|lower }}">
             {% if category.parent_id %}
             <span class="text-muted" style="margin-right: 8px;">
                 <i class="bi bi-arrow-right-short"></i>
             </span>
             {% endif %}
-            <a class="ut-name" href="{{ url_for('category_words', category_id=category.id) }}">{{ category.name }}</a>
+            {#- A name that fell back to another language is muted and says so.
+                ``Missing`` is used because it is the one msgid the catalogs
+                already carry for this idea (Arabic: "غير مترجم"); ``Original``
+                has no Hebrew or Persian translation, so it would have rendered
+                in English on an Arabic page. -#}
+            {%- set untranslated = name_source not in ('translated', 'base-language') -%}
+            <a class="ut-name{% if untranslated %} text-muted{% endif %}"
+               href="{{ url_for('category_words', category_id=category.id) }}"
+               dir="auto"
+               {% if untranslated %}title="{{ _('Missing') }}"
+               data-term-marker="missing"{% endif %}>{{ display_name }}</a>
         </td>
         <td data-ut-value="{{ category.parent_id or '' }}">
             {% if category.parent_id %}
@@ -220,6 +238,9 @@
             <div class="btn-group btn-group-sm ut-actions">
                 <a href="{{ url_for('category_words', category_id=category.id) }}" class="btn btn-outline-primary" title="{{ _('View Words') }}">
                     <i class="bi bi-eye"></i> {{ _('View') }}
+                </a>
+                <a href="{{ url_for('category_names', category_id=category.id) }}" class="btn btn-outline-secondary" title="{{ _('Name') }}">
+                    <i class="bi bi-translate"></i>
                 </a>
                 <button type="button" class="btn btn-outline-secondary"
                         data-panel-open
