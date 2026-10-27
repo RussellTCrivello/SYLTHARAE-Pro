@@ -380,12 +380,12 @@ tests.integration.test_domain_import_rejections::test_a_missing_file_is_refused_
 tests.integration.test_domain_import_rejections::test_a_missing_file_is_refused_before_a_job_exists[/api/import/preview],pass,pass,stable
 tests.integration.test_domain_import_rejections::test_a_path_is_refused_with_a_reason_and_no_job[/api/import/jobs-..],pass,pass,stable
 tests.integration.test_domain_import_rejections::test_a_path_is_refused_with_a_reason_and_no_job[/api/import/jobs-/etc/passwd],pass,pass,stable
-tests.integration.test_domain_import_rejections::test_a_path_is_refused_with_a_reason_and_no_job[/api/import/jobs-C:\\Users\\Solo\\syltharae\\classification\\domain_data.xlsx],pass,pass,stable
+tests.integration.test_domain_import_rejections::test_a_path_is_refused_with_a_reason_and_no_job[/api/import/jobs-{windows-home}\\syltharae\\classification\\domain_data.xlsx],pass,pass,stable
 tests.integration.test_domain_import_rejections::test_a_path_is_refused_with_a_reason_and_no_job[/api/import/jobs-classification/domain_data.xlsx],pass,pass,stable
 tests.integration.test_domain_import_rejections::test_a_path_is_refused_with_a_reason_and_no_job[/api/import/jobs-classification\\domain_data.xlsx],pass,pass,stable
 tests.integration.test_domain_import_rejections::test_a_path_is_refused_with_a_reason_and_no_job[/api/import/preview-..],pass,pass,stable
 tests.integration.test_domain_import_rejections::test_a_path_is_refused_with_a_reason_and_no_job[/api/import/preview-/etc/passwd],pass,pass,stable
-tests.integration.test_domain_import_rejections::test_a_path_is_refused_with_a_reason_and_no_job[/api/import/preview-C:\\Users\\Solo\\syltharae\\classification\\domain_data.xlsx],pass,pass,stable
+tests.integration.test_domain_import_rejections::test_a_path_is_refused_with_a_reason_and_no_job[/api/import/preview-{windows-home}\\syltharae\\classification\\domain_data.xlsx],pass,pass,stable
 tests.integration.test_domain_import_rejections::test_a_path_is_refused_with_a_reason_and_no_job[/api/import/preview-classification/domain_data.xlsx],pass,pass,stable
 tests.integration.test_domain_import_rejections::test_a_path_is_refused_with_a_reason_and_no_job[/api/import/preview-classification\\domain_data.xlsx],pass,pass,stable
 tests.integration.test_domain_import_rejections::test_a_rejection_inside_the_worker_keeps_its_reason,pass,pass,stable

@@ -33,6 +33,10 @@ RULES = [
     (re.compile(r"/tmp/rv"), "{venv}"),
     (re.compile(r"/tmp/al2023"), "{chromium-libs}"),
     (re.compile(r"/tmp/[A-Za-z0-9._-]+"), "{tmp}"),
+    # A parametrised test id can carry a Windows profile path verbatim; the
+    # backslashes are doubled inside a pytest id, hence the doubled pattern.
+    (re.compile(r"C:\\\\Users\\\\[A-Za-z0-9._-]+"), "{windows-home}"),
+    (re.compile(r"C:\\Users\\[A-Za-z0-9._-]+"), "{windows-home}"),
     (re.compile(r"127\.0\.0\.1:5000"), "{base-url}"),
     (re.compile(r"localhost:5000"), "{base-url}"),
 ]

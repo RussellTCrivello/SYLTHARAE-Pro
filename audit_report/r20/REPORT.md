@@ -56,8 +56,8 @@ Two detached worktrees, one database each (the suite creates a disposable
 PostgreSQL per session, so the databases are independent by construction):
 
 ```
-git worktree add --detach /tmp/wt/base 445982b
-git worktree add --detach /tmp/wt/head 8dcbfda
+git worktree add --detach {worktree-base} 445982b
+git worktree add --detach {worktree-head} 8dcbfda
 APP_DATA_DIR=<worktree>/.test_runtime_<label> \
   python -m pytest tests/unit|tests/integration -q --junit-xml=audit_report/r20/junit_<label>_<suite>.xml
 ```
@@ -83,9 +83,9 @@ The first attempt ran the two unit suites **concurrently**. Both were killed:
 
 ```
 [07:48:52] base unit
-/tmp/run_suite.sh: line 12: 124530 Killed  ... pytest tests/unit
+{tmp}/run_suite.sh: line 12: 124530 Killed  ... pytest tests/unit
 [07:49:05] head unit
-/tmp/run_suite.sh: line 12: 124705 Killed  ... pytest tests/unit
+{tmp}/run_suite.sh: line 12: 124705 Killed  ... pytest tests/unit
 ```
 
 `dmesg` names the reason: `Out of memory: Killed process 124705 (python)
