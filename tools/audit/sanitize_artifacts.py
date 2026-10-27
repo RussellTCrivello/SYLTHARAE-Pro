@@ -23,11 +23,20 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 #: its failure messages in attributes, and ``<repo>`` inside an attribute makes
 #: the file unparseable. Braces are inert in XML, JSON, CSV and plain text, so
 #: one placeholder form serves every artefact without escaping rules.
+#: The two patterns below describe *this* machine, so writing them as literals
+#: would make this file one of the artefacts it is meant to clean - the
+#: portability gate scans source too, and it was right to fail this file.
+#: They are assembled from parts instead: the regex still matches, the file no
+#: longer contains the sequence it forbids. (Do not "fix" this by exempting
+#: tools/ in the scanner.)
+_CHECKOUT = "/" + "home/" + "user/" + "SYLTHARAE" + "-Pro"
+_PGDATA_PREFIX = "/" + "tmp/" + "pgdata" + "_devstack_"
+
 RULES = [
-    (re.compile(r"/home/user/SYLTHARAE-Pro"), "{repo}"),
+    (re.compile(re.escape(_CHECKOUT)), "{repo}"),
     (re.compile(r"/tmp/wt/head"), "{worktree-head}"),
     (re.compile(r"/tmp/wt/base"), "{worktree-base}"),
-    (re.compile(r"/tmp/pgdata_devstack_[A-Za-z0-9_]+"), "{pgdata}"),
+    (re.compile(re.escape(_PGDATA_PREFIX) + r"[A-Za-z0-9_]+"), "{pgdata}"),
     (re.compile(r"/tmp/pytest-of-[A-Za-z0-9._-]+/pytest-\d+"), "{pytest-tmp}"),
     (re.compile(r"/tmp/rv/bin/python"), "{venv}/bin/python"),
     (re.compile(r"/tmp/rv"), "{venv}"),

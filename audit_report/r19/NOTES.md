@@ -83,9 +83,11 @@ Failure groups, generated (`suite_summary.csv`, `*_failing_ids.txt`):
 * **licence metadata of optional packages** — `test_licensing` (2),
   `pymupdf-layout` / `pymupdf4llm` report no licence. Environment/dependency
   question, not code.
-* **this sandbox's checkout path** — `test_no_machine_paths` (2): the path
-  `/home/user/SYLTHARAE-Pro` appears in `audit_report/r14/*` artefacts, which
-  are records of earlier runs and are not rewritten. Environment artefact.
+* **this sandbox's checkout path** — `test_no_machine_paths` (2): the absolute
+  path of the checkout this round ran in appears in `audit_report/r14/*`
+  artefacts, which are records of earlier runs and are not rewritten.
+  Environment artefact. (The literal is not repeated here: this note is source
+  the portability gate scans, and quoting it made the note itself a finding.)
 * **reader core, open** — `test_cell_locations_and_recipients` (2):
   `Sheet1 - B3` reported where `B4` is expected, and a row the oracle expects
   to be empty is not. **DEFECT-OPEN**, pre-existing, unrelated to the files
