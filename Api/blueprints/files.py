@@ -10,6 +10,7 @@ import os
 import sys
 from pathlib import Path
 import re
+import json
 import logging
 
 project_root = str(Path(__file__).parent.parent.parent.parent)
@@ -1332,6 +1333,7 @@ def bulk_export_files():
                 used_names.add(candidate)
                 return candidate
 
+            manifest_rows = []
             for sequence, fid in enumerate(file_ids, start=1):
                 fname = names.get(fid)
                 if fname is None:
@@ -1343,7 +1345,9 @@ def bulk_export_files():
                     source_path = info.get('path') or ''
                     if info.get('available') and source_path and Path(source_path).is_file():
                         arc = _named(fid, fname, sequence=sequence)
-                        zf.write(source_path, arcname=_arc_for(arc, f'file_{fid}'))
+                        archive_name = _arc_for(arc, f'file_{fid}')
+                        zf.write(source_path, arcname=archive_name)
+                        manifest_rows.append((fid, archive_name))
                         included += 1
                     else:
                         skipped.append((fid, fname, info.get('reason') or 'original unavailable'))
@@ -1353,10 +1357,41 @@ def bulk_export_files():
                         if isinstance(text, bytes):
                             text = text.decode('utf-8', errors='replace')
                         arc = _named(fid, fname, sequence=sequence, force_extension='txt')
-                        zf.writestr(_arc_for(arc, f'file_{fid}.txt'), text)
+                        archive_name = _arc_for(arc, f'file_{fid}.txt')
+                        zf.writestr(archive_name, text)
+                        manifest_rows.append((fid, archive_name))
                         included += 1
                     else:
                         skipped.append((fid, fname, 'no extracted text'))
+
+            # The archive says what it is. A manifest is what makes it usable
+            # for analysis after the download - the reader does not have to
+            # remember which filters produced it, and a script does not have to
+            # re-query the database to get the metadata back.
+            manifest_lines = [
+                "# SYLTHARAE export manifest",
+                f"# generated\t{_datetime.now().isoformat(timespec='seconds')}",
+                f"# mode\t{mode}",
+                f"# requested\t{len(file_ids)}",
+                f"# included\t{included}",
+                f"# not_included\t{len(skipped)}",
+                f"# naming_template\t{naming_template or ''}",
+                "file_id\tfile_name\tsource\tdate\tarchive_name\tstatus\treason",
+            ]
+            for fid in file_ids:
+                meta = records_meta.get(fid) or {}
+                date_value = meta.get('file_date')
+                date_text = date_value.strftime('%Y-%m-%d') if hasattr(date_value, 'strftime') \
+                    else (str(date_value)[:10] if date_value else '')
+                included_names = [arc for (included_id, arc) in manifest_rows if included_id == fid]
+                reason = next((r for (skipped_id, _n, r) in skipped if skipped_id == fid), '')
+                manifest_lines.append('\t'.join([
+                    str(fid), str(meta.get('file_name') or ''), str(meta.get('source_name') or ''),
+                    date_text, included_names[0] if included_names else '',
+                    'included' if included_names else 'not included',
+                    str(reason).replace('\t', ' ').replace('\n', ' '),
+                ]))
+            zf.writestr('_manifest.tsv', '\n'.join(manifest_lines) + '\n')
 
             if skipped:
                 lines = [f"# Not included in this {mode} export",
@@ -1513,6 +1548,19 @@ def export_file_names():
                 output.getvalue().encode('utf-8-sig'),
                 mimetype='text/csv; charset=utf-8')
             response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+        elif extension == 'json':
+            document = {
+                'generated_at': datetime.now().isoformat(timespec='seconds'),
+                'scope': scope,
+                'row_count': len(safe_rows),
+                'columns': [{'key': key, 'label': label}
+                            for key, label in zip(column_keys, labels)],
+                'rows': safe_rows,
+            }
+            response = Response(
+                json.dumps(document, ensure_ascii=False, indent=2, default=str).encode('utf-8'),
+                mimetype='application/json; charset=utf-8')
+            response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
         else:
             try:
                 from openpyxl import Workbook
@@ -1581,9 +1629,17 @@ def export_file_details():
     try:
         payload = request.get_json(silent=True) or {}
         export_format = str(payload.get('format') or 'csv').lower()
-        extension = 'xlsx' if export_format in {'excel', 'xlsx'} else 'csv'
-        if export_format not in {'csv', 'excel', 'xlsx'}:
-            return jsonify({'success': False, 'error': 'format must be csv or excel'}), 400
+        if export_format in {'excel', 'xlsx'}:
+            extension = 'xlsx'
+        elif export_format == 'json':
+            # A script wants keys, not a header row; the same allowlisted
+            # columns, the same scope rules, one JSON document.
+            extension = 'json'
+        else:
+            extension = 'csv'
+        if export_format not in {'csv', 'excel', 'xlsx', 'json'}:
+            return jsonify({'success': False,
+                            'error': 'format must be csv, excel or json'}), 400
 
         known = {key: (label, expr) for key, label, expr in _DETAILS_EXPORT_COLUMNS}
         requested = payload.get('columns')
@@ -1690,6 +1746,19 @@ def export_file_details():
             response = Response(
                 output.getvalue().encode('utf-8-sig'),
                 mimetype='text/csv; charset=utf-8')
+            response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+        elif extension == 'json':
+            document = {
+                'generated_at': datetime.now().isoformat(timespec='seconds'),
+                'scope': scope,
+                'row_count': len(safe_rows),
+                'columns': [{'key': key, 'label': label}
+                            for key, label in zip(column_keys, labels)],
+                'rows': safe_rows,
+            }
+            response = Response(
+                json.dumps(document, ensure_ascii=False, indent=2, default=str).encode('utf-8'),
+                mimetype='application/json; charset=utf-8')
             response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
         else:
             try:

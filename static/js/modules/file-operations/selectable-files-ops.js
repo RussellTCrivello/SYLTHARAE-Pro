@@ -400,11 +400,11 @@ export async function exportFileNames({
     const extension = format === 'excel' || format === 'xlsx' ? 'xlsx' : 'csv';
     const suggested = suggestedName
         || `${scope === 'all' ? 'all_indexed' : 'selected'}_filenames_${new Date().toISOString().slice(0, 10)}`;
-    const name = await askFilename(
-        t('filenameExportPrompt', 'Name this filename export (leave blank for an automatic name):'),
-        suggested
-    );
-    if (name === null) return;
+    // No name prompt: the button is a one-click export and the filename is
+    // already descriptive (scope + date). Ctrl/⌘-click asks for a name first,
+    // for the reader who wants one. A prompt in the middle of a toolbar action
+    // was the difference between "export" and "nothing happened".
+    const name = '';
     try {
         const body = {
             scope,
@@ -450,6 +450,7 @@ function ensureDetailsDialog() {
                     <select id="fmasDetailsFormat" class="form-select">
                         <option value="csv">CSV</option>
                         <option value="excel">Excel (XLSX)</option>
+                        <option value="json">JSON (one document, keys per column)</option>
                     </select>
                 </div>
                 <div class="fmas-ops-field">
@@ -505,13 +506,13 @@ function ensureDetailsDialog() {
             ids = selectedIdsOrWarn();
             if (!ids) return;
         }
-        const extension = format === 'excel' ? 'xlsx' : 'csv';
+        const extension = format === 'excel' ? 'xlsx' : (format === 'json' ? 'json' : 'csv');
         const suggested = `${scope === 'all' ? 'all_indexed' : 'selected'}_file_details_${new Date().toISOString().slice(0, 10)}`;
         try {
             const body = {
                 scope,
                 columns,
-                format: format === 'excel' ? 'excel' : 'csv',
+                format,          // csv | excel | json, as chosen in the dialog
                 filename: filename || suggested,
             };
             if (scope === 'selected') body.file_ids = ids;
