@@ -9,13 +9,19 @@ Schedule -> JobManager mapping:
 
 * ``scenario_evaluation`` -> ``JobManager.enqueue("scenario_evaluation", ...)``
 * ``retention``           -> ``JobManager.enqueue("retention", ...)``
-* ``taxonomy_sync``       -> ``JobManager.enqueue("taxonomy_sync", ...)``
+
+A third type for the category workbook (``taxonomy_sync``) is designed but not
+scheduled: ``job_schedules.schedule_type`` carries a CHECK constraint from
+``m0001`` that allows exactly the two names above, so adding it needs an
+authorised migration. See ``audit_report/r22_workbook/REPORT.md``.
 """
 
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+import os
+import threading
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
@@ -27,14 +33,84 @@ if TYPE_CHECKING:
 log = logging.getLogger(__name__)
 
 
+def enabled_by_config() -> bool:
+    """Whether this process should run the scheduler.
+
+    Off unless ``SYLTHARAE_SCHEDULER=1``: ``run_web.py`` sets it for a served
+    deployment, while tests and import-only processes must not grow scheduler
+    threads by accident.
+    """
+    return (os.environ.get("SYLTHARAE_SCHEDULER") or "").strip().lower() in (
+        "1", "true", "yes", "on")
+
+
 class ScheduleRunner:
     """Starts/stops the scheduler and keeps it in sync with the DB."""
+
+    _instance: Optional["ScheduleRunner"] = None
+    _instance_lock = threading.Lock()
 
     def __init__(self, job_manager: JobManager, store: ScheduleStore) -> None:
         self._job_manager = job_manager
         self._store = store
         self._scheduler = BackgroundScheduler(daemon=True)
         self._job_ids: dict[int, str] = {}  # schedule_id -> apscheduler job id
+
+    @classmethod
+    def get_instance(cls) -> "ScheduleRunner":
+        """The process-wide runner, built over the real store and job manager.
+
+        ``apps/web/app.py`` and ``POST /api/schedules/<id>/run_now`` both call
+        this; there is exactly one scheduler per process (the deployment is
+        single-process by design - see docs/OPERATIONS.md).
+        """
+        with cls._instance_lock:
+            if cls._instance is None:
+                from services.jobs.manager import JobManager
+                from services.scheduling.store_adapter import ScheduleStoreAdapter
+
+                cls._instance = cls(JobManager.get_instance(),
+                                    ScheduleStoreAdapter())
+            return cls._instance
+
+    def fire_now(self, schedule: Dict[str, Any]) -> Dict[str, Any]:
+        """Run one schedule immediately, with the same authorization rules.
+
+        Used by ``POST /api/schedules/<id>/run_now``. Returns a plain dict the
+        route turns into a response: ``{"status": "queued"|"disabled"|"error"}``.
+        """
+        from services.scheduling.model import ScheduleError, owner_eligible
+
+        schedule_id = int(schedule["id"])
+        schedule_type = schedule["schedule_type"]
+        owner = self._store.get_user(schedule["owner_user_id"])
+        if not owner:
+            self._store.disable(schedule_id, "owner_missing")
+            return {"status": "disabled", "reason": "owner_missing",
+                    "message": "the schedule's owner no longer exists"}
+        try:
+            ok, reason = owner_eligible(schedule_type, owner.get("role"),
+                                        owner.get("is_active", True))
+        except ScheduleError as exc:
+            # A row naming a type the vocabulary does not know is a data error,
+            # not a reason to guess which job the operator meant.
+            return {"status": "error", "message": str(exc)}
+        if not ok:
+            self._store.disable(schedule_id, reason)
+            return {"status": "disabled", "reason": reason,
+                    "message": f"this schedule can no longer run: {reason}"}
+        try:
+            if schedule_type == "retention":
+                job = self._job_manager.enqueue(
+                    "retention", created_by=owner.get("username") or "system")
+            else:
+                job = self._job_manager.enqueue(
+                    "scenario_evaluation",
+                    created_by=owner.get("username") or "system")
+        except Exception as exc:                       # pragma: no cover - defensive
+            log.exception("Schedule %d could not be fired", schedule_id)
+            return {"status": "error", "message": f"{exc.__class__.__name__}: {exc}"}
+        return {"status": "queued", "job_id": job.get("job_id")}
 
     def start(self) -> None:
         """Load enabled schedules and start the background scheduler."""
@@ -75,12 +151,6 @@ class ScheduleRunner:
         elif s.schedule_type == "retention":
             self._scheduler.add_job(
                 self._run_retention, trigger, id=job_id,
-                args=[s.id],
-                replace_existing=True,
-            )
-        elif s.schedule_type == "taxonomy_sync":
-            self._scheduler.add_job(
-                self._run_taxonomy_sync, trigger, id=job_id,
                 args=[s.id],
                 replace_existing=True,
             )
@@ -136,29 +206,8 @@ class ScheduleRunner:
             return
         self._job_manager.enqueue("retention", schedule_id=schedule_id)
 
-    def _run_taxonomy_sync(self, schedule_id: int) -> None:
-        """Fire the workbook reconciliation (services/importing/taxonomy_*)."""
-        s = self._store.get(schedule_id)
-        if not s or s.disabled:
-            log.info("Schedule %d disabled or missing; skipping", schedule_id)
-            return
-        owner = self._store.get_user(s.owner_id)
-        if not owner:
-            self._store.disable(schedule_id, "owner_missing")
-            log.info("Schedule %d disabled: owner missing", schedule_id)
-            return
-        from services.scheduling.model import owner_eligible
-        ok, reason = owner_eligible(s.schedule_type, owner.get("role"),
-                                    owner.get("is_active", True))
-        if not ok:
-            self._store.disable(schedule_id, reason)
-            log.info("Schedule %d disabled: %s", schedule_id, reason)
-            return
-        payload = getattr(s, "payload", None) or {}
-        self._job_manager.enqueue(
-            "taxonomy_sync",
-            created_by=owner.get("username") or "system",
-            data_file=payload.get("data_file"),
-            apply=True,
-            auto_renames=True,
-        )
+# ``apps/web/app.py`` and ``Api/routes/schedules.py`` import ``Scheduler``. The
+# class has always been called ``ScheduleRunner``; the alias means one name for
+# one thing rather than an ImportError on every start (which is what the app
+# logged, and why no schedule ever fired).
+Scheduler = ScheduleRunner

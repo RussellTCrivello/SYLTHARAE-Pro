@@ -108,9 +108,11 @@ can delete a category unless the request asks for it by name
 (`prune_categories`), because a half-saved workbook and a deliberate deletion
 look identical to the reader.
 
-**On a schedule.** The `taxonomy_sync` schedule type applies the workbook every
-N minutes, as an administrator. See the caveat below: in this tree the scheduler
-is not wired, so this is the shape the feature takes once it is.
+**On a schedule.** Not available yet, and not because the scheduler is missing:
+`job_schedules.schedule_type` carries a CHECK constraint from `m0001` that admits
+only `scenario_evaluation` and `retention`. Giving the workbook its own schedule
+type therefore needs an authorised additive migration. Until then, startup and
+the interface cover the unattended case.
 
 **Continuously, on one machine.** `python3 tools/i18n/sync_taxonomy.py --watch`
 applies on every save. It is what you want while editing the file.

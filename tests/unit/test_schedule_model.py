@@ -54,13 +54,12 @@ class TestTheVocabulary:
         # type whose handler is missing, which is the property the test is
         # named for. It now checks the property directly. taxonomy_sync was
         # added (workbook reconciliation, services/importing/taxonomy_*).
-        assert set(SCHEDULE_TYPES) == {"scenario_evaluation", "retention",
-                                       "taxonomy_sync"}
+        assert set(SCHEDULE_TYPES) == {"scenario_evaluation", "retention"}
         assert set(SCHEDULE_TYPES) <= _job_types_the_manager_handles()
 
     def test_a_type_without_a_handler_would_be_caught(self):
         handled = _job_types_the_manager_handles()
-        assert "taxonomy_sync" in handled, "the new job type has no handler"
+        assert "retention" in handled
         assert "no_such_job_type" not in handled
 
     def test_evaluations_are_administrative_retention_is_administrative(self):
@@ -136,30 +135,3 @@ class TestDescription:
             "scenario_id": 42})
         assert "retention" in describe("retention", {
             "policy": "jobs"})
-
-class TestTheTaxonomySchedule:
-    """A schedule that keeps the database in step with the workbook."""
-
-    def test_its_payload_names_a_file_not_a_path(self):
-        assert validate_payload("taxonomy_sync", {}) == {}
-        assert validate_payload("taxonomy_sync", None) == {}
-        assert validate_payload("taxonomy_sync",
-                                {"data_file": "domain_data.xlsx"})["data_file"] == (
-            "domain_data.xlsx")
-        for bad in ("../domain_data.xlsx", "classification/domain_data.xlsx",
-                    "C:\\data\\domain_data.xlsx", "..", ".", 7):
-            with pytest.raises(ScheduleError):
-                validate_payload("taxonomy_sync", {"data_file": bad})
-
-    def test_it_refuses_fields_it_does_not_understand(self):
-        with pytest.raises(ScheduleError):
-            validate_payload("taxonomy_sync", {"prune_categories": True})
-
-    def test_it_needs_an_administrator(self):
-        assert required_role("taxonomy_sync") == "admin"
-        assert owner_eligible("taxonomy_sync", "admin", True) == (True, None)
-        assert owner_eligible("taxonomy_sync", "analyst", True) == (False, "owner_role")
-
-    def test_the_page_says_which_file_it_applies(self):
-        assert describe("taxonomy_sync", {"data_file": "x.xlsx"}) == "apply x.xlsx to the database"
-        assert "workbook" in describe("taxonomy_sync", {})

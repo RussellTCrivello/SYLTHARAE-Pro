@@ -86,7 +86,7 @@ def test_a_fire_without_a_creator_is_attributed_to_the_system():
 
 
 class _Schedule:
-    def __init__(self, *, schedule_type="taxonomy_sync", disabled=False,
+    def __init__(self, *, schedule_type="retention", disabled=False,
                  owner_id=1, payload=None):
         self.id = 5
         self.schedule_type = schedule_type
@@ -133,25 +133,28 @@ def _runner(store):
     return ScheduleRunner(job_manager=manager, store=store), manager
 
 
-def test_a_taxonomy_schedule_enqueues_an_applying_sync_job():
-    store = _Store(_Schedule(payload={"data_file": "domain_data.xlsx"}))
+def test_a_schedule_fires_the_job_its_type_names():
+    """retention, the type that exists: the schema allows two, not three."""
+    store = _Store(_Schedule(schedule_type="retention"))
     runner, manager = _runner(store)
-    runner._run_taxonomy_sync(5)
+    runner.fire_now({"id": 5, "schedule_type": "retention", "owner_user_id": 1})
 
     assert len(manager.enqueued) == 1
     job_type, options = manager.enqueued[0]
-    assert job_type == "taxonomy_sync"
-    assert options["apply"] is True, "a scheduled sync that only plans is a no-op"
-    assert options["data_file"] == "domain_data.xlsx"
+    assert job_type == "retention"
     assert options["created_by"] == "alice"
     assert store.disabled == []
+
+
+def _fire(runner, schedule_type="retention"):
+    return runner.fire_now({"id": 5, "schedule_type": schedule_type, "owner_user_id": 1})
 
 
 def test_a_schedule_whose_owner_lost_the_role_is_disabled_not_run():
     store = _Store(_Schedule(), owner={"username": "bob", "role": "analyst",
                                        "is_active": True})
     runner, manager = _runner(store)
-    runner._run_taxonomy_sync(5)
+    _fire(runner)
 
     assert manager.enqueued == [], "an unauthorised schedule still ran"
     assert store.disabled == [(5, "owner_role")]
@@ -161,7 +164,7 @@ def test_an_inactive_owner_disables_the_schedule():
     store = _Store(_Schedule(), owner={"username": "bob", "role": "admin",
                                        "is_active": False})
     runner, manager = _runner(store)
-    runner._run_taxonomy_sync(5)
+    _fire(runner)
     assert manager.enqueued == []
     assert store.disabled == [(5, "owner_inactive")]
 
@@ -170,13 +173,21 @@ def test_a_missing_owner_disables_the_schedule():
     store = _Store(_Schedule(), owner=None)
     store.owner = None
     runner, manager = _runner(store)
-    runner._run_taxonomy_sync(5)
+    _fire(runner)
     assert manager.enqueued == []
     assert store.disabled == [(5, "owner_missing")]
 
 
-def test_a_disabled_schedule_does_nothing():
-    store = _Store(_Schedule(), disabled=True)
+def test_an_unknown_schedule_type_is_an_error_not_a_job():
+    """A row naming a type the vocabulary does not know is never guessed at.
+
+    ``job_schedules.schedule_type`` admits two values (a CHECK constraint in
+    m0001), so a third cannot exist in the table today; this pins what happens
+    if one ever does, or if the row is read from somewhere unconstrained.
+    """
+    store = _Store(_Schedule(schedule_type="taxonomy_sync"))
     runner, manager = _runner(store)
-    runner._run_taxonomy_sync(5)
-    assert manager.enqueued == [] and store.disabled == []
+    outcome = _fire(runner, schedule_type="taxonomy_sync")
+    assert manager.enqueued == [], "a type the vocabulary lacks was fired anyway"
+    assert outcome["status"] == "error"
+    assert "schedule_type must be one of" in outcome["message"]
