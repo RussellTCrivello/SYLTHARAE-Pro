@@ -188,7 +188,7 @@ def render(facts: dict, db: dict | None, command: str) -> str:
         _table([
             ("on startup", "`run_web.py` sets `SYLTHARAE_TAXONOMY_SYNC=apply`; the app reconciles once, guarded, with a fingerprint fast path"),
             ("from the interface", "`GET /api/taxonomy/status` reports the pending counts; `POST /api/taxonomy/sync` runs the job"),
-            ("on a schedule", "schedule type `taxonomy_sync` (administrator), which needs the scheduler - see the open defect below"),
+            ("on a schedule", "not yet: the scheduler is repaired, but a `taxonomy_sync` schedule type needs an authorised migration (see below)"),
             ("while editing", "`python3 tools/i18n/sync_taxonomy.py --watch`"),
         ], ("trigger", "mechanism")),
         "",
