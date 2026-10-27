@@ -169,11 +169,17 @@ sanitizer's own literals, the fault test's `LEAKS` tuple and `r19/NOTES.md`
 prose (`9f50c38`), and the artefacts' dev-stack port and fixture paths
 (`96d7ab0` + this commit's sanitised artefacts).
 
-`test_low_resolution_recovers_via_retry` is an **environment** id: skipped on
-both sides in pair A (no engine) and passing at head once rapidocr is installed.
-It is skipped (not failed) in pair B on both sides for the same reason it always
-was — the engine is installed in the shared venv, the skip is the module's own
-`importorskip` guard on `pytesseract`; re-run directly it passes.
+`test_low_resolution_recovers_via_retry` is the textbook **environment** id, and
+it is why criterion 15 exists:
+
+| run | base | head |
+|---|---|---|
+| pair A (`357a105`, engine state changed between the two sides) | skip | **fail** |
+| pair B (`dc6a413`, rapidocr + opencv-headless present for both) | pass | pass |
+
+Matching the environment (installing the fallback engine into the one shared
+venv) turned a would-be "regression" into a pass on both sides. No OCR test is
+skipped in pair B: both junit files list the same 11 skips, none of them OCR.
 
 ---
 
