@@ -48,6 +48,14 @@ RULES = [
     (re.compile(r"C:\\Users\\[A-Za-z0-9._-]+"), "{windows-home}"),
     (re.compile(r"127\.0\.0\.1:5000"), "{base-url}"),
     (re.compile(r"localhost:5000"), "{base-url}"),
+    # Same substitution for any other port: the dev stack does not always come
+    # up on 5000, and a parametrised test id that names a loopback DSN lands in
+    # the junit XML verbatim (127.0.0.1:5433 in test_artifact_portability).
+    (re.compile(r"127\.0\.0\.1:\d+"), "{loopback}"),
+    (re.compile(r"localhost:\d+"), "{loopback}"),
+    # A home directory other than this checkout's - fixtures carry examples such
+    # as /home/alice - and those reach the artefacts through test ids.
+    (re.compile(r"/home/[A-Za-z0-9._-]+"), "{home}"),
 ]
 
 #: Placeholders written by the first version of this tool. Angle brackets break
