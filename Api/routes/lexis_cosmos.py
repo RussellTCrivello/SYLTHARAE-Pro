@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import json
 import logging
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from flask import g, jsonify, render_template, request, url_for
@@ -196,15 +197,42 @@ def _scope(data: Dict[str, Any]) -> Dict[str, Any]:
                                     basket=basket)
 
 
-def _target_ids(data: Dict[str, Any]) -> List[int]:
-    """The files an action applies to: the selection, or the current view."""
+def _export_rows(data: Dict[str, Any], builder):
+    """Run one export builder over the target ids, tolerating an empty scope.
+
+    ``LexisCosmosService._target_ids`` (the service's own guard) raises on an
+    empty list because a *file action* with no files is a caller mistake. A data
+    export is different: "everything in this view" on an installation whose
+    taxonomy is still empty is a legitimate request, and its correct answer is a
+    file with a header row. So the empty case is answered here, before the
+    builder is reached, and the builder never has to know.
+    """
+    ids = _target_ids(data, required=False)
+    if not ids:
+        return []
+    return builder(ids)
+
+
+def _target_ids(data: Dict[str, Any], *, required: bool = True) -> List[int]:
+    """The files an action applies to: the selection, or the current view.
+
+    ``required=False`` is for the data exports (CSV/JSON), where an empty scope
+    is a legitimate answer - a taxonomy with no terms yet still has to produce a
+    file with a header row rather than an error. The ZIP of original files keeps
+    ``required=True``, because a ZIP with nothing in it is not an export.
+    """
     explicit = data.get("path_ids") or data.get("selected_path_ids")
     if explicit:
         return list(explicit)
     # No selection: fall back to the filtered view, paged to the export ceiling.
     scope = _scope(data)
     result = _service().search(scope, data, size=MAX_PAGE_SIZE, page=1)
-    return [row["id"] for row in result["files"]]
+    ids = [row["id"] for row in result["files"]]
+    if required and not ids:
+        raise LexisError(
+            "the current view has no files to export; select files or widen the"
+            " filters (a taxonomy with no terms yet scopes to no files)")
+    return ids
 
 
 
@@ -240,6 +268,7 @@ def _page_payload(actor: Dict[str, Any]) -> Dict[str, Any]:
             "exportReview": url_for("lexis_export_review"),
             "exportText": url_for("lexis_export_text"),
             "exportOriginals": url_for("lexis_export_originals"),
+            "exportOriginalsZip": url_for("lexis_export_originals_zip"),
             "exportStructured": url_for("lexis_export_structured"),
             "exportColumns": url_for("lexis_export_columns"),
             "rename": url_for("lexis_files_rename", path_id=0),
@@ -493,8 +522,13 @@ def register_lexis_cosmos_routes(app):
         """Q6.1 - Action 2 (xCats): categories, terms and keywords per file."""
         data = _payload()
         try:
-            rows = _service().review_rows(_scope(data), data,
-                                          data.get("selected_path_ids"))
+            selected = data.get("selected_path_ids") or data.get("path_ids")
+            if not selected:
+                # Same rule as the other exports: no selection means the view,
+                # and the view is resolved through the normal target path so an
+                # empty scope answers with an empty row set, not a 400.
+                selected = _target_ids(data, required=False) or None
+            rows = _service().review_rows(_scope(data), data, selected)
             return _ok({"rows": rows, "row_count": len(rows)})
         except Exception as exc:
             logger.error("LEXIS review export failed", exc_info=True)
@@ -506,7 +540,7 @@ def register_lexis_cosmos_routes(app):
         """Q6.2 - Actions 3 & 5: extracted text bundle."""
         data = _payload()
         try:
-            rows = _service().extracted_text(_target_ids(data))
+            rows = _export_rows(data, _service().extracted_text)
             return _ok({"rows": rows, "row_count": len(rows)})
         except Exception as exc:
             logger.error("LEXIS text export failed", exc_info=True)
@@ -518,11 +552,88 @@ def register_lexis_cosmos_routes(app):
         """Q6.3 - Actions 4, 6, 9, 10: original paths and metadata."""
         data = _payload()
         try:
-            rows = _service().original_paths(_target_ids(data))
+            rows = _export_rows(data, _service().original_paths)
             return _ok({"rows": rows, "row_count": len(rows)})
         except Exception as exc:
             logger.error("LEXIS originals export failed", exc_info=True)
             return _error(exc, "Could not read the original paths.")
+
+    @app.route("/api/lexis/export/originals.zip", methods=["POST", "GET"])
+    @limiter.limit(INTERACTIVE_READ_LIMIT)
+    def lexis_export_originals_zip():
+        """The original files themselves, as one ZIP, for the current scope.
+
+        The other "originals" export answers *where* the files are; this one
+        answers *give me the files*. Same target rule as every other action
+        (selection, else the filtered view), the same 5,000-file ceiling, and a
+        ``_not_included.txt`` naming every file whose bytes are gone - a ZIP
+        that silently drops half a selection is worse than one that says so.
+        """
+        import io
+        import zipfile
+        from pathlib import Path
+
+        from flask import send_file
+
+        from Api.services.original_file import OriginalFileService
+
+        data = _payload()
+        try:
+            ids = _target_ids(data)
+        except LexisError as exc:
+            return jsonify({"success": False, "error": str(exc)}), 400
+
+        names = {row["file_id"]: row.get("name") or ""
+                 for row in _service().original_paths(ids)}
+        buffer = io.BytesIO()
+        included = 0
+        skipped = []
+        used = set()
+        with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+            for path_id in ids:
+                info = OriginalFileService.describe(path_id, include_path=True)
+                source = info.get("path") or ""
+                name = info.get("name") or names.get(path_id) or f"file-{path_id}"
+                arcname = Path(name).name or f"file-{path_id}"
+                stem, dot, suffix = arcname.rpartition(".")
+                if not dot:
+                    stem, suffix = arcname, ""
+                candidate, counter = arcname, 2
+                while candidate in used:
+                    candidate = (f"{stem}_{counter}.{suffix}" if suffix
+                                 else f"{arcname}_{counter}")
+                    counter += 1
+                if not info.get("available") or not source or not Path(source).is_file():
+                    skipped.append((path_id, name,
+                                    info.get("message") or info.get("reason") or "unavailable"))
+                    continue
+                used.add(candidate)
+                archive.write(source, arcname=candidate)
+                included += 1
+
+            manifest = ["# LEXIS original files",
+                        f"# generated {datetime.now(timezone.utc).isoformat(timespec='seconds')}",
+                        f"# requested {len(ids)} · included {included} · not included {len(skipped)}",
+                        "# file_id\tname\treason"]
+            manifest += [f"{path_id}\t{name}\t{reason}" for path_id, name, reason in skipped]
+            archive.writestr("_manifest.txt", "\n".join(manifest) + "\n")
+
+        if included == 0:
+            return jsonify({
+                "success": False,
+                "error": "None of the files in this scope still have their original bytes on disk.",
+                "skipped": [{"file_id": i, "name": n, "reason": r} for i, n, r in skipped],
+            }), 422
+
+        buffer.seek(0)
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        response = send_file(buffer, mimetype="application/zip", as_attachment=True,
+                             download_name=f"lexis-originals_{stamp}.zip")
+        response.headers["X-Export-Included"] = str(included)
+        response.headers["X-Export-Skipped"] = str(len(skipped))
+        _log_activity("lexis.export.originals", "scope:%s" % (data.get("focus") or "root"),
+                      "ZIP with %s file(s)" % included)
+        return response
 
     @app.route("/api/lexis/export/structured", methods=["POST", "GET"])
     @limiter.limit(INTERACTIVE_READ_LIMIT)
@@ -530,7 +641,8 @@ def register_lexis_cosmos_routes(app):
         """Q6.4 - Action 7 (xStruct): structured export rows."""
         data = _payload()
         try:
-            rows = _service().structured_rows(_target_ids(data), _scope(data), data)
+            rows = _export_rows(
+                data, lambda ids: _service().structured_rows(ids, _scope(data), data))
             return _ok({"rows": rows, "row_count": len(rows)})
         except Exception as exc:
             logger.error("LEXIS structured export failed", exc_info=True)
@@ -542,7 +654,8 @@ def register_lexis_cosmos_routes(app):
         """Q6.6 - Action 11 and the standard exporter."""
         data = _payload()
         try:
-            rows = _service().column_rows(_target_ids(data), _scope(data), data)
+            rows = _export_rows(
+                data, lambda ids: _service().column_rows(ids, _scope(data), data))
             return _ok({"rows": rows, "row_count": len(rows)})
         except Exception as exc:
             logger.error("LEXIS columns export failed", exc_info=True)
