@@ -46,6 +46,8 @@ from services.i18n.term_names import (
 logger = logging.getLogger(__name__)
 
 MAX_IDS = 500
+#: Subsystem label for 5xx logs, so a correlation id names its origin.
+_SUBSYSTEM = "Api.routes.i18n_terms"
 
 
 def _run(sql, params=None, fetch="all"):
@@ -92,18 +94,6 @@ def _error(code: str, message: str, status: int, **details):
     return jsonify(payload), status
 
 
-def _server_error(exc, code: str, message: str, status: int = 500):
-    """A 5xx body: fixed message, stable ``code``, and an ``ERR-`` reference."""
-    response, status = client_error(exc, status=status,
-                                    subsystem="Api.routes.i18n_terms",
-                                    public_message=message, success_key="success")
-    body = response.get_json(silent=True) or {}
-    body["code"] = code
-    response.set_data(jsonify(body).get_data())
-    response.content_type = "application/json"
-    return response, status
-
-
 def register_i18n_term_routes(app) -> None:
     """Register the label read endpoint and the curation API."""
 
@@ -139,8 +129,9 @@ def register_i18n_term_routes(app) -> None:
             return jsonify(payload)
         except Exception as exc:  # noqa: BLE001 - never leak the reason
             logger.error("term labels failed: %s: %s", type(exc).__name__, exc)
-            return _server_error(exc, "TERM_LABELS_UNAVAILABLE",
-                                 "term labels are unavailable right now", 503)
+            return client_error(exc, status=503, subsystem=_SUBSYSTEM,
+                                  public_message="term labels are unavailable right now",
+                                  success_key="success", code="TERM_LABELS_UNAVAILABLE")
 
     @app.route("/api/term-names", methods=["GET"])
     def api_term_names_list():
@@ -157,8 +148,9 @@ def register_i18n_term_routes(app) -> None:
             return _error(exc.code, exc.message, exc.status, **exc.details)
         except Exception as exc:  # noqa: BLE001
             logger.error("term names read failed: %s: %s", type(exc).__name__, exc)
-            return _server_error(exc, "TERM_NAMES_UNAVAILABLE",
-                                 "term names are unavailable", 503)
+            return client_error(exc, status=503, subsystem=_SUBSYSTEM,
+                                  public_message="term names are unavailable",
+                                  success_key="success", code="TERM_NAMES_UNAVAILABLE")
 
     @app.route("/api/term-names", methods=["POST"])
     def api_term_names_create():
@@ -170,8 +162,9 @@ def register_i18n_term_routes(app) -> None:
             return _error(exc.code, exc.message, exc.status, **exc.details)
         except Exception as exc:  # noqa: BLE001
             logger.error("term name create failed: %s: %s", type(exc).__name__, exc)
-            return _server_error(exc, "TERM_NAME_WRITE_FAILED",
-                                 "the name was not saved")
+            return client_error(exc, subsystem=_SUBSYSTEM,
+                                  public_message="the name was not saved",
+                                  success_key="success", code="TERM_NAME_WRITE_FAILED")
 
     @app.route("/api/term-names/<int:name_id>", methods=["PUT"])
     def api_term_names_update(name_id: int):
@@ -183,8 +176,9 @@ def register_i18n_term_routes(app) -> None:
             return _error(exc.code, exc.message, exc.status, **exc.details)
         except Exception as exc:  # noqa: BLE001
             logger.error("term name update failed: %s: %s", type(exc).__name__, exc)
-            return _server_error(exc, "TERM_NAME_WRITE_FAILED",
-                                 "the name was not saved")
+            return client_error(exc, subsystem=_SUBSYSTEM,
+                                  public_message="the name was not saved",
+                                  success_key="success", code="TERM_NAME_WRITE_FAILED")
 
     @app.route("/api/term-names/<int:name_id>", methods=["DELETE"])
     def api_term_names_delete(name_id: int):
@@ -195,8 +189,9 @@ def register_i18n_term_routes(app) -> None:
             return _error(exc.code, exc.message, exc.status, **exc.details)
         except Exception as exc:  # noqa: BLE001
             logger.error("term name delete failed: %s: %s", type(exc).__name__, exc)
-            return _server_error(exc, "TERM_NAME_WRITE_FAILED",
-                                 "the name was not removed")
+            return client_error(exc, subsystem=_SUBSYSTEM,
+                                  public_message="the name was not removed",
+                                  success_key="success", code="TERM_NAME_WRITE_FAILED")
 
     @app.route("/api/term-names/import", methods=["POST"])
     def api_term_names_import():
@@ -218,12 +213,14 @@ def register_i18n_term_routes(app) -> None:
         except TermNameError as exc:
             return _error(exc.code, exc.message, exc.status, **exc.details)
         except ImportUnavailable as exc:
-            return _server_error(exc, "TERM_NAME_IMPORT_FAILED",
-                                 "the import did not run")
+            return client_error(exc, subsystem=_SUBSYSTEM,
+                                  public_message="the import did not run",
+                                  success_key="success", code="TERM_NAME_IMPORT_FAILED")
         except Exception as exc:  # noqa: BLE001
             logger.error("term name import failed: %s: %s", type(exc).__name__, exc)
-            return _server_error(exc, "TERM_NAME_IMPORT_FAILED",
-                                 "the import did not run")
+            return client_error(exc, subsystem=_SUBSYSTEM,
+                                  public_message="the import did not run",
+                                  success_key="success", code="TERM_NAME_IMPORT_FAILED")
 
 
 def _actor() -> Dict[str, Any]:
