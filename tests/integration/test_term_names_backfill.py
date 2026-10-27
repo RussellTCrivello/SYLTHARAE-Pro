@@ -149,6 +149,42 @@ class TestTheReconciliation:
         assert report["ok"] is False, "the reconciliation must not bless a moved table"
 
 
+class TestTheCoverageNumber:
+    """The reconciliation is only a gate if the number it prints can be wrong.
+
+    ``with_a_name`` was ``count(*)`` over every word, so it read "all named" on
+    a table with no name rows at all and ``--rollback`` could not be told from
+    ``--apply`` by reading the report. These two tests pin the difference.
+    """
+
+    def test_a_rolled_back_database_reports_the_backlog(self, backfill_db):
+        from tools.i18n.backfill_term_names import backfill, rollback, reconcile
+
+        conn, _words, _suffix = backfill_db
+        backfill(conn, dry_run=False)
+        assert reconcile(conn)["coverage"]["without_a_name"] == 0
+        rollback(conn, dry_run=False)
+        coverage = reconcile(conn)["coverage"]
+        # Whatever the fixture curated survives the rollback; every other word
+        # is the backlog. Count the survivors rather than assume how many the
+        # module's other tests left behind.
+        with conn.cursor() as cur:
+            cur.execute("SELECT count(*) FROM term_names WHERE source <> 'backfill'")
+            curated = cur.fetchone()[0]
+        assert coverage["with_a_name"] == curated, coverage
+        assert coverage["without_a_name"] == coverage["words"] - curated, coverage
+        assert coverage["without_a_name"] > 0
+        assert reconcile(conn)["ok"] is False
+
+    def test_a_partially_named_database_is_not_ok(self, backfill_db):
+        from tools.i18n.backfill_term_names import backfill, reconcile
+
+        conn, _words, _suffix = backfill_db
+        report = backfill(conn, dry_run=False, limit=1)
+        assert report["inserted"] == 1
+        assert reconcile(conn)["ok"] is False
+
+
 class TestTheRollback:
     def test_it_removes_only_what_the_tool_created(self, backfill_db):
         from tools.i18n.backfill_term_names import backfill, rollback

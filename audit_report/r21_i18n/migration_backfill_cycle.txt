@@ -1,0 +1,254 @@
+=== python -m tools.i18n.backfill_term_names --reconcile  (db=taxonomy_scratch @ /tmp/pgdata_taxonomy_t0oxy2yp)
+{
+  "language": "en",
+  "counts": {
+    "words": 10566,
+    "categorys": 56,
+    "keywords": 0,
+    "term_names": 10566
+  },
+  "coverage": {
+    "words": 10566,
+    "with_a_name": 10566,
+    "without_a_name": 0,
+    "with_more_than_one": 0
+  },
+  "ok": true
+}
+rc=0
+
+=== python -m tools.i18n.backfill_term_names --rollback  (db=taxonomy_scratch @ /tmp/pgdata_taxonomy_t0oxy2yp)
+{
+  "dry_run": false,
+  "source": "backfill",
+  "would_delete": 10566,
+  "deleted": 10566,
+  "after": {
+    "words": 10566,
+    "categorys": 56,
+    "keywords": 0,
+    "term_names": 0
+  },
+  "coverage": {
+    "words": 10566,
+    "with_a_name": 0,
+    "without_a_name": 10566,
+    "with_more_than_one": 0
+  },
+  "before": {
+    "words": 10566,
+    "categorys": 56,
+    "keywords": 0,
+    "term_names": 10566
+  }
+}
+rc=0
+
+=== python -m tools.i18n.backfill_term_names --dry-run  (db=taxonomy_scratch @ /tmp/pgdata_taxonomy_t0oxy2yp)
+{
+  "language": "en",
+  "dry_run": true,
+  "pending": 10566,
+  "would_insert": 10566,
+  "skipped": [],
+  "sample": [
+    {
+      "word_id": 1,
+      "word": "Computer networks",
+      "name": "Computer networks",
+      "match_key": "computer networks",
+      "language": "en",
+      "script": "Latn"
+    },
+    {
+      "word_id": 2,
+      "word": "Networking",
+      "name": "Networking",
+      "match_key": "networking",
+      "language": "en",
+      "script": "Latn"
+    },
+    {
+      "word_id": 3,
+      "word": "Network architecture",
+      "name": "Network architecture",
+      "match_key": "network architecture",
+      "language": "en",
+      "script": "Latn"
+    },
+    {
+      "word_id": 4,
+      "word": "Network topology",
+      "name": "Network topology",
+      "match_key": "network topology",
+      "language": "en",
+      "script": "Latn"
+    },
+    {
+      "word_id": 5,
+      "word": "Nodes",
+      "name": "Nodes",
+      "match_key": "nodes",
+      "language": "en",
+      "script": "Latn"
+    }
+  ],
+  "before": {
+    "words": 10566,
+    "categorys": 56,
+    "keywords": 0,
+    "term_names": 0
+  },
+  "inserted": 0
+}
+rc=0
+
+=== python -m tools.i18n.backfill_term_names --dry-run  (db=taxonomy_scratch @ /tmp/pgdata_taxonomy_t0oxy2yp)
+{
+  "language": "en",
+  "dry_run": true,
+  "pending": 10566,
+  "would_insert": 10566,
+  "skipped": [],
+  "sample": [
+    {
+      "word_id": 1,
+      "word": "Computer networks",
+      "name": "Computer networks",
+      "match_key": "computer networks",
+      "language": "en",
+      "script": "Latn"
+    },
+    {
+      "word_id": 2,
+      "word": "Networking",
+      "name": "Networking",
+      "match_key": "networking",
+      "language": "en",
+      "script": "Latn"
+    },
+    {
+      "word_id": 3,
+      "word": "Network architecture",
+      "name": "Network architecture",
+      "match_key": "network architecture",
+      "language": "en",
+      "script": "Latn"
+    },
+    {
+      "word_id": 4,
+      "word": "Network topology",
+      "name": "Network topology",
+      "match_key": "network topology",
+      "language": "en",
+      "script": "Latn"
+    },
+    {
+      "word_id": 5,
+      "word": "Nodes",
+      "name": "Nodes",
+      "match_key": "nodes",
+      "language": "en",
+      "script": "Latn"
+    }
+  ],
+  "before": {
+    "words": 10566,
+    "categorys": 56,
+    "keywords": 0,
+    "term_names": 0
+  },
+  "inserted": 0
+}
+rc=0
+
+=== python -m tools.i18n.backfill_term_names --apply  (db=taxonomy_scratch @ /tmp/pgdata_taxonomy_t0oxy2yp)
+{
+  "language": "en",
+  "dry_run": false,
+  "pending": 10566,
+  "would_insert": 0,
+  "skipped": [],
+  "sample": [
+    {
+      "word_id": 1,
+      "word": "Computer networks",
+      "name": "Computer networks",
+      "match_key": "computer networks",
+      "language": "en",
+      "script": "Latn"
+    },
+    {
+      "word_id": 2,
+      "word": "Networking",
+      "name": "Networking",
+      "match_key": "networking",
+      "language": "en",
+      "script": "Latn"
+    },
+    {
+      "word_id": 3,
+      "word": "Network architecture",
+      "name": "Network architecture",
+      "match_key": "network architecture",
+      "language": "en",
+      "script": "Latn"
+    },
+    {
+      "word_id": 4,
+      "word": "Network topology",
+      "name": "Network topology",
+      "match_key": "network topology",
+      "language": "en",
+      "script": "Latn"
+    },
+    {
+      "word_id": 5,
+      "word": "Nodes",
+      "name": "Nodes",
+      "match_key": "nodes",
+      "language": "en",
+      "script": "Latn"
+    }
+  ],
+  "before": {
+    "words": 10566,
+    "categorys": 56,
+    "keywords": 0,
+    "term_names": 0
+  },
+  "inserted": 10566,
+  "after": {
+    "words": 10566,
+    "categorys": 56,
+    "keywords": 0,
+    "term_names": 10566
+  },
+  "coverage": {
+    "words": 10566,
+    "with_a_name": 10566,
+    "without_a_name": 0,
+    "with_more_than_one": 0
+  }
+}
+rc=0
+
+=== python -m tools.i18n.backfill_term_names --reconcile  (db=taxonomy_scratch @ /tmp/pgdata_taxonomy_t0oxy2yp)
+{
+  "language": "en",
+  "counts": {
+    "words": 10566,
+    "categorys": 56,
+    "keywords": 0,
+    "term_names": 10566
+  },
+  "coverage": {
+    "words": 10566,
+    "with_a_name": 10566,
+    "without_a_name": 0,
+    "with_more_than_one": 0
+  },
+  "ok": true
+}
+rc=0
+

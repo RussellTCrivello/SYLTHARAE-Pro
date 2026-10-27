@@ -59,17 +59,27 @@ def _counts(cur) -> Dict[str, int]:
 
 
 def _preferred_coverage(cur, language: str) -> Dict[str, int]:
-    """How many words have a preferred name, and how many have more than one."""
+    """How many words have a preferred name, how many have none, and how many
+    have more than one.
+
+    The first version counted ``count(*)`` - every word - as "has a name", so
+    the field read 10 566 on a table with zero name rows and the reconciliation
+    gate passed on a database the rollback had just emptied. The count that
+    matters is the filtered one: a word with *no* preferred row in this
+    language is the backlog, whatever the display layer falls back to.
+    """
     cur.execute(
-        "SELECT count(*), count(*) FILTER (WHERE n > 1) FROM ("
-        "  SELECT w.id, (SELECT count(*) FROM term_names t"
-        "                WHERE t.word_id = w.id AND t.language = %s"
-        "                  AND t.name_type = 'preferred') AS n"
-        "    FROM words w) s", (language,))
-    with_any, with_many = cur.fetchone()
-    cur.execute("SELECT count(*) FROM words")
-    total = cur.fetchone()[0]
-    return {"words": total, "with_a_name": with_any, "with_more_than_one": with_many}
+        "SELECT count(*),"
+        "       count(*) FILTER (WHERE n > 0),"
+        "       count(*) FILTER (WHERE n > 1)"
+        "  FROM (SELECT w.id, (SELECT count(*) FROM term_names t"
+        "                     WHERE t.word_id = w.id AND t.language = %s"
+        "                       AND t.name_type = 'preferred') AS n"
+        "          FROM words w) s", (language,))
+    total, with_any, with_many = cur.fetchone()
+    return {"words": total, "with_a_name": with_any,
+            "without_a_name": total - with_any,
+            "with_more_than_one": with_many}
 
 
 def _pending(cur, language: str) -> List[Dict[str, Any]]:
@@ -175,12 +185,12 @@ def reconcile(conn, *, language: str = DEFAULT_LANGUAGE,
         report["ok"] = (
             all(b == a for b, a in untouched.values())
             and coverage["with_more_than_one"] == 0
-            and coverage["with_a_name"] == coverage["words"]
+            and coverage["without_a_name"] == 0
         )
         report["delta_term_names"] = now.get("term_names", 0) - before.get("term_names", 0)
     else:
         report["ok"] = (coverage["with_more_than_one"] == 0
-                        and coverage["with_a_name"] == coverage["words"])
+                        and coverage["without_a_name"] == 0)
     return report
 
 
