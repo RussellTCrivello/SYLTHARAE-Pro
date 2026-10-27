@@ -18,18 +18,33 @@ import re
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 
 #: Longest patterns first: ``/tmp/wt/head`` must win over a bare ``/tmp``.
+#:
+#: Placeholders are brace-delimited, not angle-bracketed: an XML artefact keeps
+#: its failure messages in attributes, and ``<repo>`` inside an attribute makes
+#: the file unparseable. Braces are inert in XML, JSON, CSV and plain text, so
+#: one placeholder form serves every artefact without escaping rules.
 RULES = [
-    (re.compile(r"/home/user/SYLTHARAE-Pro"), "<repo>"),
-    (re.compile(r"/tmp/wt/head"), "<worktree-head>"),
-    (re.compile(r"/tmp/wt/base"), "<worktree-base>"),
-    (re.compile(r"/tmp/pgdata_devstack_[A-Za-z0-9_]+"), "<pgdata>"),
-    (re.compile(r"/tmp/pytest-of-[A-Za-z0-9._-]+/pytest-\d+"), "<pytest-tmp>"),
-    (re.compile(r"/tmp/rv/bin/python"), "<venv>/bin/python"),
-    (re.compile(r"/tmp/rv"), "<venv>"),
-    (re.compile(r"/tmp/al2023"), "<chromium-libs>"),
-    (re.compile(r"/tmp/[A-Za-z0-9._-]+"), "<tmp>"),
-    (re.compile(r"127\.0\.0\.1:5000"), "<base-url>"),
-    (re.compile(r"localhost:5000"), "<base-url>"),
+    (re.compile(r"/home/user/SYLTHARAE-Pro"), "{repo}"),
+    (re.compile(r"/tmp/wt/head"), "{worktree-head}"),
+    (re.compile(r"/tmp/wt/base"), "{worktree-base}"),
+    (re.compile(r"/tmp/pgdata_devstack_[A-Za-z0-9_]+"), "{pgdata}"),
+    (re.compile(r"/tmp/pytest-of-[A-Za-z0-9._-]+/pytest-\d+"), "{pytest-tmp}"),
+    (re.compile(r"/tmp/rv/bin/python"), "{venv}/bin/python"),
+    (re.compile(r"/tmp/rv"), "{venv}"),
+    (re.compile(r"/tmp/al2023"), "{chromium-libs}"),
+    (re.compile(r"/tmp/[A-Za-z0-9._-]+"), "{tmp}"),
+    (re.compile(r"127\.0\.0\.1:5000"), "{base-url}"),
+    (re.compile(r"localhost:5000"), "{base-url}"),
+]
+
+#: Placeholders written by the first version of this tool. Angle brackets break
+#: XML parsing, so any artefact that already contains them is repaired on the
+#: next run rather than left unparseable.
+LEGACY = [
+    ("<worktree-head>", "{worktree-head}"), ("<worktree-base>", "{worktree-base}"),
+    ("<pytest-tmp>", "{pytest-tmp}"), ("<chromium-libs>", "{chromium-libs}"),
+    ("<pgdata>", "{pgdata}"), ("<venv>", "{venv}"), ("<base-url>", "{base-url}"),
+    ("<repo>", "{repo}"), ("<tmp>", "{tmp}"),
 ]
 
 SUFFIXES = {".xml", ".txt", ".log", ".json", ".csv", ".md"}
@@ -39,6 +54,10 @@ def sanitize_text(text: str) -> tuple[str, dict[str, int]]:
     counts: dict[str, int] = {}
     for pattern, replacement in RULES:
         text, number = pattern.subn(replacement, text)
+        if number:
+            counts[replacement] = counts.get(replacement, 0) + number
+    for legacy, replacement in LEGACY:
+        text, number = text.replace(legacy, replacement), text.count(legacy)
         if number:
             counts[replacement] = counts.get(replacement, 0) + number
     return text, counts
