@@ -1,0 +1,26 @@
+{
+  "requests": [
+    [
+      "GET",
+      "http://127.0.0.1:5000/api/places?page=1&per_page=25&sort=label&order=asc&status=all&source=all"
+    ],
+    [
+      "POST",
+      "http://127.0.0.1:5000/api/places"
+    ]
+  ],
+  "responses": [
+    {
+      "status": 503,
+      "body": "{\"error\":{\"code\":\"GAZETTEER_UNAVAILABLE\",\"message\":\"the gazetteer has no category for feature_type 'city'; load the gazetteer seed before adding places\",\"request_id\":\"cbc0c585985b\"},\"success\":false}\n"
+    }
+  ],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 503 (SERVICE UNAVAILABLE)"
+  ],
+  "pageErrors": [],
+  "modal": {
+    "visible": true,
+    "error": "the gazetteer has no category for feature_type 'city'; load the gazetteer seed before adding places"
+  }
+}
