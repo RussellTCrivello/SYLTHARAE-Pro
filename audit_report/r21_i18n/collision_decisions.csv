@@ -1,0 +1,11 @@
+key,decision,note
+storage area network,accept,"The workbook lists both spellings of one term; folding them is the point of a case-insensitive key. A search for either spelling returns both rows, and the display keeps each row's own spelling."
+quality of service,accept,"Two case variants of one term in the source workbook. Folding is intended; nothing unrelated is merged."
+soc,accept,"SOC (security operations centre) and SoC (system on chip) are different expansions that the source workbook stores as the same three letters. Accepted because the source already treats them as one term; the decision is recorded so a future taxonomy edit can split them deliberately rather than by accident. Note for the operator: this is the one collision where folding merges two meanings."
+ajax,accept,"Case-only duplicate (Ajax the technique vs AJAX the acronym): the same concept in this taxonomy."
+internet of things,accept,"Case-only duplicate of one term."
+pow,accept,"PoW (proof of work) and POW (prisoner of war) share a key. Accepted for the same reason as soc: the workbook carries one concept and the second reading does not occur in this corpus; flagged in the report so a reviewer can split it if the corpus changes."
+bot,accept,"Case-only duplicate of one term in the source workbook."
+gan,accept,"GAN (generative adversarial network) and GaN (gallium nitride) share a key. Accepted as written in the workbook; recorded so the ambiguity is visible rather than silent."
+sip,accept,"SIP and SiP are case variants in this taxonomy; the workbook carries one concept per row set."
+software development,accept,"Case-only duplicate of one domain name."
