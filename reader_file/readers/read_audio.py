@@ -164,9 +164,15 @@ class AudioFileReader(BaseReader):
                 result["composer"] = self._get_tag(audio, ['TCOM', 'composer', '©wrt', 'COMPOSER'])
                 result["comment"] = self._get_tag(audio, ['COMM', 'comment', '©cmt', 'COMMENT'])
             
+            result["extraction_scope"] = "container_metadata"
+            result["speech_extracted"] = False
+            result["extraction_note"] = NO_SPEECH_NOTE
             return result
-            
+
         except ImportError as e:
+            if self._container_metadata_fallback(
+                    filepath, result, reason="mutagen not installed"):
+                return result
             error_msg = "mutagen not installed. Install with: pip install mutagen"
             handle_error(
                 e,
@@ -177,6 +183,16 @@ class AudioFileReader(BaseReader):
             result["error"] = error_msg
             return result
         except Exception as e:
+            # mutagen refuses truncated and DRM-protected containers - five
+            # corpus files returned "sync not found", "truncated data" or an
+            # empty message - and each of those reads ended as an error with
+            # nothing stored, though ffmpeg still reports the duration, the
+            # codec and the tags. The container is probed before the read is
+            # called a failure, and the tag reader's complaint is kept.
+            if self._container_metadata_fallback(
+                    filepath, result, reason=f"tag reader failed: {str(e)[:160]}"):
+                result["decoder_error"] = str(e)[:500]
+                return result
             error_msg = f"Error reading audio file: {str(e)}"
             handle_error(
                 e,
@@ -186,6 +202,32 @@ class AudioFileReader(BaseReader):
             )
             result["error"] = error_msg
             return result
+
+    def _container_metadata_fallback(self, filepath: str, result: Dict[str, Any],
+                                     reason: str) -> bool:
+        """Fill ``result`` from ffmpeg's view of the container; False if it cannot.
+
+        The video reader owns the probe and the wording of "no speech was
+        extracted"; importing it here keeps one implementation of both.
+        """
+        from .read_video import NO_SPEECH_NOTE, probe_container_metadata
+
+        probed = probe_container_metadata(filepath)
+        if not probed:
+            return False
+        result.update(probed)
+        if result.get("duration_seconds"):
+            result["duration_formatted"] = self._format_duration(
+                result["duration_seconds"])
+        result["metadata_only"] = True
+        result["extraction_scope"] = "container_metadata"
+        result["speech_extracted"] = False
+        result["extraction_note"] = (
+            f"Container metadata recovered with ffmpeg ({reason}); the tag reader "
+            "did not accept this file. " + NO_SPEECH_NOTE
+        )
+        result["missing_dependency"] = f"{reason}: tag-level extraction unavailable"
+        return True
     
     def _get_tag(self, audio, possible_keys):
         """Get tag value from audio file, trying multiple possible keys"""

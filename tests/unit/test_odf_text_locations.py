@@ -82,8 +82,14 @@ class TestOdtContentXmlFallback:
             {"path": str(_odt_zip(tmp_path, body)), "extension": ".odt"}))
         heading = content["paragraphs"][0]["text"]
         assert heading.startswith("Report Title")
-        assert "Bart 2009-10-05T19:10:26" in heading
         assert "TitleBart" not in heading
+        # Round 18 moved the annotation out of the heading and onto its own
+        # labelled line: a comment is metadata about the paragraph, and leaving
+        # it inline is what welded "Rolf" to "2017-01-31T00:00:00" in
+        # testODTStyles3.odt. The attribution is still stored, whole.
+        comment = next(p["text"] for p in content["paragraphs"]
+                       if p.get("kind") == "comment")
+        assert "[comment: Bart on 2009-10-05T19:10:26] a note" in comment
 
     def test_a_paragraph_is_emitted_once_even_with_styled_spans(self, tmp_path):
         body = ("<text:p><text:span>first</text:span> <text:span>second</text:span>"

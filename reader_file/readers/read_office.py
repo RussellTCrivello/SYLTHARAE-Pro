@@ -625,6 +625,92 @@ def _ooxml_encryption_report(filepath: str) -> Optional[dict]:
     }
 
 
+def _odf_annotations(filepath: str) -> List[Dict[str, Any]]:
+    """Anchored comments in ``content.xml``: author, timestamp and note.
+
+    odfpy's ``extractText`` flattens ``office:annotation`` into the paragraph it
+    is anchored to, with no separator, so the note, its timestamp and the word
+    before it became one token in testODTStyles3.odt ("Rolf2017-01-31T00:00:00").
+    A comment is metadata about a paragraph, not a run of it: it is extracted
+    here on its own so it can be stored as a labelled line and removed from the
+    sentence.
+    """
+    import zipfile
+    import xml.etree.ElementTree as ET
+
+    try:
+        with zipfile.ZipFile(filepath) as zf:
+            if "content.xml" not in zf.namelist():
+                return []
+            root = ET.fromstring(zf.read("content.xml"))
+    except Exception:
+        return []
+
+    records: List[Dict[str, Any]] = []
+    for element in root.iter():
+        if _et_local(element.tag) != "annotation":
+            continue
+        author = date = ""
+        bodies: List[str] = []
+        for child in element:
+            local = _et_local(child.tag)
+            if local == "creator" and not author:
+                author = _collapse(child.text or "")
+            elif local == "date" and not date:
+                date = _collapse(child.text or "")
+            elif local in ("p", "h"):
+                text = _collapse(_odf_block_text(child))
+                if text:
+                    bodies.append(text)
+        text = " ".join(bodies)
+        if not (text or author or date):
+            continue
+        records.append({"author": author, "date": date, "text": text})
+    return records
+
+
+def _odf_annotation_line(record: Dict[str, Any]) -> str:
+    head = "[comment"
+    if record.get("author"):
+        head += f": {record['author']}"
+    if record.get("date"):
+        head += f" on {record['date']}"
+    head += "]"
+    return f"{head} {record['text']}".strip()
+
+
+def _apply_odf_annotations(result: Dict[str, Any], filepath: str) -> None:
+    """Detach comments from paragraph text and add them as their own lines."""
+    annotations = _odf_annotations(filepath)
+    if not annotations:
+        return
+    paragraphs = result.get("paragraphs")
+    if not isinstance(paragraphs, list):
+        return
+    for paragraph in paragraphs:
+        text = paragraph.get("text") or ""
+        if not text:
+            continue
+        changed = False
+        for record in annotations:
+            for fragment in (record.get("date"), record.get("text")):
+                if fragment and fragment in text:
+                    text = text.replace(fragment, " ")
+                    changed = True
+        if changed:
+            # Re-collapse: the removal leaves a double space where the note was.
+            paragraph["text"] = " ".join(text.split())
+    for record in annotations:
+        paragraphs.append({
+            "text": _odf_annotation_line(record),
+            "style": "Comment",
+            "location": "office:annotation",
+            "kind": "comment",
+        })
+    result["total_paragraphs"] = len(paragraphs)
+    result["annotations"] = annotations
+
+
 def _odf_tracked_changes(filepath: str) -> List[Dict[str, Any]]:
     """Every tracked change in ``content.xml``, with its author and timestamp.
 
@@ -3111,16 +3197,10 @@ class OfficeFileReader(BaseReader):
                     if any(cells):
                         tables.append({"table_number": len(tables) + 1,
                                        "rows": [cells]})
-            elif tag == "annotation":
-                author = ""
-                for child in element.iter():
-                    if _et_local(child.tag) == "creator":
-                        author = _collapse(child.text or "")
-                        break
-                for para in element.iter():
-                    if _et_local(para.tag) in ("p", "h"):
-                        record(_odf_block_text(para), f"Comment ({author})" if author
-                               else "Comment", "office:annotation", "comment")
+            # Annotations are emitted once, below, by _apply_odf_annotations,
+            # which also keeps the timestamp and detaches the note from the
+            # sentence it is anchored to. Recording them here as well produced
+            # two comment paragraphs for one comment.
             elif tag == "note":
                 note_class = element.get(_ODF_NS["text"] + "note-class") or "footnote"
                 for para in element.iter():
@@ -3129,6 +3209,9 @@ class OfficeFileReader(BaseReader):
                                f"text:{note_class}", note_class)
             # Tracked changes are emitted once, below, by the shared extractor,
             # so the fallback and the odfpy path cannot disagree about them.
+
+        _apply_odf_annotations(
+            {"paragraphs": paragraphs, "tables": tables}, filepath)
 
         changes = _odf_tracked_changes(filepath)
         for change in changes:
@@ -3273,7 +3356,9 @@ class OfficeFileReader(BaseReader):
                     logger.info(f"Extracted and processed {len(result['extracted_images'])} images from ODT")
             except Exception as e:
                 logger.debug(f"Image extraction from ODT failed (non-critical): {e}")
-            
+
+            _apply_odf_annotations(result, filepath)
+
             return result
         except Exception as e:
             return {"error": str(e), "filepath": filepath}
