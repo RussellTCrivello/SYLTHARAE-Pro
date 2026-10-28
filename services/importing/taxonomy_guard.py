@@ -26,6 +26,13 @@ from typing import Any, Dict, Optional
 LIMIT_ENV = "SYLTHARAE_TAXONOMY_SHRINK_MAX"
 DEFAULT_MAX_SHRINK = 0.25
 
+#: Always allowed, whatever the fraction. A percentage alone is nonsense on a
+#: small database: one stored membership removed is "100%", and a guard that
+#: refuses every edit to a new taxonomy is a guard people switch off. The floor
+#: makes the guard bite where the loss is real - a large curated taxonomy - and
+#: stay out of the way while one is being built.
+MIN_ABSOLUTE = 25
+
 
 def max_shrink(default: float = DEFAULT_MAX_SHRINK) -> float:
     """The configured limit, or the default when it is absent or unusable."""
@@ -60,6 +67,11 @@ def _removals(plan: Any) -> int:
             + len(categories))
 
 
+def removed_threshold(base: int, limit: float) -> int:
+    """How many removals the fraction allows, before the absolute floor."""
+    return int(base * limit)
+
+
 def check(plan: Any, stored: Dict[str, int],
           limit: Optional[float] = None) -> Dict[str, Any]:
     """``{ok, removed, stored, fraction, limit, reason}`` for one plan.
@@ -74,19 +86,23 @@ def check(plan: Any, stored: Dict[str, int],
     fraction = 0.0 if base <= 0 else min(1.0, removed / base)
     if base <= 0:
         return {"ok": True, "removed": removed, "stored": 0, "fraction": 0.0,
-                "limit": limit,
+                "limit": limit, "allowance": removed,
                 "reason": "the database stores no taxonomy yet, so nothing can "
                           "be removed"}
-    if fraction <= limit:
+    allowance = max(removed_threshold(base, limit), MIN_ABSOLUTE)
+    if removed <= allowance:
         return {"ok": True, "removed": removed, "stored": base,
                 "fraction": round(fraction, 4), "limit": limit,
-                "reason": f"removal of {removed} of {base} stored rows is within "
-                          f"the {limit:.0%} limit"}
+                "allowance": allowance,
+                "reason": (f"removal of {removed} of {base} stored rows is within "
+                           f"the {limit:.0%} limit (or its {MIN_ABSOLUTE}-row "
+                           f"floor)")}
     return {
         "ok": False, "removed": removed, "stored": base,
-        "fraction": round(fraction, 4), "limit": limit,
+        "fraction": round(fraction, 4), "limit": limit, "allowance": allowance,
         "reason": (f"this sync would remove {removed} of {base} stored rows "
-                   f"({fraction:.0%}), above the {limit:.0%} limit; the workbook "
+                   f"({fraction:.0%}), above the {limit:.0%} limit and its "
+                   f"{MIN_ABSOLUTE}-row floor; the workbook "
                    f"is probably truncated, half-saved or missing sheets. Nothing "
                    f"was written. Raise {LIMIT_ENV} deliberately if the removal "
                    f"is intended"),

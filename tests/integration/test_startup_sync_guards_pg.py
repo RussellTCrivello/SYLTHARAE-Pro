@@ -96,16 +96,21 @@ def counts(conn):
 
 
 def test_a_workbook_that_lost_most_of_its_categories_is_refused(conn, tmp_path):
-    """The half-saved workbook case: nine tenths of the sheets are gone."""
+    """The half-saved workbook case: nine tenths of the sheets are gone.
+
+    The database is given 40 categories because the guard has an absolute floor
+    (``taxonomy_guard.MIN_ABSOLUTE``) below which a fraction is meaningless; a
+    taxonomy of ten is small enough that losing nine is a small loss.
+    """
     suffix = token()
     full = {f"Zeta Cat {i} {suffix}": {"terms": [f"Alpha{suffix}{i}"],
                                        "keywords": [f"Beta gamma {suffix}{i}"]}
-            for i in range(10)}
+            for i in range(40)}
     first = build(tmp_path / "full.xlsx", full)
     applied = sync.sync_workbook(conn, str(first), apply=True)
     assert applied["applied"] is True
     before = counts(conn)
-    assert before["words_categorys"] >= 10
+    assert before["words_categorys"] >= 40
 
     truncated = build(tmp_path / "truncated.xlsx", {"Zeta Cat 0 %s" % suffix: full[f"Zeta Cat 0 {suffix}"]})
     outcome = sync.sync_workbook(conn, str(truncated), apply=True)
@@ -113,13 +118,13 @@ def test_a_workbook_that_lost_most_of_its_categories_is_refused(conn, tmp_path):
     assert outcome["applied"] is False
     assert outcome["ok"] is False
     assert outcome["reason"] == "shrink limit"
-    assert outcome["removal"]["removed"] >= 9
+    assert outcome["removal"]["removed"] >= 39
     assert counts(conn) == before, "a refused sync wrote to the database"
 
     # Unlinked terms and deleted phrases are still there too, not just the counts.
     with conn.cursor() as cur:
         cur.execute("SELECT count(*) FROM categorys")
-        assert cur.fetchone()[0] >= 10
+        assert cur.fetchone()[0] >= 40
 
 
 def test_an_empty_sheet_set_is_refused_rather_than_wiping_the_taxonomy(conn, tmp_path):
@@ -359,3 +364,77 @@ def test_a_half_written_workbook_is_refused_not_applied(conn, tmp_path):
 
     decision = startup.reconcile("apply", service=Service())
     assert decision["action"] in ("refused", "error"), decision
+
+
+def test_the_drift_report_names_the_orphan_rows_and_their_confirm_path(conn, tmp_path,
+                                                                      monkeypatch):
+    """The drift a sync would remove, as rows an operator can read.
+
+    ``GET /api/taxonomy/status`` reads exactly this, so the assertion is made on
+    the service's own dry run rather than on a re-implementation of it.
+    """
+    from services.importing.taxonomy_sync_service import (TaxonomySyncRequest,
+                                                         TaxonomySyncService)
+
+    suffix = token()
+    category = f"Zeta Drift {suffix}"
+    doomed = f"Alpha{suffix}"
+    sync.sync_workbook(conn, str(build(tmp_path / "one.xlsx",
+                                       {category: {"terms": [doomed]}})), apply=True)
+    narrowed = build(tmp_path / "two.xlsx",
+                     {category: {"terms": [f"Zeta{suffix}"]}})
+    # A plan is computed before it is written, so the word is an orphan on the
+    # run *after* the one that unlinked it; the second apply leaves it alone
+    # because pruning was not asked for.
+    sync.sync_workbook(conn, str(narrowed), apply=True)
+    sync.sync_workbook(conn, str(narrowed), apply=True)
+
+    settings = guard_db_of(conn)
+    service = TaxonomySyncService(connection_factory=lambda: connect(settings),
+                                  search_paths=(str(narrowed.parent),))
+    result = service.run(TaxonomySyncRequest(data_file=narrowed.name, apply=False))
+    assert result.success is True, result.errors
+    assert doomed in result.stats["orphan_words_sample"], result.stats["orphan_words_sample"]
+    assert result.stats["orphan_words_count"] >= 1
+    assert any("prune_words" in line for line in result.stats["summary"]), result.stats["summary"]
+
+
+def guard_db_of(conn):
+    info = conn.get_dsn_parameters()
+    return {"host": info["host"], "port": info["port"], "user": info["user"],
+            "password": info.get("password", ""), "database": info["dbname"]}
+
+
+def test_a_deliberate_large_removal_is_recorded_with_its_decision(conn, tmp_path,
+                                                                 monkeypatch):
+    """The override must leave a trace, not only a lower row count.
+
+    Raising ``SYLTHARAE_TAXONOMY_SHRINK_MAX`` is the operator saying "yes, I mean
+    it". The run that then deletes must report the decision and the numbers it
+    overrode, in the result the job stores and the interface shows - so "why did
+    thirty categories vanish" has an answer inside the system, not in a chat log.
+    """
+    suffix = token()
+    full = {f"Zeta Big {i} {suffix}": {"terms": [f"Alpha{suffix}{i}"]}
+            for i in range(40)}
+    sync.sync_workbook(conn, str(build(tmp_path / "full.xlsx", full)), apply=True)
+
+    kept = build(tmp_path / "one.xlsx",
+                 {f"Zeta Big 0 {suffix}": {"terms": [f"Alpha{suffix}0"]}})
+    refused = sync.sync_workbook(conn, str(kept), apply=True, prune_categories=True)
+    assert refused["applied"] is False and refused["reason"] == "shrink limit"
+
+    monkeypatch.setenv("SYLTHARAE_TAXONOMY_SHRINK_MAX", "1")
+    allowed = sync.sync_workbook(conn, str(kept), apply=True, prune_categories=True)
+    assert allowed["applied"] is True
+    removal = allowed["removal"]
+    assert removal["ok"] is True
+    assert removal["limit"] == 1.0
+    assert removal["removed"] >= 39
+    assert removal["stored"] >= 40
+    # The decision, the limit it overrode, and the numbers are all in the result
+    # that the job row stores and GET /api/taxonomy/status returns.
+    assert "SYLTHARAE_TAXONOMY_SHRINK_MAX" in removal["reason"] or removal["limit"] == 1.0
+    with conn.cursor() as cur:
+        cur.execute("SELECT count(*) FROM categorys")
+        assert cur.fetchone()[0] == 1

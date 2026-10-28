@@ -121,7 +121,7 @@ watching. It stays safe because three guards stand in front of the write:
 | guard | what it does |
 |---|---|
 | rule validation | a workbook that breaks a rule is refused, nothing written |
-| shrink limit (`SYLTHARAE_TAXONOMY_SHRINK_MAX`, default `0.25`) | a sync that would remove more than a quarter of the stored memberships and keywords is **refused**, with the numbers in the message. This is what stops a truncated or half-saved workbook becoming an authoritative deletion. `1` allows any removal |
+| shrink limit (`SYLTHARAE_TAXONOMY_SHRINK_MAX`, default `0.25`, plus an absolute floor of 25 rows) | a sync that would remove more than a quarter of the stored memberships and keywords is **refused**, with the numbers in the message. This is what stops a truncated or half-saved workbook becoming an authoritative deletion. `1` allows any removal. The floor exists because a percentage is meaningless on a small database - one stored membership removed is 100% - and a guard that refuses every edit to a new deployment is a guard people switch off. A deliberate large removal therefore means setting the limit to `1`, and the run then reports the limit it overrode and the numbers it removed (`removal` in the sync result and in `GET /api/taxonomy/status`) |
 | apply lock (advisory) | two instances booting together cannot both apply; the second reports `already_syncing`. A crashed process releases the lock with its connection |
 
 A refusal is a log line and an `action: "refused"` in `GET /api/taxonomy/status`;

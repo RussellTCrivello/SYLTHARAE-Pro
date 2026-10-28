@@ -187,6 +187,7 @@ def test_a_second_run_changes_nothing(conn):
         "categories_created": 0, "categories_deleted": 0, "categories_renamed": 0,
         "words_created": 0, "terms_linked": 0, "terms_unlinked": 0,
         "keywords_created": 0, "keywords_deleted": 0, "words_pruned": 0,
+        "words_kept_for_names": 0,
     }
     assert plan.create_categories == [] and plan.link_terms == []
     assert plan.create_keywords == [] and plan.delete_keywords == []

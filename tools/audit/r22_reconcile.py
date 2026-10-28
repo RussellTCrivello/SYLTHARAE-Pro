@@ -190,13 +190,28 @@ def main(argv=None) -> int:
         "",
         extra_table,
         "",
-        "## The number that cannot be re-derived",
+        "## Three numbers, and what happened to each",
         "",
-        "The text capture behind 67 no longer exists: the sandbox was re-cloned and",
-        "the file went with it. 67 is therefore **observed, not verified**. It is",
-        "also not a count of ids — counting `FAILED`/`ERROR` lines in a `-q` capture",
-        "double-counts the in-line headers and depends on where the capture was cut.",
-        "The authoritative figures are in the table above, all read from JUnit XML.",
+        table(["number", "where it came from", "status"], [
+            ["34", "Round 21's `id_diff_unit.csv` class column", 
+             "**verified** - the ids are in the committed CSV; 35 ids are "
+             "recorded failing (34 pre-existing plus the one regression)"],
+            ["67", "a `grep -c` over a `-q` text capture from an earlier run in "
+                   "the previous session",
+             "**retired** - no artefact survives, and the method cannot produce "
+             "an id count (a `-q` capture repeats each id in the short summary, so "
+             "a line count is a function of capture length, not of failures)"],
+            ["76 / 77", "the JUnit XML of two runs made in one venv",
+             "**measured** - these are the numbers this report uses"],
+        ]),
+        "",
+        "The 67 is not reconciled with the 76; it is **withdrawn**. A figure whose "
+        "raw artefact is gone cannot be re-derived, and the arithmetic that would "
+        "have to be invented to explain it would be a claim, not a measurement. "
+        "Everything this round publishes is counted from the JUnit files below. "
+        "The retired number appears nowhere as evidence, and the sentence it used "
+        "to support - \"67 pre-existing failures\" - is replaced by the table "
+        "above.",
         "",
         "## Reproduced, fixed, and new",
         "",
@@ -230,6 +245,42 @@ def main(argv=None) -> int:
         "",
         "Both are properties of the directory, not of the code, and neither is a",
         "regression: `git diff` between the two runs is empty.",
+        "",
+        "## Every rule this round added to the classifier, and its proof",
+        "",
+        "The classifier is `tools/audit/r22_baseline.py`. It uses "
+        "`tools/audit/triage_failures.py`'s vocabulary and adds three classes, "
+        "because the environment question could not be answered with the existing "
+        "ones. **None of these rules turns a failure green**: each assigns a class, "
+        "and the tool exits non-zero on any id it cannot place. A rule is added "
+        "only with a measurement beside it.",
+        "",
+        table(["rule", "what it claims", "the measurement that justifies it"],
+              [[f"`{key}`", why, evidence]
+               for key, (why, evidence) in [
+                   ("ENV-OCR", "the module cannot run without an OCR engine",
+                    "the same nine modules in a venv with rapidocr + opencv 4.10.0 "
+                    "+ numpy<2 + ffmpeg 7.0.2: "
+                    f"{engine_counts['tests']} passed, {engine_counts['failed']} "
+                    f"failed, {engine_counts['skipped']} skipped"),
+                   ("ENV-FFMPEG", "the media reader cannot run without ffmpeg",
+                    "same run as ENV-OCR (the media modules are in the nine)"),
+                   ("DOCS-NOT-COMMITTED / NEEDS-DECISION / test_licensing / "
+                    "test_no_machine_paths", "classes taken from "
+                    "`triage_failures.py`'s own rule table",
+                    "`tools/audit/triage_failures.py` - no new vocabulary was "
+                    "invented for these"),
+               ]]),
+        "",
+        "One rule is worth spelling out because it looked like gate tuning: the two "
+        "`test_content_vs_identity` ids are classified *stale helper*, with the "
+        "proof that `inspect.signature(StoragePipeline._extract_text_from_content)` "
+        "is `(self, content)` and its body calls `self._media_metadata_text`, that "
+        "the product change is `1c60be5` (an ancestor of the baseline commit), and "
+        "that both ids are recorded as failing at the baseline in Round 21's own "
+        "CSV. The rule did not make them pass - it named the cause. They pass now "
+        "because the helper was fixed, and that edit is listed, with its old and "
+        "new premise, in `TEST_EDITS.md`.",
         "",
         "## Classes that would block closeout",
         "",

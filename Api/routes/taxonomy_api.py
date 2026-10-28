@@ -100,6 +100,7 @@ def register_taxonomy_routes(app):
                 "summary": stats.get("summary") or [],
                 "not_stored_count": stats.get("not_stored_count", 0),
                 "orphan_words_count": stats.get("orphan_words_count", 0),
+                "orphan_words_sample": stats.get("orphan_words_sample") or [],
                 "warnings": result.warnings,
             },
         })

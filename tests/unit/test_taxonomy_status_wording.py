@@ -64,3 +64,30 @@ def test_every_sentence_is_a_plain_string_so_the_payload_stays_serialisable():
     lines = summarise(plan)
     assert all(isinstance(line, str) and line.strip() for line in lines)
     assert len(lines) == 4
+
+
+def test_the_drift_report_names_the_orphan_rows_not_only_their_count():
+    """A removal nobody can see is a removal nobody can confirm."""
+    from services.importing.taxonomy_sync import SAMPLE_ROWS, Plan
+
+    plan = Plan(orphan_words=[f"word{i}" for i in range(SAMPLE_ROWS + 5)]).as_dict()
+    assert plan["orphan_words"] == SAMPLE_ROWS + 5
+    assert len(plan["orphan_words_sample"]) == SAMPLE_ROWS
+    assert plan["orphan_words_sample"][0] == "word0"
+
+
+def test_a_short_orphan_list_is_reported_whole():
+    from services.importing.taxonomy_sync import Plan
+
+    plan = Plan(orphan_words=["alpha", "beta"]).as_dict()
+    assert plan["orphan_words_sample"] == ["alpha", "beta"]
+
+
+def test_the_plan_carries_no_removal_without_a_confirm_path():
+    """Every removal key the plan exposes is named in a sentence with its flag."""
+    from services.importing.taxonomy_sync import Plan
+
+    plan = Plan(orphan_words=["alpha"], missing_categories=["Gone"],
+                delete_categories=["Gone"]).as_dict()
+    text = " ".join(summarise(plan))
+    assert "prune_words" in text and "prune_categories" in text

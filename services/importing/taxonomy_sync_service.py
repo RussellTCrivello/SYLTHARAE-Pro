@@ -238,8 +238,12 @@ class TaxonomySyncService:
                 "summary": sync.summarise(outcome.get("plan") or {}),
                 "not_stored_count": len(
                     (outcome.get("plan") or {}).get("not_stored_shared") or []),
-                "orphan_words_count": len(
-                    (outcome.get("plan") or {}).get("orphan_words") or []),
+                "orphan_words_sample":
+                    (outcome.get("plan") or {}).get("orphan_words_sample") or [],
+                "orphan_words_count": (
+                    (outcome.get("plan") or {}).get("orphan_words")
+                    if isinstance((outcome.get("plan") or {}).get("orphan_words"), int)
+                    else len((outcome.get("plan") or {}).get("orphan_words") or [])),
                 "removal": outcome.get("removal"),
             })
             result.errors = list(outcome.get("errors") or [])

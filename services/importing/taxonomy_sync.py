@@ -93,6 +93,11 @@ def snapshot(conn) -> Dict[str, int]:
 # ---------------------------------------------------------------------------
 # the plan
 # ---------------------------------------------------------------------------
+#: How many rows of a removal list a report carries. The count is the answer;
+#: twenty examples are enough to recognise a mistake.
+SAMPLE_ROWS = 20
+
+
 @dataclass
 class Plan:
     """The difference between the workbook and the database.
@@ -144,6 +149,9 @@ class Plan:
             "not_stored_shared": self.not_stored,
             "stale_keywords": self.stale_keywords,
             "orphan_words": len(self.orphan_words),
+            # The rows themselves, not only the count: a drift report that says
+            # "3 orphans" and cannot name them is a report nobody can act on.
+            "orphan_words_sample": list(self.orphan_words[:SAMPLE_ROWS]),
             "unchanged": self.unchanged,
         }
 

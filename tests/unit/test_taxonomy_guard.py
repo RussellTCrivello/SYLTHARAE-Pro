@@ -135,3 +135,30 @@ def test_the_sync_logic_version_is_declared_and_bumped_by_hand():
     """A version string, not a timestamp: it must change only on purpose."""
     assert isinstance(sync.SYNC_LOGIC_VERSION, str)
     assert sync.SYNC_LOGIC_VERSION.count(".") >= 1
+
+
+def test_a_small_database_may_lose_its_whole_taxonomy_without_a_decision():
+    """One stored row removed is 100%: a fraction alone cannot judge that.
+
+    The guard exists to stop a large curated taxonomy disappearing, not to make
+    every edit to a new deployment impossible. Below the absolute floor the
+    fraction is not consulted.
+    """
+    verdict = guard.check(FakePlan(unlink=1), {"words_categorys": 1, "keywords": 0})
+    assert verdict["ok"] is True
+    assert verdict["allowance"] == guard.MIN_ABSOLUTE
+
+
+def test_the_floor_is_an_absolute_number_of_rows_not_a_percentage():
+    at_floor = guard.check(FakePlan(unlink=guard.MIN_ABSOLUTE),
+                           {"words_categorys": 10, "keywords": 0})
+    assert at_floor["ok"] is True
+    over = guard.check(FakePlan(unlink=guard.MIN_ABSOLUTE + 1),
+                       {"words_categorys": 10, "keywords": 0})
+    assert over["ok"] is False, "the floor must be a limit, not an exemption"
+
+
+def test_a_large_database_is_judged_by_the_fraction_not_the_floor():
+    verdict = guard.check(FakePlan(unlink=400), {"words_categorys": 1000, "keywords": 0})
+    assert verdict["ok"] is False
+    assert verdict["allowance"] == 250
