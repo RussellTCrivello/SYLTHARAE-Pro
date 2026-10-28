@@ -1,6 +1,6 @@
 """Can the category-list / tree-search plan regression be removed? (100k rows)"""
-import json, sys, psycopg2
-sys.path.insert(0, "/home/user/SYLTHARAE-Pro")
+import json, pathlib, sys, psycopg2
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2]))
 from services.i18n.term_labels import ID_SET_CAP
 from core.i18n.term_key import term_key
 from tools.i18n.audit_terms import _index_names

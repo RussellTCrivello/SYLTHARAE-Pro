@@ -5,11 +5,13 @@ database is left exactly as it was; the script asserts that at the end.
 """
 import csv
 import json
+import pathlib
 import sys
 
 import psycopg2
 
-sys.path.insert(0, "/home/user/SYLTHARAE-Pro")
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 from services.i18n.term_labels import ID_SET_CAP  # noqa: E402
 from core.i18n.term_key import term_key  # noqa: E402
 from tools.i18n.audit_terms import _PLAN_SQL, _index_names  # noqa: E402

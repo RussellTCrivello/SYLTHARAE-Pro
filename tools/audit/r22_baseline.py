@@ -95,20 +95,30 @@ def _module_of(classname: str) -> str:
 
 
 def failing_ids(xml_path: pathlib.Path) -> dict:
-    """``{"path::name": status}`` for every failing id in a JUnit file."""
+    """``{"classname::name": status}`` for every failing id in a JUnit file.
+
+    The id keeps the whole classname so it compares with the Round 21 record
+    (``audit_report/r21_i18n/id_diff_unit.csv``) character for character; the
+    module path a rule matches on is ``module_of_id``.
+    """
     root = ET.parse(xml_path).getroot()
     out = {}
     for case in root.iter("testcase"):
+        classname = case.get("classname") or ""
         name = case.get("name") or ""
-        module = _module_of(case.get("classname") or "")
         status = None
         for child in case:
             if child.tag in ("failure", "error"):
                 status = child.tag
                 break
         if status:
-            out[f"{module}::{name}"] = status
+            out[f"{classname}::{name}"] = status
     return out
+
+
+def module_of_id(test_id: str) -> str:
+    """``tests.unit.test_x.TestY::test_z`` -> ``tests/unit/test_x.py``."""
+    return _module_of(test_id.partition("::")[0])
 
 
 def counts(xml_path: pathlib.Path) -> dict:
@@ -125,7 +135,8 @@ def counts(xml_path: pathlib.Path) -> dict:
 
 def classify_id(test_id: str, engines: set) -> tuple:
     """``(class, verdict, evidence)`` for one failing id."""
-    path, _, name = test_id.partition("::")
+    path = module_of_id(test_id)
+    name = test_id.partition("::")[2]
     module = pathlib.Path(path).stem
 
     if test_id in engines:
