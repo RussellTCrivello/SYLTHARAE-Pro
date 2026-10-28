@@ -411,6 +411,7 @@ def apply_plan(conn, workbook: rules.Workbook, plan: Plan,
 
     written = {"categories_created": 0, "categories_deleted": 0, "categories_renamed": 0,
                "words_created": 0, "terms_linked": 0, "terms_unlinked": 0,
+               "words_kept_for_names": 0,
                "keywords_created": 0, "keywords_deleted": 0, "words_pruned": 0}
     state = rules.desired_state(workbook)
 
@@ -512,9 +513,17 @@ def apply_plan(conn, workbook: rules.Workbook, plan: Plan,
             for (blob,) in _query(conn, "SELECT keyword FROM keywords"):
                 from core.serialization import unpack_int_list
                 referenced.update(int(i) for i in unpack_int_list(blob))
+            named = {int(row[0]) for row in _query(
+                conn, "SELECT DISTINCT word_id FROM term_names")}
             for word in plan.orphan_words:
                 wid = _scalar(conn, "SELECT id FROM words WHERE word = %s", (word,))
                 if wid is None or int(wid) in referenced:
+                    continue
+                if int(wid) in named:
+                    # ``term_names`` is ON DELETE CASCADE and holds names no
+                    # workbook can reproduce: a curated Arabic or Hebrew name is
+                    # not an orphan, whatever the vocabulary says.
+                    written["words_kept_for_names"] += 1
                     continue
                 with conn.cursor() as cur:
                     cur.execute("DELETE FROM words WHERE word = %s", (word,))
@@ -779,7 +788,12 @@ def sync_workbook(conn, path: str, *, apply: bool = False,
         result.update({"ok": False, "applied": False,
                        "reason": "shrink limit", "errors": [verdict["reason"]]})
         return result
-    if plan.changes == 0:
+    # ``changes`` counts creations, links, unlinks and phrase edits. Pruning is
+    # work too: a run whose only task is removing orphans used to report
+    # "nothing to do" and remove nothing, forever.
+    pending_prune = ((prune_words and len(plan.orphan_words))
+                     or (prune_categories and len(plan.delete_categories)))
+    if plan.changes == 0 and not pending_prune:
         result.update({"applied": False, "reason": "nothing to do", "written": {}})
         return result
 
