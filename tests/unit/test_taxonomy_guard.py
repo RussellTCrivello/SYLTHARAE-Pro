@@ -151,11 +151,38 @@ def test_a_small_database_may_lose_its_whole_taxonomy_without_a_decision():
 
 def test_the_floor_is_an_absolute_number_of_rows_not_a_percentage():
     at_floor = guard.check(FakePlan(unlink=guard.MIN_ABSOLUTE),
-                           {"words_categorys": 10, "keywords": 0})
+                           {"words_categorys": guard.MIN_ABSOLUTE + 50,
+                            "keywords": 0})
     assert at_floor["ok"] is True
     over = guard.check(FakePlan(unlink=guard.MIN_ABSOLUTE + 1),
-                       {"words_categorys": 10, "keywords": 0})
+                       {"words_categorys": guard.MIN_ABSOLUTE + 50, "keywords": 0})
     assert over["ok"] is False, "the floor must be a limit, not an exemption"
+
+
+def test_a_sync_that_replaces_a_small_database_with_a_big_workbook_is_allowed():
+    """Growth is not a shrink, however many seeded rows it removes.
+
+    This is the case the integration suite caught: a first sync against a small
+    hand-seeded database removes every seeded membership and adds thousands.
+    Judging it by removals alone refused the run that grows the taxonomy.
+    """
+    verdict = guard.check(FakePlan(unlink=42), {"words_categorys": 42, "keywords": 0})
+    assert verdict["ok"] is False, "with no additions at all this is a wipe"
+
+    class GrowingPlan(FakePlan):
+        def __init__(self):
+            super().__init__(unlink=42)
+            self.link_terms = [("cat", f"t{i}") for i in range(3000)]
+            self.create_keywords = [("cat", f"p{i}") for i in range(8000)]
+
+    verdict = guard.check(GrowingPlan(), {"words_categorys": 42, "keywords": 0})
+    assert verdict["ok"] is True
+
+    # The numbers say what happened: not "42 removed", but "42 -> 11042".
+    assert verdict["removed"] == 42
+    assert verdict["added"] == 11000
+    assert verdict["after"] == 11000
+    assert "42 to 11000" in verdict["reason"]
 
 
 def test_a_large_database_is_judged_by_the_fraction_not_the_floor():

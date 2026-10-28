@@ -72,38 +72,56 @@ def removed_threshold(base: int, limit: float) -> int:
     return int(base * limit)
 
 
+def _additions(plan: Any) -> int:
+    """Rows this plan would add: the other half of "does the taxonomy shrink?"."""
+    total = 0
+    for field in ("link_terms", "create_keywords"):
+        total += len(getattr(plan, field, ()) or ())
+    return total
+
+
 def check(plan: Any, stored: Dict[str, int],
           limit: Optional[float] = None) -> Dict[str, Any]:
-    """``{ok, removed, stored, fraction, limit, reason}`` for one plan.
+    """``{ok, removed, added, after, stored, fraction, limit, reason}``.
 
-    ``stored`` is ``taxonomy_sync.snapshot(conn)``: table counts. Removals are
-    compared with the memberships and keywords those counts describe, because
-    those are what a plan removes.
+    ``stored`` is ``taxonomy_sync.snapshot(conn)``: table counts.
+
+    The measure is the **size the taxonomy would have afterwards**, not the
+    number of removals. A first sync that replaces a small hand-seeded database
+    with the full workbook removes every seeded row and adds thousands; judging
+    it by removals alone refused a run that grows the taxonomy by two orders of
+    magnitude. A truncated workbook removes almost everything and adds nothing,
+    which is the case this guard exists for - and it still fails.
     """
     limit = max_shrink() if limit is None else limit
     removed = _removals(plan)
+    added = _additions(plan)
     base = int(stored.get("words_categorys") or 0) + int(stored.get("keywords") or 0)
-    fraction = 0.0 if base <= 0 else min(1.0, removed / base)
+    after = max(0, base - removed + added)
+    fraction = 0.0 if base <= 0 else min(1.0, (base - after) / base)
     if base <= 0:
         return {"ok": True, "removed": removed, "stored": 0, "fraction": 0.0,
                 "limit": limit, "allowance": removed,
                 "reason": "the database stores no taxonomy yet, so nothing can "
                           "be removed"}
     allowance = max(removed_threshold(base, limit), MIN_ABSOLUTE)
-    if removed <= allowance:
-        return {"ok": True, "removed": removed, "stored": base,
-                "fraction": round(fraction, 4), "limit": limit,
+    if base - after <= allowance:
+        return {"ok": True, "removed": removed, "added": added, "after": after,
+                "stored": base, "fraction": round(fraction, 4), "limit": limit,
                 "allowance": allowance,
-                "reason": (f"removal of {removed} of {base} stored rows is within "
-                           f"the {limit:.0%} limit (or its {MIN_ABSOLUTE}-row "
-                           f"floor)")}
+                "reason": (f"the taxonomy would go from {base} to {after} stored "
+                           f"rows ({removed} removed, {added} added), which is "
+                           f"within the {limit:.0%} limit and its "
+                           f"{MIN_ABSOLUTE}-row floor")}
     return {
-        "ok": False, "removed": removed, "stored": base,
-        "fraction": round(fraction, 4), "limit": limit, "allowance": allowance,
-        "reason": (f"this sync would remove {removed} of {base} stored rows "
-                   f"({fraction:.0%}), above the {limit:.0%} limit and its "
-                   f"{MIN_ABSOLUTE}-row floor; the workbook "
-                   f"is probably truncated, half-saved or missing sheets. Nothing "
-                   f"was written. Raise {LIMIT_ENV} deliberately if the removal "
-                   f"is intended"),
+        "ok": False, "removed": removed, "added": added, "after": after,
+        "stored": base, "fraction": round(fraction, 4), "limit": limit,
+        "allowance": allowance,
+        "reason": (f"this sync would take the taxonomy from {base} to {after} "
+                   f"stored rows ({removed} removed, {added} added), a "
+                   f"{fraction:.0%} shrink, above the {limit:.0%} limit and its "
+                   f"{MIN_ABSOLUTE}-row floor; the workbook is probably "
+                   f"truncated, half-saved or missing sheets. Nothing was "
+                   f"written. Raise {LIMIT_ENV} deliberately if the removal is "
+                   f"intended"),
     }

@@ -1689,6 +1689,30 @@
     "internal": true
   },
   {
+    "endpoint": "api_taxonomy_status",
+    "rule": "/api/taxonomy/status",
+    "methods": [
+      "GET"
+    ],
+    "blueprint": "(app)",
+    "module": "taxonomy_api",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "api_taxonomy_sync",
+    "rule": "/api/taxonomy/sync",
+    "methods": [
+      "POST"
+    ],
+    "blueprint": "(app)",
+    "module": "taxonomy_api",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
     "endpoint": "api_term_labels",
     "rule": "/api/i18n/term-labels",
     "methods": [
