@@ -78,6 +78,11 @@ def _scalar(conn, sql: str, params=None):
     return rows[0][0] if rows else None
 
 
+def snapshot_counts(conn) -> Dict[str, int]:
+    """The table counts the shrink guard measures a plan against."""
+    return snapshot(conn)
+
+
 def snapshot(conn) -> Dict[str, int]:
     out = {}
     for table in ("words", "categorys", "words_categorys", "keywords"):
@@ -521,14 +526,54 @@ def apply_plan(conn, workbook: rules.Workbook, plan: Plan,
 # ---------------------------------------------------------------------------
 # identity, snapshots, and the one entry point
 # ---------------------------------------------------------------------------
-def fingerprint(path: str) -> str:
-    """SHA-256 of the workbook's bytes.
+#: Bumped by hand when the sync's *behaviour* changes - a different reading of a
+#: worksheet, a different rule, a different write - so a stored fingerprint from
+#: before the change can never authorise the fast path after it.
+SYNC_LOGIC_VERSION = "3.0"
 
-    An unchanged file is the common case for a scheduled sync, and reading eight
-    thousand rows to discover that is wasteful. The fingerprint is what lets a
-    caller skip the work and still say why.
+#: The modules whose source is part of what a fingerprint means. If the rules
+#: that turn worksheets into terms and keywords change, the same workbook means
+#: something else and the stored fingerprint must not match it any more.
+RULES_MODULES = ("services.importing.taxonomy_rules", "services.importing.taxonomy_sync",
+                 "services.importing.taxonomy_guard")
+
+
+def _rules_digest() -> str:
+    """A digest of the rule sources, with the checkout root stripped.
+
+    The path is not part of the rule, so it is not part of the digest: two
+    checkouts of the same commit must produce the same fingerprint, and a
+    dependency on where the file lives would make that false.
     """
     digest = hashlib.sha256()
+    root = Path(__file__).resolve().parents[2]
+    for name in RULES_MODULES:
+        path = root / (name.replace(".", "/") + ".py")
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            digest.update(b"missing:")
+            digest.update(name.encode())
+            continue
+        digest.update(name.encode())
+        digest.update(text.replace(str(root), "{root}").encode("utf-8"))
+    return digest.hexdigest()
+
+
+def fingerprint(path: str) -> str:
+    """What the stored state records: workbook bytes, the rules, the version.
+
+    The bytes alone were not enough. An unchanged workbook with changed rules
+    was skipped by the fast path even though applying it would have written
+    something different - the fingerprint said "you have seen this file", when
+    what the caller needs to know is "you have already applied this meaning".
+    """
+    digest = hashlib.sha256()
+    digest.update(b"sync-logic-v")
+    digest.update(SYNC_LOGIC_VERSION.encode("utf-8"))
+    digest.update(b"\nrules:")
+    digest.update(_rules_digest().encode("ascii"))
+    digest.update(b"\nworkbook:")
     with open(path, "rb") as handle:
         for chunk in iter(lambda: handle.read(1 << 20), b""):
             digest.update(chunk)
@@ -570,14 +615,21 @@ def export_state(conn, names: Optional[List[str]] = None) -> Dict[str, Any]:
     return state
 
 
-def restore_state(conn, state: Dict[str, Any]) -> Dict[str, int]:
+def restore_state(conn, state: Dict[str, Any],
+                  names: Optional[List[str]] = None) -> Dict[str, int]:
     """Put a snapshot back. Idempotent, and it writes only what differs.
 
     Restoring is deliberately *not* a full re-sync: a category the snapshot
     does not know about is removed, because it was created after the snapshot
     was taken. Word rows are left alone - the vocabulary is shared, and an
     unused word is harmless where a wrongly deleted one is not.
+
+    ``names`` scopes the undo to the categories a sync touched. Without it a
+    restore is "the whole taxonomy, as it was", which removes everything another
+    writer created while the sync was running - a consequence nobody asked for
+    when they clicked *undo*. The sync's own undo passes the names it wrote.
     """
+    scope = None if names is None else {name.casefold() for name in names}
     from core.serialization import pack_int_list
 
     written = {"categories_restored": 0, "categories_removed": 0,
@@ -587,6 +639,8 @@ def restore_state(conn, state: Dict[str, Any]) -> Dict[str, int]:
     current = export_state(conn)
 
     for name in current["categories"]:
+        if scope is not None and name.casefold() not in scope:
+            continue
         if name not in snapshot:
             cid = _stored_categories(conn)[name.casefold()][1]
             with conn.cursor() as cur:
@@ -611,6 +665,8 @@ def restore_state(conn, state: Dict[str, Any]) -> Dict[str, int]:
             return int(cur.fetchone()[0])
 
     for name, content in snapshot.items():
+        if scope is not None and name.casefold() not in scope:
+            continue
         cid = category_id(name)
         written["categories_restored"] += 1
         have = {term.casefold() for term in
@@ -668,7 +724,25 @@ def sync_workbook(conn, path: str, *, apply: bool = False,
     the API and the CLI all report it, so the three cannot describe the same run
     differently.
     """
-    workbook = rules.read(path, renames=renames)
+    try:
+        workbook = rules.read(path, renames=renames)
+    except Exception as exc:
+        # A file caught mid-save, a download that stopped, a name that is not a
+        # workbook: all of these used to raise out of here. A boot-time step that
+        # raises takes the web app with it, and an API call that raises answers
+        # 500 for something the operator can fix by one click.
+        return {
+            "path": str(path),
+            "fingerprint": None,
+            "ok": False,
+            "applied": False,
+            "reason": "unreadable workbook",
+            "errors": [f"{exc.__class__.__name__}: the workbook could not be "
+                       f"read, so nothing was written"],
+            "layout": None,
+            "workbook": None,
+            "decisions": 0,
+        }
     result: Dict[str, Any] = {
         "path": str(path),
         "fingerprint": fingerprint(path),
@@ -691,6 +765,19 @@ def sync_workbook(conn, path: str, *, apply: bool = False,
         "applied": False,
     })
     if not apply:
+        return result
+
+    # Before anything is written: how much of the stored taxonomy would this
+    # remove? A truncated file, a half-saved workbook and a file whose sheets
+    # were emptied are all "authoritative" too, and a boot-time apply has nobody
+    # to ask. See services/importing/taxonomy_guard.py.
+    from services.importing import taxonomy_guard as guard
+
+    verdict = guard.check(plan, snapshot_counts(conn))
+    result["removal"] = verdict
+    if not verdict["ok"]:
+        result.update({"ok": False, "applied": False,
+                       "reason": "shrink limit", "errors": [verdict["reason"]]})
         return result
     if plan.changes == 0:
         result.update({"applied": False, "reason": "nothing to do", "written": {}})

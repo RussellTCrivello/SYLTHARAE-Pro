@@ -1,0 +1,93 @@
+"""The guard rails an automatic apply needs before it deletes anything.
+
+The workbook is authoritative, which is a good rule and a dangerous one: a
+truncated download, a half-saved file and a workbook whose sheets were emptied
+are all "authoritative" too, and a startup apply has nobody to ask. This module
+is the answer to "how much of the taxonomy may one sync remove without a human?"
+
+It measures *removals* - unlinked terms, deleted keywords, categories the
+workbook no longer mentions and categories a plan would delete - against what the
+database currently holds, and refuses above a fraction. The fraction is
+``SYLTHARAE_TAXONOMY_SHRINK_MAX`` (0..1, default 0.25): a sync that would remove
+more than a quarter of what is stored is refused with the numbers in the message,
+and the operator raises the limit deliberately if that is what they meant.
+
+Refusing is the right failure for a boot-time step. A confirmation prompt cannot
+be answered at 3am by a supervisor, and "applied, look at the log" is how a
+taxonomy disappears.
+"""
+
+from __future__ import annotations
+
+import os
+from typing import Any, Dict, Optional
+
+#: The fraction of the stored taxonomy one sync may remove without a decision.
+LIMIT_ENV = "SYLTHARAE_TAXONOMY_SHRINK_MAX"
+DEFAULT_MAX_SHRINK = 0.25
+
+
+def max_shrink(default: float = DEFAULT_MAX_SHRINK) -> float:
+    """The configured limit, or the default when it is absent or unusable."""
+    raw = (os.environ.get(LIMIT_ENV) or "").strip()
+    if not raw:
+        return default
+    try:
+        value = float(raw)
+    except ValueError:
+        return default
+    if not 0.0 <= value <= 1.0:
+        return default
+    return value
+
+
+def _removals(plan: Any) -> int:
+    """How many stored rows this plan would take away.
+
+    A category that will be pruned appears in both ``missing_categories`` and
+    ``delete_categories``; counting both said "10 of 6 stored rows", which is
+    how a guard earns a reputation for being wrong. Categories are counted once,
+    by name, and a category the workbook merely stopped mentioning counts too:
+    that is the shape a truncated file has, and it is exactly the case this
+    guard exists for.
+    """
+    categories = {str(name).casefold()
+                  for name in (getattr(plan, "missing_categories", ()) or ())}
+    categories |= {str(name).casefold()
+                   for name in (getattr(plan, "delete_categories", ()) or ())}
+    return (len(getattr(plan, "unlink_terms", ()) or ())
+            + len(getattr(plan, "delete_keywords", ()) or ())
+            + len(categories))
+
+
+def check(plan: Any, stored: Dict[str, int],
+          limit: Optional[float] = None) -> Dict[str, Any]:
+    """``{ok, removed, stored, fraction, limit, reason}`` for one plan.
+
+    ``stored`` is ``taxonomy_sync.snapshot(conn)``: table counts. Removals are
+    compared with the memberships and keywords those counts describe, because
+    those are what a plan removes.
+    """
+    limit = max_shrink() if limit is None else limit
+    removed = _removals(plan)
+    base = int(stored.get("words_categorys") or 0) + int(stored.get("keywords") or 0)
+    fraction = 0.0 if base <= 0 else min(1.0, removed / base)
+    if base <= 0:
+        return {"ok": True, "removed": removed, "stored": 0, "fraction": 0.0,
+                "limit": limit,
+                "reason": "the database stores no taxonomy yet, so nothing can "
+                          "be removed"}
+    if fraction <= limit:
+        return {"ok": True, "removed": removed, "stored": base,
+                "fraction": round(fraction, 4), "limit": limit,
+                "reason": f"removal of {removed} of {base} stored rows is within "
+                          f"the {limit:.0%} limit"}
+    return {
+        "ok": False, "removed": removed, "stored": base,
+        "fraction": round(fraction, 4), "limit": limit,
+        "reason": (f"this sync would remove {removed} of {base} stored rows "
+                   f"({fraction:.0%}), above the {limit:.0%} limit; the workbook "
+                   f"is probably truncated, half-saved or missing sheets. Nothing "
+                   f"was written. Raise {LIMIT_ENV} deliberately if the removal "
+                   f"is intended"),
+    }

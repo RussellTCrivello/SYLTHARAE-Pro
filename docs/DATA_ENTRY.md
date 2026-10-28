@@ -98,9 +98,35 @@ according to `SYLTHARAE_TAXONOMY_SYNC`:
 | `0` / `off` | neither |
 
 The fingerprint of the last applied run is kept in `APP_DATA_DIR`, so a restart
-with an unchanged file costs one SHA-256 and no database work. An edit made
-while the service was down is therefore applied the next time it starts, and
-nothing else is touched.
+with an unchanged file costs one digest and no database work. An edit made while
+the service was down is therefore applied the next time it starts, and nothing
+else is touched. The fingerprint covers three things - the workbook's bytes, the
+rules that interpret it, and `SYNC_LOGIC_VERSION` in
+`services/importing/taxonomy_sync.py` - because a changed rule makes the same
+file mean something different, and a fingerprint over the bytes alone would let
+the fast path skip work that the new rules would have written.
+
+Measured on this workstation: the unchanged path costs 0.42 ms (one digest,
+0.21 ms of it) and the slow path 56.5 ms for a 30-category workbook; the test
+that measures it is `test_the_fast_path_costs_a_hash_and_the_slow_path_costs_the_plan`.
+
+### Why the entry point still applies
+
+`run_web.py` sets `SYLTHARAE_TAXONOMY_SYNC=apply`. Every other entry point - the
+API, the CLI, a test - defaults to `check`. The reason is the rule at the top of
+this page: an edit to the workbook must reach the database without anybody
+remembering a command, and a served deployment is the only place where nobody is
+watching. It stays safe because three guards stand in front of the write:
+
+| guard | what it does |
+|---|---|
+| rule validation | a workbook that breaks a rule is refused, nothing written |
+| shrink limit (`SYLTHARAE_TAXONOMY_SHRINK_MAX`, default `0.25`) | a sync that would remove more than a quarter of the stored memberships and keywords is **refused**, with the numbers in the message. This is what stops a truncated or half-saved workbook becoming an authoritative deletion. `1` allows any removal |
+| apply lock (advisory) | two instances booting together cannot both apply; the second reports `already_syncing`. A crashed process releases the lock with its connection |
+
+A refusal is a log line and an `action: "refused"` in `GET /api/taxonomy/status`;
+the database is untouched and the fingerprint is not recorded, so the next start
+tries again rather than treating the refusal as "in sync".
 
 **From the interface.** `GET /api/taxonomy/status` answers "is the database up to
 date?" with the pending counts; `POST /api/taxonomy/sync` runs the job. Neither
@@ -158,6 +184,14 @@ review — the test failing is the tool telling you what your edit did.
 An applied run also returns a snapshot of the taxonomy as it was
 (`sync_workbook(..., apply=True)`), so a wrong edit can be put back with
 `restore_state`. A workbook that breaks a rule is never written at all.
+
+Undoing an apply is scoped: `restore_state(conn, snapshot, names=[...])` puts back
+only the categories the sync wrote and removes only those, so a category another
+user created while the sync was running survives the undo. Word rows are never
+deleted by a restore - the vocabulary is shared, and an unused word is harmless
+where a wrongly deleted one is not. Without `names` a restore means "the whole
+taxonomy as it was", which is the right tool for a deliberate rollback and the
+wrong one for undo.
 
 ## What the rules do not cover
 

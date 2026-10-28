@@ -38,6 +38,63 @@ def mode_from_env(default: str = "check") -> str:
     return (os.environ.get("SYLTHARAE_TAXONOMY_SYNC") or default).strip().lower()
 
 
+#: A stable advisory-lock key for "one process may apply the workbook".
+APPLY_LOCK_KEY = 0x5C4E_1D02
+
+
+def _claim_apply_lock(service):
+    """``True`` (claimed), ``False`` (someone else has it) or ``None`` (no DB).
+
+    Best effort by design: a service without a connection (a fake in a unit
+    test, a CLI run over its own connection) keeps the old behaviour, because the
+    lock is a guard against a second *process*, not a correctness requirement.
+    """
+    factory = getattr(service, "_connect", None)
+    if factory is None:
+        return None
+    try:
+        conn = factory()
+    except Exception:
+        return None
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT pg_try_advisory_lock(%s)", (APPLY_LOCK_KEY,))
+            acquired = bool(cur.fetchone()[0])
+        conn.commit()
+    except Exception:
+        try:
+            conn.close()
+        except Exception:
+            pass
+        return None
+    if not acquired:
+        try:
+            conn.close()
+        except Exception:
+            pass
+        return False
+    _claim_apply_lock.held = conn
+    return True
+
+
+def _release_apply_lock(service) -> None:
+    conn = getattr(_claim_apply_lock, "held", None)
+    if conn is None:
+        return
+    _claim_apply_lock.held = None
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT pg_advisory_unlock(%s)", (APPLY_LOCK_KEY,))
+        conn.commit()
+    except Exception:
+        pass
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+
 def reconcile(mode: Optional[str] = None,
               service: Optional[Any] = None) -> Dict[str, Any]:
     """Compare the workbook with the database, and apply it in ``apply`` mode.
@@ -78,7 +135,19 @@ def reconcile(mode: Optional[str] = None,
             return {"action": "already_in_sync", "path": path,
                     "fingerprint": fingerprint}
 
-        result = service.run(TaxonomySyncRequest(apply=True, created_by="startup"))
+        # Two instances booting together must not both apply: one writes, the
+        # other reports that it declined. A session-level advisory lock on the
+        # apply path only - a check costs nothing and must never be blocked.
+        lock = _claim_apply_lock(service)
+        if lock is False:
+            return {"action": "already_syncing", "path": path,
+                    "fingerprint": fingerprint,
+                    "reason": "another process is applying the workbook"}
+        try:
+            result = service.run(
+                TaxonomySyncRequest(apply=True, created_by="startup"))
+        finally:
+            _release_apply_lock(service)
         if not result.success:
             return {"action": "refused", "path": path, "fingerprint": fingerprint,
                     "errors": list(result.errors)}
