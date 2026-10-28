@@ -293,6 +293,27 @@ def main(argv=None) -> int:
         "because the helper was fixed, and that edit is listed, with its old and "
         "new premise, in `TEST_EDITS.md`.",
         "",
+        "## The integration suite, at the same commit", "",
+        "Classification of the integration run (1467 tests, 1349 passed, 5 failed,",
+        "113 skipped) is in `integration_ids.csv`, generated from",
+        "`junit/integration_final.xml` by",
+        "`tools/audit/r22_baseline.py --single`. The five:",
+        "",
+        table(["class", "ids", "why"], [
+            ["NEEDS-DECISION", "4", "the four `test_translation_coverage` locales "
+             "(ar, he, fa, hr) are untranslated catalogues - a translation task, "
+             "not a code defect; `triage_failures.py` already classed them so"],
+            ["COLLATERAL", "1", "`test_the_resolver_declines_what_is_not_a_name"
+             "[\\u202eevil]` passes in isolation at this and at the baseline commit; "
+             "in the full run the resolver finds word 'Evil' from "
+             "`test-doc/Spreadsheets/text-test.tsv`, ingested by another module into "
+             "the shared session database. A test-isolation defect older than this "
+             "round"],
+        ]),
+        "",
+        "113 integration ids were skipped. A skip is not a pass, and no claim in "
+        "this report counts one as green.",
+        "",
         "## Classes that would block closeout",
         "",
         "None. Every failing id carries a class from `triage_failures.py`'s",

@@ -55,6 +55,17 @@ MEDIA_MODULES = ("test_audio_metadata_fallback", "test_video_metadata_only")
 #: entry carries the measurement that justifies it, so the row can be checked
 #: rather than believed.
 MEASURED = {
+    ("tests/integration/test_term_names_hostile_input.py",
+     "test_the_resolver_declines_what_is_not_a_name"): (
+        "COLLATERAL",
+        "cross-module state: another module ingests a spreadsheet containing "
+        "'Evil' into the shared session database",
+        "the id passes in isolation at this commit and at the baseline; in the "
+        "full run the resolver returns word 'Evil' (word_id 18826), which comes "
+        "from `test-doc/Spreadsheets/text-test.tsv` - a file this test does not "
+        "create. The RTL override is stripped, leaving 'evil', which matches it. "
+        "The test and the ingestion are both older than this round",
+    ),
     ("tests/unit/test_content_vs_identity.py", "test_"): (
         "NEEDS-DECISION",
         "stale helper: the test passes `None` as `self` to a method that now reads it",
@@ -180,15 +191,23 @@ def classify_id(test_id: str, engines: set) -> tuple:
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--before", required=True, type=pathlib.Path)
-    parser.add_argument("--after", required=True, type=pathlib.Path)
+    parser.add_argument("--before", type=pathlib.Path)
+    parser.add_argument("--after", type=pathlib.Path)
+    parser.add_argument("--single", type=pathlib.Path,
+                        help="classify one run's failing ids; no comparison is "
+                             "possible, so every id is reported as "
+                             "`failing-in-this-run`")
     parser.add_argument("--engines", type=pathlib.Path,
                         help="JUnit XML from the venv with OCR and ffmpeg")
     parser.add_argument("--out", type=pathlib.Path, required=True)
     args = parser.parse_args(argv)
 
-    before = failing_ids(args.before)
-    after = failing_ids(args.after)
+    if args.single:
+        before, after = {}, failing_ids(args.single)
+    elif args.before and args.after:
+        before, after = failing_ids(args.before), failing_ids(args.after)
+    else:
+        parser.error("give --single, or both --before and --after")
     engines = failing_ids(args.engines) if args.engines else set()
     engine_passed, engine_skipped = (engine_proof(args.engines)
                                      if args.engines else (set(), set()))
@@ -196,7 +215,7 @@ def main(argv=None) -> int:
     ids = sorted(set(before) | set(after))
     rows, unclassified, unproven = [], [], []
     for test_id in ids:
-        if test_id not in after:            # failing before, passing after
+        if args.single is None and test_id not in after:  # failing before, passing
             rows.append({
                 "id": test_id, "dc6a413": before[test_id], "6cf97f3": "pass",
                 "class": "FIXED", "verdict": "fixed between the two commits",
@@ -214,7 +233,9 @@ def main(argv=None) -> int:
             # a claim if the engine run did not actually execute it.
             unproven.append((test_id, "skipped" if test_id in engine_skipped
                              else "absent"))
-        if test_id in before and test_id in after:
+        if args.single:
+            state = "failing-in-this-run"
+        elif test_id in before and test_id in after:
             state = "pre-existing"
         elif test_id in before:
             state = "fixed"
@@ -236,7 +257,10 @@ def main(argv=None) -> int:
         writer.writeheader()
         writer.writerows(rows)
 
-    for label, path in (("before", args.before), ("after", args.after)):
+    for label, path in (("before", args.before), ("after", args.after),
+                        ("single", args.single)):
+        if path is None:
+            continue
         c = counts(path)
         print(f"{label:6} {path.name}: tests={c['tests']} passed={c['passed']} "
               f"failed={c['failed']} errors={c['errors']} skipped={c['skipped']} "
