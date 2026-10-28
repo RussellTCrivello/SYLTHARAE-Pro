@@ -95,6 +95,15 @@ class EventThrottle:
             self.pending = []
 
 
+def _summary_of(result: Any) -> Optional[Dict[str, Any]]:
+    """The stored result of a job: its own summary, or the mapping it returned."""
+    if hasattr(result, "to_dict"):
+        return result.to_dict().get("result_summary")
+    if isinstance(result, dict):
+        return result
+    return None
+
+
 class JobManager:
     """Creates, executes and controls long-running operations."""
 
@@ -185,7 +194,7 @@ class JobManager:
     # Worker lifecycle
     # ------------------------------------------------------------------
     def enqueue(self, job_type: str, created_by: Optional[str] = None,
-                **options: Any) -> Dict[str, Any]:
+                source: Optional[str] = None, **options: Any) -> Dict[str, Any]:
         """Create a job from a schedule.
 
         ``services/scheduling/scheduler.py`` documents its whole job as
@@ -197,7 +206,7 @@ class JobManager:
         """
         return self.create_job(
             job_type,
-            source=f"schedule:{job_type}",
+            source=source or f"schedule:{job_type}",
             options=dict(options),
             created_by=created_by or "system",
         )
@@ -410,8 +419,11 @@ class JobManager:
                 "status": status, "completed_at": finished,
                 "stats": final_stats,
                 "errors": errors, "warnings": warnings,
-                "result_summary": getattr(result, "to_dict", dict)().get("result_summary")
-                if hasattr(result, "to_dict") else None,
+                # A job that returns a plain dict (retention does) had its result
+                # thrown away: ``dict(result).get("result_summary")`` is always
+                # None, so the per-area counts an operator checks after a prune
+                # were stored nowhere. Keep the dict as the summary.
+                "result_summary": _summary_of(result),
             })
             flush_progress(
                 final_percent if final_percent is not None else 100,

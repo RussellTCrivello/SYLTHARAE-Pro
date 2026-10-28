@@ -284,8 +284,15 @@ def _start_scheduler():
         from services.scheduling.scheduler import Scheduler, enabled_by_config
 
         if enabled_by_config():
-            Scheduler.get_instance().start()
-            logger.info("✅ Job scheduler started")
+            import atexit
+
+            runner = Scheduler.get_instance()
+            if runner.start():
+                logger.info("✅ Job scheduler started")
+            # A graceful exit hands the timers and the advisory lock back before
+            # the interpreter tears the threads down, so the next process starts
+            # firing immediately instead of waiting for the socket to close.
+            atexit.register(runner.stop)
     except Exception as exc:
         # Name the cause, not the exception class: "ModuleNotFoundError" alone
         # hid a missing dependency (apscheduler) on a clean install.

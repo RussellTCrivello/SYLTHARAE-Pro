@@ -55,6 +55,7 @@ class ScheduleRunner:
         self._store = store
         self._scheduler = BackgroundScheduler(daemon=True)
         self._job_ids: dict[int, str] = {}  # schedule_id -> apscheduler job id
+        self._leader_conn = None            # holds the advisory lock while set
 
     @classmethod
     def get_instance(cls) -> "ScheduleRunner":
@@ -100,30 +101,66 @@ class ScheduleRunner:
             return {"status": "disabled", "reason": reason,
                     "message": f"this schedule can no longer run: {reason}"}
         try:
-            if schedule_type == "retention":
-                job = self._job_manager.enqueue(
-                    "retention", created_by=owner.get("username") or "system")
-            else:
-                job = self._job_manager.enqueue(
-                    "scenario_evaluation",
-                    created_by=owner.get("username") or "system")
+            job = self._enqueue(schedule_type, schedule_id, schedule.get("payload"),
+                                owner.get("username") or "system")
         except Exception as exc:                       # pragma: no cover - defensive
             log.exception("Schedule %d could not be fired", schedule_id)
             return {"status": "error", "message": f"{exc.__class__.__name__}: {exc}"}
         return {"status": "queued", "job_id": job.get("job_id")}
 
-    def start(self) -> None:
-        """Load enabled schedules and start the background scheduler."""
+    def _enqueue(self, schedule_type: str, schedule_id: int, payload,
+                 actor: str) -> Dict[str, Any]:
+        """Translate the stored payload into the job's options and enqueue it.
+
+        The source names the schedule, so a job row says which schedule fired
+        it; the options are the ones the job reads, so a ``policy`` chosen on
+        the page reaches ``run_retention``. A payload key the job cannot honour
+        is logged with its reason instead of being dropped in silence.
+        """
+        from services.scheduling.model import job_options
+
+        options, dropped = job_options(schedule_type, payload)
+        if dropped:
+            log.warning("Schedule %d: payload field(s) not passed to the job: %s",
+                        schedule_id,
+                        "; ".join(f"{key} ({why})" for key, why in dropped.items()))
+        return self._job_manager.enqueue(
+            schedule_type, created_by=actor,
+            source=f"schedule:{schedule_id}", **options)
+
+    def start(self) -> bool:
+        """Become the firing process, or decline because another one is.
+
+        Returns ``False`` when the advisory lock is held elsewhere: two web
+        processes over one database must not both fire the same schedule, and
+        the second one says so rather than doing it quietly.
+        """
+        if self._leader_conn is None:
+            claim = getattr(self._store, "claim_leadership", None)
+            if claim is not None:
+                self._leader_conn = claim()
+                if self._leader_conn is None:
+                    log.warning(
+                        "Scheduler not started: another process holds the "
+                        "scheduler lock for this database")
+                    return False
         schedules = self._store.list_enabled()
         for s in schedules:
             self._schedule_one(s)
         self._scheduler.start()
         log.info("Scheduler started with %d job(s)", len(schedules))
+        return True
 
     def stop(self) -> None:
-        """Shut down the scheduler cleanly."""
-        self._scheduler.shutdown(wait=False)
-        log.info("Scheduler stopped")
+        """Shut down the scheduler cleanly and give the lock back."""
+        try:
+            self._scheduler.shutdown(wait=False)
+        finally:
+            release = getattr(self._store, "release_leadership", None)
+            if release is not None:
+                release(self._leader_conn)
+            self._leader_conn = None
+            log.info("Scheduler stopped")
 
     def refresh(self, schedule_id: int) -> None:
         """Resync one schedule after create/update/delete/enable/disable."""
@@ -186,7 +223,8 @@ class ScheduleRunner:
             self._store.disable(schedule_id, reason)
             log.info("Schedule %d disabled: %s", schedule_id, reason)
             return
-        self._job_manager.enqueue("scenario_evaluation", schedule_id=schedule_id)
+        self._enqueue("scenario_evaluation", schedule_id, s.payload,
+                      owner.get("username") or "system")
 
     def _run_retention(self, schedule_id: int) -> None:
         s = self._store.get(schedule_id)
@@ -204,7 +242,8 @@ class ScheduleRunner:
             self._store.disable(schedule_id, reason)
             log.info("Schedule %d disabled: %s", schedule_id, reason)
             return
-        self._job_manager.enqueue("retention", schedule_id=schedule_id)
+        self._enqueue("retention", schedule_id, s.payload,
+                      owner.get("username") or "system")
 
 # ``apps/web/app.py`` and ``Api/routes/schedules.py`` import ``Scheduler``. The
 # class has always been called ``ScheduleRunner``; the alias means one name for

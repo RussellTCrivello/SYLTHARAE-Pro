@@ -104,6 +104,53 @@ class ScheduleStoreAdapter:
         return {"id": row[0], "username": row[1], "role": row[2],
                 "is_active": row[3]}
 
+    # -- one scheduler per database ---------------------------------------
+    #: Advisory lock key. Any constant works as long as it is stable: two
+    #: processes that ask for the same key cannot both be the leader, and a
+    #: process that dies releases it with its connection.
+    LEADER_LOCK_KEY = 0x5C4E_1D01
+
+    def claim_leadership(self):
+        """Hold the scheduler's advisory lock, or return ``None``.
+
+        A session-level advisory lock, taken on a connection this object keeps
+        open for as long as it is the leader: the connection *is* the lock, so a
+        crashed process releases it and a second process cannot fire the same
+        schedule twice. Nothing is written to the database, so this needs no
+        migration and no schema.
+        """
+        conn = self._connect()
+        try:
+            with conn.cursor() as cur:
+                cur.execute("SELECT pg_try_advisory_lock(%s)",
+                            (self.LEADER_LOCK_KEY,))
+                acquired = bool(cur.fetchone()[0])
+            conn.commit()
+        except Exception:
+            conn.close()
+            raise
+        if not acquired:
+            conn.close()
+            return None
+        return conn
+
+    def release_leadership(self, conn) -> None:
+        """Give the lock back. Called from ``ScheduleRunner.stop``."""
+        if conn is None:
+            return
+        try:
+            with conn.cursor() as cur:
+                cur.execute("SELECT pg_advisory_unlock(%s)",
+                            (self.LEADER_LOCK_KEY,))
+            conn.commit()
+        except Exception:
+            pass
+        finally:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
     def disable(self, schedule_id: int, reason: str) -> None:
         conn = self._connect()
         try:
