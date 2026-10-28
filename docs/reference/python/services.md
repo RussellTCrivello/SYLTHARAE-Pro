@@ -212,7 +212,7 @@ The guard rails an automatic apply needs before it deletes anything.
 
 - `max_shrink(default: float = DEFAULT_MAX_SHRINK) -> float` - The configured limit, or the default when it is absent or unusable.
 - `removed_threshold(base: int, limit: float) -> int` - How many removals the fraction allows, before the absolute floor.
-- `check(plan: Any, stored: Dict[str, int], limit: Optional[float] = None) -> Dict[str, Any]` - ``{ok, removed, stored, fraction, limit, reason}`` for one plan.
+- `check(plan: Any, stored: Dict[str, int], limit: Optional[float] = None) -> Dict[str, Any]` - ``{ok, removed, added, after, stored, fraction, limit, reason}``.
 
 ### `services/importing/taxonomy_startup.py`
 

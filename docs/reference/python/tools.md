@@ -348,6 +348,7 @@ Classify every failing unit id between two commits, with evidence.
 - `failing_ids(xml_path: pathlib.Path) -> dict` - ``{"classname::name": status}`` for every failing id in a JUnit file.
 - `module_of_id(test_id: str) -> str` - ``tests.unit.test_x.TestY::test_z`` -> ``tests/unit/test_x.py``.
 - `counts(xml_path: pathlib.Path) -> dict`
+- `engine_proof(xml_path: pathlib.Path) -> tuple` - ``(passed, skipped)`` - which ids the engine run actually executed.
 - `classify_id(test_id: str, engines: set) -> tuple` - ``(class, verdict, evidence)`` for one failing id.
 - `main(argv = None) -> int`
 
