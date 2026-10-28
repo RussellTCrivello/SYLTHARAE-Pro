@@ -790,3 +790,44 @@ def sync_workbook(conn, path: str, *, apply: bool = False,
     if before is not None:
         result["snapshot"] = before
     return result
+
+
+#: What a plan means, in sentences an operator can act on. The counts are the
+#: answer and these are the words: "3 shared" is not a fact anybody can decide
+#: about, "3 memberships are listed in a worksheet and not stored" is.
+def summarise(plan: Dict[str, Any]) -> list:
+    """Plain-language standing facts about a plan (or a status payload)."""
+    lines = []
+    not_stored = plan.get("not_stored_shared") or plan.get("not_stored") or []
+    if not_stored:
+        owners = sorted({str(item.get("owner", "")) for item in not_stored})
+        lines.append(
+            f"{len(not_stored)} phrase membership(s) are listed in more than one "
+            f"worksheet and not stored: `keywords.keyword` is unique, so each "
+            f"phrase belongs to one category only ({', '.join(o for o in owners if o)}). "
+            f"`{rules.OWNERS_SHEET}` decides which.")
+    shared = plan.get("shared_keywords")
+    if shared and len(shared) > len(not_stored):
+        lines.append(f"{len(shared)} phrase(s) are listed in more than one worksheet.")
+    missing = plan.get("missing_categories") or []
+    if missing:
+        lines.append(
+            f"{len(missing)} stored categor{'y is' if len(missing) == 1 else 'ies are'} "
+            f"not in the workbook. They are reported, not deleted; deleting them "
+            f"needs `prune_categories` in the request, by name.")
+    orphans = plan.get("orphan_words")
+    if isinstance(orphans, list):
+        orphans = len(orphans)
+    if orphans:
+        lines.append(
+            f"{orphans} word row(s) are referenced by nothing and would be removed "
+            f"only with `prune_words`: the confirm path is the request, not a "
+            f"default.")
+    stale = plan.get("stale_keywords") or []
+    if stale:
+        lines.append(
+            f"{len(stale)} stored phrase(s) belong to a category the workbook does "
+            f"not describe; they are reported as stale.")
+    if not lines:
+        lines.append("The database matches the workbook.")
+    return lines

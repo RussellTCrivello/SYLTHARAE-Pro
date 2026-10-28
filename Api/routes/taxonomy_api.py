@@ -95,6 +95,11 @@ def register_taxonomy_routes(app):
                 "layout": stats.get("layout"),
                 "workbook": stats.get("workbook"),
                 "plan": _summarise(plan),
+                # The same sentences the sync job returns, so "is the database
+                # up to date?" has an answer in words and not only in counts.
+                "summary": stats.get("summary") or [],
+                "not_stored_count": stats.get("not_stored_count", 0),
+                "orphan_words_count": stats.get("orphan_words_count", 0),
                 "warnings": result.warnings,
             },
         })

@@ -232,6 +232,15 @@ class TaxonomySyncService:
                 "detected_renames": bool(
                     outcome.get("plan", {}).get("detected_renames")),
                 "reason": outcome.get("reason"),
+                # The standing facts, in words, beside the counts. Section D of
+                # round 22: a membership the schema cannot store is a fact about
+                # the workbook, not a warning that scrolls away.
+                "summary": sync.summarise(outcome.get("plan") or {}),
+                "not_stored_count": len(
+                    (outcome.get("plan") or {}).get("not_stored_shared") or []),
+                "orphan_words_count": len(
+                    (outcome.get("plan") or {}).get("orphan_words") or []),
+                "removal": outcome.get("removal"),
             })
             result.errors = list(outcome.get("errors") or [])
             for decision in (outcome.get("plan", {}).get("not_stored") or [])[:5]:
