@@ -9,8 +9,8 @@ Every count below is read from a JUnit file, and every id is in
 | run | tests | passed | failed | errors | skipped | failing ids |
 |---|---|---|---|---|---|---|
 | dc6a413, shared worktree | 3565 | 3461 | 72 | 5 | 27 | 77 |
-| 6cf97f3, shared worktree | 3653 | 3550 | 71 | 5 | 27 | 76 |
-| 6cf97f3, the real checkout | 3653 | 3548 | 73 | 5 | 27 | 78 |
+| 6cf97f3, shared worktree (previous environment) | 3653 | 3550 | 71 | 5 | 27 | 76 |
+| the final commit, the real checkout | 3706 | 3604 | 70 | 5 | 27 | 75 |
 | nine OCR/media modules, engine venv | 209 | 209 | 0 | 0 | 0 | 0 |
 
 The skips are reported beside every pass count because a skip is not a
@@ -31,13 +31,15 @@ venv (209 passed, 0 failed, 0 skipped) — and the code did not change.
 | ENV-OCR | 31 |
 | ENV-FFMPEG | 11 |
 
-## The number that cannot be re-derived
+## Three numbers, and what happened to each
 
-The text capture behind 67 no longer exists: the sandbox was re-cloned and
-the file went with it. 67 is therefore **observed, not verified**. It is
-also not a count of ids — counting `FAILED`/`ERROR` lines in a `-q` capture
-double-counts the in-line headers and depends on where the capture was cut.
-The authoritative figures are in the table above, all read from JUnit XML.
+| number | where it came from | status |
+|---|---|---|
+| 34 | Round 21's `id_diff_unit.csv` class column | **verified** - the ids are in the committed CSV; 35 ids are recorded failing (34 pre-existing plus the one regression) |
+| 67 | a `grep -c` over a `-q` text capture from an earlier run in the previous session | **retired** - no artefact survives, and the method cannot produce an id count (a `-q` capture repeats each id in the short summary, so a line count is a function of capture length, not of failures) |
+| 76 / 77 | the JUnit XML of two runs made in one venv | **measured** - these are the numbers this report uses |
+
+The 67 is not reconciled with the 76; it is **withdrawn**. A figure whose raw artefact is gone cannot be re-derived, and the arithmetic that would have to be invented to explain it would be a claim, not a measurement. Everything this round publishes is counted from the JUnit files below. The retired number appears nowhere as evidence, and the sentence it used to support - "67 pre-existing failures" - is replaced by the table above.
 
 ## Reproduced, fixed, and new
 
@@ -48,26 +50,38 @@ The authoritative figures are in the table above, all read from JUnit XML.
 | Round 21 ids this run no longer collects | 0 |
 | ids failing at dc6a413 that are not in the Round 21 list | 42 |
 | ids failing at dc6a413 | 77 |
-| ids failing at 6cf97f3 | 76 |
-| of those, newly passing since dc6a413 | 1 |
-| of those, newly failing since dc6a413 | 0 |
-| ids skipped in the 6cf97f3 run | 27 |
+| ids failing at the final commit | 75 |
+| of those, newly passing since dc6a413 | 3 |
+| of those, newly failing since dc6a413 | 1 |
+| of those, failing only in a real checkout (see below) | 1 |
+| ids skipped in the final run | 27 |
 | Round 21 ids recorded as skipped | 11 |
-| Round 21 skips still skipped at 6cf97f3 | 11 |
+| Round 21 skips still skipped at the final commit | 11 |
 | Round 21 skips that now run and pass | 0 |
 | Round 21 skips that now fail | 0 |
 
-Newly passing: `tests.unit.test_artifact_portability::test_no_new_artifact_names_a_home_directory_or_a_loopback_port`.
+Newly passing: `tests.unit.test_artifact_portability::test_no_new_artifact_names_a_home_directory_or_a_loopback_port`, `tests.unit.test_content_vs_identity::test_forensic_text_is_content_and_is_still_joined`, `tests.unit.test_content_vs_identity::test_identity_metadata_does_not_displace_real_content`.
 
-## Why the real checkout reports two ids the worktree does not
+## The ids that only fail in a real checkout
 
-| id | why it fails here and not in a worktree |
+| id | why it fails in the checkout and not in a worktree |
 |---|---|
-| `tests.unit.test_no_machine_paths::test_no_file_contains_the_checkout_path` | the id depends on where the checkout lives or what the working tree carries |
-| `tests.unit.test_reference_docs::test_reference_docs_are_current` | the id depends on where the checkout lives or what the working tree carries |
+| `tests.unit.test_no_machine_paths::test_no_file_contains_the_checkout_path` | the test asserts that no tracked file contains *this checkout's* absolute path; a worktree has a different path, so the gate cannot fire there. Two files trip it - raw captures from round 14 (`audit_report/r14/ocr_before_no_engine.txt`, `ownership_red.txt`) - and rewriting a captured run would make it say something that was never printed. The gate stays red; the owner decides |
+| `tests.unit.test_reference_docs::test_reference_docs_are_current` | it compares `docs/reference/` with what the generator produces now; the pages were regenerated at the final commit, so it passes here |
 
-Both are properties of the directory, not of the code, and neither is a
-regression: `git diff` between the two runs is empty.
+It is in the failing set of this round because the final run was made in the checkout (the earlier comparison runs were made in a worktree). `path_dependent` = 0: the two runs compared above were both made in the checkout, so no id differs between them for a path reason.
+
+## Every rule this round added to the classifier, and its proof
+
+The classifier is `tools/audit/r22_baseline.py`. It uses `tools/audit/triage_failures.py`'s vocabulary and adds three classes, because the environment question could not be answered with the existing ones. **None of these rules turns a failure green**: each assigns a class, and the tool exits non-zero on any id it cannot place. A rule is added only with a measurement beside it.
+
+| rule | what it claims | the measurement that justifies it |
+|---|---|---|
+| `ENV-OCR` | the module cannot run without an OCR engine | the same nine modules in a venv with rapidocr + opencv 4.10.0 + numpy<2 + ffmpeg 7.0.2: 209 passed, 0 failed, 0 skipped |
+| `ENV-FFMPEG` | the media reader cannot run without ffmpeg | same run as ENV-OCR (the media modules are in the nine) |
+| `DOCS-NOT-COMMITTED / NEEDS-DECISION / test_licensing / test_no_machine_paths` | classes taken from `triage_failures.py`'s own rule table | `tools/audit/triage_failures.py` - no new vocabulary was invented for these |
+
+One rule is worth spelling out because it looked like gate tuning: the two `test_content_vs_identity` ids are classified *stale helper*, with the proof that `inspect.signature(StoragePipeline._extract_text_from_content)` is `(self, content)` and its body calls `self._media_metadata_text`, that the product change is `1c60be5` (an ancestor of the baseline commit), and that both ids are recorded as failing at the baseline in Round 21's own CSV. The rule did not make them pass - it named the cause. They pass now because the helper was fixed, and that edit is listed, with its old and new premise, in `TEST_EDITS.md`.
 
 ## Classes that would block closeout
 

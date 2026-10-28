@@ -46,7 +46,7 @@ from tools.audit.triage_failures import classify  # noqa: E402
 OCR_MODULES = (
     "test_embedded_images", "test_date_and_orientation", "test_pdf_text_layer",
     "test_ocr_engines", "test_ocr_matrix", "test_pdf_mixed_pages",
-    "test_ocr_selfcheck", "test_ocr_provenance_docs",
+    "test_ocr_selfcheck",
 )
 MEDIA_MODULES = ("test_audio_metadata_fallback", "test_video_metadata_only")
 
@@ -133,6 +133,25 @@ def counts(xml_path: pathlib.Path) -> dict:
             "failing_ids": failures + errors}
 
 
+def engine_proof(xml_path: pathlib.Path) -> tuple:
+    """``(passed, skipped)`` - which ids the engine run actually executed.
+
+    A skip is not a pass here either: an id that the engine venv skipped (a
+    reader it lacks) has not been *proved* to be an environment failure, and
+    saying so would be the same mistake as counting a skip as a green.
+    """
+    root = ET.parse(xml_path).getroot()
+    passed, skipped = set(), set()
+    for case in root.iter("testcase"):
+        test_id = f"{case.get('classname')}::{case.get('name')}"
+        tags = {child.tag for child in case}
+        if "skipped" in tags:
+            skipped.add(test_id)
+        elif not tags & {"failure", "error"}:
+            passed.add(test_id)
+    return passed, skipped
+
+
 def classify_id(test_id: str, engines: set) -> tuple:
     """``(class, verdict, evidence)`` for one failing id."""
     path = module_of_id(test_id)
@@ -171,9 +190,11 @@ def main(argv=None) -> int:
     before = failing_ids(args.before)
     after = failing_ids(args.after)
     engines = failing_ids(args.engines) if args.engines else set()
+    engine_passed, engine_skipped = (engine_proof(args.engines)
+                                     if args.engines else (set(), set()))
 
     ids = sorted(set(before) | set(after))
-    rows, unclassified = [], []
+    rows, unclassified, unproven = [], [], []
     for test_id in ids:
         if test_id not in after:            # failing before, passing after
             rows.append({
@@ -188,6 +209,11 @@ def main(argv=None) -> int:
         cls, verdict, evidence = classify_id(test_id, engines)
         if cls == "UNCLASSIFIED":
             unclassified.append(test_id)
+        if cls in ("ENV-OCR", "ENV-FFMPEG", "ENV") and test_id not in engine_passed:
+            # The claim is "this passes once the engine is installed". It is only
+            # a claim if the engine run did not actually execute it.
+            unproven.append((test_id, "skipped" if test_id in engine_skipped
+                             else "absent"))
         if test_id in before and test_id in after:
             state = "pre-existing"
         elif test_id in before:
@@ -231,6 +257,12 @@ def main(argv=None) -> int:
 
     print(f"\nwrote {args.out.relative_to(ROOT) if args.out.is_relative_to(ROOT) else args.out}"
           f" ({len(rows)} ids)")
+    if unproven:
+        print(f"\nENV CLAIMS NOT PROVEN ({len(unproven)}): the engine run did "
+              f"not pass these")
+        for test_id, why in unproven:
+            print(f"    {why:8} {test_id}")
+        return 1
     if unclassified:
         print(f"\nUNCLASSIFIED ({len(unclassified)}): an unexplained failure blocks closeout")
         for test_id in unclassified:

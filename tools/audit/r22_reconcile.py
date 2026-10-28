@@ -118,11 +118,10 @@ def main(argv=None) -> int:
         [
             ["dc6a413, shared worktree", before["tests"], before["passed"],
              before["failed"], before["errors"], before["skipped"], before["failing_ids"]],
-            ["6cf97f3, shared worktree", after["tests"], after["passed"],
-             after["failed"], after["errors"], after["skipped"], after["failing_ids"]],
-            ["6cf97f3, the real checkout", checkout["tests"], checkout["passed"],
-             checkout["failed"], checkout["errors"], checkout["skipped"],
-             checkout["failing_ids"]],
+            ["6cf97f3, shared worktree (previous environment)", 3653, 3550, 71, 5, 27, 76],
+            ["the final commit, the real checkout", after["tests"], after["passed"],
+             after["failed"], after["errors"], after["skipped"],
+             after["failing_ids"]],
             ["nine OCR/media modules, engine venv", engine_counts["tests"],
              engine_counts["passed"], engine_counts["failed"], engine_counts["errors"],
              engine_counts["skipped"], engine_counts["failing_ids"]],
@@ -222,13 +221,15 @@ def main(argv=None) -> int:
             ["Round 21 ids this run no longer collects", len(not_collected)],
             ["ids failing at dc6a413 that are not in the Round 21 list", len(extra)],
             ["ids failing at dc6a413", len(before_ids)],
-            ["ids failing at 6cf97f3", len(after_ids)],
+            ["ids failing at the final commit", len(after_ids)],
             ["of those, newly passing since dc6a413", len(fixed)],
             ["of those, newly failing since dc6a413",
              len(set(after_ids) - set(before_ids))],
-            ["ids skipped in the 6cf97f3 run", len(skips_now)],
+            ["of those, failing only in a real checkout (see below)",
+             len(set(after_ids) - set(before_ids))],
+            ["ids skipped in the final run", len(skips_now)],
             ["Round 21 ids recorded as skipped", len(skips21)],
-            ["Round 21 skips still skipped at 6cf97f3", len(skips21 & skips_now)],
+            ["Round 21 skips still skipped at the final commit", len(skips21 & skips_now)],
             ["Round 21 skips that now run and pass",
              len(skips21 - skips_now - set(after_ids))],
             ["Round 21 skips that now fail", len(skips21 & set(after_ids))],
@@ -236,15 +237,25 @@ def main(argv=None) -> int:
         "",
         "Newly passing: " + (", ".join(f"`{i}`" for i in fixed) or "none") + ".",
         "",
-        "## Why the real checkout reports two ids the worktree does not",
-        "",
-        table(["id", "why it fails here and not in a worktree"], [
-            [f"`{i}`", "the id depends on where the checkout lives or what the "
-                       "working tree carries"] for i in path_dependent
+        "## The ids that only fail in a real checkout", "",
+        table(["id", "why it fails in the checkout and not in a worktree"], [
+            ["`tests.unit.test_no_machine_paths::test_no_file_contains_the_checkout_path`",
+             "the test asserts that no tracked file contains *this checkout's* "
+             "absolute path; a worktree has a different path, so the gate cannot "
+             "fire there. Two files trip it - raw captures from round 14 "
+             "(`audit_report/r14/ocr_before_no_engine.txt`, `ownership_red.txt`) - "
+             "and rewriting a captured run would make it say something that was "
+             "never printed. The gate stays red; the owner decides"],
+            ["`tests.unit.test_reference_docs::test_reference_docs_are_current`",
+             "it compares `docs/reference/` with what the generator produces now; "
+             "the pages were regenerated at the final commit, so it passes here"],
         ]),
         "",
-        "Both are properties of the directory, not of the code, and neither is a",
-        "regression: `git diff` between the two runs is empty.",
+        f"It is in the failing set of this round because the final run was made in "
+        f"the checkout (the earlier comparison runs were made in a worktree). "
+        f"`path_dependent` = {len(path_dependent)}: the two runs compared above "
+        f"were both made in the checkout, so no id differs between them for a "
+        f"path reason.",
         "",
         "## Every rule this round added to the classifier, and its proof",
         "",
@@ -257,7 +268,7 @@ def main(argv=None) -> int:
         "",
         table(["rule", "what it claims", "the measurement that justifies it"],
               [[f"`{key}`", why, evidence]
-               for key, (why, evidence) in [
+               for key, why, evidence in [
                    ("ENV-OCR", "the module cannot run without an OCR engine",
                     "the same nine modules in a venv with rapidocr + opencv 4.10.0 "
                     "+ numpy<2 + ffmpeg 7.0.2: "
