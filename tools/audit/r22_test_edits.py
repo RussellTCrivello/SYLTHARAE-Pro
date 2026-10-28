@@ -26,6 +26,17 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 #: file -> (what changed, whether an assertion changed, why the old premise was
 #: wrong). No entry, no commit: the script exits non-zero.
 JUSTIFIED = {
+    "tests/integration/test_sync_taxonomy.py": (
+        "one key added to the dict `apply_plan` is asserted to return",
+        "no - the assertion is `written == {…}` and the dict gained a counter; "
+        "every previous key still has to be 0",
+        "`apply_plan` now reports `words_kept_for_names`, a counter this round "
+        "added because the prune path was deleting words whose `term_names` rows "
+        "cascaded away. The test asserts the exact dict of counters on a run that "
+        "changes nothing, so a new counter belongs in it: the alternative would be "
+        "to stop reporting the fact. Nothing that was 0 became non-zero - the "
+        "second run still writes nothing.",
+    ),
     "tests/unit/test_content_vs_identity.py": (
         "the `_text` helper",
         "no - both assertions are untouched",

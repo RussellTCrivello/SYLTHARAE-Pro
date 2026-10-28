@@ -8,7 +8,14 @@ These were already in the suite before this round. Each one is listed with what 
 
 | file | what changed | assertion changed? | why the old premise was wrong |
 |---|---|---|---|
+| `tests/integration/test_sync_taxonomy.py` | one key added to the dict `apply_plan` is asserted to return | no - the assertion is `written == {…}` and the dict gained a counter; every previous key still has to be 0 | `apply_plan` now reports `words_kept_for_names`, a counter this round added because the prune path was deleting words whose `term_names` rows cascaded away. The test asserts the exact dict of counters on a run that changes nothing, so a new counter belongs in it: the alternative would be to stop reporting the fact. Nothing that was 0 became non-zero - the second run still writes nothing. |
 | `tests/unit/test_content_vs_identity.py` | the `_text` helper | no - both assertions are untouched | `StoragePipeline._extract_text_from_content` reads `self._media_metadata_text` (changed in 1c60be5, an ancestor of the baseline commit), so passing `None` raised AttributeError inside the method's broad `except` and returned ''. The helper's docstring said `self` is unused; it is used. A real uninitialised instance makes the two assertions test the product again: the payload with content yields the sentence, the metadata-only payload yields ''. |
+
+### `tests/integration/test_sync_taxonomy.py`
+
+```diff
++        "words_kept_for_names": 0,
+```
 
 ### `tests/unit/test_content_vs_identity.py`
 
@@ -36,6 +43,7 @@ New tests carry their own justification in their docstring; they cannot weaken a
 | `tests/integration/test_term_names_survive_sync_pg.py` |
 | `tests/unit/test_audit_baseline_tools.py` |
 | `tests/unit/test_schedule_payload_routing.py` |
+| `tests/unit/test_sync_mode_defaults.py` |
 | `tests/unit/test_taxonomy_guard.py` |
 | `tests/unit/test_taxonomy_status_wording.py` |
 

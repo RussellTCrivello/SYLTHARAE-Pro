@@ -10,7 +10,7 @@ Every count below is read from a JUnit file, and every id is in
 |---|---|---|---|---|---|---|
 | dc6a413, shared worktree | 3565 | 3461 | 72 | 5 | 27 | 77 |
 | 6cf97f3, shared worktree (previous environment) | 3653 | 3550 | 71 | 5 | 27 | 76 |
-| the final commit, the real checkout | 3706 | 3604 | 70 | 5 | 27 | 75 |
+| the final commit, the real checkout | 3707 | 3605 | 70 | 5 | 27 | 75 |
 | nine OCR/media modules, engine venv | 209 | 209 | 0 | 0 | 0 | 0 |
 
 The skips are reported beside every pass count because a skip is not a
