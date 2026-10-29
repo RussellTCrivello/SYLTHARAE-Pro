@@ -236,7 +236,7 @@ def register_common_routes(app, babel_instance):
         
         # Import centralized version
         try:
-            from version import get_version
+            from core.app_version import get_version
             app_version = get_version()
         except ImportError:
             app_version = "unknown"  # version.py is the single source of truth

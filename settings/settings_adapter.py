@@ -67,7 +67,7 @@ class SettingsAdapter:
             return self.settings.version
         except AttributeError:
             try:
-                from version import get_version as _get_version
+                from core.app_version import get_version as _get_version
             except Exception:  # pragma: no cover - defensive
                 return "unknown"
             return _get_version()
@@ -333,7 +333,7 @@ class SettingsAdapter:
         # {"status":"degraded","checks":{"settings":"error: AttributeError"}}
         # on every boot, which is exactly the signal an orchestrator watches.
         try:
-            from version import get_version as _get_version
+            from core.app_version import get_version as _get_version
         except Exception:  # pragma: no cover - defensive
             _get_version = None
 

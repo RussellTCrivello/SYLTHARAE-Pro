@@ -125,6 +125,31 @@ The four failures are the same four ids in both runs (`test_translation_coverage
 | reset disabled | `tests/conftest.py` fixture body replaced by `yield; return` for one run | `FAILED test_the_previous_module_row_is_not_visible_here` ("a row planted by test_isolation_canary_plants survived the module boundary"); reverted, `git grep NEGATIVE CONTROL` = 0 |
 | overlay in place again | `merged = dict(_pristine_catalog(...))` replaced by `merged = catalog` for one run | `FAILED test_a_reset_stops_rendering_on_the_very_next_request`; reverted |
 
+### Closeout edit (round 22, B): a 222-id order defect, and the fix
+
+Two of the three seeded module orders failed **222 ids** while forward and
+reverse passed. The cause was not the dataset but the shared process:
+
+| step | what happens |
+|---|---|
+| a module touches an image | `reader_file` imports `cv2` |
+| `cv2` cannot load | `libGL.so.1` is absent in the locked environment; the import raises |
+| the failure leaves a path behind | OpenCV's loader inserts `<site-packages>/cv2` into `sys.path` and only removes it on success (`cv2/__init__.py`, `sys.path = save_sys_path` is skipped on the exception path) |
+| the next page render | `apps/web/app.py` did `from version import get_version`, which now resolves to `cv2/version.py`, which has no `get_version` |
+| the result | every page that renders the release line answers 500: 193 failed + 29 errors, the same 222 ids in both orders |
+
+The product fix is `core/app_version.py`: the repository's `version.py` is loaded
+by path under the private name `syltharae_version`, so nothing that appears on
+`sys.path` can decide which code answers "what version is this?". The five call
+sites (`apps/web/app.py`, `Api/routes/common.py`, `settings/routes.py`,
+`settings/settings_adapter.py` twice) use it.
+
+`tests/unit/test_version_shadowing.py` (4 ids) was written first and failed:
+a shadowing `version.py` on `sys.path` changed the reported version, the real
+cv2 failure broke it, and the call-site scan found all five imports. All four
+pass after the fix, and `inject_release_info()` returns `2.2.0` with cv2's
+leaked path present.
+
 ## Files added
 
 New tests carry their own justification in their docstring; they cannot weaken an existing gate because they did not exist before.

@@ -427,7 +427,7 @@ def _validated_source_code_url(configured):
 
 @app.context_processor
 def inject_release_info():
-    from version import get_version
+    from core.app_version import get_version
     return {'version': get_version(), 'source_code_url': source_code_url()}
 
 
