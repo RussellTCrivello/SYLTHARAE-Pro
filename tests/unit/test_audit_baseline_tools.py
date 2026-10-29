@@ -10,6 +10,7 @@ round from closing.
 from __future__ import annotations
 
 import importlib
+import json
 import sys
 from pathlib import Path
 
@@ -132,3 +133,89 @@ def test_the_reconciliation_reads_a_skip_as_a_skip(tmp_path):
 def test_both_failure_kinds_are_failing_ids(tmp_path, status):
     path = _junit(tmp_path / "run.xml", [("tests.unit.test_a.TestB", "test_x", status)])
     assert baseline.failing_ids(path) == {"tests.unit.test_a.TestB::test_x": status}
+
+
+# --------------------------------------------------------------------------- #
+# The skip-count baseline
+# --------------------------------------------------------------------------- #
+# Removing 109 of 113 skips is only worth something if a later change cannot
+# quietly put them back. `tools/audit/skip_baseline.py` pins the count and fails
+# a run whose skips grew without a line in the edit table explaining why.
+
+skip_baseline = importlib.import_module("tools.audit.skip_baseline")
+
+
+def test_a_skip_is_classified_by_what_produced_it():
+    assert skip_baseline.categorise("no OCR engine installed") == "ENGINE-OCR"
+    assert skip_baseline.categorise(
+        "PostgreSQL not reachable for the crash-recovery tests") == "DATABASE"
+    assert skip_baseline.categorise("set CATEGORY_SCALE_100K=1 to build the 100k-node tree") \
+        == "OPT-IN-FLAG"
+    assert skip_baseline.categorise("nginx or openssl not installed") == "EXTERNAL-BINARY"
+    assert skip_baseline.categorise("Requires full ingestion pipeline - Part 2") \
+        == "NOT-IMPLEMENTED"
+    # An unknown message keeps its own name instead of borrowing a friendly one.
+    assert skip_baseline.categorise("something new") == "OTHER"
+
+
+def test_skips_are_read_with_their_reasons(tmp_path):
+    path = _junit(tmp_path / "run.xml", [("tests.unit.test_a.TestB", "test_ok", "pass")],
+                  skipped=[("tests.unit.test_a.TestB", "test_s")])
+    found = skip_baseline.skips(path)
+    assert list(found) == ["tests.unit.test_a.TestB::test_s"]
+    assert found["tests.unit.test_a.TestB::test_s"] == "no sample"
+
+
+def test_a_grown_skip_count_is_unexcused_when_nothing_names_the_module(tmp_path):
+    found = {"tests.unit.test_new.TestX::test_y": "no OCR engine installed"}
+    delta = skip_baseline.compare(found, {}, "| `tests/unit/test_other.py` | ... |")
+    assert delta["unexcused"] == found
+    assert delta["excused"] == {}
+
+
+def test_a_grown_skip_count_is_excused_when_the_edit_table_names_the_module():
+    found = {"tests.unit.test_new.TestX::test_y": "no OCR engine installed"}
+    delta = skip_baseline.compare(found, {}, "| `tests/unit/test_new.py` | guard added |")
+    assert delta["excused"] == found
+    assert delta["unexcused"] == {}
+
+
+def test_main_fails_the_run_when_skips_grow_unexplained(tmp_path):
+    current = _junit(tmp_path / "run.xml", [], skipped=[("tests.unit.test_new.TestX", "test_y")])
+    baseline = tmp_path / "baseline.json"
+    baseline.write_text(json.dumps({"count": 0, "ids": {}}), encoding="utf-8")
+    explanations = tmp_path / "edits.md"
+    explanations.write_text("| `tests/unit/test_unrelated.py` |", encoding="utf-8")
+    assert skip_baseline.main(["--current", str(current), "--baseline", str(baseline),
+                               "--explanations", str(explanations)]) == 1
+
+
+def test_main_passes_when_the_count_matches_and_refuses_an_unexplained_record(tmp_path):
+    case = ("tests.unit.test_new.TestX", "test_y")
+    current = _junit(tmp_path / "run.xml", [], skipped=[case])
+    baseline = tmp_path / "baseline.json"
+    explanations = tmp_path / "edits.md"
+    explanations.write_text("nothing relevant", encoding="utf-8")
+    assert skip_baseline.main(["--current", str(current), "--baseline", str(baseline),
+                               "--explanations", str(explanations), "--record"]) == 1
+    assert not baseline.exists(), "an unexplained increase must not be recorded"
+
+    explanations.write_text("| `tests/unit/test_new.py` |", encoding="utf-8")
+    assert skip_baseline.main(["--current", str(current), "--baseline", str(baseline),
+                               "--explanations", str(explanations), "--record"]) == 0
+    assert skip_baseline.main(["--current", str(current), "--baseline", str(baseline),
+                               "--explanations", str(explanations)]) == 0
+
+
+def test_a_skip_that_stops_skipping_has_to_be_re_recorded(tmp_path):
+    # An improvement is not a failure, but leaving the baseline stale would let
+    # the skip return unnoticed, so an equal-count run with a different id set
+    # still exits non-zero until the baseline is rewritten.
+    baseline = tmp_path / "baseline.json"
+    baseline.write_text(json.dumps({"count": 1, "ids": {
+        "tests.unit.test_new.TestX::test_old": "no OCR engine installed"}}), encoding="utf-8")
+    current = _junit(tmp_path / "run.xml", [], skipped=[("tests.unit.test_new.TestX", "test_y")])
+    explanations = tmp_path / "edits.md"
+    explanations.write_text("| `tests/unit/test_new.py` |", encoding="utf-8")
+    assert skip_baseline.main(["--current", str(current), "--baseline", str(baseline),
+                               "--explanations", str(explanations)]) == 1

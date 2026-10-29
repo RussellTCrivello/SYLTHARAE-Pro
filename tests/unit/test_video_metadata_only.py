@@ -47,6 +47,18 @@ def _require(path):
         pytest.skip(f"corpus file missing: {path}")
 
 
+def _require_ffmpeg():
+    """Skip when no ffmpeg binary is installed.
+
+    The container-metadata path needs the binary, which is not a Python
+    package and so is not carried by any lock file. Every test that reads a
+    real container through ffmpeg uses this, so a machine without one reports
+    a skip instead of a failure that says nothing about the reader.
+    """
+    if ffmpeg_path() is None:
+        pytest.skip("no ffmpeg binary available")
+
+
 # --------------------------------------------------------------------------- #
 # ffmpeg banner parsing
 # --------------------------------------------------------------------------- #
@@ -163,6 +175,7 @@ def _stored_text(reader_result):
 def test_video_metadata_reaches_the_stored_text():
     """The readers reported duration and codec; the store kept 0 characters."""
     _require(SAMPLE)
+    _require_ffmpeg()
     result = VideoFileReader().read_video_file(SAMPLE)
     stored = _stored_text(result)
     assert stored, "a media read that yields metadata stored nothing"
@@ -173,18 +186,24 @@ def test_video_metadata_reaches_the_stored_text():
 
 def test_the_stored_text_says_that_speech_was_not_extracted():
     _require(SAMPLE)
+    _require_ffmpeg()
     stored = _stored_text(VideoFileReader().read_video_file(SAMPLE))
     assert "Speech: not extracted" in stored
 
 
 def test_container_tags_are_stored_when_present(tmp_path):
-    if ffmpeg_path() is None:
+    # Only the binary matters to the test. `ffmpeg_path()` already resolves one
+    # (system build first, then the `imageio-ffmpeg` wheel), so importing the
+    # wheel here made the test need a package the lock file does not carry -
+    # and failed outright when a system ffmpeg was present but the wheel was
+    # not installed.
+    ffmpeg = ffmpeg_path()
+    if ffmpeg is None:
         pytest.skip("no ffmpeg binary available")
-    import imageio_ffmpeg
 
     clip = tmp_path / "tagged.mp4"
     completed = subprocess.run(
-        [imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-hide_banner", "-loglevel", "error",
+        [ffmpeg, "-y", "-hide_banner", "-loglevel", "error",
          "-f", "lavfi", "-i", "testsrc=size=160x120:rate=5", "-t", "1",
          "-pix_fmt", "yuv420p", "-metadata", "title=Evidence clip", str(clip)],
         capture_output=True, text=True)
@@ -198,6 +217,7 @@ def test_media_metadata_is_in_provenance_not_only_in_text():
     from pipeline.storage_pipeline import StoragePipeline
 
     _require(SAMPLE)
+    _require_ffmpeg()
     result = VideoFileReader().read_video_file(SAMPLE)
     provenance = StoragePipeline._build_extraction_provenance.__get__(
         object.__new__(StoragePipeline))(result)

@@ -193,6 +193,11 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--before", type=pathlib.Path)
     parser.add_argument("--after", type=pathlib.Path)
+    parser.add_argument("--environment-label", default=None,
+                        help="label a run made outside requirements.lock; the "
+                             "numbers are then comparable only with the same label")
+    parser.add_argument("--skip-env-check", action="store_true",
+                        help="classify anyway (recorded in the output)")
     parser.add_argument("--single", type=pathlib.Path,
                         help="classify one run's failing ids; no comparison is "
                              "possible, so every id is reported as "
@@ -201,6 +206,20 @@ def main(argv=None) -> int:
                         help="JUnit XML from the venv with OCR and ffmpeg")
     parser.add_argument("--out", type=pathlib.Path, required=True)
     args = parser.parse_args(argv)
+
+    from tools.audit import env_lock
+
+    environment = env_lock.report(args.environment_label)
+    print(f"environment {environment['set_hash'][:16]} "
+          f"(python {environment['python']}, {environment['packages']} packages) "
+          f"{'matches' if environment['match'] else 'DOES NOT MATCH'} the lock"
+          + (f"; label {environment['label']!r}" if environment["label"] else ""))
+    if not environment["match"] and not environment["label"] and not args.skip_env_check:
+        print("REFUSING to classify: this is not the locked environment, so its "
+              "failures cannot be compared with the recorded runs. Install "
+              "requirements.lock, or pass --environment-label to say where the "
+              "run was made.", file=sys.stderr)
+        return 2
 
     if args.single:
         before, after = {}, failing_ids(args.single)
@@ -279,8 +298,11 @@ def main(argv=None) -> int:
         a = sum(1 for r in group if r["6cf97f3"] != "pass")
         print(f"{cls:34} {b:6}  {a:5}")
 
+    sidecar = args.out.with_suffix(".environment.json")
+    sidecar.write_text(__import__("json").dumps(environment, indent=2, sort_keys=True),
+                       encoding="utf-8")
     print(f"\nwrote {args.out.relative_to(ROOT) if args.out.is_relative_to(ROOT) else args.out}"
-          f" ({len(rows)} ids)")
+          f" ({len(rows)} ids; environment in {sidecar.name})")
     if unproven:
         print(f"\nENV CLAIMS NOT PROVEN ({len(unproven)}): the engine run did "
               f"not pass these")
