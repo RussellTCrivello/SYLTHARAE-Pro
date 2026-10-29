@@ -40,14 +40,14 @@ touches an assertion about product behaviour.
 
 | file | what changed | assertion changed? | why the old premise was wrong |
 |---|---|---|---|
-| `tests/integration/test_resume_real_database.py` | the module no longer probes `localhost:5432` at import time; `pg` is now a module-scoped fixture that takes the session's `pg_settings` | no - every assertion in all 26 tests is byte-identical | the module ran `psycopg2.connect(host="localhost", port=5432)` at import and set `pytestmark = skipif(...)` when that failed. The suite provisions its own server through `pg_settings` (usually a unix socket), so the probe asked a different question from the one the fixture answers: 26 tests skipped with "PostgreSQL not reachable" on a machine where PostgreSQL was reachable. Measured after the fix: 25 passed, 1 skipped (the documented moved-duplicate known gap), 0 failed. |
+| `tests/integration/test_resume_real_database.py` | the module no longer probes the loopback server at import time; `pg` is now a module-scoped fixture that takes the session's `pg_settings` | no - every assertion in all 26 tests is byte-identical | the module opened a connection to the loopback server on the default port at import and set `pytestmark = skipif(...)` when that failed. The suite provisions its own server through `pg_settings` (usually a unix socket), so the probe asked a different question from the one the fixture answers: 26 tests skipped with "PostgreSQL not reachable" on a machine where PostgreSQL was reachable. Measured after the fix: 25 passed, 1 skipped (the documented moved-duplicate known gap), 0 failed. |
 | `tests/unit/test_video_metadata_only.py` | `test_container_tags_are_stored_when_present` builds the fixture clip with `ffmpeg_path()` instead of `import imageio_ffmpeg`; a new `_require_ffmpeg()` guard is used by the three container-reading tests that lacked one | no - every assertion is untouched | the test imported `imageio_ffmpeg` inside the body to get a binary path, although `ffmpeg_path()` already resolves one (system build first, then that same wheel). It therefore needed a package `requirements.lock` does not carry, and failed with `ModuleNotFoundError: imageio_ffmpeg` in a consistent environment where a system ffmpeg was present. The three unguarded readers (`test_video_metadata_reaches_the_stored_text`, `test_the_stored_text_says_that_speech_was_not_extracted`, `test_media_metadata_is_in_provenance_not_only_in_text`) failed on a machine without ffmpeg while their siblings in the same file skipped with "no ffmpeg binary available"; they now use the same guard. |
 
 ```diff
 --- a/tests/integration/test_resume_real_database.py
 +++ b/tests/integration/test_resume_real_database.py
 -# probed at import time, and skipped the whole module when it failed
--PG = {"host": "localhost", "port": 5432, ...}
+-PG = {"host": <loopback host>, "port": <default port>, ...}
 -def _postgres_available(): ...
 -pytestmark = pytest.mark.skipif(not _postgres_available(), reason=...)
 +@pytest.fixture(scope="module")
@@ -149,6 +149,22 @@ a shadowing `version.py` on `sys.path` changed the reported version, the real
 cv2 failure broke it, and the call-site scan found all five imports. All four
 pass after the fix, and `inject_release_info()` returns `2.2.0` with cv2's
 leaked path present.
+
+### Closeout edits (round 22, B): the video module's cv2 guard
+
+| file | what changed | assertion changed? | why the old premise was wrong |
+|---|---|---|---|
+| `tests/unit/test_video_metadata_only.py` | `pytest.importorskip("cv2")` replaced by `_require_opencv()`, which tries the import, undoes what a failed load leaves behind, and skips with the reason | no - every assertion is untouched | `importorskip` skips only when the module is **absent**. In the locked environment `cv2` is installed but cannot load (`libGL.so.1`), and pytest re-raises an `ImportError` from an existing module, so the test failed instead of skipping. The failed load is also not free: OpenCV leaves its own directory on `sys.path` and a half-imported `cv2` in `sys.modules`, and the next `import cv2` then raises "recursion is detected during loading of cv2 binaries". `_require_opencv()` restores both before skipping, which is why the test no longer takes its neighbours down with it. |
+
+### Files added in the final verification
+
+| file | ids | what they prove |
+|---|---|---|
+| `tests/unit/test_version_shadowing.py` | 4 | the application version cannot be shadowed: a `version.py` earlier on `sys.path` does not change it, a failed `import cv2` (the real production shape) does not break it, and no call site imports the name again |
+| `core/app_version.py` (product) | — | the fix behind those tests: `version.py` is loaded by path under a private name |
+| `tools/audit/order_matrix.py` | — | runs the integration suite forward, reverse and in N seeded orders and fails when the failing-id sets differ |
+| `tests/integration/test_translation_catalog_overlay.py` | 5 | the overlay is per request: reset visible on the next request, no torn render under concurrency, no cross-locale leak, no growth of the pristine map across 1,000 requests |
+| `tests/suite_isolation.py`, `tests/unit/test_suite_isolation.py`, `tests/integration/test_isolation_canary_*.py` | 5 + 7 + 5 | the module reset really runs (canary, both orders, and it fails when the reset is disabled) |
 
 ## Files added
 

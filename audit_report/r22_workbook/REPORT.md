@@ -139,3 +139,86 @@ python3 -m pytest tests/integration/test_sync_taxonomy.py -q   # needs PostgreSQ
 ```
 
 The operator's contract is [docs/DATA_ENTRY.md](../../docs/DATA_ENTRY.md).
+
+## Final verification (round 22 closeout)
+
+Every number below names its environment and its command; a claim that is
+inferred rather than measured says so. The full set of edits is in
+`TEST_EDITS.md`, the environments in `ENVIRONMENT.md`.
+
+### Order independence — measured
+
+`tools/audit/order_matrix.py --python {tmp}/rv/bin/python --seeds 1 2 3`,
+locked environment, 132 integration modules, same tree for all five runs:
+
+| order | tests | passed | failed | errors | skipped | failing ids |
+|---|---|---|---|---|---|---|
+| forward | 1484 | 1392 | 4 | 0 | 88 | 4 |
+| reverse | 1484 | 1392 | 4 | 0 | 88 | 4 |
+| seed 1 | 1484 | 1392 | 4 | 0 | 88 | 4 |
+| seed 2 | 1484 | 1392 | 4 | 0 | 88 | 4 |
+| seed 3 | 1484 | 1392 | 4 | 0 | 88 | 4 |
+
+The failing-id sets are **equal across all five orders** (`failing_ids_agree:
+true` in the tool's `summary.json`). Getting there took two fixes and one
+product defect:
+
+| what the orders exposed | fix |
+|---|---|
+| `test_term_names_hostile_input::…[\\u202eevil]` failed only in a full run | per-module database reset (`tests/suite_isolation.py`); the row came from another module |
+| `test_signal_ingestion` failed without a gazetteer in the reversed order | the module loads `data/gazetteer/places_seed.json` itself |
+| `test_translation_management_page_renders_in_the_selected_language[ar]` | product fix: the overlay no longer welds itself into Babel's cache |
+| 222 ids in two seeded orders | product fix: the application version is no longer resolved through `sys.path`, where a failed `import cv2` leaves its own directory behind (§ below) |
+
+### The 222-id defect
+
+`import cv2` fails in the locked environment (`libGL.so.1` missing) **after**
+inserting `<site-packages>/cv2` into `sys.path`; OpenCV only restores the path on
+success. Any later `from version import get_version` then imports
+`cv2/version.py`, and every page that renders the release line answers 500.
+`core/app_version.py` loads the repository's `version.py` by path instead.
+Measured: with cv2's leaked path present, `inject_release_info()` returns
+`2.2.0`; before the fix it raised `ImportError`.
+
+### Environments — measured
+
+| environment | set hash | what it is |
+|---|---|---|
+| locked (`{tmp}/rv`) | `1353dba7e052f925…` | `requirements.lock` alone, 118 packages, python 3.11.2 |
+| provisioned (`{tmp}/rv_prov`) | `e1c90bc3fc067101…` | the same lock, minus the GUI `opencv-python`, with `opencv-python-headless` reinstalled last (owns `cv2/`) and `imageio-ffmpeg` providing an `ffmpeg` binary |
+
+The provisioned run of the modules whose tests skip in the lock:
+**160 tests, 159 passed, 0 failed, 1 skipped** (the documented moved-duplicate
+gap). So those skips are the environment, not the code.
+
+### Skips — measured, with the enforced baseline
+
+| suite | tests | passed | failed | errors | skipped |
+|---|---|---|---|---|---|
+| integration (locked) | 1484 | 1392 | 4 | 0 | 88 |
+| unit (locked) | 3727 | 3623 | 66 | 5 | 33 |
+
+The integration skip count fell from 113 to 88 by removing the two causes that
+were removable (`test_resume_real_database`'s localhost probe, and the
+`imageio_ffmpeg` import); the remaining 88 are the OCR engine (84), the opt-in
+100k-scale flag (1), nginx/openssl (1), an unbuilt pipeline part (1) and the
+documented moved-duplicate gap (1). `tools/audit/skip_baseline.py` pins both
+counts: an increase fails unless the module is named in `TEST_EDITS.md`, and a
+decrease has to be re-recorded.
+
+### The four translation-coverage failures — owner and decision date
+
+`tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[ar|he|fa|hr]`
+fails in every order and in every environment (they read the `.po` files, not the
+database): 309 Arabic, 284 Hebrew, 284 Persian and 359 Croatian entries are
+empty or fuzzy.
+
+| field | value |
+|---|---|
+| owner | the repository owner (product owner of `translations/`) |
+| decision date | **2026-11-05** |
+| the gate | refuses an empty or fuzzy entry rather than counting it as translated |
+| options | translate the entries, or change the threshold **with a recorded decision** - the gate is not to be relaxed silently |
+
+This round did not touch either: it is content, not code, and the gate is what
+would catch the next round's regression.

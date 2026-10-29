@@ -14,6 +14,7 @@ The behavioural half of each row is proved by
 | is a fire observable before it deletes? | yes: the job row names the schedule and its `result_summary` carries the per-area counts | `test_the_first_fire_is_observable_before_it_deletes_anything` |
 | can two processes both fire? | no: one holds the advisory lock and the other declines | `test_two_instances_do_not_both_fire` |
 | does stopping the process stop the timers? | yes: `stop()` shuts the scheduler down and releases the lock; a hard exit releases it with the connection | `test_exiting_the_process_stops_the_scheduler_and_frees_the_lock` |
+| does a **SIGKILLed** leader block the next boot? | no: the lock is the connection, so the kill frees it; a second runner declines while the leader lives and leads within the retry window after `SIGKILL` | `test_a_sigkilled_leader_releases_the_lock_and_the_next_one_leads` |
 
 ## What each schedulable type does by default
 

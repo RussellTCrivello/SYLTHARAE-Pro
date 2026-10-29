@@ -47,6 +47,32 @@ def _require(path):
         pytest.skip(f"corpus file missing: {path}")
 
 
+def _require_opencv():
+    """Skip when OpenCV cannot actually be imported.
+
+    ``pytest.importorskip("cv2")`` is not enough: the module *exists* in the
+    locked environment, it just fails to load its binaries (``libGL.so.1`` is
+    absent for the GUI wheel). pytest re-raises an ``ImportError`` from an
+    existing module, so the test failed instead of skipping - and the failed
+    load leaves OpenCV's own directory on ``sys.path``, which makes a later
+    ``import cv2`` raise "recursion is detected". Both are undone here so a
+    skip leaves the interpreter as it found it.
+    """
+    import sys
+
+    before_path = list(sys.path)
+    try:
+        import cv2                                       # noqa: F401
+    except Exception as exc:                             # noqa: BLE001 - the reason
+        for name in [m for m in sys.modules if m == "cv2" or m.startswith("cv2.")]:
+            sys.modules.pop(name, None)
+        sys.path[:] = before_path
+        if hasattr(sys, "OpenCV_LOADER"):
+            delattr(sys, "OpenCV_LOADER")
+        pytest.skip(f"cv2 is installed but cannot load in this environment: {exc}")
+    return True
+
+
 def _require_ffmpeg():
     """Skip when no ffmpeg binary is installed.
 
@@ -149,7 +175,7 @@ def test_a_file_that_is_not_a_video_does_not_crash_the_reader(no_decoders, tmp_p
 # --------------------------------------------------------------------------- #
 def test_the_opencv_path_also_says_no_speech_was_extracted():
     _require(SAMPLE)
-    pytest.importorskip("cv2")
+    _require_opencv()
     result = VideoFileReader().read_video_file(SAMPLE)
     assert "error" not in result, result.get("error")
     assert result["speech_extracted"] is False

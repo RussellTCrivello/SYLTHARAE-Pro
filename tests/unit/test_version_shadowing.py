@@ -64,21 +64,34 @@ def test_a_shadowing_version_module_does_not_change_the_reported_version(tmp_pat
 
 
 def test_the_failed_opencv_import_does_not_break_the_version(monkeypatch):
-    """The exact production shape: cv2 cannot load, and leaves a path behind."""
+    """The exact production shape: cv2 cannot load, and leaves state behind."""
     monkeypatch.delitem(sys.modules, "version", raising=False)
+    before_modules = set(sys.modules)
+    before_path = list(sys.path)
     try:
         import cv2                                       # noqa: F401
     except Exception:                                    # libGL, or not installed
         pass
-    leaked = [p for p in sys.path if p.rstrip("/").endswith("cv2")]
-    helper = importlib.import_module("core.app_version")
-    assert helper.get_version() == _repo_version()
-    if leaked:
-        # The leak is cv2's, not ours: it is exactly the condition this fix
-        # has to survive, so it is asserted rather than tolerated silently.
-        assert helper.get_version() != "9.9.9-shadow"
-    monkeypatch.undo()
-    sys.path[:] = [p for p in sys.path if not p.rstrip("/").endswith("cv2")]
+    leaked = [p for p in sys.path if p not in before_path]
+    try:
+        helper = importlib.import_module("core.app_version")
+        assert helper.get_version() == _repo_version()
+        if leaked:
+            # The leak is cv2's, not ours: it is exactly the condition this fix
+            # has to survive, so it is asserted rather than tolerated silently.
+            assert helper.get_version() != "9.9.9-shadow"
+    finally:
+        # A half-imported cv2 is not a leftover this test may hand to the next
+        # module: with its own directory on sys.path a second ``import cv2``
+        # raises "recursion is detected during loading of cv2 binaries", which
+        # is how this test first made tests/unit/test_video_metadata_only.py
+        # fail. Put the interpreter back exactly as it was.
+        for name in [m for m in sys.modules
+                     if m == "cv2" or m.startswith("cv2.")
+                     or (m not in before_modules and m == "version")]:
+            monkeypatch.delitem(sys.modules, name, raising=False)
+        monkeypatch.delattr(sys, "OpenCV_LOADER", raising=False)
+        sys.path[:] = before_path
 
 
 def test_no_call_site_imports_the_version_by_name():
