@@ -33,6 +33,29 @@ _MAP_DATA.mkdir(parents=True, exist_ok=True)
 _SHIPPED_CATALOG = PROJECT_ROOT / "map_data" / "catalog.json"
 if _SHIPPED_CATALOG.is_file() and not (_MAP_DATA / "catalog.json").exists():
     (_MAP_DATA / "catalog.json").write_bytes(_SHIPPED_CATALOG.read_bytes())
+# What the checkout looked like before this run touched it. A developer running
+# the suite from a dirty tree is normal; a run that *adds* to that dirt is not.
+# ``tests/unit/test_run_leaves_no_tracked_changes.py`` compares the two, so
+# "the suite does not write the repository" is measured per run instead of
+# assumed.
+GIT_STATUS_AT_START = _MAP_DATA.parent / "git_status_at_start.txt"
+
+
+def _record_git_status() -> None:
+    import subprocess
+
+    try:
+        completed = subprocess.run(["git", "status", "--porcelain", "--untracked-files=all"],
+                                   cwd=str(PROJECT_ROOT), capture_output=True,
+                                   text=True, timeout=120)
+    except Exception:                                    # noqa: BLE001 - no git, no test
+        return
+    if completed.returncode == 0:
+        GIT_STATUS_AT_START.write_text(completed.stdout, encoding="utf-8")
+
+
+_record_git_status()
+
 os.environ.setdefault("FLASK_SECRET_KEY", "test-secret-key-not-for-production-0123456789")
 os.environ.setdefault("FLASK_ENV", "development")
 
