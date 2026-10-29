@@ -109,6 +109,15 @@ def load_baseline(path: pathlib.Path) -> dict:
     return payload.get("ids", payload)
 
 
+def _provenance(path: pathlib.Path, found: dict) -> dict:
+    """Enough about a JUnit file to find it again: name, digest, skip count."""
+    import hashlib
+
+    data = path.read_bytes() if path.exists() else b""
+    return {"file": path.name, "sha256": hashlib.sha256(data).hexdigest()[:16],
+            "skips": len(found)}
+
+
 def explained_modules(text: str) -> set:
     """Module paths the edit table names, e.g. ``tests/unit/test_x.py``."""
     return set(re.findall(r"tests/[A-Za-z0-9_/]+\.py", text or ""))
@@ -158,8 +167,11 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
 
     found = {}
+    per_file = []
     for path in args.current:
-        found.update(skips(path))
+        one = skips(path)
+        per_file.append(one)
+        found.update(one)
     baseline = load_baseline(args.baseline)
     explanations = (args.explanations.read_text(encoding="utf-8")
                     if args.explanations.exists() else "")
@@ -214,9 +226,16 @@ def main(argv=None) -> int:
                 print(f"    {category:18} {len(ids):4}")
             print("    every id is pinned in the file; a later increase is refused "
                   "unless the edit table names the module")
+        previous = len(baseline)
         payload = {"count": len(found), "ids": dict(sorted(found.items())),
                    "by_category": {k: len(v) for k, v in by_category.items()},
-                   "first_recording": not args.baseline.exists()}
+                   "first_recording": not args.baseline.exists(),
+                   "previous_count": previous,
+                   # Which run produced this pin. A baseline whose provenance is
+                   # "some run, some day" cannot be audited; these are the files
+                   # it was measured from, with their own counts.
+                   "recorded_from": [_provenance(path, found_) for path, found_ in
+                                     zip(args.current, per_file)]}
         args.baseline.parent.mkdir(parents=True, exist_ok=True)
         args.baseline.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n",
                                  encoding="utf-8")

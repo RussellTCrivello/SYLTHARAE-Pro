@@ -233,3 +233,40 @@ def test_a_skip_that_stops_skipping_has_to_be_re_recorded(tmp_path):
     explanations.write_text("| `tests/unit/test_new.py` |", encoding="utf-8")
     assert skip_baseline.main(["--current", str(current), "--baseline", str(baseline),
                                "--explanations", str(explanations)]) == 1
+
+
+def test_a_re_pin_is_refused_in_the_same_run_that_increased_the_count(tmp_path):
+    """The pin moves only when every new skip is named in the edit table.
+
+    A run that both measures an increase and writes the new baseline would
+    launder the increase: the number would be higher, the file would say it is
+    expected, and nobody would have had to write down why. The refusal is
+    per-id, so a run that names one module and quietly grows by another is
+    still refused.
+    """
+    baseline = tmp_path / "baseline.json"
+    explanations = tmp_path / "edits.md"
+    explanations.write_text("nothing relevant", encoding="utf-8")
+    first = _junit(tmp_path / "first.xml", [], skipped=[("tests.unit.test_a.TestA", "test_one")])
+    assert skip_baseline.main(["--current", str(first), "--baseline", str(baseline),
+                               "--explanations", str(explanations), "--record"]) == 0
+
+    # Two new skips, one of them named: still an unexplained increase.
+    grown = _junit(tmp_path / "grown.xml", [],
+                   skipped=[("tests.unit.test_a.TestA", "test_one"),
+                            ("tests.unit.test_named.TestN", "test_two"),
+                            ("tests.unit.test_unnamed.TestU", "test_three")])
+    explanations.write_text("| `tests/unit/test_named.py` | named |", encoding="utf-8")
+    assert skip_baseline.main(["--current", str(grown), "--baseline", str(baseline),
+                               "--explanations", str(explanations), "--record"]) == 1
+    assert json.loads(baseline.read_text(encoding="utf-8"))["count"] == 1, \
+        "a refused recording must leave the pin where it was"
+
+    explanations.write_text("| `tests/unit/test_named.py` | named |\n"
+                            "| `tests/unit/test_unnamed.py` | named too |", encoding="utf-8")
+    assert skip_baseline.main(["--current", str(grown), "--baseline", str(baseline),
+                               "--explanations", str(explanations), "--record"]) == 0
+    payload = json.loads(baseline.read_text(encoding="utf-8"))
+    assert payload["count"] == 3
+    assert payload["previous_count"] == 1
+    assert payload["recorded_from"][0]["skips"] == 3
