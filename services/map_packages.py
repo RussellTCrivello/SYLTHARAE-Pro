@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 import shutil
 import tarfile
@@ -23,8 +24,17 @@ _PACKAGE_ID = re.compile(r"^[a-z0-9][a-z0-9._-]{0,63}$", re.I)
 _active_downloads: Dict[str, threading.Thread] = {}
 
 
+#: Where the map tree lives. A deployment keeps it beside the sources (the
+#: default). It is overridable because the suite must not write into the
+#: checkout: ``map_data/registry.db`` holds the tile cache, and a test run that
+#: opened it dirtied a tracked, 15 MB binary on every run.
+MAP_DATA_DIR_ENV = "MAP_DATA_DIR"
+
+
 def map_data_root() -> Path:
-    root = get_project_root() / "map_data"
+    override = (os.environ.get(MAP_DATA_DIR_ENV) or "").strip()
+    root = (Path(override).expanduser().resolve() if override
+            else get_project_root() / "map_data")
     root.mkdir(parents=True, exist_ok=True)
     for name in ("packages", "installed", "runtime"):
         (root / name).mkdir(parents=True, exist_ok=True)
