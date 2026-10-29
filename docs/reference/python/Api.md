@@ -906,7 +906,7 @@ Catalog-backed translation management and runtime overrides.
 - `source_entry_for_id(entry_id: str) -> Optional[dict]`
 - `get_translation_overrides(locale: str, use_cache: bool = True) -> Dict[str, dict]` - Return the sparse database overrides, with a short process-local cache.
 - `invalidate_translation_override_cache(locale: Optional[str] = None) -> None`
-- `apply_runtime_translation_overrides(locale: str) -> None` - Overlay the selected locale's saved edits into this Babel request.
+- `apply_runtime_translation_overrides(locale: str) -> None` - Overlay the selected locale's saved edits into this request's Babel catalog.
 - `translation_management_catalog(locale: str, query: str = '', screen: str = '', status: str = 'all', page: int = 1, per_page: int = 50) -> dict` - Filtered, paginated translation data for the administrator interface.
 - `placeholder_signature(text: str) -> List[str]` - Named gettext/JS placeholders which a translator must preserve.
 - `save_translation_changes(locale: str, changes: List[dict], updated_by: Optional[int]) -> int` - Atomically save or reset a validated batch of locale overrides.
