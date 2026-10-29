@@ -10,6 +10,7 @@ from typing import Dict, Any, Optional, Set
 from pathlib import Path
 
 from .base_reader import BaseReader
+from core.optional_imports import import_opencv
 
 from Hdg_Err_Ex_Log import (
     handle_error,
@@ -38,25 +39,60 @@ NO_SPEECH_NOTE = (
 _FFMPEG_PROBE_TIMEOUT = 30
 
 
+#: ``{path: bool}`` - whether this binary actually ran. A path is probed once.
+_FFMPEG_USABLE: Dict[str, bool] = {}
+
+
+def _runs(binary: str) -> bool:
+    """Does this program run and identify itself as ffmpeg?
+
+    ``shutil.which`` answers "is a file with this name here and executable",
+    which is not the same question. A broken symlink into a deleted virtualenv,
+    a stub left on ``PATH``, or a build missing a shared library all pass
+    ``which`` and then fail every invocation - and the caller sees a reader
+    that stored nothing rather than an environment that cannot read. Round 22
+    reproduced exactly that shape.
+    """
+    import subprocess
+
+    if binary in _FFMPEG_USABLE:
+        return _FFMPEG_USABLE[binary]
+    usable = False
+    try:
+        completed = subprocess.run([binary, "-version"], capture_output=True,
+                                   text=True, timeout=10)
+        usable = completed.returncode == 0 and "ffmpeg version" in (
+            completed.stdout + completed.stderr).lower()
+    except Exception:                                    # noqa: BLE001
+        usable = False
+    _FFMPEG_USABLE[binary] = usable
+    return usable
+
+
 def ffmpeg_path():
-    """An ffmpeg binary, or None.
+    """An ffmpeg binary that runs, or None.
 
     ``imageio-ffmpeg`` ships a static ffmpeg in its wheel, so a machine with no
     system ffmpeg still has one. Checked in that order because the system build
-    may carry codecs the bundled one does not.
+    may carry codecs the bundled one does not. A candidate is only returned if
+    it actually runs (see :func:`_runs`); a program that exists but cannot read
+    anything is reported as absent, so the caller skips instead of failing.
     """
     import shutil
 
     for candidate in ("ffmpeg", "ffmpeg.exe"):
         found = shutil.which(candidate)
-        if found:
+        if found and _runs(found):
             return found
     try:
         import imageio_ffmpeg
 
-        return imageio_ffmpeg.get_ffmpeg_exe()
-    except Exception:
-        return None
+        bundled = imageio_ffmpeg.get_ffmpeg_exe()
+        if bundled and _runs(bundled):
+            return bundled
+    except Exception:                                    # noqa: BLE001
+        pass
+    return None
 
 
 def _parse_ffmpeg_stderr(text: str) -> Dict[str, Any]:
@@ -239,10 +275,14 @@ class VideoFileReader(BaseReader):
             result["error"] = f"Cannot get file size: {str(e)}"
             return result
         
-        # Try opencv first (most reliable and fastest)
+        # Try opencv first (most reliable and fastest). Imported through the
+        # guard: a failed load leaves OpenCV's own directory on sys.path, where
+        # it can shadow a later import in the same process (round 22).
         try:
-            import cv2
-            
+            cv2 = import_opencv()
+            if cv2 is None:
+                raise ImportError("cv2 is not usable in this environment")
+
             cap = cv2.VideoCapture(filepath)
             
             if not cap.isOpened():

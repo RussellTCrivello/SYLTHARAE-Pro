@@ -33,6 +33,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, Iterable, List, Optional, Sequence, Tuple
 
+from core.optional_imports import import_opencv
+
 logger = logging.getLogger(__name__)
 
 BBox = Tuple[int, int, int, int]
@@ -281,9 +283,11 @@ def _glyph_size(image: Any) -> Optional[float]:
     OpenCV is unavailable (the search then runs at the given size).
     """
     try:
-        import cv2
         import numpy as np
     except ImportError:
+        return None
+    cv2 = import_opencv()
+    if cv2 is None:
         return None
     try:
         gray = np.array(image.convert("L"))
