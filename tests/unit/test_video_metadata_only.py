@@ -291,6 +291,9 @@ def test_a_binary_that_cannot_run_is_not_reported_as_usable(tmp_path, monkeypatc
     stub.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
     stub.chmod(0o755)
     monkeypatch.setenv("PATH", str(tmp_path))
+    # A machine may also have the bundled wheel; the question here is only
+    # whether the *stub* is accepted, so the wheel is made unavailable.
+    monkeypatch.setitem(sys.modules, "imageio_ffmpeg", None)
     import importlib
 
     import reader_file.readers.read_video as read_video
@@ -309,6 +312,7 @@ def test_a_working_binary_is_still_found(tmp_path, monkeypatch):
     stub.write_text("#!/bin/sh\necho 'ffmpeg version 7.0.2-static'\nexit 0\n", encoding="utf-8")
     stub.chmod(0o755)
     monkeypatch.setenv("PATH", str(tmp_path))
+    monkeypatch.setitem(sys.modules, "imageio_ffmpeg", None)
     import importlib
 
     import reader_file.readers.read_video as read_video

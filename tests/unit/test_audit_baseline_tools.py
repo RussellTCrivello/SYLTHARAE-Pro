@@ -105,8 +105,12 @@ def test_main_exits_non_zero_when_an_id_cannot_be_classified(tmp_path):
     after = _junit(tmp_path / "after.xml",
                    [("tests.unit.test_nope.TestX", "test_y", "failure")])
     out = tmp_path / "ids.csv"
+    # The classification, not the environment: a run made outside
+    # requirements.lock has to say so, and these tests are not measuring the
+    # lock. Without the label this assertion would hold only on a machine whose
+    # package set happens to match the lock exactly.
     assert baseline.main(["--before", str(before), "--after", str(after),
-                          "--out", str(out)]) == 1
+                          "--out", str(out), "--environment-label", "unit-tests"]) == 1
     assert "test_nope" in out.read_text(encoding="utf-8")
 
 
@@ -117,7 +121,7 @@ def test_a_fixed_id_is_classed_fixed_and_does_not_block_closeout(tmp_path):
                    [("tests.unit.test_nope.TestX", "test_y", None)])
     out = tmp_path / "ids.csv"
     assert baseline.main(["--before", str(before), "--after", str(after),
-                          "--out", str(out)]) == 0
+                          "--out", str(out), "--environment-label", "unit-tests"]) == 0
     row = out.read_text(encoding="utf-8")
     assert ",FIXED," in row
 
