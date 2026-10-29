@@ -149,7 +149,12 @@ inferred rather than measured says so. The full set of edits is in
 ### Order independence — measured
 
 `tools/audit/order_matrix.py --python {tmp}/rv/bin/python --seeds 1 2 3`,
-locked environment, 132 integration modules, same tree for all five runs:
+locked environment, 132 integration modules, same tree for all five runs.
+Measured at `a64fbf4`, a re-run made after the video module's cv2 guard was
+fixed so that the matrix describes the tree that ships. No product or integration
+file changed between `2a3f448` and the tip (`git diff --stat 2a3f448..HEAD --
+tests/integration core Api apps settings reader_file pipeline database` is
+empty), so the table describes the tip:
 
 | order | tests | passed | failed | errors | skipped | failing ids |
 |---|---|---|---|---|---|---|
@@ -193,6 +198,10 @@ gap). So those skips are the environment, not the code.
 
 ### Skips — measured, with the enforced baseline
 
+Measured in the locked environment, each suite once, at the tip: integration `{tmp}/final/integration.xml`, unit
+`{tmp}/final/unit4.xml` (the unit suite was re-run after the last test-file
+change).
+
 | suite | tests | passed | failed | errors | skipped |
 |---|---|---|---|---|---|
 | integration (locked) | 1484 | 1392 | 4 | 0 | 88 |
@@ -222,3 +231,59 @@ empty or fuzzy.
 
 This round did not touch either: it is content, not code, and the gate is what
 would catch the next round's regression.
+
+### Every failing id classified — measured
+
+`tools/audit/r22_baseline.py --single {tmp}/final/unit4.xml` classifies each of
+the 71 failing ids against the committed baseline; the table below is its
+output, and it exits non-zero if any id lands in `UNCLASSIFIED`. This run: 71
+ids, 0 unclassified, exit 0.
+
+| class | ids | what it is | whose |
+|---|---|---|---|
+| ENV-OCR | 31 | no OCR engine in the lock (no `tesseract`, no usable `cv2`) | environment; passes in the provisioned environment |
+| DOCS-NOT-COMMITTED | 26 | generated documents the checkout does not carry (`docs/COMPONENT_LIBRARY.md`, `docs/ARCHITECTURE.md`, …) | repository, unchanged this round |
+| ENV-FFMPEG | 7 | `test_audio_metadata_fallback` reads real audio through an ffmpeg binary the lock does not carry | environment; passes with an ffmpeg on `PATH` |
+| NEEDS-DECISION | 3 | `test_analytics_measures` (no keyness dataset SQL exists anywhere in the history) | open question, listed in R5 |
+| test_licensing | 2 | `pymupdf-layout` / `pymupdf4llm` ship no usable licence metadata | open question, listed in R5 |
+| test_no_machine_paths | 2 | pre-existing absolute paths inside `audit_report/R10_VERIFICATION.md` and `audit_report/evidence_r6/` | historical evidence text, not this round |
+
+Against the previously recorded run (75 failing ids, `junit/unit_final.xml`):
+
+| change | ids |
+|---|---|
+| fixed | 4 (all `tests/unit/test_video_metadata_only.py`) |
+| new | **0** |
+| still failing | 71 |
+
+The four fixed ids are the collateral of OpenCV's half-import:
+`test_the_opencv_path_also_says_no_speech_was_extracted` (an `ImportError`
+re-raised by `importorskip`), and the three that read a real clip
+(`test_video_metadata_reaches_the_stored_text`,
+`test_the_stored_text_says_that_speech_was_not_extracted`,
+`test_media_metadata_is_in_provenance_not_only_in_text`) which passed once the
+half-imported `cv2` was no longer in `sys.modules`. Measured after the change:
+13 of 14 in that module pass in the locked environment with an ffmpeg on
+`PATH`, and 159/159 pass in the provisioned environment.
+
+### The skip baseline — recorded and enforced
+
+`tools/audit/skip_baseline.py --current <integration.xml> --current <unit.xml>
+--record` pinned **121** skips (integration 88 + unit 33) in
+`skip_baseline.json`:
+
+| category | count |
+|---|---|
+| ENGINE-OCR | 92 |
+| OTHER | 11 |
+| EXTERNAL-BINARY | 8 |
+| FIXTURE | 7 |
+| KNOWN-GAP | 1 |
+| NOT-IMPLEMENTED | 1 |
+| OPT-IN-FLAG | 1 |
+
+Re-checked against the pin: `121 skips: equal to the recorded baseline`, exit
+0. An increase fails unless the module is named in `TEST_EDITS.md`; a decrease
+has to be re-recorded so the improvement cannot quietly come back. This is the
+first pin — the rule it enforces is stated in the tool's docstring: *a skip is
+not a pass*.

@@ -156,6 +156,13 @@ leaked path present.
 |---|---|---|---|
 | `tests/unit/test_video_metadata_only.py` | `pytest.importorskip("cv2")` replaced by `_require_opencv()`, which tries the import, undoes what a failed load leaves behind, and skips with the reason | no - every assertion is untouched | `importorskip` skips only when the module is **absent**. In the locked environment `cv2` is installed but cannot load (`libGL.so.1`), and pytest re-raises an `ImportError` from an existing module, so the test failed instead of skipping. The failed load is also not free: OpenCV leaves its own directory on `sys.path` and a half-imported `cv2` in `sys.modules`, and the next `import cv2` then raises "recursion is detected during loading of cv2 binaries". `_require_opencv()` restores both before skipping, which is why the test no longer takes its neighbours down with it. |
 
+### The skip-count guard could not be switched on (round 22, B)
+
+| file | what changed | assertion changed? | why |
+|---|---|---|---|
+| `tools/audit/skip_baseline.py` | the excuse rule now applies to an increase **over a recorded baseline**; the first recording pins the whole state and labels itself `"first_recording": true` | no - a grown count still fails unless the module is named here | with no baseline there is nothing to compare against, so every pre-existing skip counted as an unexplained increase and the tool refused to record anything at all. A guard that cannot be switched on protects nothing. |
+| `tests/unit/test_audit_baseline_tools.py` | the old test asserted the unusable behaviour; the new one asserts the match, the refusal, and that a refused recording leaves the pin unchanged | yes, and the row is here for that reason | the previous assertion pinned a rule that made the tool dead on arrival |
+
 ### Files added in the final verification
 
 | file | ids | what they prove |
