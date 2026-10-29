@@ -201,3 +201,140 @@ def test_an_apply_never_writes_to_term_names(conn, tmp_path):
     with conn.cursor() as cur:
         cur.execute("SELECT count(*) FROM term_names")
         assert cur.fetchone()[0] == before
+
+
+def all_names(conn):
+    """Every curated row, as a comparable set: (word, language, name)."""
+    with conn.cursor() as cur:
+        cur.execute("SELECT w.word, n.language, n.name FROM term_names n"
+                    " JOIN words w ON w.id = n.word_id ORDER BY w.word, n.language")
+        return cur.fetchall()
+
+
+def test_a_content_detected_rename_keeps_the_names_of_the_renamed_category(conn, tmp_path):
+    """The workbook only says the worksheet moved; the names must move with it.
+
+    ``auto_renames`` infers a rename when the stored category and the new
+    worksheet hold exactly the same terms. The category's word row is the
+    parent of its curated names, so a rename implemented as delete-then-create
+    would cascade them away - and nothing in the workbook would record that
+    they had existed.
+    """
+    suffix = token()
+    old, new = f"Zeta Before {suffix}", f"Zeta After {suffix}"
+    terms = [f"Alpha{suffix}", f"Beta{suffix}"]
+    sync.sync_workbook(conn, str(build(tmp_path / "one.xlsx", {old: {"terms": terms}})),
+                       apply=True)
+    renamed_id = add_name(conn, old, "ar", "زد")
+    add_name(conn, terms[0], "he", "אלף")
+
+    outcome = sync.sync_workbook(conn, str(build(tmp_path / "two.xlsx",
+                                                 {new: {"terms": terms}})), apply=True)
+    assert outcome["ok"] is True, outcome.get("errors")
+    assert outcome["plan"]["rename_categories"] == [f"{old} -> {new}"]
+    assert word_id(conn, old) is None, "the old worksheet name is still stored"
+    assert word_id(conn, new) == renamed_id, "the rename created a new word row"
+    assert names_for(conn, new) == [("ar", "زد")], (
+        "a content-detected rename lost the names curated for the category")
+    assert names_for(conn, terms[0]) == [("he", "אלף")]
+
+
+def test_removals_below_the_shrink_threshold_keep_names(conn, tmp_path):
+    """A removal the guard allows still has to leave the names alone.
+
+    The guard's floor is 25 absolute removals, so one term out of thirty is
+    below it: the apply goes ahead, and that is the path that could delete a
+    word whose names a curator wrote.
+    """
+    suffix = token()
+    category = f"Zeta Shrink {suffix}"
+    terms = [f"T{i:02d}{suffix}" for i in range(30)]
+    sync.sync_workbook(conn, str(build(tmp_path / "one.xlsx", {category: {"terms": terms}})),
+                       apply=True)
+    add_name(conn, terms[0], "he", "בתא")
+    before = all_names(conn)
+
+    narrowed = build(tmp_path / "two.xlsx", {category: {"terms": terms[1:]}})
+    outcome = sync.sync_workbook(conn, str(narrowed), apply=True)
+    assert outcome["ok"] is True, outcome.get("errors")
+    assert outcome["applied"] is True
+    assert outcome["removal"]["ok"] is True
+    assert names_for(conn, terms[0]) == [("he", "בתא")]
+    assert set(before) <= set(all_names(conn)), "the allowed removal lost a curated name"
+
+
+def test_removals_above_the_shrink_threshold_are_refused_and_change_no_name(conn, tmp_path):
+    """The refused path must not be a half-applied one.
+
+    A truncated workbook is the shape the guard exists for. The refusal has to
+    happen before any write, so the curated names are exactly as they were -
+    not deleted by the categories the plan would have removed, and not
+    duplicated by a retry.
+    """
+    monkeypatch = pytest.MonkeyPatch()
+    monkeypatch.setenv("SYLTHARAE_TAXONOMY_SHRINK_MAX", "0.25")
+    try:
+        suffix = token()
+        category = f"Zeta Cut {suffix}"
+        terms = [f"U{i:02d}{suffix}" for i in range(30)]
+        sync.sync_workbook(conn, str(build(tmp_path / "one.xlsx", {category: {"terms": terms}})),
+                           apply=True)
+        add_name(conn, terms[0], "ar", "ألفا")
+        add_name(conn, category, "fa", "زد")
+        before = all_names(conn)
+
+        # The same worksheet keeps one term out of thirty: twenty-nine stored
+        # memberships would go, which is above both the fraction and the floor.
+        outcome = sync.sync_workbook(
+            conn, str(build(tmp_path / "two.xlsx", {category: {"terms": terms[:1]}})),
+            apply=True)
+        assert outcome["ok"] is False, {k: outcome.get(k)
+                                        for k in ("ok", "applied", "reason", "removal")}
+        assert outcome["applied"] is False
+        assert outcome["reason"] == "shrink limit", outcome
+        assert outcome["removal"]["ok"] is False
+        assert all_names(conn) == before, "a refused sync changed a curated name"
+        assert words_still_present(conn, [terms[0], category])
+    finally:
+        monkeypatch.undo()
+
+
+def words_still_present(conn, words):
+    missing = [word for word in words if word_id(conn, word) is None]
+    assert not missing, f"a refused sync deleted stored words: {missing}"
+    return True
+
+
+def test_a_restored_name_is_not_duplicated_by_the_next_sync(conn, tmp_path):
+    """Delete a name, put it back, sync twice: exactly one row survives."""
+    suffix = token()
+    category, term = f"Zeta Restore {suffix}", f"W1{suffix}"
+    workbook = build(tmp_path / "one.xlsx", {category: {"terms": [term]}})
+    sync.sync_workbook(conn, str(workbook), apply=True)
+    add_name(conn, term, "he", "בתא")
+    with conn.cursor() as cur:
+        cur.execute("DELETE FROM term_names WHERE language = 'he'")
+    conn.commit()
+    assert names_for(conn, term) == []
+
+    add_name(conn, term, "he", "בתא")          # the operator restores it
+    for _ in range(2):
+        sync.sync_workbook(conn, str(workbook), apply=True)
+    assert names_for(conn, term) == [("he", "בתא")]
+
+
+def test_adding_a_term_creates_no_name_of_its_own(conn, tmp_path):
+    """A new word arrives with no translation, and the sync does not invent one."""
+    suffix = token()
+    category = f"Zeta Add {suffix}"
+    first, second = f"X1{suffix}", f"X2{suffix}"
+    sync.sync_workbook(conn, str(build(tmp_path / "one.xlsx", {category: {"terms": [first]}})),
+                       apply=True)
+    add_name(conn, first, "hr", "prvi")
+    before = all_names(conn)
+
+    sync.sync_workbook(conn, str(build(tmp_path / "two.xlsx",
+                                       {category: {"terms": [first, second]}})), apply=True)
+    assert words_still_present(conn, [first, second])
+    assert names_for(conn, second) == [], "the sync wrote a translation it cannot know"
+    assert set(before) <= set(all_names(conn))

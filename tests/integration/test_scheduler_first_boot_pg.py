@@ -279,3 +279,68 @@ def test_exiting_the_process_stops_the_scheduler_and_frees_the_lock(pg_db):
     assert survivor.start() is True, (
         "the exited process still holds the scheduler lock")
     survivor.stop()
+
+
+def test_a_sigkilled_leader_releases_the_lock_and_the_next_one_leads(pg_db):
+    """The lock is the connection, so ``kill -9`` has to free it.
+
+    The graceful path is covered above. This one kills the leader the way an
+    OOM killer or a container stop does - no ``stop()``, no ``finally`` - and
+    asks the two questions that decide whether a crashed deployment can be
+    restarted: while the leader is alive a second process must decline, and
+    once it is killed the next process must be able to lead.
+    """
+    import json
+    import os
+    import signal
+    import subprocess
+    import time
+
+    script = (
+        "import json, sys, time\n"
+        "sys.path.insert(0, %r)\n"
+        "from _seed import connect\n"
+        "from services.jobs.manager import JobManager\n"
+        "from services.scheduling.scheduler import ScheduleRunner\n"
+        "from services.scheduling.store_adapter import ScheduleStoreAdapter\n"
+        "settings = json.loads(%r)\n"
+        "adapter = ScheduleStoreAdapter(connection_factory=lambda: connect(settings))\n"
+        "runner = ScheduleRunner(JobManager(synchronous=True), adapter)\n"
+        "print(json.dumps({'started': runner.start()}), flush=True)\n"
+        "time.sleep(120)\n"
+        % (str(ROOT / "tests" / "integration"), json.dumps(pg_db))
+    )
+    leader = subprocess.Popen([sys.executable, "-c", script], stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE, text=True,
+                              env={**os.environ, "PYTHONPATH": str(ROOT)})
+    survivor = ScheduleRunner(
+        JobManager(synchronous=True),
+        ScheduleStoreAdapter(connection_factory=lambda: connect(pg_db)))
+    try:
+        reported = json.loads(leader.stdout.readline())
+        assert reported["started"] is True, "the child never took the lock"
+
+        # A second process, while the leader is alive: the lock is held.
+        assert survivor.start() is False, (
+            "two leaders were started against one database")
+
+        leader.send_signal(signal.SIGKILL)
+        assert leader.wait(timeout=30) == -signal.SIGKILL
+
+        # The backend notices the dead socket on its own schedule; the retry is
+        # the test waiting for Postgres, not the lock being weaker than claimed.
+        deadline = time.time() + 15
+        while time.time() < deadline:
+            if survivor.start() is True:
+                break
+            time.sleep(0.5)
+        else:
+            pytest.fail("the SIGKILLed leader still holds the scheduler lock")
+    finally:
+        try:
+            survivor.stop()
+        except Exception:
+            pass
+        if leader.poll() is None:
+            leader.kill()
+            leader.wait(timeout=30)

@@ -30,6 +30,29 @@ MULTILINGUAL = (
 )
 
 
+@pytest.fixture(scope="module", autouse=True)
+def loaded_gazetteer(pg_db):
+    """The place detector needs a gazetteer, and it is not this module's data.
+
+    ``data/gazetteer/places_seed.json`` is reference data a deployment loads
+    once. The suite empties the database between modules, so a module that reads
+    places has to say so: before this fixture the tests passed only because
+    ``test_places_pg`` happened to run earlier in the alphabetical order, and a
+    reversed order failed with "no gazetteer is loaded".
+    """
+    from services.geo import gazetteer
+
+    conn = connect(pg_db)
+    try:
+        with conn.cursor() as cur:
+            gazetteer.sync_seed(cur, loaded_by="test_suite_signal_ingestion")
+        conn.commit()
+    finally:
+        conn.close()
+    gazetteer._invalidate_cache()
+    return True
+
+
 @pytest.fixture(scope="module")
 def tenant(pg_db):
     conn = connect(pg_db)
