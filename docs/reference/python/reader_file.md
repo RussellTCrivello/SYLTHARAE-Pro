@@ -196,7 +196,7 @@ Video file reader - Extract metadata from video files
   - `get_supported_extensions(self) -> Set[str]` - Return set of supported video extensions
   - `read_file(self, file_info: Dict[str, Any]) -> Optional[Dict[str, Any]]` - Read video file and extract metadata with improved error handling
   - `read_video_file(self, filepath: str) -> Dict[str, Any]` - Extract metadata from video file with improved error handling
-- `ffmpeg_path()` - An ffmpeg binary, or None.
+- `ffmpeg_path()` - An ffmpeg binary that runs, or None.
 - `probe_container_metadata(filepath: str) -> Dict[str, Any]` - Container metadata from ffmpeg, or ``{}`` when no ffmpeg is available.
 
 ### `reader_file/repository/__init__.py`
