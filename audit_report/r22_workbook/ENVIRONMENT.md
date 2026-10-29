@@ -94,3 +94,29 @@ Round 22 baseline runs were made after a re-clone rebuilt the venv from
 67 pre-existing" is the symptom of that, not a code change. Every number in this
 workbook now names its environment hash, and the classifier refuses a run that
 does not match the lock.
+
+## Rebuilt in this round, and both full suites run in both environments
+
+Both virtualenvs were destroyed with the sandbox and rebuilt from
+`requirements.lock` alone; the installed-set hashes came back identical
+(`1353dba7…` locked, `e1c90bc3…` provisioned), which is what makes the two
+environments reproducible rather than remembered.
+
+| suite | environment | tests | passed | failed | errors | skipped |
+|---|---|---|---|---|---|---|
+| unit | locked | 3749 | 3670 | 38 | 0 | 41 |
+| unit | locked + `ffmpeg` on `PATH` | 3749 | 3684 | 38 | 0 | 27 |
+| unit | provisioned | 3749 | 3729 | 7 | 0 | 13 |
+| integration | locked | 1487 | 1395 | 4 | 0 | 88 |
+| integration | provisioned | 1487 | 1479 | 4 | 0 | 4 |
+
+Per id: **38 of 38** ids classed ENV-OCR (31) or ENV-FFMPEG (7) pass in the
+provisioned runs; in the locked environment 31 fail and 7 skip. The `ffmpeg`
+column exists to answer a narrower question and is not a separate class: with a
+runnable binary the locked environment passes the same 14 media ids the
+provisioned one does.
+
+What the provisioned environment still does not fix, and why it is not an
+environment question: the 4 translation-coverage ids (they read `.po` files),
+the 3 NEEDS-DECISION ids and the 2 licensing ids (they read metadata), and the 2
+`test_no_machine_paths` ids (they read committed historical evidence).

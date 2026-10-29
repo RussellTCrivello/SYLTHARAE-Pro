@@ -201,3 +201,57 @@ None of these replaces an existing assertion; the file count does not move.
 
 * it did not edit a portability baseline, an exempt fragment, or a scanner, and it did not touch `tests/unit/test_identifiers_intel.py` (on the do-not-edit list); that id stays red as a NEEDS-DECISION;
 * it did not change an assertion in any pre-existing test: the two `test_content_vs_identity` assertions held before the edit and hold after it.
+
+## Round 22 residuals: every test edit, with the reason
+
+| file | what changed | assertion changed? | why |
+|---|---|---|---|
+| `tests/unit/test_video_metadata_only.py` | `_require_opencv()` replaces `pytest.importorskip("cv2")`; `ffmpeg_path()` now has to *run* before it is accepted, and two tests pin that | no assertion was weakened; two new ids were added | `importorskip` re-raises an `ImportError` from an installed-but-unloadable module, and the failed load leaves a half-imported `cv2` behind. Separately, a binary that exists but exits non-zero passed the old guard and made three tests fail with a message about the reader |
+| `tests/unit/test_audio_metadata_fallback.py` | `_require_ffmpeg()` added to the seven recovery tests | no - every assertion is untouched | without an ffmpeg binary there is nothing to recover with; the seven failures described the machine, not the reader. They now skip, and pass with a binary present (measured in the provisioned environment) |
+| `tests/unit/test_optional_imports.py` (new) | 9 ids: the leak reproduced, the guard's before/after, the working module, the product's own imports, the bare-import resolution, the version module | n/a - new | the hazard is now tested, not described |
+| `tests/unit/test_run_leaves_no_tracked_changes.py` (new) | 2 ids: the run's effect on `git status`, measured against a start-of-run snapshot | n/a - new | "the suite does not write the repository" is a measurement, not a promise |
+| `tests/integration/test_isolation_canary_negative_control.py` (new) | 3 ids: the pair run in a subprocess with the reset injected off, and it must fail on the marker assertion | n/a - new | a canary that has never been seen to fail proves nothing |
+| `tests/unit/test_audit_baseline_tools.py` | two `r22_baseline.main()` calls pass `--environment-label unit-tests`; one test added for the re-pin refusal | the classification assertions are unchanged | those two tests are about classification, and were passing only because they happened to run in the locked environment; the tool's refusal for an unlabelled foreign environment is unchanged and still tested |
+| `tests/conftest.py` | records `git status --porcelain` before the first test imports anything | n/a | the baseline the cleanliness test compares against |
+
+### The seven added skips, named (the baseline refuses an unnamed increase)
+
+| module | ids | reason |
+|---|---|---|
+| `tests/unit/test_audio_metadata_fallback.py` | 7 | no runnable ffmpeg binary in the locked environment |
+| `tests/unit/test_video_metadata_only.py` | 4 | no runnable ffmpeg binary (3) / no loadable cv2 (1) |
+| `tests/unit/test_search_export_authority.py` | 2 | the disposable database is empty after the per-module reset; the test needs rows it does not seed (open item) |
+| `tests/unit/test_optional_imports.py` | 1 | cv2 cannot load in this environment, so "is a working cv2 here?" has nothing to report |
+
+## E. The 26 DOCS-NOT-COMMITTED ids: the decision for each
+
+Every id reads a document that the checkout did not carry. The decision was
+made per generator, not per test: run it and commit the output, or write the
+hand-authored half by hand where no generator exists. None of the tests was
+edited, and none of the documents carries a count that a generator does not
+produce.
+
+| ids | document | generator | decision |
+|---|---|---|---|
+| 5 | `docs/COMPONENT_LIBRARY.md` | `python3 -m core.frontend.component_audit <path>` | **committed, generated.** The hand-written half states the ownership rules the tests already assert |
+| 8 | `docs/INTERFACE_REGISTRY.md` | `python3 -m core.interfaces.docgen <path>` | **committed, generated**; the frozen-contract section names register, navigation, shortcut, help and visibility |
+| 5 | `docs/REGISTRY_EVIDENCE.md` + `docs/endpoint_inventory.json` | `python3 -m core.interfaces.evidence --write/--inventory`, plus the application half written by `tests/integration/test_interface_coverage.py` under `INFORAXIS_WRITE_EVIDENCE=1` | **committed, generated.** Unmanaged user-facing endpoints: 0, measured |
+| 3 | `docs/INTERFACE_REGISTRY.md` (lifecycle copies) | same generator | **committed** |
+| 2 | `docs/EXPERIENCE_CONTRACT.md` | `python3 -m core.experience.docgen <path>` | **committed, generated** |
+| 2 | `docs/SCREEN_INSPECTOR_EVIDENCE.md` | `python3 -m core.experience.audit <path>` | **committed, generated** |
+| 2 | `docs/ACTION_SURFACE_AUDIT.md` | `python3 -m core.experience.action_audit <path>` | **committed, generated** |
+| 2 | `docs/ARCHITECTURE.md` | none - the tests compare it with `services.jobs.job_state` | **written from the code**: the state diagram is the machine's transitions and terminal states, edge for edge, generated from the module and then checked by the test in both directions |
+| 2 | `docs/DOMAIN_MODEL.md` | none - the tests compare it with `StoragePipeline._ocr_provenance` | **written from the code**: the OCR paragraph lists exactly the fields the pipeline emits, checked in both directions |
+| 1 | `docs/windows/DEPENDENCY_INVENTORY.md` | `python3 tools/windows/inventory_dependencies.py` | **committed, generated** |
+| 2 | `docs/INTERFACE_REGISTRY.md` / `docs/PRODUCTIZATION_MAP.md` | none (the map points at the generated sources) | **written**, and it carries no count of its own |
+
+Result: 26 ids pass, measured in this round's locked run. `DOCS-NOT-COMMITTED`
+is no longer a class with members.
+
+### Two generated documents that disagree with the code (a finding, not a skip)
+
+`tests/unit/test_component_library.py::TestAdoption::test_the_audit_counts_the_hand_written_markup`
+still fails: the audit counts twelve hand-written table blocks where the test
+expects nine. That is the document doing its job - three templates hand-write
+a table the migration has not reached. It is recorded as a finding with an
+owner (`NEEDS-DECISION`, below) rather than by editing the expected count.

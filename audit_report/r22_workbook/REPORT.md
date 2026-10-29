@@ -232,58 +232,151 @@ empty or fuzzy.
 This round did not touch either: it is content, not code, and the gate is what
 would catch the next round's regression.
 
-### Every failing id classified — measured
+### Correction: the four video ids were never "fixed"
 
-`tools/audit/r22_baseline.py --single {tmp}/final/unit4.xml` classifies each of
-the 71 failing ids against the committed baseline; the table below is its
-output, and it exits non-zero if any id lands in `UNCLASSIFIED`. This run: 71
-ids, 0 unclassified, exit 0.
+An earlier version of this section said four ids in
+`tests/unit/test_video_metadata_only.py` were "fixed". In the locked
+environment, with no ffmpeg binary, **none of them passes**: one skips because
+`cv2` cannot load, three skip because no ffmpeg binary is available. They
+stopped *failing*, which is not the same thing, and the difference matters
+because a skip is not a pass.
+
+| id | locked, no ffmpeg | locked, ffmpeg on `PATH` | provisioned |
+|---|---|---|---|
+| `test_the_opencv_path_also_says_no_speech_was_extracted` | **skip** (cv2 cannot load) | skip (same reason) | **pass** |
+| `test_video_metadata_reaches_the_stored_text` | **skip** (no ffmpeg) | **pass** | **pass** |
+| `test_the_stored_text_says_that_speech_was_not_extracted` | **skip** (no ffmpeg) | **pass** | **pass** |
+| `test_media_metadata_is_in_provenance_not_only_in_text` | **skip** (no ffmpeg) | **pass** | **pass** |
+
+What the round actually changed is the *failure mode*: `importorskip("cv2")`
+re-raised an `ImportError` from an installed-but-unloadable module, so a test
+that should have skipped failed, and its half-import broke three neighbours.
+That is a test defect, and it is fixed; the environment is still the
+environment.
+
+### The three ffmpeg-gated failures: cause found, and it was the guard
+
+The three ids above failed in one earlier full run and passed in every other
+one. Measured, full unit suite, locked environment, **before** the cv2 fix
+(`0a5da30`):
+
+| environment | tests | passed | failed | errors | skipped | the three ids |
+|---|---|---|---|---|---|---|
+| ffmpeg on `PATH` | 3723 | 3633 | 60 | 5 | 25 | **pass** |
+| no ffmpeg | 3723 | 3619 | 67 | 5 | 32 | **skip** |
+
+So they fail neither from the code nor from the lock. The condition that
+reproduces them is a program named `ffmpeg` that exists but cannot run: the
+guard used `shutil.which()` - "is there a file", not "does it work" - so it
+passed, the reader produced nothing, and three tests failed with a message
+about the reader. Reproduced on purpose:
+
+```
+PATH=<dir with a stub ffmpeg that exits 1> pytest tests/unit/test_video_metadata_only.py
+-> 7 failed, including all three, with "a media read that yields metadata
+   stored nothing"
+```
+
+**That run's own environment is not recorded**, so the claim for it is stated
+narrowly: the mechanism is identified and reproduced, the specific run is
+**unexplained** — an ffmpeg binary was resolvable there and unusable, which is
+inferred from its assertion messages (they can only execute past
+`_require_ffmpeg()`), not from a recorded environment.
+
+The fix is in the product: `ffmpeg_path()` now returns a binary only if
+`ffmpeg -version` exits 0 and identifies itself, cached per path. A machine
+with a broken binary reports "no ffmpeg" and the tests skip, instead of failing
+in a way that accuses the reader.
+
+### Every failing id classified — measured
+At the tip, locked environment: **38 failing ids**, every one of them in a class
+that was already known. `tools/audit/r22_baseline.py` exits 0 with
+`UNCLASSIFIED` empty.
 
 | class | ids | what it is | whose |
 |---|---|---|---|
-| ENV-OCR | 31 | no OCR engine in the lock (no `tesseract`, no usable `cv2`) | environment; passes in the provisioned environment |
-| DOCS-NOT-COMMITTED | 26 | generated documents the checkout does not carry (`docs/COMPONENT_LIBRARY.md`, `docs/ARCHITECTURE.md`, …) | repository, unchanged this round |
-| ENV-FFMPEG | 7 | `test_audio_metadata_fallback` reads real audio through an ffmpeg binary the lock does not carry | environment; passes with an ffmpeg on `PATH` |
-| NEEDS-DECISION | 3 | `test_analytics_measures` (no keyness dataset SQL exists anywhere in the history) | open question, listed in R5 |
-| test_licensing | 2 | `pymupdf-layout` / `pymupdf4llm` ship no usable licence metadata | open question, listed in R5 |
-| test_no_machine_paths | 2 | pre-existing absolute paths inside `audit_report/R10_VERIFICATION.md` and `audit_report/evidence_r6/` | historical evidence text, not this round |
+| ENV-OCR | 31 | no OCR engine in the lock (no `tesseract`, no usable `cv2`) | environment — **all 31 pass in the provisioned environment** |
+| NEEDS-DECISION | 3 | `test_component_library`'s hand-written-markup counts, `test_identifiers_intel` (2) | open question |
+| test_licensing | 2 | `pymupdf-layout` / `pymupdf4llm` publish no usable licence metadata | open question, listed in R5 |
+| test_no_machine_paths | 2 | absolute paths inside `audit_report/R10_VERIFICATION.md` and `audit_report/evidence_r6/` | historical evidence, deliberately not rewritten |
+| DOCS-NOT-COMMITTED | 0 | was 26 | **closed this round** (section E) |
+| ENV-FFMPEG | 0 | was 7 | **reclassified**: they skip without a binary and pass with one |
 
-Against the previously recorded run (75 failing ids, `junit/unit_final.xml`):
+Against the previously recorded run (71 failing ids, `baseline_ids.csv`):
 
 | change | ids |
 |---|---|
-| fixed | 4 (all `tests/unit/test_video_metadata_only.py`) |
+| fixed (the documents exist and the tests pass) | 26 |
+| reclassified (failed → skip without an engine; pass with one) | 7 |
 | new | **0** |
-| still failing | 71 |
 
-The four fixed ids are the collateral of OpenCV's half-import:
-`test_the_opencv_path_also_says_no_speech_was_extracted` (an `ImportError`
-re-raised by `importorskip`), and the three that read a real clip
-(`test_video_metadata_reaches_the_stored_text`,
-`test_the_stored_text_says_that_speech_was_not_extracted`,
-`test_media_metadata_is_in_provenance_not_only_in_text`) which passed once the
-half-imported `cv2` was no longer in `sys.modules`. Measured after the change:
-13 of 14 in that module pass in the locked environment with an ffmpeg on
-`PATH`, and 159/159 pass in the provisioned environment.
+### The environment classes, proven on the full suites — measured
 
-### The skip baseline — recorded and enforced
+Both suites, both environments:
 
-`tools/audit/skip_baseline.py --current <integration.xml> --current <unit.xml>
---record` pinned **121** skips (integration 88 + unit 33) in
-`skip_baseline.json`:
+| suite | environment | tests | passed | failed | errors | skipped |
+|---|---|---|---|---|---|---|
+| unit | locked | 3749 | 3670 | 38 | 0 | 41 |
+| unit | locked + ffmpeg on `PATH` | 3749 | 3684 | 38 | 0 | 27 |
+| unit | provisioned | 3749 | 3729 | 7 | 0 | 13 |
+| integration | locked | 1487 | 1395 | 4 | 0 | 88 |
+| integration | provisioned | 1487 | 1479 | 4 | 0 | 4 |
+
+Every id classed ENV-OCR (31) or ENV-FFMPEG (7) **passes** in the provisioned
+run: 38 of 38, counted per id. The provisioned environment is the same lock plus
+`opencv-python-headless` (installed last, so it owns `cv2/`) and
+`imageio-ffmpeg`; set hash `e1c90bc3…`, rebuilt from scratch in this round and
+identical to the earlier one.
+
+The 7 remaining unit failures in the provisioned environment are the same
+classes that survive in the locked one: 3 NEEDS-DECISION, 2 licensing, 2
+`test_no_machine_paths`. The 4 integration failures are the four
+translation-coverage ids in both environments, because they read the `.po`
+files rather than the database.
+
+### The skip baseline — itemised against the pre-round state
+
+Two pre-round runs are the starting point, both committed
+(`audit_report/r22_workbook/junit/`): integration **113** skips
+(`integration_final.xml`) and unit **27** (`unit_dc6a413.xml`) — 140 together.
+The pin now stands at **129** (88 + 41). Every move, by id:
+
+| direction | ids | which | why |
+|---|---|---|---|
+| removed | −25 | `test_resume_real_database` | the module probed the loopback server at import time and skipped 26 tests on a machine where the suite provisions its own server; the probe is gone and the module runs |
+| added | +7 | `test_audio_metadata_fallback` | the recovery those tests describe *is* the ffmpeg probe; without a binary there is nothing to recover with, so they now skip instead of failing. They passed in neither pre-round run: they were 7 of the 71 failing ids |
+| added | +4 | `test_video_metadata_only` | three needed ffmpeg and failed as collateral of the cv2 half-import, one could not load cv2 and failed; all four now skip honestly in the locked environment and pass with the engine present |
+| added | +2 | `test_search_export_authority` | **a finding from the isolation fix**: they passed at `dc6a413` only because another module had left rows in the shared database. With the per-module reset they see an empty disposable database, the endpoint answers "no results", and the test skips. The premise is wrong, not the endpoint - the fix is to seed the rows the test needs, which is recorded as an open item rather than hidden by removing the skip |
+| added | +1 | `test_optional_imports` | the new guard's own "is a working cv2 here?" id, which skips when there is not |
+| total | **140 → 129** | | −11 |
+
+Per category, as recorded by `--record`:
 
 | category | count |
 |---|---|
 | ENGINE-OCR | 92 |
-| OTHER | 11 |
-| EXTERNAL-BINARY | 8 |
+| EXTERNAL-BINARY | 15 |
+| OTHER | 12 |
 | FIXTURE | 7 |
 | KNOWN-GAP | 1 |
 | NOT-IMPLEMENTED | 1 |
 | OPT-IN-FLAG | 1 |
 
-Re-checked against the pin: `121 skips: equal to the recorded baseline`, exit
-0. An increase fails unless the module is named in `TEST_EDITS.md`; a decrease
-has to be re-recorded so the improvement cannot quietly come back. This is the
-first pin — the rule it enforces is stated in the tool's docstring: *a skip is
-not a pass*.
+No skip was added without a named module in `TEST_EDITS.md`, and the tool
+refuses a pin that grows without one. It also now refuses a re-pin in the same
+run that grew the count (per id, not per run), and records what it was measured
+from: `recorded_from` holds each JUnit file, its digest and its skip count, and
+`previous_count` says what the pin replaced.
+
+### Import shadowing, audited — measured
+
+`from version import ...` was one instance of a class. The class was enumerated
+by parsing every product module for bare imports, and the answer is short:
+
+| name | kind | state |
+|---|---|---|
+| `version` | repository module | **fixed** (`core/app_version.py`); a second test guards it from the other side |
+| `cv2` | third-party | **fixed** (`core/optional_imports.import_opencv`); no product module imports it directly |
+| `odf` | third-party | **ticketed**: the `odf` wheel inserts its own directory on `sys.path` on every import. It cannot shadow a repository module by name (`odf` is not one), so it is a wart rather than a hazard today |
+| `core`, `database`, `pipeline`, `reader_file`, `services`, `settings`, `config`, `concurrency`, `Hdg_Err_Ex_Log` | repository packages | **guarded**: a test asserts each resolves inside the repository, and that importing the product adds no `sys.path` entry inside `site-packages` |
+
