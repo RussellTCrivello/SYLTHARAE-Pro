@@ -32,6 +32,99 @@ These were already in the suite before this round. Each one is listed with what 
 +        object.__new__(StoragePipeline), content)
 ```
 
+### Closeout edits (round 22, A-G)
+
+Two further pre-existing tests changed while the skips were being removed. Both
+replace an environment-shaped *failure or skip* with a real run; neither
+touches an assertion about product behaviour.
+
+| file | what changed | assertion changed? | why the old premise was wrong |
+|---|---|---|---|
+| `tests/integration/test_resume_real_database.py` | the module no longer probes `localhost:5432` at import time; `pg` is now a module-scoped fixture that takes the session's `pg_settings` | no - every assertion in all 26 tests is byte-identical | the module ran `psycopg2.connect(host="localhost", port=5432)` at import and set `pytestmark = skipif(...)` when that failed. The suite provisions its own server through `pg_settings` (usually a unix socket), so the probe asked a different question from the one the fixture answers: 26 tests skipped with "PostgreSQL not reachable" on a machine where PostgreSQL was reachable. Measured after the fix: 25 passed, 1 skipped (the documented moved-duplicate known gap), 0 failed. |
+| `tests/unit/test_video_metadata_only.py` | `test_container_tags_are_stored_when_present` builds the fixture clip with `ffmpeg_path()` instead of `import imageio_ffmpeg`; a new `_require_ffmpeg()` guard is used by the three container-reading tests that lacked one | no - every assertion is untouched | the test imported `imageio_ffmpeg` inside the body to get a binary path, although `ffmpeg_path()` already resolves one (system build first, then that same wheel). It therefore needed a package `requirements.lock` does not carry, and failed with `ModuleNotFoundError: imageio_ffmpeg` in a consistent environment where a system ffmpeg was present. The three unguarded readers (`test_video_metadata_reaches_the_stored_text`, `test_the_stored_text_says_that_speech_was_not_extracted`, `test_media_metadata_is_in_provenance_not_only_in_text`) failed on a machine without ffmpeg while their siblings in the same file skipped with "no ffmpeg binary available"; they now use the same guard. |
+
+```diff
+--- a/tests/integration/test_resume_real_database.py
++++ b/tests/integration/test_resume_real_database.py
+-# probed at import time, and skipped the whole module when it failed
+-PG = {"host": "localhost", "port": 5432, ...}
+-def _postgres_available(): ...
+-pytestmark = pytest.mark.skipif(not _postgres_available(), reason=...)
++@pytest.fixture(scope="module")
++def pg(pg_settings):
++    return pg_settings
++
++def _admin_conn(pg, database="postgres"): ...
++@pytest.fixture
++def database(pg): ...
++    cfg = dict(pg, database=name)
+```
+
+```diff
+--- a/tests/unit/test_video_metadata_only.py
++++ b/tests/unit/test_video_metadata_only.py
++def _require_ffmpeg():
++    if ffmpeg_path() is None:
++        pytest.skip("no ffmpeg binary available")
++
+ def test_container_tags_are_stored_when_present(tmp_path):
+-    if ffmpeg_path() is None:
+-        pytest.skip("no ffmpeg binary available")
+-    import imageio_ffmpeg
++    ffmpeg = ffmpeg_path()
++    if ffmpeg is None:
++        pytest.skip("no ffmpeg binary available")
+     completed = subprocess.run(
+-        [imageio_ffmpeg.get_ffmpeg_exe(), "-y", ...])
++        [ffmpeg, "-y", ...])
+```
+
+**Effect on the counted skips.** `test_video_metadata_only.py` in the locked
+environment goes from 14 tests = 7 passed / 3 failed / 4 skipped to
+14 = 6 passed / 1 failed / 7 skipped: two environment failures become
+explained skips (the third, `test_the_opencv_path_also_says_no_speech_was_extracted`,
+stays red because `cv2` cannot import `libGL.so.1` - that is the recorded
+ENV-OCR cause, not a skip). The integration module's 26 skips become 25 passes
+and 1 skip, so the integration skip total falls by 25 and the unit skip total
+rises by 3; the enforced baseline in `tools/audit/r22_baseline.py` is updated in
+the same commit with this paragraph as its explanation.
+
+### Closeout edits (round 22, C)
+
+| file | what changed | assertion changed? | why the old premise was wrong |
+|---|---|---|---|
+| `tests/conftest.py` | a module-scoped autouse fixture empties every data table between modules (`TRUNCATE ... RESTART IDENTITY CASCADE`, `schema_migrations` kept); `admin_credentials` moved from session to module scope so the admin is recreated per module | no - no test assertion was touched | the suite shared one database for the whole session, so a module's ingested corpus changed what a later module's resolver returned. The defect this round names by id: `test_term_names_hostile_input::test_the_resolver_declines_what_is_not_a_name[\u202eevil]` failed only in a full run, because an earlier module had stored a name the hostile query normalises onto. The reset also clears the process caches that mirror those rows (the `Api.utils` singletons, the connection pools, the translation override cache) - a cache of deleted rows is the same leftover as the rows. |
+| `tests/integration/test_signal_ingestion.py` | module-scoped autouse `loaded_gazetteer` fixture that loads `data/gazetteer/places_seed.json` through `services.geo.gazetteer.sync_seed` | no - every assertion is untouched | the place detector needs a gazetteer, and this module passed only because `test_places_pg` runs earlier in alphabetical order: in a reversed order it failed with "no gazetteer is loaded (migration m0001 not applied?)". Reference data a module reads is the module's fixture, not another module's side effect. |
+| `tests/integration/test_translation_management.py` | one test added (`test_resetting_an_override_changes_the_rendered_page_without_a_restart`) | no existing assertion touched; the new test failed first | see the product fix below: the test was written before the fix and failed with "the deleted override is still rendered: the catalog cache kept it". |
+
+**The product fix that C produced.** `Api/services/translation_management.py::apply_runtime_translation_overrides` wrote saved edits into the Babel catalog object itself, which is cached for the process. Deleting an override therefore left the edit on every page until a restart, and a later module rendered an earlier module's edit - the last order-dependent failure in the suite. The overlay now merges into a copy against a remembered pristine catalog. This is a product defect found by the isolation work, not a test accommodation.
+
+**Order independence, measured.** The full integration suite was run twice at the same tree, once in directory order and once with the 129 module paths reversed on the command line:
+
+| order | tests | passed | failed | errors | skipped |
+|---|---|---|---|---|---|
+| forward | 1474 | 1382 | 4 | 0 | 88 |
+| reversed | 1474 | 1382 | 4 | 0 | 88 |
+
+The four failures are the same four ids in both runs (`test_translation_coverage::test_no_catalog_entry_is_empty_or_fuzzy[ar|he|fa|hr]`, the pre-existing untranslated-catalog gate), and the failing-id sets are equal: `set(forward) ^ set(reversed) == {}`.
+
+### Closeout edits (round 22, final verification)
+
+| file | what changed | assertion changed? | why the old premise was wrong |
+|---|---|---|---|
+| `tests/conftest.py` | the isolation helpers move to `tests/suite_isolation.py` (this file keeps the wiring); `MAP_DATA_DIR` points the map tree at `.test_runtime/map_data` and the shipped `map_data/catalog.json` is copied in | no | two side effects, not test premises: the helpers had to be importable without pytest to be tested at all, and `tests/unit/test_map_packages.py::test_map_registry_syncs_sqlite` wrote the tracked 15 MB `map_data/registry.db`, so every run left `git status` dirty and "did this run change anything?" had no answer. |
+| `tests/unit/test_map_packages.py` | two tests added | no | the same side effect, asserted rather than described: the registry must not live inside the tracked map tree, and `MAP_DATA_DIR` must move the tree. The first failed before the change (`the registry is inside the checkout`). |
+| `Api/services/translation_management.py` | the overlay merges into a copy of a remembered pristine catalog, keyed by **locale** instead of `id(translations)` | no - product fix behind a new test | flask-babel caches one translations object per (locale, domain) for the process, so writing edits into it made an override permanent: a reset left the old text on every page until a restart, and a later module rendered an earlier module's edit. `id()` was also the wrong key: ids are reused after collection and say nothing about which catalog they belong to. |
+| `tests/integration/test_translation_catalog_overlay.py` | new module, 5 ids | new tests only | they encode the defect and the concurrency limits: a reset applies on the next request (failed first, before the fix: "the deleted override is still rendering"), a reader racing a writer never sees a torn title, an Arabic override never appears in a `he`/`fa` page, `_PRISTINE_CATALOGS` does not grow across 1,000 requests, and the remembered catalog equals the checked-in `.po`. |
+| `tests/suite_isolation.py`, `tests/unit/test_suite_isolation.py`, `tests/integration/test_isolation_canary_plants.py`, `tests/integration/test_isolation_canary_asserts.py` | new files, 5 + 7 + 2 + 3 ids | new tests only | the module reset was unverified. The canary pair plants a row (and an idle-in-transaction session) in one module and requires it gone in the other, in both orders; the negative control below shows it fails when the reset is disabled. |
+
+**Negative controls, measured.**
+
+| control | edit | result |
+|---|---|---|
+| reset disabled | `tests/conftest.py` fixture body replaced by `yield; return` for one run | `FAILED test_the_previous_module_row_is_not_visible_here` ("a row planted by test_isolation_canary_plants survived the module boundary"); reverted, `git grep NEGATIVE CONTROL` = 0 |
+| overlay in place again | `merged = dict(_pristine_catalog(...))` replaced by `merged = catalog` for one run | `FAILED test_a_reset_stops_rendering_on_the_very_next_request`; reverted |
+
 ## Files added
 
 New tests carry their own justification in their docstring; they cannot weaken an existing gate because they did not exist before.
@@ -46,6 +139,15 @@ New tests carry their own justification in their docstring; they cannot weaken a
 | `tests/unit/test_sync_mode_defaults.py` |
 | `tests/unit/test_taxonomy_guard.py` |
 | `tests/unit/test_taxonomy_status_wording.py` |
+
+### Tests added in closeout (D, E)
+
+| file | ids added | what they prove |
+|---|---|---|
+| `tests/integration/test_term_names_survive_sync_pg.py` | `test_a_content_detected_rename_keeps_the_names_of_the_renamed_category`, `test_removals_below_the_shrink_threshold_keep_names`, `test_removals_above_the_shrink_threshold_are_refused_and_change_no_name`, `test_a_restored_name_is_not_duplicated_by_the_next_sync`, `test_adding_a_term_creates_no_name_of_its_own` | a curated `term_names` row survives an add, a content-detected category rename (same `words.id`, no cascade), a removal the shrink guard allows, a removal it refuses (nothing written, nothing deleted), and a restore; the refusal path is asserted to leave every curated row identical, not merely "no new rows" |
+| `tests/integration/test_scheduler_first_boot_pg.py` | `test_a_sigkilled_leader_releases_the_lock_and_the_next_one_leads` | the advisory lock is the connection: while the child leader lives a second runner declines (`start() is False`), and after `SIGKILL` (no `stop()`, no `finally`) the next runner leads within the retry window |
+
+None of these replaces an existing assertion; the file count does not move.
 
 ## What this round did *not* do
 

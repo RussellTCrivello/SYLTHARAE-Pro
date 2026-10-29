@@ -17,7 +17,7 @@ import re
 import threading
 import time
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from babel.messages.pofile import read_po
 
@@ -362,20 +362,54 @@ def invalidate_translation_override_cache(locale: Optional[str] = None) -> None:
             _override_cache.pop(locale, None)
 
 
+#: The unmodified catalog of each locale, ``{locale: dict}``.
+#:
+#: The object ``flask_babel.get_translations()`` returns is cached for the
+#: process, keyed by locale (``Domain.cache[str(locale), domain]``), and shared
+#: by every request in that locale. Writing saved edits into it made an override
+#: permanent: deleting the row (the editor's "reset") left the text on every
+#: page until the service restarted. The overlay therefore merges into a copy of
+#: the catalog as it was before any overlay, remembered here.
+#:
+#: Keyed by locale, not by ``id()``: an id is only unique among live objects, so
+#: the locale is what identifies which catalog a copy belongs to - and it is the
+#: same key Babel's own cache uses, so the two cannot disagree. The number of
+#: supported locales is fixed (``settings.languages``), so the dict is bounded by
+#: construction; anything outside that set is not an overlay target.
+_PRISTINE_CATALOGS: Dict[str, Dict[Any, Any]] = {}
+_PRISTINE_LOCK = threading.Lock()
+
+
+def _pristine_catalog(locale: str, catalog: dict) -> Dict[Any, Any]:
+    """The catalog as it was before any overlay, for ``locale``."""
+    with _PRISTINE_LOCK:
+        known = _PRISTINE_CATALOGS.get(locale)
+        if known is None:
+            known = dict(catalog)
+            _PRISTINE_CATALOGS[locale] = known
+        return known
+
+
 def apply_runtime_translation_overrides(locale: str) -> None:
-    """Overlay the selected locale's saved edits into this Babel request."""
-    overrides = get_translation_overrides(locale)
-    if not overrides:
-        return
+    """Overlay the selected locale's saved edits into this request's Babel catalog.
+
+    The overlay is applied to a **copy** and assigned back, so an override that
+    is deleted stops rendering on the next request instead of at the next
+    restart, and a locale without overrides renders exactly the checked-in
+    catalog. ``_PRISTINE_CATALOGS`` is keyed by locale; the copy is per request,
+    so two requests in the same locale never share a half-applied catalog.
+    """
     from flask_babel import get_translations
 
     translations = get_translations()
     catalog = getattr(translations, "_catalog", None)
     if not isinstance(catalog, dict):
         return
-    for item in overrides.values():
+    merged = dict(_pristine_catalog(str(locale), catalog))
+    for item in get_translation_overrides(locale).values():
         # The key is the source msgid, exactly what gettext() looks up.
-        catalog[item["msgid"]] = item["translation"]
+        merged[item["msgid"]] = item["translation"]
+    translations._catalog = merged
 
 
 def _entry_translation(entry: dict, locale: str, locale_defaults: dict,
