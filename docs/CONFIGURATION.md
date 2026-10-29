@@ -58,6 +58,7 @@ this page explains what each one does and which ones are reserved.
 | `OPERATIONS_UPLOAD_CHUNK_MB` | shipped default | Chunk size. |
 | `OPERATIONS_MAX_STAGED_PATH_CHARS` | shipped default | Longest staged path. |
 | `TESSERACT_CMD` | auto-detected | Path to the Tesseract binary when it is not on `PATH`. |
+| `MAP_DATA_DIR` | repository `map_data/` | Where the map viewer reads and writes its registry. The shipped tree contains `catalog.json` (read-only reference data) and `registry.db` (written by the application). Pointing this at a scratch directory keeps a run from writing the tracked file: the test suite sets it to a temporary tree and copies the shipped `catalog.json` there, so a full run leaves `git status` clean. |
 
 ## Compute
 
