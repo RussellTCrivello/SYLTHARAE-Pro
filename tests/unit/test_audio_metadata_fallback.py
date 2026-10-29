@@ -20,6 +20,21 @@ CORPUS = os.path.join(os.path.dirname(__file__), "..", "..", "test-doc")
 AUDIO = os.path.join(CORPUS, "Audio")
 
 
+def _require_ffmpeg():
+    """Skip when no runnable ffmpeg binary is installed.
+
+    The recovery these tests describe *is* the ffmpeg probe: without a binary
+    there is nothing to recover with, and a failure would say "the reader is
+    broken" about a machine that cannot read the container at all. The guard is
+    the reader's own ``ffmpeg_path()``, so it cannot disagree with the code
+    under test - including about a binary that exists but does not run.
+    """
+    from reader_file.readers.read_video import ffmpeg_path
+
+    if ffmpeg_path() is None:
+        pytest.skip("no ffmpeg binary available")
+
+
 def _reader():
     from reader_file.readers.read_audio import AudioFileReader
 
@@ -37,6 +52,7 @@ def _stored_text(result):
 @pytest.mark.parametrize("name", ["testAAC.aac", "testAACid3.aac",
                                   "testMP4_drm.m4a", "testMP4_truncated.m4a"])
 def test_a_refused_tag_parse_still_yields_container_metadata(name):
+    _require_ffmpeg()
     path = os.path.join(AUDIO, name)
     if not os.path.exists(path):
         pytest.skip("corpus file missing")
@@ -49,6 +65,7 @@ def test_a_refused_tag_parse_still_yields_container_metadata(name):
 
 
 def test_the_tag_reader_failure_is_kept_on_the_record():
+    _require_ffmpeg()
     path = os.path.join(AUDIO, "testAAC.aac")
     if not os.path.exists(path):
         pytest.skip("corpus file missing")
@@ -58,6 +75,7 @@ def test_the_tag_reader_failure_is_kept_on_the_record():
 
 
 def test_the_recovered_metadata_is_stored():
+    _require_ffmpeg()
     path = os.path.join(AUDIO, "testAAC.aac")
     if not os.path.exists(path):
         pytest.skip("corpus file missing")
@@ -67,6 +85,7 @@ def test_the_recovered_metadata_is_stored():
 
 
 def test_a_successful_tag_read_also_states_no_speech():
+    _require_ffmpeg()
     path = os.path.join(AUDIO, "testFLAC.flac")
     if not os.path.exists(path):
         pytest.skip("corpus file missing")

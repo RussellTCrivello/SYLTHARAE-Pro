@@ -272,3 +272,49 @@ def test_a_decoder_failure_falls_back_to_the_container():
     assert result["speech_extracted"] is False
     assert "decoder failed" in result["extraction_note"]
     assert result["resolution"]
+
+
+# --------------------------------------------------------------------------- #
+# A binary on PATH is not the same as a usable binary
+# --------------------------------------------------------------------------- #
+def test_a_binary_that_cannot_run_is_not_reported_as_usable(tmp_path, monkeypatch):
+    """`shutil.which` answers "is a file here", not "does it work".
+
+    Round 22 could not reproduce three failures recorded in an earlier run of
+    this module and found the condition that produces them: a program named
+    `ffmpeg` sitting on `PATH` that exits non-zero. The guard passed (a binary
+    existed), the reader then produced nothing, and three tests failed with
+    "a media read that yields metadata stored nothing" - a message about the
+    reader, caused by the environment. A guard has to test what it claims.
+    """
+    stub = tmp_path / "ffmpeg"
+    stub.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
+    stub.chmod(0o755)
+    monkeypatch.setenv("PATH", str(tmp_path))
+    import importlib
+
+    import reader_file.readers.read_video as read_video
+
+    read_video = importlib.reload(read_video)
+    try:
+        assert read_video.ffmpeg_path() is None, (
+            "a binary that exits non-zero was accepted as usable ffmpeg")
+    finally:
+        importlib.reload(read_video)
+
+
+def test_a_working_binary_is_still_found(tmp_path, monkeypatch):
+    """The check must not reject the real one."""
+    stub = tmp_path / "ffmpeg"
+    stub.write_text("#!/bin/sh\necho 'ffmpeg version 7.0.2-static'\nexit 0\n", encoding="utf-8")
+    stub.chmod(0o755)
+    monkeypatch.setenv("PATH", str(tmp_path))
+    import importlib
+
+    import reader_file.readers.read_video as read_video
+
+    read_video = importlib.reload(read_video)
+    try:
+        assert read_video.ffmpeg_path() == str(stub)
+    finally:
+        importlib.reload(read_video)
