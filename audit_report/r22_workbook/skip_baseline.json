@@ -1,15 +1,15 @@
 {
   "by_category": {
     "ENGINE-OCR": 92,
-    "EXTERNAL-BINARY": 8,
+    "EXTERNAL-BINARY": 15,
     "FIXTURE": 7,
     "KNOWN-GAP": 1,
     "NOT-IMPLEMENTED": 1,
     "OPT-IN-FLAG": 1,
-    "OTHER": 11
+    "OTHER": 12
   },
-  "count": 121,
-  "first_recording": true,
+  "count": 129,
+  "first_recording": false,
   "ids": {
     "tests.integration.test_archive_lineage::test_all_three_levels_were_stored": "no OCR engine installed",
     "tests.integration.test_archive_lineage::test_chain_is_walkable_with_a_recursive_query": "no OCR engine installed",
@@ -99,6 +99,13 @@
     "tests.integration.test_universal_recursion::test_every_row_reached_a_terminal_status[chain_b]": "fixture unavailable",
     "tests.integration.test_universal_recursion::test_no_row_contradicts_itself[chain_a]": "fixture unavailable",
     "tests.integration.test_universal_recursion::test_no_row_contradicts_itself[chain_b]": "fixture unavailable",
+    "tests.unit.test_audio_metadata_fallback::test_a_refused_tag_parse_still_yields_container_metadata[testAAC.aac]": "no ffmpeg binary available",
+    "tests.unit.test_audio_metadata_fallback::test_a_refused_tag_parse_still_yields_container_metadata[testAACid3.aac]": "no ffmpeg binary available",
+    "tests.unit.test_audio_metadata_fallback::test_a_refused_tag_parse_still_yields_container_metadata[testMP4_drm.m4a]": "no ffmpeg binary available",
+    "tests.unit.test_audio_metadata_fallback::test_a_refused_tag_parse_still_yields_container_metadata[testMP4_truncated.m4a]": "no ffmpeg binary available",
+    "tests.unit.test_audio_metadata_fallback::test_a_successful_tag_read_also_states_no_speech": "no ffmpeg binary available",
+    "tests.unit.test_audio_metadata_fallback::test_the_recovered_metadata_is_stored": "no ffmpeg binary available",
+    "tests.unit.test_audio_metadata_fallback::test_the_tag_reader_failure_is_kept_on_the_record": "no ffmpeg binary available",
     "tests.unit.test_iwork_pages_reader::test_numbers_routes_to_office_reader": "test-doc fixture missing",
     "tests.unit.test_iwork_pages_reader::test_pages_index_xml_yields_storage_text": "test-doc fixture missing",
     "tests.unit.test_iwork_pages_reader::test_pages_routes_to_office_not_archive": "test-doc fixture missing",
@@ -116,6 +123,7 @@
     "tests.unit.test_ocr_matrix.TestRotation::test_rotated_text_is_still_read[180]": "no OCR engine installed (needs tesseract or rapidocr-onnxruntime)",
     "tests.unit.test_ocr_matrix.TestRotation::test_rotated_text_is_still_read[270]": "no OCR engine installed (needs tesseract or rapidocr-onnxruntime)",
     "tests.unit.test_ocr_matrix.TestRotation::test_rotated_text_is_still_read[90]": "no OCR engine installed (needs tesseract or rapidocr-onnxruntime)",
+    "tests.unit.test_optional_imports::test_a_working_opencv_is_reported_as_working": "cv2 cannot load in this environment; the failure path is covered above",
     "tests.unit.test_pdf_mixed_pages::test_scanned_annex_with_real_engine_produces_text": "no OCR engine installed in this environment",
     "tests.unit.test_ppt_ole_extraction::test_legacy_ppt_ole_extraction_finds_slide_text": "test-doc/testPPT.ppt missing",
     "tests.unit.test_screen_inspector.TestTheBindingIsScannedNotAssumed::test_a_markup_binding_is_named_as_such": "no markup bindings exist in the product today",
@@ -132,5 +140,18 @@
     "tests.unit.test_xlsb_error_message::test_pyxlsb_failure_is_reported_with_its_cause": "sample workbook not in checkout",
     "tests.unit.test_xlsx_external_link_without_rels::test_dde_link_workbook_without_link_rels_is_read": "sample workbook not in checkout",
     "tests.unit.test_xlsx_external_link_without_rels::test_default_loader_still_fails_on_the_same_package": "sample workbook not in checkout"
-  }
+  },
+  "previous_count": 121,
+  "recorded_from": [
+    {
+      "file": "integration_FINAL.xml",
+      "sha256": "daa96a96e756d558",
+      "skips": 88
+    },
+    {
+      "file": "unit_FINAL.xml",
+      "sha256": "46a7a63f95266dce",
+      "skips": 41
+    }
+  ]
 }

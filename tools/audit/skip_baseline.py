@@ -243,7 +243,14 @@ def main(argv=None) -> int:
         return 0
 
     if status == 0:
-        print(f"\n{len(found)} skips: equal to the recorded baseline")
+        if len(found) == len(baseline):
+            print(f"\n{len(found)} skips: equal to the recorded baseline")
+        else:
+            # Every difference is excused, so the run passes - but saying
+            # "equal" about two different numbers is how a report starts lying.
+            print(f"\n{len(found)} skips: {len(delta['excused'])} new and named in "
+                  f"{args.explanations.name}, {len(delta['gone'])} recorded and gone; "
+                  f"baseline was {len(baseline)} - re-record to pin this state")
     return status
 
 
