@@ -198,10 +198,25 @@ def main(argv=None) -> int:
 
     if args.record:
         if delta["unexcused"]:
-            print("\nrefusing to record: the increase is not explained")
-            return 1
+            # Only an *increase over a recorded baseline* has to be explained.
+            # The first recording has nothing to grow from: the suite already
+            # has skips before this tool exists, and refusing to pin them would
+            # make the guard unusable on the day it is added - while refusing
+            # nothing at all would let a later increase hide inside the first
+            # number. So the first recording is taken as a whole and labelled
+            # as one; every later run is compared against it.
+            if args.baseline.exists():
+                print("\nrefusing to record: the increase is not explained")
+                return 1
+            print(f"\nno baseline existed: recording all {len(found)} skip(s) as the "
+                  f"first baseline, by category")
+            for category, ids in by_category.items():
+                print(f"    {category:18} {len(ids):4}")
+            print("    every id is pinned in the file; a later increase is refused "
+                  "unless the edit table names the module")
         payload = {"count": len(found), "ids": dict(sorted(found.items())),
-                   "by_category": {k: len(v) for k, v in by_category.items()}}
+                   "by_category": {k: len(v) for k, v in by_category.items()},
+                   "first_recording": not args.baseline.exists()}
         args.baseline.parent.mkdir(parents=True, exist_ok=True)
         args.baseline.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n",
                                  encoding="utf-8")

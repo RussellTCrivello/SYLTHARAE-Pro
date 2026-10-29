@@ -190,21 +190,35 @@ def test_main_fails_the_run_when_skips_grow_unexplained(tmp_path):
                                "--explanations", str(explanations)]) == 1
 
 
-def test_main_passes_when_the_count_matches_and_refuses_an_unexplained_record(tmp_path):
+def test_the_first_recording_pins_the_state_and_a_later_increase_is_refused(tmp_path):
+    # The suite has skips before this tool exists. Refusing to pin them would
+    # make the guard unusable on the day it is added, so the first recording
+    # takes the state as a whole and is labelled as a first recording; from
+    # then on an increase has to be named in the edit table.
     case = ("tests.unit.test_new.TestX", "test_y")
     current = _junit(tmp_path / "run.xml", [], skipped=[case])
     baseline = tmp_path / "baseline.json"
     explanations = tmp_path / "edits.md"
     explanations.write_text("nothing relevant", encoding="utf-8")
-    assert skip_baseline.main(["--current", str(current), "--baseline", str(baseline),
-                               "--explanations", str(explanations), "--record"]) == 1
-    assert not baseline.exists(), "an unexplained increase must not be recorded"
 
-    explanations.write_text("| `tests/unit/test_new.py` |", encoding="utf-8")
     assert skip_baseline.main(["--current", str(current), "--baseline", str(baseline),
                                "--explanations", str(explanations), "--record"]) == 0
+    assert json.loads(baseline.read_text(encoding="utf-8"))["first_recording"] is True
+
+    # Same run, now measured against the pin: it matches, so it passes.
     assert skip_baseline.main(["--current", str(current), "--baseline", str(baseline),
                                "--explanations", str(explanations)]) == 0
+
+    # One more skip, nothing naming its module: refused, and not recorded.
+    grown = _junit(tmp_path / "grown.xml", [],
+                   skipped=[case, ("tests.unit.test_other.TestZ", "test_w")])
+    assert skip_baseline.main(["--current", str(grown), "--baseline", str(baseline),
+                               "--explanations", str(explanations), "--record"]) == 1
+    assert json.loads(baseline.read_text(encoding="utf-8"))["count"] == 1
+
+    explanations.write_text("| `tests/unit/test_other.py` |", encoding="utf-8")
+    assert skip_baseline.main(["--current", str(grown), "--baseline", str(baseline),
+                               "--explanations", str(explanations), "--record"]) == 0
 
 
 def test_a_skip_that_stops_skipping_has_to_be_re_recorded(tmp_path):
