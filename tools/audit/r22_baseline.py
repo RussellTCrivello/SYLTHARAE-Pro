@@ -220,6 +220,14 @@ def main(argv=None) -> int:
               "requirements.lock, or pass --environment-label to say where the "
               "run was made.", file=sys.stderr)
         return 2
+    if (environment["match"] and not environment["opencv"]["usable"]
+            and any("opencv" in line for line in env_lock.lock_lines())):
+        # A set hash cannot see this: the packages can be exactly the lock's and
+        # cv2 can still fail to load when two wheels fight over cv2/.
+        print("REFUSING to classify: the lock's OpenCV cannot be imported here "
+              f"({environment['opencv'].get('error', 'unknown')}), so this run's "
+              "OCR ids are environment noise, not evidence.", file=sys.stderr)
+        return 2
 
     if args.single:
         before, after = {}, failing_ids(args.single)

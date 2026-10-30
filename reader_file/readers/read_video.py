@@ -36,14 +36,19 @@ NO_SPEECH_NOTE = (
     "Transcribe separately if the audio content matters."
 )
 
-_FFMPEG_PROBE_TIMEOUT = 30
+#: Seconds to wait for ``ffmpeg -version``. A binary that hangs must cost one
+#: timeout, not a hung read: the probe is on the read path of every media file a
+#: machine without a working ffmpeg tries to open.
+_FFMPEG_PROBE_TIMEOUT = 10
 
 
-#: ``{path: bool}`` - whether this binary actually ran. A path is probed once.
+#: ``{path: bool}`` - whether this binary actually ran. A path is probed once,
+#: so the subprocess cost is paid on the first media read and never again; the
+#: read path itself calls only :func:`ffmpeg_path`, which hits this cache.
 _FFMPEG_USABLE: Dict[str, bool] = {}
 
 
-def _runs(binary: str) -> bool:
+def _runs(binary: str, timeout: float = None) -> bool:
     """Does this program run and identify itself as ffmpeg?
 
     ``shutil.which`` answers "is a file with this name here and executable",
@@ -60,7 +65,8 @@ def _runs(binary: str) -> bool:
     usable = False
     try:
         completed = subprocess.run([binary, "-version"], capture_output=True,
-                                   text=True, timeout=10)
+                                   text=True,
+                                   timeout=_FFMPEG_PROBE_TIMEOUT if timeout is None else timeout)
         usable = completed.returncode == 0 and "ffmpeg version" in (
             completed.stdout + completed.stderr).lower()
     except Exception:                                    # noqa: BLE001

@@ -109,6 +109,44 @@ def engines() -> dict:
     return out
 
 
+#: Distributions that write into ``cv2/``; more than one is the known trap.
+CV2_OWNERS = ("opencv-python", "opencv-python-headless", "opencv-contrib-python",
+              "opencv-contrib-python-headless")
+
+
+def opencv_state() -> dict:
+    """Whether ``cv2`` actually imports here, and which distributions own it.
+
+    ``find_spec('cv2')`` says a directory exists; it says nothing about the
+    compiled extension, which is what fails when the GUI wheel's files are the
+    ones on disk and ``libGL.so.1`` is absent.
+    """
+    probe = subprocess.run(
+        [sys.executable, "-c",
+         "import cv2, sys\n"
+         "print(cv2.__version__)\n"
+         "print(cv2.__file__)\n"],
+        capture_output=True, text=True)
+    from importlib import metadata
+
+    owners = []
+    for dist_name in CV2_OWNERS:
+        try:
+            metadata.distribution(dist_name)
+        except metadata.PackageNotFoundError:
+            continue
+        owners.append(dist_name)
+    state = {"usable": probe.returncode == 0, "owners": sorted(owners)}
+    if probe.returncode == 0:
+        version, _, location = probe.stdout.partition("\n")
+        state["version"] = version.strip()
+        state["file"] = location.strip()
+    else:
+        state["error"] = (probe.stderr or probe.stdout).strip().splitlines()[-1:] or [""]
+        state["error"] = state["error"][0]
+    return state
+
+
 def report(label=None) -> dict:
     installed, locked = installed_lines(), lock_lines()
     actual = set_hash(installed)
@@ -128,6 +166,7 @@ def report(label=None) -> dict:
         "engines": engines(),
         "missing_from_this_env": missing,
         "not_in_the_lock": extra,
+        "opencv": opencv_state(),
     }
 
 
@@ -168,6 +207,11 @@ def main(argv=None) -> int:
         print(f"match       {'yes' if info['match'] else 'NO'}")
         for name, state in info["engines"].items():
             print(f"  engine {name:22} {state}")
+        opencv = info["opencv"]
+        print(f"  opencv {'usable ' + opencv.get('version', '') if opencv['usable'] else 'CANNOT LOAD'}"
+              f" (owners: {', '.join(opencv['owners']) or 'none'})")
+        if not opencv["usable"] and opencv.get("file"):
+            print(f"         imported from {opencv['file']}")
         if info["missing_from_this_env"]:
             print("missing from this environment (in the lock):")
             for line in info["missing_from_this_env"]:
@@ -176,6 +220,16 @@ def main(argv=None) -> int:
             print("not in the lock (this environment has extra):")
             for line in info["not_in_the_lock"]:
                 print("   +", line)
+
+    locked_opencv = [line for line in lock_lines()
+                     if line.split("==")[0].lower() in CV2_OWNERS]
+    if args.check and locked_opencv and not info["opencv"]["usable"]:
+        print(f"\nREFUSING: the lock carries {', '.join(locked_opencv)} but `import cv2` "
+              f"fails in this interpreter ({info['opencv'].get('error', 'unknown error')}). "
+              f"Two distributions can own cv2/ and whichever was installed last wins; "
+              f"rebuild with `python3 tools/audit/rebuild_lock_env.py --venv <path>`.",
+              file=sys.stderr)
+        return 3
 
     if args.check and not info["match"]:
         if info["label"]:

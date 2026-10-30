@@ -225,6 +225,70 @@ class TestTheRowsAreTheServers:
         assert result.total == 5000
 
 
+@pytest.fixture()
+def exportable_rows(pg_db):
+    """One stored file, so the export has something to export.
+
+    These two tests used to skip on "the disposable database has no records":
+    they passed before the per-module reset only because another module had left
+    rows behind, which is precisely the cross-module dependency the reset exists
+    to remove. A test that needs a row seeds the row.
+
+    Rows are inserted through the same tables ingestion writes (side, source,
+    hash, hash_context, path) and deleted afterwards, so the module boundary is
+    where it was.
+    """
+    import datetime
+
+    import psycopg2
+
+    conn = psycopg2.connect(host=pg_db["host"], port=pg_db["port"],
+                            user=pg_db["user"], password=pg_db["password"],
+                            dbname=pg_db["database"])
+    today = datetime.date.today()
+    path_id = None
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO sides (name, importance, date_creation) VALUES (%s, 0.5, %s)"
+                " ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name RETURNING id",
+                ("export_fixture_side", today))
+            side_id = cur.fetchone()[0]
+            cur.execute(
+                "INSERT INTO sources (name, job, importance, country, date_creation)"
+                " VALUES (%s, 'fixture', 0.5, 'NL', %s)"
+                " ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name RETURNING id",
+                ("export_fixture_source", today))
+            source_id = cur.fetchone()[0]
+            cur.execute(
+                "INSERT INTO hashs (hash) VALUES (%s)"
+                " ON CONFLICT (hash) DO UPDATE SET hash = EXCLUDED.hash RETURNING id",
+                ("export-fixture-hash-0001",))
+            hash_id = cur.fetchone()[0]
+            cur.execute(
+                "INSERT INTO hash_contexts (hash_id, source_id, side_id)"
+                " VALUES (%s, %s, %s)"
+                " ON CONFLICT (hash_id, source_id, side_id) DO UPDATE"
+                " SET hash_id = EXCLUDED.hash_id RETURNING id",
+                (hash_id, source_id, side_id))
+            context_id = cur.fetchone()[0]
+            cur.execute(
+                "INSERT INTO paths (file_name, file_path, file_size, file_type,"
+                " file_status, file_date, date_creation, context_id, processing_status)"
+                " VALUES (%s, %s, 32, 'txt', 'Read', %s, CURRENT_DATE, %s, 'processed')"
+                " RETURNING id",
+                ("export_fixture.txt", "/fixture/export_fixture.txt", today, context_id))
+            path_id = cur.fetchone()[0]
+        conn.commit()
+        yield path_id
+    finally:
+        if path_id is not None:
+            with conn.cursor() as cur:
+                cur.execute("DELETE FROM paths WHERE id = %s", (path_id,))
+            conn.commit()
+        conn.close()
+
+
 class TestTheServedEndpoint:
     def _post(self, client, payload):
         return client.post("/api/search/export", json=payload)
@@ -242,23 +306,22 @@ class TestTheServedEndpoint:
         assert response.status_code == 400
         assert "no results" in response.get_json()["error"].lower()
 
-    def test_an_authenticated_export_comes_back_with_its_own_counts(self, admin_client):
+    def test_an_authenticated_export_comes_back_with_its_own_counts(
+            self, admin_client, exportable_rows):
         response = self._post(admin_client, {"query": "", "export_scope": "dataset",
                                              "format": "json"})
-        assert response.status_code in (200, 400)
-        if response.status_code == 400:
-            pytest.skip("the disposable database has no records to export")
+        assert response.status_code == 200, response.get_data(as_text=True)
         payload = json.loads(response.get_data(as_text=True))
         assert response.headers["X-Export-Scope"] == "dataset"
         assert response.headers["X-Export-Format"] == "json"
         assert int(response.headers["X-Export-Rows"]) >= 0
         assert payload is not None
 
-    def test_the_csv_header_is_the_published_column_set(self, admin_client):
+    def test_the_csv_header_is_the_published_column_set(self, admin_client,
+                                                        exportable_rows):
         response = self._post(admin_client, {"query": "", "export_scope": "dataset",
                                              "format": "csv"})
-        if response.status_code == 400:
-            pytest.skip("the disposable database has no records to export")
+        assert response.status_code == 200, response.get_data(as_text=True)
         text = response.get_data(as_text=True)
         first = next(iter(csv.reader(io.StringIO(text))), [])
         assert first, "the CSV response has no header row"

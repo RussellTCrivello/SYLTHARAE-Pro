@@ -29,7 +29,7 @@ import sys
 from types import ModuleType
 from typing import List, Optional
 
-__all__ = ["import_opencv", "restore_after_failed_import"]
+__all__ = ["import_clean", "import_opencv", "restore_after_failed_import"]
 
 #: Names OpenCV sets on the interpreter itself, outside ``sys.path`` and
 #: ``sys.modules``. Restored too, so a later import gets a clean attempt.
@@ -76,3 +76,30 @@ def import_opencv() -> Optional[ModuleType]:
         restore_after_failed_import(before_path, before_modules)
         return None
     return cv2
+
+
+def import_clean(dotted: str) -> ModuleType:
+    """Import ``dotted`` and leave ``sys.path`` exactly as it was.
+
+    Some distributions append their own package directory to ``sys.path`` when a
+    submodule is imported, so that their modules can import each other by bare
+    name. ``odfpy`` does it on every one of its modules (seven appends for the
+    four submodules the spreadsheet reader uses), and the entries stay for the
+    life of the process - a directory *inside* ``site-packages`` that can shadow
+    a later bare import.
+
+    Restoring the path after the import is safe for such a package because its
+    modules are already imported and cached in ``sys.modules`` under their full
+    dotted names: a later ``from odf.table import TableCell`` resolves through
+    the cache and does not need the directory on the path. A *lazy* import of a
+    module that has not been loaded yet would still work, because the parent
+    package is found through ``site-packages`` as usual.
+    """
+    import importlib
+
+    before = list(sys.path)
+    try:
+        module = importlib.import_module(dotted)
+    finally:
+        sys.path[:] = before
+    return module

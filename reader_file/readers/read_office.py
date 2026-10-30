@@ -15,6 +15,19 @@ from core.file_utils import (
 )
 
 from .base_reader import BaseReader
+from core.optional_imports import import_clean
+
+
+def _odf(dotted: str):
+    """An ``odf`` submodule, imported without leaving its directory on sys.path.
+
+    ``odfpy`` appends ``site-packages/odf`` to ``sys.path`` from every one of its
+    modules, so reading a document left a package directory on the path for the
+    rest of the process. ``import_clean`` puts the path back; the module stays
+    cached, so the next read costs nothing.
+    """
+    return import_clean(dotted)
+
 
 
 
@@ -332,7 +345,8 @@ def _ods_row_cells(row) -> list:
     are held back and flushed only when a cell with text follows, which keeps
     every populated cell in its true column.
     """
-    from odf.table import TableCell
+    _odf_mod_1 = _odf("odf.table")
+    TableCell = _odf_mod_1.TableCell
 
     cells = []
     pending_empty = 0
@@ -369,7 +383,8 @@ def _odf_node_text(node) -> str:
     if node is None:
         return ''
     try:
-        from odf.teletype import extractText
+        _odf_mod_2 = _odf("odf.teletype")
+        extractText = _odf_mod_2.extractText
         text = extractText(node)
         if text:
             return ' '.join(text.split())
@@ -3287,10 +3302,16 @@ class OfficeFileReader(BaseReader):
     def read_odt_file(self, filepath):
         """Independent ODT (OpenDocument Text) reader function."""
         try:
-            from odf.opendocument import load
-            from odf.text import P
-            from odf.table import Table, TableRow, TableCell
-            from odf.teletype import extractText
+            _odf_mod_3 = _odf("odf.opendocument")
+            load = _odf_mod_3.load
+            _odf_mod_4 = _odf("odf.text")
+            P = _odf_mod_4.P
+            _odf_mod_5 = _odf("odf.table")
+            Table = _odf_mod_5.Table
+            TableRow = _odf_mod_5.TableRow
+            TableCell = _odf_mod_5.TableCell
+            _odf_mod_6 = _odf("odf.teletype")
+            extractText = _odf_mod_6.extractText
         except ImportError:
             return {
                 "error": "odfpy not installed. Install with: pip install odfpy",
@@ -3419,8 +3440,12 @@ class OfficeFileReader(BaseReader):
     def read_ods_file(self, filepath):
         """Independent ODS (OpenDocument Spreadsheet) reader function."""
         try:
-            from odf.opendocument import load
-            from odf.table import Table, TableRow, TableCell
+            _odf_mod_7 = _odf("odf.opendocument")
+            load = _odf_mod_7.load
+            _odf_mod_8 = _odf("odf.table")
+            Table = _odf_mod_8.Table
+            TableRow = _odf_mod_8.TableRow
+            TableCell = _odf_mod_8.TableCell
         except ImportError:
             return {
                 "error": "odfpy not installed. Install with: pip install odfpy",
@@ -3529,11 +3554,20 @@ class OfficeFileReader(BaseReader):
         Preserves original order of elements within slides.
         """
         try:
-            from odf.opendocument import load
-            from odf.draw import Page, TextBox
-            from odf.presentation import FooterDecl, HeaderDecl, Notes
-            from odf.text import P
-            from odf.table import TableRow, TableCell
+            _odf_mod_9 = _odf("odf.opendocument")
+            load = _odf_mod_9.load
+            _odf_mod_10 = _odf("odf.draw")
+            Page = _odf_mod_10.Page
+            TextBox = _odf_mod_10.TextBox
+            _odf_mod_11 = _odf("odf.presentation")
+            FooterDecl = _odf_mod_11.FooterDecl
+            HeaderDecl = _odf_mod_11.HeaderDecl
+            Notes = _odf_mod_11.Notes
+            _odf_mod_12 = _odf("odf.text")
+            P = _odf_mod_12.P
+            _odf_mod_13 = _odf("odf.table")
+            TableRow = _odf_mod_13.TableRow
+            TableCell = _odf_mod_13.TableCell
         except ImportError:
             return {
                 "error": "odfpy not installed. Install with: pip install odfpy",

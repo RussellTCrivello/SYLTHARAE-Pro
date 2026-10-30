@@ -11,18 +11,34 @@
 # or, on a fresh interpreter, `pip install -r requirements.lock` alone.
 #
 # python: 3.11.2
-# packages: 118
-# set hash: 1353dba7e052f925f0ae967601c24eae17a398a7335228ed0231d82adabf6814
+# packages: 117
+# set hash: 6d1421aeb8dd44ffd012d1a059553b0cd23bd901601fe526d8be9ecae7b2fe93
 #
 # The hash is over the sorted `name==version` lines, without this header, so it
 # can be recomputed from an installed environment by `tools/audit/env_lock.py`.
 # A run whose installed set hashes to something else is not reproducible and the
 # classifier refuses to label it; pass --environment-label to say so out loud.
 #
+# INSTALL WITH --no-deps. This file is a complete freeze, so every transitive
+# package is already listed; resolving dependencies again can only add something
+# this file does not contain. That is exactly how `cv2` broke: rapidocr declares
+# the GUI `opencv-python`, which unpacks into the same `cv2/` directory as
+# `opencv-python-headless` and needs libGL.so.1 - so a plain `pip install -r`
+# produced an environment where `import cv2` raised ImportError. The GUI build is
+# excluded from this file and `--no-deps` keeps it out:
+#
+#     python3.11 -m venv /tmp/rv
+#     /tmp/rv/bin/pip install --no-deps -r requirements.lock
+#     /tmp/rv/bin/python tools/audit/env_lock.py --check   # fails if cv2 cannot load
+#
+# or just `python3 tools/audit/rebuild_lock_env.py --venv /tmp/rv`, which does
+# both and refuses to leave a broken environment behind. The headless wheel
+# provides the same importable `cv2` and needs no system library.
+#
 # NOT captured by this file, and equally able to change a result (see
 # audit_report/r22_workbook/ENVIRONMENT.md):
-#   * the native libraries OpenCV needs (libGL.so.1 is absent here, so `import
-#     cv2` fails even though opencv 5.0.0.93 is installed)
+#   * the native libraries a package may need at import time (this is why the
+#     GUI OpenCV build is NOT in this file: see below)
 #   * the `tesseract` binary (absent: pytesseract is installed and unusable)
 #   * an `ffmpeg` binary (absent: the media reader reports the dependency)
 #   * the PostgreSQL build that `pgserver` unpacks
@@ -87,7 +103,6 @@ olefile==0.47
 oletools==0.60.2
 onnxruntime==1.31.1
 opencv-python-headless==5.0.0.93
-opencv-python==5.0.0.93
 openpyxl==3.1.5
 ordered-set==4.1.0
 packaging==26.3

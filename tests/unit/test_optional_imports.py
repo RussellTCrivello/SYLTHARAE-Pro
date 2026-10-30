@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import pathlib
 import re
+import re
 import sys
 import textwrap
 
@@ -225,3 +226,68 @@ def test_the_version_module_is_still_not_resolved_through_the_path():
     resolved = pathlib.Path(core.app_version.version_module().__file__).resolve()
     root = pathlib.Path(__file__).resolve().parents[2]
     assert resolved == (root / "version.py").resolve()
+
+
+# --------------------------------------------------------------------------- #
+# The same pattern for a package that appends its own directory on import
+# --------------------------------------------------------------------------- #
+def test_odf_does_append_its_own_directory_to_the_path():
+    """The hazard, from the third-party side - it is not this repository's bug."""
+    import importlib
+
+    for name in [m for m in sys.modules if m == "odf" or m.startswith("odf.")]:
+        del sys.modules[name]
+    before = list(sys.path)
+    try:
+        importlib.import_module("odf.table")
+        leaked = [entry for entry in sys.path if entry not in before]
+        assert any(entry.endswith("/odf") or entry.endswith("\\odf") for entry in leaked), (
+            "odf no longer appends its directory; the guard is now unnecessary "
+            "(remove it, do not leave dead code)")
+    finally:
+        sys.path[:] = before
+        for name in [m for m in sys.modules if m == "odf" or m.startswith("odf.")]:
+            del sys.modules[name]
+
+
+def test_the_guarded_import_of_odf_leaves_the_path_alone():
+    from core.optional_imports import import_clean
+
+    before = list(sys.path)
+    module = import_clean("odf.table")
+    assert hasattr(module, "Table")
+    assert sys.path == before, "the guarded import left a directory on sys.path"
+
+
+def test_the_guarded_import_restores_the_path_when_the_import_fails():
+    from core.optional_imports import import_clean
+
+    before = list(sys.path)
+    with pytest.raises(ImportError):
+        import_clean("odf.this_submodule_does_not_exist")
+    assert sys.path == before
+
+
+def test_the_office_reader_uses_the_guard_rather_than_a_bare_odf_import():
+    source = (pathlib.Path(__file__).resolve().parents[2]
+              / "reader_file" / "readers" / "read_office.py").read_text(encoding="utf-8")
+    bare = [line for line in source.splitlines()
+            if re.match(r"^\s*from odf[.\s]|^\s*import odf\b", line)]
+    assert bare == [], (
+        "these import odf directly, which appends site-packages/odf to sys.path: "
+        + "; ".join(bare))
+    assert '_odf("' in source
+
+
+def test_reading_a_spreadsheet_leaves_no_package_directory_on_the_path():
+    """End to end, through the reader's own helper."""
+    import reader_file.readers.read_office as read_office
+
+    import sysconfig
+
+    site_packages = pathlib.Path(sysconfig.get_paths()["purelib"]).resolve()
+    before = list(sys.path)
+    read_office._odf("odf.table")
+    added = [entry for entry in sys.path if entry not in before]
+    assert [entry for entry in added
+            if pathlib.Path(entry).resolve().is_relative_to(site_packages)] == []
