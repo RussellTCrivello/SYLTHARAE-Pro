@@ -5,6 +5,17 @@ read it. This document describes the model as the code implements it; the
 paragraphs that state a contract are checked against the code, so a change to
 the model without a change here fails the suite.
 
+Which paragraphs are checked, and by what:
+
+| paragraph | derived from | test |
+|---|---|---|
+| the record, and the table each concept is stored in | `database/migrations/m0001_baseline.py` | `test_architecture_claims.py` |
+| "identified by its path and hash" | `paths.context_id -> hash_contexts -> hashs` | same |
+| "archive: lineage from container to member" | `paths.parent_path_id`, `paths.hierarchy_path` (there is no archive table) | same |
+| `extraction_provenance.ocr`, field by field | `StoragePipeline._ocr_provenance` | `test_ocr_provenance_docs.py` |
+| the media paragraph | `VideoFileReader`, which writes `speech_extracted: False` | `test_architecture_claims.py` |
+| "a field that is absent means not measured" | convention; not derived | unverified |
+
 ## The record
 
 | concept | what it is |
@@ -18,8 +29,10 @@ the model without a change here fails the suite.
 
 ## Extraction provenance
 
-Every stored item carries `extraction_provenance`: how its text was obtained,
-from which reader, and what the reader could not do. A field that is absent
+Every item the pipeline stores carries `extraction_provenance`: how its text
+was obtained, from which reader, and what the reader could not do. (The column
+is nullable - an item written by something other than the pipeline can lack
+it - so the document claims it of what the pipeline stores, not of every row.) A field that is absent
 means "not measured", never "measured as zero".
 
 ### OCR
@@ -44,3 +57,8 @@ A media read that cannot transcribe speech still stores what the container
 says: duration, geometry, codec, stream counts and tags. The record states that
 speech was **not** extracted rather than storing an empty transcript, so an
 empty text is never mistaken for silence in the recording.
+
+Reviewed by: repository owner (the same owner who holds the translation
+decision due 2026-11-05). Last reviewed: 2026-10-29, against the baseline
+migration, `pipeline/storage_pipeline.py` and `reader_file/readers/read_video.py`
+at that commit.
