@@ -1,0 +1,16 @@
+{
+  "captured": "2026-10-30",
+  "what": "the three tables migrated onto data_table (Monitoring scenarios, Reports by file type, translation selection panel)",
+  "browser": "Chromium 123 (npm @sparticuz/chromium 123.0.1) driven by playwright-core 1.47.2, viewport 1440x900, full-page screenshots",
+  "browser_note": "the sandbox image has no libnss3/libnssutil3/libnspr4; they were built from source (mozilla/nspr + nss-dev/nss, ninja) and supplied through LD_LIBRARY_PATH=/tmp/nssall. Nothing was installed into the venv or the repository",
+  "server": "tools/audit/serve_for_screenshots.py (real Flask app, disposable pgserver PostgreSQL, admin seeded)",
+  "harness": "tools/audit/capture_table_pages.py",
+  "before": {"commit": "ada9e11de85278262383af3ea7e2130fbd0ea8c0", "label": "parent of the table migration", "port": 5056},
+  "after": {"commit": "e6de71298d801ba47ed76079bd095a8f20ff3c76", "label": "the migration and later commits", "port": 5055},
+  "migrated_by": "1476312",
+  "result": {
+    "pixels": "all three screenshots are byte-identical between the two runs",
+    "dom": "id, class attribute, thead headers, column count, wrapper class, row count and bounding box are identical; the table's outerHTML differs only in whitespace introduced by the Jinja macro call",
+    "visible_difference": "none seen"
+  }
+}

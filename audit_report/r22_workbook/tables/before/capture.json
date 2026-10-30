@@ -1,0 +1,105 @@
+[
+  {
+    "name": "monitoring",
+    "path": "/monitoring",
+    "status": 200,
+    "finalUrl": "http://127.0.0.1:5056/monitoring",
+    "table": {
+      "found": true,
+      "id": "scenariosTable",
+      "classes": [
+        "table",
+        "table-hover",
+        "align-middle"
+      ],
+      "headers": [
+        "Name",
+        "Version",
+        "Status",
+        "Last Evaluated",
+        "Actions"
+      ],
+      "columns": 5,
+      "wrapper": "table-responsive",
+      "box": {
+        "x": 346,
+        "y": 298,
+        "width": 1008,
+        "height": 37
+      },
+      "rows": 0,
+      "hidden": false,
+      "html": "<table class=\"table table-hover align-middle\" id=\"scenariosTable\">\n                            <thead>\n                                <tr>\n                                    <th>Name</th>\n                                    <th>Version</th>\n                                    <th>Status</th>\n                                    <th>Last Evaluated</th>\n                                    <th class=\"text-end\">Actions</th>\n                                </tr>\n                            </thead>\n                            <tbody id=\"scenariosTableBody\"></tbody>\n                        </table>"
+    },
+    "screenshot": "/tmp/shots-before/monitoring.png"
+  },
+  {
+    "name": "reports",
+    "path": "/reports",
+    "status": 200,
+    "finalUrl": "http://127.0.0.1:5056/reports",
+    "table": {
+      "found": true,
+      "id": "reportByType",
+      "classes": [
+        "table",
+        "table-sm",
+        "table-hover",
+        "align-middle",
+        "mb-0"
+      ],
+      "headers": [
+        "File type",
+        "Total",
+        "Processed",
+        "Failed",
+        "Success Rate"
+      ],
+      "columns": 5,
+      "wrapper": "table-responsive",
+      "box": {
+        "x": 342,
+        "y": 623,
+        "width": 1016,
+        "height": 78
+      },
+      "rows": 1,
+      "hidden": false,
+      "html": "<table class=\"table table-sm table-hover align-middle mb-0\" id=\"reportByType\">\n                <thead>\n                    <tr>\n                        <th scope=\"col\">File type</th>\n                        <th scope=\"col\" class=\"text-end\">Total</th>\n                        <th scope=\"col\" class=\"text-end\">Processed</th>\n                        <th scope=\"col\" class=\"text-end\">Failed</th>\n                        <th scope=\"col\" class=\"text-end\">Success Rate</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    \n                    <tr>\n                        <td colspan=\"5\" class=\"text-muted\">No results found</td>\n                    </tr>\n                    \n                </tbody>\n            </table>"
+    },
+    "screenshot": "/tmp/shots-before/reports.png"
+  },
+  {
+    "name": "translation_panel",
+    "path": "/search",
+    "status": 200,
+    "finalUrl": "http://127.0.0.1:5056/search",
+    "table": {
+      "found": true,
+      "id": null,
+      "classes": [
+        "table",
+        "table-sm",
+        "align-middle",
+        "mb-0"
+      ],
+      "headers": [
+        "Original",
+        "Translation",
+        "Accept translation"
+      ],
+      "columns": 3,
+      "wrapper": "table-responsive",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "rows": 0,
+      "hidden": true,
+      "html": "<table class=\"table table-sm align-middle mb-0\">\n                <thead>\n                    <tr>\n                        <th scope=\"col\" style=\"width:45%\">Original</th>\n                        <th scope=\"col\" style=\"width:45%\">Translation</th>\n                        <th scope=\"col\" style=\"width:10%\">Accept translation</th>\n                    </tr>\n                </thead>\n                <tbody data-translation-rows=\"\"></tbody>\n            </table>"
+    },
+    "screenshot": "/tmp/shots-before/translation_panel.png"
+  }
+]
