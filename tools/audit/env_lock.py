@@ -113,6 +113,41 @@ def engines() -> dict:
 CV2_OWNERS = ("opencv-python", "opencv-python-headless", "opencv-contrib-python",
               "opencv-contrib-python-headless")
 
+#: The builds that need a system GUI stack (libGL, libgthread). A lock that
+#: lists one of these cannot be installed on a headless machine, so it must not
+#: list one at all - see :func:`lock_cv2_problems`.
+GUI_CV2 = ("opencv-python", "opencv-contrib-python")
+
+
+def lock_cv2_problems(lines) -> list:
+    """Why a lock file's OpenCV is unsafe, as a list of sentences.
+
+    Two separate defects, both observed:
+
+    * a **GUI** OpenCV distribution - it loads ``libGL.so.1``, which a headless
+      host does not have, so ``import cv2`` fails while the package is
+      installed and everything else looks healthy;
+    * **two** distributions that own ``cv2/`` - whichever wheel is unpacked
+      last silently replaces the other's compiled extension.
+
+    Checked on the lock's own text, not on an installed environment, so a lock
+    is refused *before* anyone builds from it.
+    """
+    named = [line.split("==")[0].strip().lower() for line in lines
+             if "==" in line and not line.lstrip().startswith("#")]
+    present = [name for name in named if name in CV2_OWNERS]
+    problems = []
+    for name in present:
+        if name in GUI_CV2:
+            problems.append(
+                f"{name} is a GUI build: its cv2/ loads libGL.so.1, so "
+                f"`import cv2` fails on any headless host")
+    if len(present) > 1:
+        problems.append(
+            f"{len(present)} distributions own cv2/ ({', '.join(sorted(present))}); "
+            f"whichever is installed last silently wins")
+    return problems
+
 
 def opencv_state() -> dict:
     """Whether ``cv2`` actually imports here, and which distributions own it.
@@ -167,6 +202,7 @@ def report(label=None) -> dict:
         "missing_from_this_env": missing,
         "not_in_the_lock": extra,
         "opencv": opencv_state(),
+        "lock_opencv_problems": lock_cv2_problems(locked),
     }
 
 
@@ -220,6 +256,14 @@ def main(argv=None) -> int:
             print("not in the lock (this environment has extra):")
             for line in info["not_in_the_lock"]:
                 print("   +", line)
+
+    lock_problems = lock_cv2_problems(lock_lines())
+    if args.check and lock_problems:
+        for problem in lock_problems:
+            print(f"\nREFUSING: {problem}. The lock must carry exactly one "
+                  f"OpenCV distribution and it must be the headless one.",
+                  file=sys.stderr)
+        return 3
 
     locked_opencv = [line for line in lock_lines()
                      if line.split("==")[0].lower() in CV2_OWNERS]

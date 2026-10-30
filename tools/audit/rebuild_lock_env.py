@@ -31,6 +31,8 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 LOCK = ROOT / "requirements.lock"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 #: Distributions that write into ``cv2/``. Exactly one may be installed.
 CV2_OWNERS = ("opencv-python", "opencv-python-headless", "opencv-contrib-python",
@@ -52,6 +54,17 @@ def main(argv=None) -> int:
     parser.add_argument("--reuse", action="store_true",
                         help="install into an existing venv instead of creating one")
     args = parser.parse_args(argv)
+
+    # Refuse the lock *before* building anything from it: a GUI OpenCV build,
+    # or two distributions that own cv2/, produces an environment that installs
+    # cleanly and then cannot import its own OCR engine.
+    from tools.audit.env_lock import lock_cv2_problems, lock_lines
+
+    problems = lock_cv2_problems(lock_lines())
+    if problems:
+        for problem in problems:
+            print(f"REFUSING: {problem}", file=sys.stderr)
+        return 3
 
     venv = pathlib.Path(args.venv)
     python = venv / "bin" / "python"

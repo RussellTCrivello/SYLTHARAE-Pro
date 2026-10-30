@@ -1,0 +1,125 @@
++ python3.11 -m venv {tmp}/lock-check/run1/venv
++ {tmp}/lock-check/run1/venv/bin/pip install --quiet --no-deps -r {repo}/requirements.lock
++ {tmp}/lock-check/run1/venv/bin/python {repo}/tools/audit/env_lock.py --fingerprint
++ {tmp}/lock-check/run1/venv/bin/python {repo}/tools/audit/env_lock.py --check
++ {tmp}/lock-check/run1/venv/bin/python -c import cv2, importlib.metadata as m
+owners=[d.metadata['Name'] for d in m.distributions()
+        if (d.metadata['Name'] or '').lower().replace('_','-') in ('opencv-python','opencv-python-headless','opencv-contrib-python','opencv-contrib-python-headless')]
+print(cv2.__version__)
+print(','.join(sorted(owners)))
++ {tmp}/lock-check/run1/venv/bin/python {repo}/tools/audit/env_lock.py --json
+{
+  "directory": "{tmp}/lock-check/run1",
+  "set_hash": "6d1421aeb8dd44ffd012d1a059553b0cd23bd901601fe526d8be9ecae7b2fe93",
+  "packages": 117,
+  "env_lock_exit": 0,
+  "env_lock_output": [
+    "  opencv usable 5.0.0 (owners: opencv-python-headless)"
+  ],
+  "cv2_import_exit": 0,
+  "cv2_version": "5.0.0",
+  "cv2_owners": [
+    "opencv-python-headless"
+  ]
+}
++ python3.11 -m venv {tmp}/lock-check/run2/venv
++ {tmp}/lock-check/run2/venv/bin/pip install --quiet --no-deps -r {repo}/requirements.lock
++ {tmp}/lock-check/run2/venv/bin/python {repo}/tools/audit/env_lock.py --fingerprint
++ {tmp}/lock-check/run2/venv/bin/python {repo}/tools/audit/env_lock.py --check
++ {tmp}/lock-check/run2/venv/bin/python -c import cv2, importlib.metadata as m
+owners=[d.metadata['Name'] for d in m.distributions()
+        if (d.metadata['Name'] or '').lower().replace('_','-') in ('opencv-python','opencv-python-headless','opencv-contrib-python','opencv-contrib-python-headless')]
+print(cv2.__version__)
+print(','.join(sorted(owners)))
++ {tmp}/lock-check/run2/venv/bin/python {repo}/tools/audit/env_lock.py --json
+{
+  "directory": "{tmp}/lock-check/run2",
+  "set_hash": "6d1421aeb8dd44ffd012d1a059553b0cd23bd901601fe526d8be9ecae7b2fe93",
+  "packages": 117,
+  "env_lock_exit": 0,
+  "env_lock_output": [
+    "  opencv usable 5.0.0 (owners: opencv-python-headless)"
+  ],
+  "cv2_import_exit": 0,
+  "cv2_version": "5.0.0",
+  "cv2_owners": [
+    "opencv-python-headless"
+  ]
+}
+
+--- demonstrating the unsupported command: pip install -r ---
++ python3.11 -m venv {tmp}/lock-check/plain/venv
++ {tmp}/lock-check/plain/venv/bin/pip install --quiet -r {repo}/requirements.lock
++ {tmp}/lock-check/plain/venv/bin/python {repo}/tools/audit/env_lock.py --fingerprint
++ {tmp}/lock-check/plain/venv/bin/python {repo}/tools/audit/env_lock.py --check
++ {tmp}/lock-check/plain/venv/bin/python -c import cv2, importlib.metadata as m
+owners=[d.metadata['Name'] for d in m.distributions()
+        if (d.metadata['Name'] or '').lower().replace('_','-') in ('opencv-python','opencv-python-headless','opencv-contrib-python','opencv-contrib-python-headless')]
+print(cv2.__version__)
+print(','.join(sorted(owners)))
++ {tmp}/lock-check/plain/venv/bin/python {repo}/tools/audit/env_lock.py --json
+{
+  "directory": "{tmp}/lock-check/plain",
+  "set_hash": "1353dba7e052f925f0ae967601c24eae17a398a7335228ed0231d82adabf6814",
+  "packages": 118,
+  "env_lock_exit": 3,
+  "env_lock_output": [
+    "REFUSING: the lock carries opencv-python-headless==5.0.0.93 but `import cv2` fails in this interpreter (ImportError: libGL.so.1: cannot open shared object file: No such file or directory). Two distributions can own cv2/ and whichever was installed last wins; rebuild with `python3 tools/audit/rebuild_lock_env.py --venv <path>`."
+  ],
+  "cv2_import_exit": 1,
+  "cv2_version": null,
+  "cv2_owners": []
+}
+
+========================================================================
+install check
+========================================================================
+{
+  "runs": [
+    {
+      "directory": "{tmp}/lock-check/run1",
+      "set_hash": "6d1421aeb8dd44ffd012d1a059553b0cd23bd901601fe526d8be9ecae7b2fe93",
+      "packages": 117,
+      "env_lock_exit": 0,
+      "env_lock_output": [
+        "  opencv usable 5.0.0 (owners: opencv-python-headless)"
+      ],
+      "cv2_import_exit": 0,
+      "cv2_version": "5.0.0",
+      "cv2_owners": [
+        "opencv-python-headless"
+      ]
+    },
+    {
+      "directory": "{tmp}/lock-check/run2",
+      "set_hash": "6d1421aeb8dd44ffd012d1a059553b0cd23bd901601fe526d8be9ecae7b2fe93",
+      "packages": 117,
+      "env_lock_exit": 0,
+      "env_lock_output": [
+        "  opencv usable 5.0.0 (owners: opencv-python-headless)"
+      ],
+      "cv2_import_exit": 0,
+      "cv2_version": "5.0.0",
+      "cv2_owners": [
+        "opencv-python-headless"
+      ]
+    }
+  ],
+  "identical": {
+    "set_hash": "6d1421aeb8dd44ffd012d1a059553b0cd23bd901601fe526d8be9ecae7b2fe93",
+    "packages": 117,
+    "cv2_version": "5.0.0",
+    "cv2_owners": [
+      "opencv-python-headless"
+    ]
+  },
+  "plain_install": {
+    "set_hash": "1353dba7e052f925f0ae967601c24eae17a398a7335228ed0231d82adabf6814",
+    "cv2_import_exit": 1,
+    "cv2_owners": [],
+    "env_lock_exit": 3
+  }
+}
+
+both builds are the lock: 6d1421aeb8dd44ffd012d1a059553b0cd23bd901601fe526d8be9ecae7b2fe93, 117 packages, cv2 5.0.0 owned by opencv-python-headless
+exit=0

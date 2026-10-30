@@ -5,6 +5,43 @@
 > were run, but the workflow described here has not been agreed as the
 > project's development process.
 
+## Installing the pinned environment
+
+`requirements.lock` is a **complete freeze**: every transitive package is listed
+with its exact version, and its set hash is over that list. It is installed with
+`--no-deps`, which is the documented and only supported command:
+
+```bash
+python3.11 -m venv /tmp/rv
+/tmp/rv/bin/pip install --no-deps -r requirements.lock
+/tmp/rv/bin/python tools/audit/env_lock.py --check     # prints the set hash, exits 0
+```
+
+or, in one step, `python3 tools/audit/rebuild_lock_env.py --venv /tmp/rv`, which
+does both above, refuses an environment whose `cv2/` is not owned by exactly
+`opencv-python-headless`, and refuses one where `import cv2` fails.
+
+**A plain `pip install -r requirements.lock` is unsupported and is checked to
+fail.** The file is a freeze, so resolving it again can only add packages, and
+one of them is guaranteed: `rapidocr-onnxruntime` declares the **GUI**
+`opencv-python`, which unpacks into the same `cv2/` directory as
+`opencv-python-headless` and loads `libGL.so.1`. The result installs cleanly,
+reports the right version in `pip list`, and answers `import cv2` with
+`ImportError: libGL.so.1: cannot open shared object file` - 31 failing ids and
+84 skips in the round that found it.
+
+Three things enforce this, and each fails loudly:
+
+| check | refuses |
+|---|---|
+| `tools/audit/env_lock.py --check` | a lock that lists a GUI OpenCV build or two distributions that own `cv2/` (**exit 3**), and an installed set that is not the lock (exit 1) |
+| `tools/audit/rebuild_lock_env.py` | the lock text before installing, and the environment after |
+| `tools/audit/check_install.py` | builds the lock twice **from scratch**, requires the same set hash, the same package count and a working `import cv2` in both, then demonstrates that the plain command produces an environment the check rejects |
+
+`python3 tools/audit/check_install.py` is the CI-callable form; it needs no
+database and no test fixtures, and it takes a few minutes because it really does
+create two virtualenvs.
+
 ## Running the tests
 
 ```bash

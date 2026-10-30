@@ -40,7 +40,13 @@
 #   * the native libraries a package may need at import time (this is why the
 #     GUI OpenCV build is NOT in this file: see below)
 #   * the `tesseract` binary (absent: pytesseract is installed and unusable)
-#   * an `ffmpeg` binary (absent: the media reader reports the dependency)
+#   * an `ffmpeg` binary (absent: the media reader reports the dependency).
+#     Deliberate, and decided in audit_report/r22_workbook/DECISION_FFMPEG.md:
+#     ffmpeg is an external binary here, not a wheel, because the project's own
+#     requirements.txt documents it per platform and because the wheel that
+#     would supply it carries a GPLv3 static build. The 14 ids that need it
+#     skip in this lock and pass with a binary on PATH (measured: 3779 vs 3765
+#     passing in the full unit suite).
 #   * the PostgreSQL build that `pgserver` unpacks
 APScheduler==3.11.3
 Deprecated==1.3.1
