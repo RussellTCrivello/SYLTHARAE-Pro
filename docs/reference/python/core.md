@@ -1206,6 +1206,7 @@ Optional native imports that cannot damage the interpreter when they fail.
 
 - `restore_after_failed_import(before_path: List[str], before_modules: dict) -> None` - Undo everything a failed optional import may have left behind.
 - `import_opencv() -> Optional[ModuleType]` - OpenCV, or ``None`` if it cannot be imported here.
+- `import_clean(dotted: str) -> ModuleType` - Import ``dotted`` and leave ``sys.path`` exactly as it was.
 
 ### `core/path_safety.py`
 
