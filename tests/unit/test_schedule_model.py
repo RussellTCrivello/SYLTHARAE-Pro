@@ -7,6 +7,8 @@ eligibility rule is the authorization the scheduler re-decides at every
 fire.
 """
 
+from pathlib import Path
+
 import pytest
 
 from services.scheduling.model import (
@@ -16,10 +18,49 @@ from services.scheduling.model import (
 )
 
 
+def _job_types_the_manager_handles() -> set:
+    """The job types ``JobManager._run_builtin`` actually dispatches on.
+
+    Read from the source rather than imported, because the manager dispatches
+    through an if/elif chain and has no registry to ask. This is what makes
+    "a schedule type maps onto an existing job" checkable: a type added to the
+    vocabulary without a handler used to pass this test by being listed here.
+    """
+    import ast
+
+    source = (Path(__file__).resolve().parents[2]
+              / "services" / "jobs" / "manager.py")
+    tree = ast.parse(source.read_text(encoding="utf-8"))
+    handled = set()
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Compare) or len(node.ops) != 1:
+            continue
+        left = node.left
+        if not (isinstance(left, ast.Name) and left.id == "job_type"):
+            continue
+        comparator = node.comparators[0]
+        if isinstance(node.ops[0], ast.Eq) and isinstance(comparator, ast.Constant):
+            handled.add(comparator.value)
+        elif isinstance(node.ops[0], ast.In) and isinstance(comparator, (ast.Tuple, ast.List)):
+            for element in comparator.elts:
+                if isinstance(element, ast.Constant):
+                    handled.add(element.value)
+    return handled
+
+
 class TestTheVocabulary:
     def test_the_job_types_map_onto_existing_jobs(self):
-        # Only scenario_evaluation and retention remain after consolidation.
+        # Was a hardcoded set of the two types; a hardcoded list cannot catch a
+        # type whose handler is missing, which is the property the test is
+        # named for. It now checks the property directly. taxonomy_sync was
+        # added (workbook reconciliation, services/importing/taxonomy_*).
         assert set(SCHEDULE_TYPES) == {"scenario_evaluation", "retention"}
+        assert set(SCHEDULE_TYPES) <= _job_types_the_manager_handles()
+
+    def test_a_type_without_a_handler_would_be_caught(self):
+        handled = _job_types_the_manager_handles()
+        assert "retention" in handled
+        assert "no_such_job_type" not in handled
 
     def test_evaluations_are_administrative_retention_is_administrative(self):
         assert required_role("scenario_evaluation") == "admin"

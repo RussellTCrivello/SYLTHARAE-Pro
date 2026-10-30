@@ -103,28 +103,35 @@ class KeywordRepository:
                 )
             
             if is_duplicate_error:
-                # Keyword already exists with a different category_id (or same one in race condition)
-                # Query for the existing keyword ID (ignoring category_id)
+                # The unique index is on the phrase alone, not on
+                # (phrase, category). Reaching this point means the phrase is
+                # already stored under *another* category.
+                #
+                # This used to return that other category's keyword id, which
+                # made the orchestrator count the term as imported into the
+                # category the operator asked for - it had not been. The
+                # database is right and the caller is wrong, so say so and
+                # report a skip.
                 try:
                     existing = self.tx_manager.execute_query(
-                        f"SELECT id FROM {TABLE_KEYWORDS} "
+                        f"SELECT id, category_id FROM {TABLE_KEYWORDS} "
                         f"WHERE keyword = %s",
                         (keyword_blob,),
                         fetch=True
                     )
-                    if existing:
-                        keyword_id = existing[0][0]
-                        self.logger.debug(
-                            f"Keyword already exists globally (ID: {keyword_id}), "
-                            f"skipping duplicate for category {category_id}"
-                        )
-                        return keyword_id
                 except Exception as lookup_error:
                     self.logger.warning(
                         f"Failed to lookup existing keyword after duplicate error: {lookup_error}"
                     )
-                # If lookup failed, return None (keyword exists but we couldn't get its ID)
-                # This will be treated as a skip by the orchestrator
+                    return None
+
+                if existing:
+                    owner_id = existing[0][1]
+                    self.logger.warning(
+                        f"Keyword for category {category_id} already belongs to "
+                        f"category {owner_id} (keyword ID {existing[0][0]}): the "
+                        f"schema stores a phrase once, so it was not created here"
+                    )
                 return None
             
             # For other errors, log and raise

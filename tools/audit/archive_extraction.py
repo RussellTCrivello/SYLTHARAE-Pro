@@ -24,6 +24,7 @@ import collections
 import gzip
 import hashlib
 import json
+import html
 import re
 import resource
 import sys
@@ -155,19 +156,37 @@ def recall(oracle_text, stored_text: str) -> Dict[str, Any]:
     }
 
 
-def units_from_content(content: Dict[str, Any]) -> List[Dict[str, Any]]:
+class _UnitList(list):
+    """A list of units that also reports how many existed before the cap."""
+
+    total = 0
+
+
+def units_from_content(content: Dict[str, Any],
+                       limit: Optional[int] = None) -> List[Dict[str, Any]]:
     """Turn a reader's output into located units, without inventing structure.
 
     Every unit names the container it came from, so a reader can point at the
     exact page, paragraph, cell, slide, member or box the text occupies.
+
+    ``limit`` bounds how many unit dicts are built. A spreadsheet with 250 000
+    cells produced 249 990 of them, and materialising that list next to the
+    extracted text was enough to exhaust the child process: the record of a
+    file that had been read successfully could not be written. The count is
+    still reported (``units_total``), because a truncated list that does not
+    say it is truncated is a lie about coverage.
     """
-    units: List[Dict[str, Any]] = []
+    units = _UnitList()
+    total = [0]
 
     def add(kind: str, loc: str, text: Any, allow_empty: bool = False,
             **meta: Any) -> None:
         if isinstance(text, (int, float)):
             text = str(text)
         if not allow_empty and (not isinstance(text, str) or not text.strip()):
+            return
+        total[0] += 1
+        if limit is not None and len(units) >= limit:
             return
         unit = {"kind": kind, "loc": loc, "chars": len(text), "text": text}
         if meta:
@@ -178,7 +197,10 @@ def units_from_content(content: Dict[str, Any]) -> List[Dict[str, Any]]:
     if isinstance(pages, list) and pages and isinstance(pages[0], dict):
         for i, page in enumerate(pages, 1):
             number = page.get("page_number", page.get("number", i))
-            add("page", f"page {number}", page.get("text"),
+            # An empty page is a measurement: it says the page exists and
+            # carries no text this reader could reach. Dropping it would make a
+            # scanned page indistinguishable from a page that is not there.
+            add("page", f"page {number}", page.get("text"), allow_empty=True,
                 width=page.get("width"), height=page.get("height"),
                 rotation=page.get("rotation"), columns=page.get("columns"),
                 method=page.get("method"))
@@ -290,10 +312,12 @@ def units_from_content(content: Dict[str, Any]) -> List[Dict[str, Any]]:
                 add("document", "whole file", value)
                 break
 
+    units.total = total[0]
     return units
 
 
-def probe(path: Path, svc, pipe, corpus: Path, timeout: int) -> Dict[str, Any]:
+def probe(path: Path, svc, pipe, corpus: Path, timeout: int,
+          oracle_reader=None) -> Dict[str, Any]:
     rel = path.relative_to(corpus).as_posix()
     ext = path.suffix.lower()
     rec: Dict[str, Any] = {
@@ -338,33 +362,92 @@ def probe(path: Path, svc, pipe, corpus: Path, timeout: int) -> Dict[str, Any]:
         content = result.get("content") if isinstance(result, dict) and \
             isinstance(result.get("content"), dict) and "elements" not in result else result
 
-        stored = pipe._extract_text_from_content(content) or ""
+        # The storage boundary is a stage of its own: it can fail (memory,
+        # time) on text the reader produced happily, and a bare "MemoryError"
+        # on the record would blame the reader for it. Measured on
+        # Spreadsheets/testRecordSizeExceeded.xlsx.
+        try:
+            stored = pipe._extract_text_from_content(content) or ""
+        except MemoryError:
+            rec["storage_error"] = (
+                "MemoryError in _extract_text_from_content: the reader produced "
+                f"{len(rec.get('units') or [])} units of text that the storage "
+                "text builder could not hold")
+            stored = ""
+        except Exception as exc:
+            rec["storage_error"] = f"{type(exc).__name__}: {exc}"
+            stored = ""
         rec["stored_chars"] = len(stored)
         rec["stored_sha256"] = sha256_text(stored)
         rec["lone_surrogates"] = len(re.findall(r"[\ud800-\udfff]", stored))
         rec["peak_rss_kb"] = peak_memory_kb()
-        rec["units"] = units_from_content(content)
+        # Units are capped, with the total kept: a 250 000-cell sheet produced
+        # 249 990 unit dicts, and materialising them alongside the 10 MB text
+        # pushed the child past its address-space limit - the harness died
+        # building its own report of a file it had read successfully.
+        all_units = units_from_content(content, limit=UNITS_CAP)
+        rec["units_total"] = getattr(all_units, "total", len(all_units))
+        rec["units_truncated"] = rec["units_total"] > len(all_units)
+        rec["units"] = list(all_units)
+        rec.update(storage_boundary(content))
         rec["unit_kinds"] = dict(collections.Counter(u["kind"] for u in rec["units"]))
+
+        if not rec.get("error") and rec.get("storage_error"):
+            rec["error"] = rec["storage_error"]
+
+        # Proxies are all the record needs from the reader's content from here
+        # on; the dict itself can be gigabytes (a workbook whose cells are the
+        # content), and holding it while the oracle and the token counters are
+        # built is what exhausted the child on testRecordSizeExceeded.xlsx.
+        proxies = ocr_proxies(content)
+        content = None
+        import gc
+
+        gc.collect()
 
         o = oracle_for(path, ext)
         rec["oracle"] = {k: v for k, v in o.items() if k != "text"}
-        oracle_text = _oracle_text(path, ext)
+        # The oracle is a second full read of the same file, so it can run out
+        # of memory even when the reader succeeded - measured on
+        # Spreadsheets/testRecordSizeExceeded.xlsx, where a successful 10 MB
+        # extraction was reported as ERROR because the comparison could not be
+        # made. A measurement that could not be taken is not a reader failure.
+        try:
+            oracle_text = (oracle_reader or _oracle_text)(path, ext)
+        except MemoryError:
+            rec["oracle_error"] = "MemoryError while building the oracle"
+            oracle_text = ""
+        except Exception as exc:  # a broken oracle must not become a reader verdict
+            rec["oracle_error"] = f"{type(exc).__name__}: {exc}"
+            oracle_text = ""
         readings = oracle_text if isinstance(oracle_text, (list, tuple)) else [oracle_text]
+        if any(len(r or "") > ORACLE_SAMPLE_CHARS for r in readings):
+            readings = [(r or "")[:ORACLE_SAMPLE_CHARS] for r in readings]
+            rec["oracle_sampled_chars"] = ORACLE_SAMPLE_CHARS
+            rec["recall_scope"] = (f"oracle prefix of {ORACLE_SAMPLE_CHARS:,} characters; "
+                                   "the stored side is complete")
         if not any((r or "").strip() for r in readings):
             if rec.get("error"):
                 rec["verdict"] = "ERROR"
             elif not stored.strip():
                 rec["verdict"] = "EMPTY-PLAUSIBLE"
             else:
-                proxies = ocr_proxies(content)
                 if proxies.get("kind") == "ocr":
                     rec["verdict"] = "UNVERIFIABLE"
                     rec["proxies"] = proxies
                 else:
                     rec["verdict"] = "OK-NO-ORACLE"
         else:
-            # the oracle text is re-derived from the file, never stored
-            rec.update(recall(oracle_text, stored))
+            # the oracle text is re-derived from the file, never stored;
+            # score the (possibly sampled) readings, not the full text
+            try:
+                rec.update(recall(readings, stored))
+            except MemoryError:
+                rec["oracle_error"] = ("MemoryError while scoring: the file is "
+                                       "too large to tokenise on both sides")
+                rec["verdict"] = "OK-NO-ORACLE"
+                rec["text"] = stored
+                return rec
             r = rec.get("recall")
             if rec.get("error"):
                 rec["verdict"] = "ERROR"
@@ -536,6 +619,81 @@ def ocr_proxies(content: dict) -> dict:
     }
 
 
+
+def storage_consumed_keys() -> List[str]:
+    """Keys of a reader's content dict that reach the stored text.
+
+    Read off ``StoragePipeline._extract_text_from_content`` by walking its
+    syntax tree, not by reading it by eye: the question "is this key stored?"
+    has a mechanical answer, and a hand-kept list drifts from the code. The
+    function's mapping is "key -> stored", so a captured key that is not in
+    this set is text the reader produced and the pipeline discarded.
+    """
+    import ast
+
+    source = (Path(__file__).resolve().parents[2] / "pipeline" / "storage_pipeline.py")
+    tree = ast.parse(source.read_text(encoding="utf-8"))
+    keys = set()
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.FunctionDef) or node.name != "_extract_text_from_content":
+            continue
+        def is_content_name(expr) -> bool:
+            # Only direct ``content`` access counts. Reader dicts are reached
+            # through locals with other names; including every string constant
+            # in the function (values such as 'Normal', 'SQLite') would turn
+            # the "not persisted" list into an undercount of real loss.
+            return isinstance(expr, ast.Name) and expr.id == "content"
+
+        for sub in ast.walk(node):
+            if isinstance(sub, ast.Compare):
+                # ``'key' in content`` - the gate that decides whether a
+                # content category is stored at all.
+                if len(sub.comparators) == 1 and is_content_name(sub.comparators[0]) \
+                        and isinstance(sub.left, ast.Constant) \
+                        and isinstance(sub.left.value, str):
+                    keys.add(sub.left.value)
+            elif isinstance(sub, ast.Call) and isinstance(sub.func, ast.Attribute) \
+                    and sub.func.attr == "get" and is_content_name(sub.func.value) \
+                    and sub.args and isinstance(sub.args[0], ast.Constant) \
+                    and isinstance(sub.args[0].value, str):
+                keys.add(sub.args[0].value)
+            elif isinstance(sub, ast.Subscript) and is_content_name(sub.value) \
+                    and isinstance(sub.slice, ast.Constant) \
+                    and isinstance(sub.slice.value, str):
+                keys.add(sub.slice.value)
+    return sorted(keys)
+
+
+#: Computed once per process; empty when the source cannot be parsed.
+STORAGE_KEYS: List[str] = []
+
+
+def _storage_keys() -> set:
+    """The consumed-key set, computed on first use.
+
+    Computed lazily because there are two entry points - the in-process loop
+    and the ``--one`` child - and a global only the first one initialised made
+    every key look unpersisted in isolated runs.
+    """
+    global STORAGE_KEYS
+    if not STORAGE_KEYS:
+        STORAGE_KEYS = storage_consumed_keys()
+    return set(STORAGE_KEYS)
+
+
+def storage_boundary(content: Any) -> Dict[str, Any]:
+    """Which of this file's content keys the storage layer consumes."""
+    if not isinstance(content, dict):
+        return {"content_keys": [], "keys_not_persisted": []}
+    populated = sorted(k for k, v in content.items()
+                       if v not in (None, "", [], {}, (), 0, False))
+    consumed = _storage_keys()
+    return {
+        "content_keys": populated,
+        "keys_not_persisted": [k for k in populated if k not in consumed],
+    }
+
+
 def _oracle_text(path: Path, ext: str) -> str:
     """Oracle text, kept out of the archive but used for the recall score."""
     try:
@@ -611,7 +769,24 @@ def _oracle_text(path: Path, ext: str) -> str:
                     # reader at all.
                     return ""
                 xml = zf.read("content.xml").decode("utf-8", "replace")
-            return re.sub(r"<[^>]+>", " ", xml)
+            # An index title *template* is the model LibreOffice regenerates the
+            # heading from, not text the document shows: the rendered copy sits
+            # next to it in text:index-title. Tag-stripping counted both and
+            # made a reader that stores the visible one look lossy. Drop the
+            # template, keep everything else.
+            xml = re.sub(r"<text:index-title-template\b.*?</text:index-title-template>",
+                         " ", xml, flags=re.S)
+            # Inline formatting carries no whitespace: `1<text:span>er</text:span>`
+            # reads as "1er", and inserting a space at the tag boundary split it
+            # into two tokens the reader was then blamed for not storing.
+            # Block-level boundaries do separate words, so they still become
+            # a space. (``testODT-TIKA-6000.odt``: "1er cycle", twice.)
+            xml = re.sub(r"<text:(?:span|a)\b[^>]*>|</text:(?:span|a)>", "", xml)
+            xml = re.sub(r"<text:bookmark(?:-start|-end)?\b[^>]*/?>", "", xml)
+            # XML escapes are markup, not content: a reader that stores
+            # "l'apostrophe" was being marked down for the four tokens
+            # `apos`, `quot`, `lt`, `gt` that the escape spelling produced.
+            return html.unescape(re.sub(r"<[^>]+>", " ", xml))
         if ext in (".html", ".htm", ".xhtml"):
             from bs4 import BeautifulSoup
 
@@ -689,6 +864,126 @@ def _oracle_text(path: Path, ext: str) -> str:
     return ""
 
 
+#: Default ceiling for one child process, in MiB. The sandbox has 3.9 GiB and
+#: the previous in-process harness died at 604/698 files with the process
+#: resident set near the machine limit; a child that exceeds this is killed and
+#: recorded rather than allowed to take the run down with it.
+DEFAULT_MEMORY_MB = 2048
+
+#: Exit code the child returns when it hit its own address-space limit.
+MEMORY_EXIT = 9
+
+#: Characters of oracle text scored per file. Token recall needs a Counter of
+#: the oracle's words; on a 10 MB spreadsheet that Counter is large enough to
+#: exhaust the child on its own (measured: MemoryError inside recall()). The
+#: sample is the oracle's own prefix and the record says so, so a sampled score
+#: is never mistaken for a whole-file one.
+ORACLE_SAMPLE_CHARS = 2_000_000
+
+#: Located units kept per record. The total is recorded separately, so a
+#: truncated list is evidence of scale rather than a silent omission.
+UNITS_CAP = 2000
+
+
+def _limit_own_memory(memory_mb: int) -> None:
+    """Cap this process's address space, so one file cannot exhaust the box."""
+    if memory_mb <= 0:
+        return
+    try:
+        import resource
+
+        limit = memory_mb * 1024 * 1024
+        resource.setrlimit(resource.RLIMIT_AS, (limit, limit))
+    except Exception as exc:  # never let the guard itself be the failure
+        print(f"memory limit not applied: {exc}", file=sys.stderr, flush=True)
+
+
+def run_one(rel: str, corpus: Path, out_file: Path, timeout: int,
+            memory_mb: int) -> int:
+    """Child entry point: audit a single file and write its record as JSON.
+
+    Kept as its own process because reader libraries leak: three passes over
+    the corpus each stopped near the same file count with the resident set at
+    the machine limit, and the failure arrived as a bare process death with no
+    traceback. A child process makes the leak harmless, makes the per-file peak
+    memory a real measurement (``ru_maxrss`` of that process, not a running
+    maximum of the harness), and turns a hang into a timeout the parent can
+    record instead of a run that never finishes.
+    """
+    _limit_own_memory(memory_mb)
+    from reader_file.services.file_reader_service import FileReaderService
+    from pipeline.storage_pipeline import StoragePipeline
+
+    path = (corpus / rel).resolve()
+    try:
+        rec = probe(path, FileReaderService(), object.__new__(StoragePipeline),
+                    corpus, timeout)
+    except MemoryError:
+        out_file.write_text(json.dumps({
+            "path": rel, "verdict": "ERROR", "memory_limited": True,
+            "error": f"MemoryError under a {memory_mb} MiB address-space limit",
+        }), encoding="utf-8")
+        return MEMORY_EXIT
+    payload = json.dumps(scrub_paths(scrub(rec)), ensure_ascii=False)
+    out_file.write_text(payload, encoding="utf-8")
+    return 0
+
+
+def run_isolated(path: Path, corpus: Path, timeout: int, memory_mb: int,
+                 script: Optional[str] = None) -> Dict[str, Any]:
+    """Audit ``path`` in a child process; return its record or a failure record.
+
+    Every way the child can fail becomes a record: a timeout, a killed process,
+    a crash with a traceback, or a memory limit. A file that cannot be audited
+    is a finding, never a missing row.
+    """
+    import subprocess
+    import tempfile
+
+    rel = path.relative_to(corpus).as_posix()
+    started = time.perf_counter()
+    with tempfile.TemporaryDirectory() as tmp:
+        out_file = Path(tmp) / "record.json"
+        cmd = [sys.executable, script or __file__, "--one", rel,
+               "--corpus", str(corpus), "--result", str(out_file),
+               "--timeout", str(timeout), "--memory-mb", str(memory_mb)]
+        try:
+            proc = subprocess.run(cmd, capture_output=True, text=True,
+                                  timeout=max(1, timeout + 15),
+                                  cwd=str(corpus.parent))
+        except subprocess.TimeoutExpired:
+            return {
+                "path": rel, "folder": rel.split("/")[0], "ext": path.suffix.lower(),
+                "bytes": path.stat().st_size, "verdict": "TIMEOUT",
+                "error": f"killed after {timeout + 15}s in a child process",
+                "elapsed_ms": round((time.perf_counter() - started) * 1000, 1),
+                "isolated": True, "stored_chars": 0, "text": "",
+            }
+        elapsed = round((time.perf_counter() - started) * 1000, 1)
+        if out_file.exists():
+            try:
+                rec = json.loads(out_file.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as exc:
+                rec = {"path": rel, "verdict": "ERROR",
+                       "error": f"child wrote unreadable JSON: {exc}"}
+        else:
+            tail = (proc.stderr or "").strip().splitlines()[-6:]
+            rec = {
+                "path": rel, "folder": rel.split("/")[0], "ext": path.suffix.lower(),
+                "bytes": path.stat().st_size, "verdict": "ERROR",
+                "error": (f"child exited {proc.returncode} without a record; "
+                          + " | ".join(tail))[:2000],
+                "returncode": proc.returncode,
+                "memory_limited": proc.returncode in (MEMORY_EXIT, -9)
+                or "MemoryError" in (proc.stderr or ""),
+                "stored_chars": 0, "text": "",
+            }
+        rec.setdefault("elapsed_ms", elapsed)
+        rec["isolated"] = True
+        rec["wall_ms"] = elapsed
+        return rec
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--corpus", default="test-doc")
@@ -699,9 +994,21 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--skip", default=None,
                     help="comma-separated corpus paths to leave out; a file that "
                          "cannot be interrupted is recorded separately")
+    ap.add_argument("--isolate", action="store_true",
+                    help="audit each file in its own process, with a wall-clock "
+                         "timeout and an address-space limit; failures become "
+                         "TIMEOUT/ERROR records instead of ending the run")
+    ap.add_argument("--memory-mb", type=int, default=DEFAULT_MEMORY_MB,
+                    help=f"address-space limit per child in --isolate mode "
+                         f"(default {DEFAULT_MEMORY_MB})")
+    ap.add_argument("--one", default=None, help=argparse.SUPPRESS)
+    ap.add_argument("--result", default=None, help=argparse.SUPPRESS)
     args = ap.parse_args(argv)
 
     corpus = Path(args.corpus).resolve()
+    if args.one:
+        return run_one(args.one, corpus, Path(args.result), args.timeout,
+                       args.memory_mb)
     out = Path(args.out).resolve()
     (out / "text").mkdir(parents=True, exist_ok=True)
     jsonl = out / "records.jsonl"
@@ -724,11 +1031,16 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     svc = FileReaderService()
     pipe = object.__new__(StoragePipeline)
+    global STORAGE_KEYS
+    STORAGE_KEYS = storage_consumed_keys()
 
     print(f"archiving {len(files)} files", flush=True)
     with jsonl.open("a", encoding="utf-8") as fh:
         for i, path in enumerate(files, 1):
-            rec = probe(path, svc, pipe, corpus, args.timeout)
+            if args.isolate:
+                rec = run_isolated(path, corpus, args.timeout, args.memory_mb)
+            else:
+                rec = probe(path, svc, pipe, corpus, args.timeout)
             fh.write(json.dumps(scrub_paths(scrub(rec)), ensure_ascii=False) + "\n")
             fh.flush()
             print(f"[{i}/{len(files)}] {rec['verdict']:<16} "

@@ -13,6 +13,7 @@ import threading
 import warnings
 
 from core.ocr import get_ocr_engine, recognize_best
+from core.optional_imports import import_opencv
 
 from .base_reader import BaseReader
 
@@ -706,14 +707,14 @@ class ImageFileReader(BaseReader):
             except ImportError:
                 _LIBS_CACHE['pytesseract'] = None
             
+            # Through the guard: a failed cv2 load leaves its own directory
+            # on sys.path (round 22), where it shadows later imports.
             try:
-                import cv2
                 import numpy as np
-                _LIBS_CACHE['cv2'] = cv2
                 _LIBS_CACHE['np'] = np
             except ImportError:
-                _LIBS_CACHE['cv2'] = None
                 _LIBS_CACHE['np'] = None
+            _LIBS_CACHE['cv2'] = import_opencv()
             
             return _LIBS_CACHE
     

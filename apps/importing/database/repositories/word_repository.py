@@ -36,35 +36,41 @@ class WordRepository:
         """
         Insert a word into the database
         
+        The spelling is kept as given. The table's unique index is
+        case-**sensitive**, so normalising here (this method used to lowercase)
+        means the same word written as ``Networks`` by one writer and
+        ``networks`` by another becomes two rows - and, through
+        ``categorys.word_id``, two categories. Lookup is therefore
+        case-insensitive and keeps whichever spelling is already stored; a new
+        row keeps the caller's spelling, which is what the interface displays.
+
         Args:
-            word: Word to insert (will be converted to lowercase)
-            
+            word: Word to insert, stored as given (whitespace trimmed)
+
         Returns:
             Word ID if successful, None otherwise
         """
         if not word or not word.strip():
             return None
-        
-        word = word.strip().lower()
-        
+
+        word = " ".join(word.split())
+        key = word.casefold()
+
         # Check cache first
-        cached_id = self._get_from_cache(word)
+        cached_id = self._get_from_cache(key)
         if cached_id:
             return cached_id
-        
+
         try:
-            # Try to get existing word first (check cache and DB)
-            existing = self.tx_manager.execute_query(
-                f"SELECT id FROM {TABLE_WORDS} WHERE word = %s",
-                (word,),
-                fetch=True
-            )
-            
+            # Try to get existing word first, matching case-insensitively so a
+            # word already stored in another casing is reused rather than
+            # duplicated. An exact match wins when both spellings exist.
+            existing = self._find(word)
             if existing:
-                word_id = existing[0][0]
-                self._add_to_cache(word, word_id)
+                word_id = existing
+                self._add_to_cache(key, word_id)
                 return word_id
-            
+
             # Insert new word with ON CONFLICT to handle race conditions
             # This ensures no duplicate even if two threads try to insert simultaneously
             result = self.tx_manager.execute_query(
@@ -73,24 +79,20 @@ class WordRepository:
                 (word,),
                 fetch=True
             )
-            
+
             if result:
                 # Insert succeeded
                 word_id = result[0][0]
-                self._add_to_cache(word, word_id)
+                self._add_to_cache(key, word_id)
                 self.logger.debug(f"Inserted word: '{word}' (ID: {word_id})")
                 return word_id
             else:
                 # Conflict occurred, word was inserted by another thread
                 # Fetch the ID now
-                existing = self.tx_manager.execute_query(
-                    f"SELECT id FROM {TABLE_WORDS} WHERE word = %s",
-                    (word,),
-                    fetch=True
-                )
+                existing = self._find(word)
                 if existing:
-                    word_id = existing[0][0]
-                    self._add_to_cache(word, word_id)
+                    word_id = existing
+                    self._add_to_cache(key, word_id)
                     return word_id
             
             return None
@@ -108,6 +110,20 @@ class WordRepository:
                 self.logger.error(f"Failed to insert word '{word}': {e}")
             raise RepositoryException(f"Word insertion failed: {e}") from e
     
+    def _find(self, word: str) -> Optional[int]:
+        """The id of ``word``, matched case-insensitively, or None.
+
+        The exact spelling wins if both casings are present, so a lookup never
+        oscillates between two rows.
+        """
+        rows = self.tx_manager.execute_query(
+            f"SELECT id FROM {TABLE_WORDS} "
+            "WHERE lower(word) = lower(%s) ORDER BY (word = %s) DESC, id LIMIT 1",
+            (word, word),
+            fetch=True
+        )
+        return rows[0][0] if rows else None
+
     def _get_from_cache(self, word: str) -> Optional[int]:
         """Get word ID from cache"""
         with self.cache_lock:

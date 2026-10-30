@@ -26,34 +26,39 @@ import pytest
 
 REPO = Path(__file__).resolve().parents[2]
 WORKER = Path(__file__).with_name("resume_worker.py")
-PG = {
-    "host": os.environ.get("SYLTHARAE_TEST_PG_HOST", "localhost"),
-    "port": int(os.environ.get("SYLTHARAE_TEST_PG_PORT", "5432")),
-    "user": os.environ.get("SYLTHARAE_TEST_PG_USER", "postgres"),
-    "password": os.environ.get("SYLTHARAE_TEST_PG_PASSWORD", ""),
-}
 
 psycopg2 = pytest.importorskip("psycopg2")
 
 
-def _admin_conn(dbname="postgres"):
-    conn = psycopg2.connect(dbname=dbname, host=PG["host"], port=PG["port"],
-                            user=PG["user"], password=PG["password"], connect_timeout=3)
+@pytest.fixture(scope="module")
+def pg(pg_settings):
+    """The server the rest of the suite uses, not a guess at ``localhost:5432``.
+
+    This module used to read ``SYLTHARAE_TEST_PG_HOST``/``_PORT`` with
+    ``localhost:5432`` defaults at import time. The suite provisions its own
+    disposable PostgreSQL - often on a unix socket in a temporary directory - so
+    the probe never matched and all 26 crash-recovery tests were skipped, leaving
+    the area with no integration coverage at all. A skip that means "we could not
+    find the server we ourselves started" is not a limit of the environment.
+
+    ``SYLTHARAE_TEST_PG_*`` still wins when it is set, because pointing these
+    tests at a specific server is a legitimate thing to want.
+    """
+    return {
+        "host": os.environ.get("SYLTHARAE_TEST_PG_HOST") or pg_settings["host"],
+        "port": int(os.environ.get("SYLTHARAE_TEST_PG_PORT") or pg_settings["port"]),
+        "user": os.environ.get("SYLTHARAE_TEST_PG_USER") or pg_settings["user"],
+        "password": (os.environ.get("SYLTHARAE_TEST_PG_PASSWORD")
+                     if os.environ.get("SYLTHARAE_TEST_PG_PASSWORD") is not None
+                     else pg_settings.get("password") or ""),
+    }
+
+
+def _admin_conn(pg, dbname="postgres"):
+    conn = psycopg2.connect(dbname=dbname, host=pg["host"], port=pg["port"],
+                            user=pg["user"], password=pg["password"], connect_timeout=3)
     conn.autocommit = True
     return conn
-
-
-def _postgres_available() -> bool:
-    try:
-        _admin_conn().close()
-        return True
-    except Exception:
-        return False
-
-
-pytestmark = pytest.mark.skipif(
-    not _postgres_available(), reason="PostgreSQL not reachable for the crash-recovery tests"
-)
 
 # Expected logical files for the fixture folder below.
 EXPECTED_FILES = {"a.txt", "b.txt", "m1.txt", "m2.txt", "m3.txt", "bundle.zip"}
@@ -62,21 +67,21 @@ TOTAL_STORES = len(EXPECTED_FILES)
 
 
 @pytest.fixture()
-def database():
+def database(pg):
     name = f"sylt_resume_{uuid.uuid4().hex[:10]}"
-    admin = _admin_conn()
+    admin = _admin_conn(pg)
     with admin.cursor() as cur:
         cur.execute(f'CREATE DATABASE "{name}"')
     admin.close()
 
-    cfg = dict(PG, database=name)
+    cfg = dict(pg, database=name)
     sys.path.insert(0, str(REPO))
     from database.bootstrap import bootstrap_database
     bootstrap_database(cfg)
     try:
         yield cfg
     finally:
-        admin = _admin_conn()
+        admin = _admin_conn(pg)
         with admin.cursor() as cur:
             cur.execute(f'DROP DATABASE IF EXISTS "{name}" WITH (FORCE)')
         admin.close()

@@ -24,6 +24,11 @@ MAX_INTERVAL_MINUTES = 525600  # one year
 SCENARIO_EVALUATION = "scenario_evaluation"
 RETENTION = "retention"
 
+# A third type for the category workbook's reconciliation is designed but not
+# schedulable: ``job_schedules.schedule_type`` carries a CHECK constraint from
+# m0001 that admits exactly the two names above. Adding one needs an authorised
+# migration; until then the workbook sync runs at startup, from the interface,
+# or from the command line (docs/DATA_ENTRY.md).
 SCHEDULE_TYPES = (SCENARIO_EVALUATION, RETENTION)
 
 #: The role an owner must hold *at each fire* for the schedule to run.
@@ -98,6 +103,53 @@ def validate_payload(schedule_type: str, payload: Any) -> Dict[str, Any]:
         return dict(payload)
 
     raise ScheduleError(f"schedule_type must be one of: {', '.join(SCHEDULE_TYPES)}")
+
+
+#: How a stored payload maps onto the options the job actually reads.
+#:
+#: ``validate_payload`` pins the *stored* vocabulary; ``run_retention`` and
+#: ``run_scenario_evaluation`` speak a different one. Nothing translated between
+#: them, and the runner used to pass ``schedule_id`` instead - an option no job
+#: reads - so a schedule's payload never reached its job. Keys the job cannot
+#: honour are returned alongside the translation so the caller can say so out
+#: loud rather than drop them in silence.
+PAYLOAD_TARGET = {
+    "retention": {"policy": "areas"},
+    "scenario_evaluation": {"scenario_id": "scenario_ids"},
+}
+
+
+def job_options(schedule_type: str, payload: Any) -> tuple:
+    """``(options, dropped)`` - the job's keyword arguments for this payload.
+
+    ``dropped`` maps each stored key that has no counterpart to the reason. An
+    unknown retention ``policy`` is dropped rather than handed to the job: the
+    job would ask the policy table, which answers with a message the operator
+    cannot act on from a log line.
+    """
+    if schedule_type not in SCHEDULE_TYPES:
+        raise ScheduleError(
+            f"schedule_type must be one of: {', '.join(SCHEDULE_TYPES)}")
+    payload = dict(payload or {})
+    targets = PAYLOAD_TARGET.get(schedule_type, {})
+    options: Dict[str, Any] = {}
+    dropped: Dict[str, str] = {}
+    for key, value in sorted(payload.items()):
+        if key not in targets:
+            dropped[key] = "no counterpart in the job's options"
+            continue
+        if key == "policy":
+            from services.retention.model import POLICIES
+
+            if value not in POLICIES:
+                dropped[key] = f"{value!r} is not a retention area"
+                continue
+            options["areas"] = [value]
+        elif key == "scenario_id":
+            options["scenario_ids"] = [value]
+        else:                                    # a mapping with no rule yet
+            dropped[key] = "no translation is defined"
+    return options, dropped
 
 
 def required_role(schedule_type: str) -> str:

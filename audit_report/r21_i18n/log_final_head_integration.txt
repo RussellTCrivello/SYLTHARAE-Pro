@@ -1,0 +1,108 @@
+........................................................................ [  5%]
+.......................................................................s [ 10%]
+........................................................................ [ 15%]
+........................................................................ [ 20%]
+..........................................................s............. [ 25%]
+........................................................................ [ 30%]
+........................................................................ [ 35%]
+........................................................................ [ 40%]
+........................................................................ [ 46%]
+........................................................................ [ 51%]
+..............................s......................................... [ 56%]
+...ssssssssssssssssssssssssss........................................... [ 61%]
+........................................................................ [ 66%]
+........................................................................ [ 71%]
+........................................................................ [ 76%]
+........................................................................ [ 81%]
+........................................................................ [ 87%]
+........................................................................ [ 92%]
+.....FFFF............................................................... [ 97%]
+......................................                                   [100%]
+=================================== FAILURES ===================================
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[ar] __________________
+
+lang = 'ar'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [ar] 309 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[he] __________________
+
+lang = 'he'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [he] 284 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[fa] __________________
+
+lang = 'fa'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [fa] 284 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[hr] __________________
+
+lang = 'hr'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [hr] 359 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+=============================== warnings summary ===============================
+tests/integration/test_admin_password_recovery.py::test_list_names_the_accounts_that_can_log_in
+  {venv}/lib/python3.11/site-packages/platformdirs/api.py:459: RuntimeDirWarning: XDG_RUNTIME_DIR is not set, falling back to {tmp}
+    return Path(self.user_runtime_dir)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[ar]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[he]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[fa]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[hr]

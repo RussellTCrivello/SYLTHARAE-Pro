@@ -15,6 +15,19 @@ from core.file_utils import (
 )
 
 from .base_reader import BaseReader
+from core.optional_imports import import_clean
+
+
+def _odf(dotted: str):
+    """An ``odf`` submodule, imported without leaving its directory on sys.path.
+
+    ``odfpy`` appends ``site-packages/odf`` to ``sys.path`` from every one of its
+    modules, so reading a document left a package directory on the path for the
+    rest of the process. ``import_clean`` puts the path back; the module stays
+    cached, so the next read costs nothing.
+    """
+    return import_clean(dotted)
+
 
 
 
@@ -231,6 +244,25 @@ def _pptx_cover_remaining(slides: List[Dict[str, Any]], filepath: str) -> Dict[s
                           or name.startswith('ppt/notesMasters/'))]
             payload = {name: archive.read(name).decode('utf-8', 'replace')
                        for name in parts}
+            # A notes page is not slide N just because its part is called
+            # notesSlideN: the number is the notes page's own, and a deck that
+            # gained or lost a notes page while editing has them out of step.
+            # notesSlide2.xml in testPPT_various2.pptx holds "Notes for slide3".
+            # The relationship file is the authority.
+            notes_targets = {}
+            for name in parts:
+                if not name.startswith('ppt/notesSlides/notesSlide'):
+                    continue
+                rels_name = name.replace('notesSlides/', 'notesSlides/_rels/') + '.rels'
+                rels = payload.get(rels_name)
+                if rels is None:
+                    try:
+                        rels = archive.read(rels_name).decode('utf-8', 'replace')
+                    except KeyError:
+                        continue
+                match = re.search(r'Target="[^"]*slides/(slide\d+)\.xml"', rels)
+                if match:
+                    notes_targets[name] = int(match.group(1)[len('slide'):])
     except Exception as exc:
         return {"error": f"{type(exc).__name__}: {exc}", "added": 0}
 
@@ -245,9 +277,12 @@ def _pptx_cover_remaining(slides: List[Dict[str, Any]], filepath: str) -> Dict[s
     added, per_part, leftovers = 0, {}, []
     for name in sorted(payload):
         number = 0
-        match = re.search(r'(slide|notesSlide)(\d+)\.xml$', name)
-        if match:
-            number = int(match.group(2))
+        if name in notes_targets:
+            number = notes_targets[name]
+        else:
+            match = re.search(r'(slide|notesSlide)(\d+)\.xml$', name)
+            if match:
+                number = int(match.group(2))
         paragraphs = _drawingml_paragraph_texts(payload[name])
         kept = 0
         for text in paragraphs:
@@ -282,7 +317,60 @@ def _pptx_cover_remaining(slides: List[Dict[str, Any]], filepath: str) -> Dict[s
     return result
 
 
-def _odf_node_text(node):
+def _ods_repeat(node, attribute: str, *, default: int = 1, cap: int = 16384) -> int:
+    """The repeat/span count an ODF cell or row declares, within bounds.
+
+    ODF writes a run of identical nodes once and records the length:
+    ``number-rows-repeated="2"`` is two rows, ``number-columns-repeated="3"``
+    is three cells. A reader that takes the node as one row moves every address
+    below it upwards - a value in B4 was reported in B3 and the *columns* of a
+    row shifted the same way. Capped because writers pad sheets to the sheet
+    limit with enormous empty repeats.
+    """
+    raw = node.getAttribute(attribute)
+    try:
+        value = int(raw)
+    except (TypeError, ValueError):
+        return default
+    if value < 1:
+        return 1
+    return min(value, cap)
+
+
+def _ods_row_cells(row) -> list:
+    """One ODF table row as a list of cell texts, repeats and spans expanded.
+
+    Trailing empty runs are not materialised: a padded sheet declares thousands
+    of empty cells per row and none of them carry an address that matters. They
+    are held back and flushed only when a cell with text follows, which keeps
+    every populated cell in its true column.
+    """
+    _odf_mod_1 = _odf("odf.table")
+    TableCell = _odf_mod_1.TableCell
+
+    cells = []
+    pending_empty = 0
+    for cell in row.getElementsByType(TableCell):
+        text = ""
+        for para in cell.childNodes:
+            if hasattr(para, "data"):
+                text += para.data
+            elif hasattr(para, "childNodes") and para.childNodes:
+                text += _odf_node_text(para)
+        text = text.strip()
+        width = max(_ods_repeat(cell, "numbercolumnsrepeated"),
+                    _ods_repeat(cell, "numbercolumnsspanned"))
+        if not text:
+            pending_empty += width
+            continue
+        if pending_empty:
+            cells.extend([""] * pending_empty)
+            pending_empty = 0
+        cells.extend([text] * min(width, 100))
+    return cells
+
+
+def _odf_node_text(node) -> str:
     """All text under an ODF node, in document order.
 
     ``para.childNodes[0].data`` reads one run, and in ODF a run is usually a
@@ -295,7 +383,8 @@ def _odf_node_text(node):
     if node is None:
         return ''
     try:
-        from odf.teletype import extractText
+        _odf_mod_2 = _odf("odf.teletype")
+        extractText = _odf_mod_2.extractText
         text = extractText(node)
         if text:
             return ' '.join(text.split())
@@ -325,6 +414,44 @@ def _odf_node_text(node):
 #: the result and in storage.
 MAX_SHEET_CELLS = 250_000
 MAX_WORKBOOK_CELLS = 1_000_000
+
+#: Work ceiling on the *padded* rectangle, which is what actually costs time.
+#: The cap above counts populated cells; a sheet whose used range spans all
+#: 16384 columns still has to be walked, so iteration is bounded separately.
+MAX_SHEET_GRID_CELLS = 4_000_000
+
+
+def _cap_from_env(name: str, default: int) -> int:
+    """A configured cap, falling back to the module default.
+
+    The caps are deployment facts: a workstation and a 512 MB container have
+    different right answers, and a ceiling that can only be changed by editing
+    a reader is a ceiling that silently decides what is recoverable.
+    """
+    raw = os.environ.get(name)
+    if not raw:
+        return default
+    try:
+        value = int(raw.strip())
+    except (TypeError, ValueError):
+        logger.warning("Ignoring %s=%r: not an integer", name, raw)
+        return default
+    if value <= 0:
+        logger.warning("Ignoring %s=%r: must be positive", name, raw)
+        return default
+    return value
+
+
+def sheet_cell_cap() -> int:
+    return _cap_from_env("SYLTHARAE_MAX_SHEET_CELLS", MAX_SHEET_CELLS)
+
+
+def workbook_cell_cap() -> int:
+    return _cap_from_env("SYLTHARAE_MAX_WORKBOOK_CELLS", MAX_WORKBOOK_CELLS)
+
+
+def sheet_grid_cap() -> int:
+    return _cap_from_env("SYLTHARAE_MAX_SHEET_GRID_CELLS", MAX_SHEET_GRID_CELLS)
 
 #: Every part of a WordprocessingML package that can hold visible text.
 _DOCX_TEXT_PARTS = re.compile(
@@ -427,27 +554,57 @@ def _docx_cover_remaining(elements: List[Dict[str, Any]], filepath) -> Dict[str,
     def normalise(text: str) -> str:
         return " ".join(text.split())
 
-    haystack = normalise("\n".join(
-        str(element.get("text") or "") for element in elements
-        if isinstance(element, dict)))
+    # Coverage is counted, per line, over what the structured walk produced.
+    #
+    # Two defects lived here, both measured on `Other/testWORD_template.dotx`:
+    # the whole haystack was normalised after joining, so every newline became
+    # a space and nothing ever matched (the backfill re-added paragraphs that
+    # had already been extracted), and coverage was a plain membership test, so
+    # the five identical "Click here to enter text" placeholders the package
+    # contains were stored once and the file scored 0.839.
+    #
+    # Matching is by whole line rather than by substring: "Click here to enter
+    # text" is a substring of "Click here to enter text.", and a substring test
+    # declared three real paragraphs covered by one that differs by a full
+    # stop. A cell holding several paragraphs contributes each of its lines, so
+    # a paragraph inside a table cell still matches rather than being stored
+    # twice.
+    covered: Dict[str, int] = {}
+
+    def add_lines(text: Any, counts: Dict[str, int]) -> None:
+        for line in str(text or "").split("\n"):
+            line = normalise(line)
+            if line:
+                counts[line] = counts.get(line, 0) + 1
+
     for element in elements:
-        if isinstance(element, dict) and element.get("rows"):
-            for row in element["rows"]:
-                haystack += "\n" + normalise(" | ".join(str(c) for c in row))
+        if not isinstance(element, dict):
+            continue
+        add_lines(element.get("text"), covered)
+        for row in element.get("rows") or []:
+            add_lines(" | ".join(str(c) for c in row), covered)
+            for cell in row:
+                add_lines(cell, covered)
+
+    def present_in_document(text: str) -> int:
+        return covered.get(text, 0)
 
     added: List[Dict[str, Any]] = []
     per_part: Dict[str, Dict[str, int]] = {}
+
     for name in sorted(parts):
         xml = _MC_FALLBACK_RE.sub("", parts[name])  # never count a fallback twice
         part_added = part_seen = 0
+        seen_per_text: Dict[str, int] = {}
         for paragraph in _docx_paragraph_texts(xml):
             text = normalise(_docx_unescape(paragraph))
             if not text:
                 continue
             part_seen += 1
-            if text in haystack:
+            seen_per_text[text] = seen_per_text.get(text, 0) + 1
+            if seen_per_text[text] <= present_in_document(text):
                 continue
-            haystack += "\n" + text
+            covered[text] = covered.get(text, 0) + 1
             part_added += 1
             added.append({
                 "type": "paragraph",
@@ -482,6 +639,210 @@ _ODF_INLINE = frozenset({
     "reference-mark-start", "reference-mark-end", "change-start", "change-end",
     "change", "note-citation", "note-ref", "ruby-base", "ruby-text",
 })
+
+
+#: OOXML extensions whose encrypted form is a CFB container rather than a ZIP.
+_ENCRYPTABLE_OOXML = (
+    '.docx', '.docm', '.dotx', '.dotm',
+    '.xlsx', '.xlsm', '.xltx', '.xltm',
+    '.pptx', '.pptm', '.potx', '.potm', '.ppsx', '.ppsm',
+)
+
+
+def _ooxml_encryption_report(filepath: str) -> Optional[dict]:
+    """Describe an encrypted OOXML package, or return None if it is not one.
+
+    Password-protected OOXML is not a ZIP: the whole package is a CFB container
+    holding ``EncryptionInfo`` and ``EncryptedPackage``, which is why openpyxl
+    answers "File is not a zip file" and python-pptx "Package not found" for
+    files that are intact. Measured on the round-17 corpus: five such files were
+    reported as unreadable rather than protected. The evidence is two stream
+    names, so it can be checked before any parser is asked to open the file.
+    """
+    try:
+        import olefile
+    except Exception:
+        return None
+    try:
+        if not olefile.isOleFile(filepath):
+            return None
+        with olefile.OleFileIO(filepath) as ole:
+            names = ["/".join(entry) for entry in ole.listdir()]
+    except Exception:
+        return None
+
+    lowered = [name.lower() for name in names]
+    encrypted_parts = [name for name, low in zip(names, lowered)
+                       if low.startswith('encryptioninfo')
+                       or low.startswith('encryptedpackage')]
+    if not encrypted_parts:
+        return None
+    return {
+        'error': ('Encrypted Office package (CFB encryption): the payload is '
+                  'ciphertext and needs the password; EncryptionInfo and '
+                  'EncryptedPackage are present, so the file is protected, '
+                  'not corrupt'),
+        'encrypted': True,
+        'encrypted_parts': sorted(encrypted_parts),
+        'extraction_info': {
+            'skipped': True,
+            'skip_reason': 'encrypted_without_password',
+            'encryption': 'cfb',
+        },
+    }
+
+
+def _odf_annotations(filepath: str) -> List[Dict[str, Any]]:
+    """Anchored comments in ``content.xml``: author, timestamp and note.
+
+    odfpy's ``extractText`` flattens ``office:annotation`` into the paragraph it
+    is anchored to, with no separator, so the note, its timestamp and the word
+    before it became one token in testODTStyles3.odt ("Rolf2017-01-31T00:00:00").
+    A comment is metadata about a paragraph, not a run of it: it is extracted
+    here on its own so it can be stored as a labelled line and removed from the
+    sentence.
+    """
+    import zipfile
+    import xml.etree.ElementTree as ET
+
+    try:
+        with zipfile.ZipFile(filepath) as zf:
+            if "content.xml" not in zf.namelist():
+                return []
+            root = ET.fromstring(zf.read("content.xml"))
+    except Exception:
+        return []
+
+    records: List[Dict[str, Any]] = []
+    for element in root.iter():
+        if _et_local(element.tag) != "annotation":
+            continue
+        author = date = ""
+        bodies: List[str] = []
+        for child in element:
+            local = _et_local(child.tag)
+            if local == "creator" and not author:
+                author = _collapse(child.text or "")
+            elif local == "date" and not date:
+                date = _collapse(child.text or "")
+            elif local in ("p", "h"):
+                text = _collapse(_odf_block_text(child))
+                if text:
+                    bodies.append(text)
+        text = " ".join(bodies)
+        if not (text or author or date):
+            continue
+        records.append({"author": author, "date": date, "text": text})
+    return records
+
+
+def _odf_annotation_line(record: Dict[str, Any]) -> str:
+    head = "[comment"
+    if record.get("author"):
+        head += f": {record['author']}"
+    if record.get("date"):
+        head += f" on {record['date']}"
+    head += "]"
+    return f"{head} {record['text']}".strip()
+
+
+def _apply_odf_annotations(result: Dict[str, Any], filepath: str) -> None:
+    """Detach comments from paragraph text and add them as their own lines."""
+    annotations = _odf_annotations(filepath)
+    if not annotations:
+        return
+    paragraphs = result.get("paragraphs")
+    if not isinstance(paragraphs, list):
+        return
+    for paragraph in paragraphs:
+        text = paragraph.get("text") or ""
+        if not text:
+            continue
+        changed = False
+        for record in annotations:
+            for fragment in (record.get("date"), record.get("text")):
+                if fragment and fragment in text:
+                    text = text.replace(fragment, " ")
+                    changed = True
+        if changed:
+            # Re-collapse: the removal leaves a double space where the note was.
+            paragraph["text"] = " ".join(text.split())
+    for record in annotations:
+        paragraphs.append({
+            "text": _odf_annotation_line(record),
+            "style": "Comment",
+            "location": "office:annotation",
+            "kind": "comment",
+        })
+    result["total_paragraphs"] = len(paragraphs)
+    result["annotations"] = annotations
+
+
+def _odf_tracked_changes(filepath: str) -> List[Dict[str, Any]]:
+    """Every tracked change in ``content.xml``, with its author and timestamp.
+
+    Two parsers can read an ODT and they answered this question differently:
+    the content.xml fallback read ``office:change-info`` and the odfpy path did
+    not look at it at all, so whether an author survived depended on which
+    parser accepted the package. Both paths now call this one function, which
+    walks the real tree and returns one record per ``text:insertion`` /
+    ``text:deletion`` / ``text:format-change`` / ``text:change`` region:
+
+    ``{kind, author, date, text, location}``
+
+    Repeated records are kept. Two insertions by the same person in the same
+    second are two entries in the redline, and collapsing them by text loses a
+    change an examiner may need to count - which is exactly what happened to
+    ``testODFwithOOo3.odt`` (three regions, one stored).
+    """
+    import zipfile
+    import xml.etree.ElementTree as ET
+
+    try:
+        with zipfile.ZipFile(filepath) as zf:
+            if "content.xml" not in zf.namelist():
+                return []
+            root = ET.fromstring(zf.read("content.xml"))
+    except Exception:
+        return []
+
+    records: List[Dict[str, Any]] = []
+    for element in root.iter():
+        if _et_local(element.tag) not in ("insertion", "deletion",
+                                          "format-change", "change"):
+            continue
+        author = date = ""
+        bodies: List[str] = []
+        for child in element.iter():
+            local = _et_local(child.tag)
+            if local == "creator" and not author:
+                author = _collapse(child.text or "")
+            elif local == "date" and not date:
+                date = _collapse(child.text or "")
+            elif local in ("p", "h"):
+                text = _collapse(_odf_block_text(child))
+                if text:
+                    bodies.append(text)
+        kind = _et_local(element.tag)
+        records.append({
+            "kind": kind,
+            "author": author,
+            "date": date,
+            "text": " ".join(bodies),
+            "location": f"text:{kind}",
+        })
+    return records
+
+
+def _odf_change_line(record: Dict[str, Any]) -> str:
+    """The one-line form of a tracked change, as it reaches the text body."""
+    parts = [f"[{record['kind']}"]
+    if record.get("author"):
+        parts.append(f": {record['author']}")
+    if record.get("date"):
+        parts.append(f" on {record['date']}")
+    head = "".join(parts) + "]"
+    return f"{head} {record['text']}".strip() if record.get("text") else head
 
 
 def _odf_encryption_report(filepath):
@@ -754,6 +1115,14 @@ class OfficeFileReader(BaseReader):
         file_path = str(file_info.get("path"))
         # DETECT-01: dispatch on the content-verified type, not the filename.
         ext = self.effective_extension(file_info)
+
+        # An encrypted OOXML package is not a broken ZIP. Answer before any
+        # parser gets the chance to describe the ciphertext as corruption.
+        if ext in _ENCRYPTABLE_OOXML:
+            encrypted = _ooxml_encryption_report(file_path)
+            if encrypted:
+                encrypted["filepath"] = file_path
+                return encrypted
         
         try:
             result = None
@@ -1725,26 +2094,80 @@ class OfficeFileReader(BaseReader):
                 }
 
                 sheet_cells = 0
+                grid_cells = 0
+                padding_cells_trimmed = 0
+                empty_rows_skipped = 0
+                max_sheet_cells = sheet_cell_cap()
+                max_workbook_cells = workbook_cell_cap()
+                max_grid_cells = sheet_grid_cap()
                 for row_idx, row in enumerate(sheet.iter_rows(values_only=True)):
                     # Yield periodically during row processing
                     if row_idx > 0 and row_idx % 100 == 0:
                         self.yield_cpu_if_needed(aggressive=False)
+                    padded = len(row)
+                    # Trailing empty cells are padding, not content. A sheet
+                    # whose used range spans all 16384 columns used to burn the
+                    # whole cell cap on fifteen rows of empty space - the
+                    # CVLKRA KYC workbook stopped at 245,760 cells with rows
+                    # still to read - so only populated cells are counted and
+                    # only they are stored.
                     row = list(row)
-                    if (sheet_cells + len(row) > MAX_SHEET_CELLS
-                            or cells_read + len(row) > MAX_WORKBOOK_CELLS):
+                    trimmed = 0
+                    while row and (row[-1] is None or row[-1] == ""):
+                        row.pop()
+                        trimmed += 1
+                    padding_cells_trimmed += trimmed
+                    if not row:
+                        empty_rows_skipped += 1
+                        continue
+                    grid_cells += padded
+                    if grid_cells > max_grid_cells:
                         sheet_data["truncated"] = True
+                        sheet_data["truncated_reason"] = (
+                            f"sheet grid cap reached: {grid_cells} padded cells "
+                            f"> SYLTHARAE_MAX_SHEET_GRID_CELLS ({max_grid_cells})")
                         sheet_data["cells_read"] = sheet_cells
                         sheet_data["rows_read"] = row_idx
-                        logger.warning(
-                            "Sheet %s in %s truncated at %d cells (cap %d per sheet, %d per workbook)",
-                            sheet_name, filepath, sheet_cells, MAX_SHEET_CELLS, MAX_WORKBOOK_CELLS)
+                        logger.warning("Sheet %s in %s: %s", sheet_name, filepath,
+                                       sheet_data["truncated_reason"])
+                        break
+                    if (sheet_cells + len(row) > max_sheet_cells
+                            or cells_read + len(row) > max_workbook_cells):
+                        sheet_data["truncated"] = True
+                        if cells_read + len(row) > max_workbook_cells:
+                            sheet_data["truncated_reason"] = (
+                                f"workbook cell cap reached: {cells_read} + {len(row)} "
+                                f"> SYLTHARAE_MAX_WORKBOOK_CELLS ({max_workbook_cells})")
+                        else:
+                            sheet_data["truncated_reason"] = (
+                                f"sheet cell cap reached: {sheet_cells} + {len(row)} "
+                                f"> SYLTHARAE_MAX_SHEET_CELLS ({max_sheet_cells})")
+                        sheet_data["cells_read"] = sheet_cells
+                        sheet_data["rows_read"] = row_idx
+                        logger.warning("Sheet %s in %s: %s", sheet_name, filepath,
+                                       sheet_data["truncated_reason"])
                         break
                     sheet_data["data"].append(row)
                     sheet_cells += len(row)
                     cells_read += len(row)
+                    # Row numbers are the sheet's own (1-based) so a truncation
+                    # gap can be located: rows_read counts rows, row_numbers
+                    # records which.
+                    sheet_data.setdefault("row_numbers", []).append(row_idx + 1)
 
                 if not sheet_data.get("truncated"):
                     sheet_data["cells_read"] = sheet_cells
+                # Why a stored character count can fall without content being
+                # lost: these were never content. Recorded so a smaller body is
+                # a number to check rather than a mystery (testEXCEL_poi-61034
+                # is formulas with no cached values - 410 declared rows, no
+                # values at all - and stored 4,556 characters of separators).
+                if padding_cells_trimmed:
+                    sheet_data["padding_cells_trimmed"] = padding_cells_trimmed
+                if empty_rows_skipped:
+                    sheet_data["empty_rows_skipped"] = empty_rows_skipped
+                if len(sheet_data.get("data") or []) == (sheet.max_row or 0):
+                    sheet_data.pop("row_numbers", None)
                 sheet_data["cells_available"] = (
                     (sheet.max_row or 0) * (sheet.max_column or 0))
 
@@ -1754,19 +2177,47 @@ class OfficeFileReader(BaseReader):
                 # nowhere. Collected per sheet with their anchor cell so the
                 # note keeps its address.
                 try:
+                    # openpyxl keeps the comments themselves; walking the grid
+                    # to find them repeats work proportional to the sheet, on
+                    # the one path where the sheet may be too large to walk
+                    # again. Measured on testRecordSizeExceeded.xlsx: the value
+                    # pass had stored 10,000,085 characters and this second
+                    # walk raised MemoryError, which the reader returned as a
+                    # total failure - throwing the extracted text away.
                     comments = []
-                    for row in sheet.iter_rows():
-                        for cell in row:
+                    # The cells openpyxl has already materialised, not a second
+                    # walk over the grid: reading a sheet twice costs a second
+                    # pass's memory for text that has already been collected.
+                    cells = getattr(sheet, "_cells", None)
+                    if isinstance(cells, dict):
+                        for cell in list(cells.values()):
                             note = getattr(cell, "comment", None)
-                            if note is None or not str(getattr(note, "text", "") or "").strip():
+                            text = " ".join(str(getattr(note, "text", "") or "").split()) \
+                                if note is not None else ""
+                            if not text:
                                 continue
                             comments.append({
-                                "cell": cell.coordinate,
+                                "cell": str(getattr(cell, "coordinate", "") or ""),
                                 "author": str(getattr(note, "author", "") or ""),
-                                "text": " ".join(str(note.text).split()),
+                                "text": text,
                             })
+                    else:  # pragma: no cover - read-only workbooks have no cell map
+                        for row in sheet.iter_rows():
+                            for cell in row:
+                                note = getattr(cell, "comment", None)
+                                if note is None or not str(getattr(note, "text", "") or "").strip():
+                                    continue
+                                comments.append({
+                                    "cell": cell.coordinate,
+                                    "author": str(getattr(note, "author", "") or ""),
+                                    "text": " ".join(str(note.text).split()),
+                                })
                     if comments:
                         sheet_data["comments"] = comments
+                except MemoryError:
+                    # A comment inventory is worth less than the cells already
+                    # read: say it could not be collected and keep the sheet.
+                    sheet_data["comments_error"] = "MemoryError while collecting comments"
                 except Exception as comment_error:
                     sheet_data["comments_error"] = str(comment_error)[:200]
 
@@ -2767,19 +3218,34 @@ class OfficeFileReader(BaseReader):
 
         paragraphs: List[Dict[str, Any]] = []
         tables: List[Dict[str, Any]] = []
-        seen: set = set()
+        # De-duplication is by element, not by text. Two identical paragraphs
+        # are two paragraphs - a résumé repeats a placeholder, a redline repeats
+        # a change - and collapsing them by text dropped real content. What the
+        # set is for is the nesting case: a paragraph inside a paragraph (a text
+        # box, a nested list item) is already part of its ancestor's text, so
+        # its element id is marked when the ancestor is emitted.
+        emitted: set = set()
 
         def record(text: str, style: str, location: str, kind: str = "paragraph"):
             text = _collapse(text)
-            if not text or text in seen:
+            if not text:
                 return
-            seen.add(text)
             paragraphs.append({"text": text, "style": style, "location": location,
                                "kind": kind})
 
+        def mark_descendants(element) -> None:
+            for child in element.iter():
+                if child is element:
+                    continue
+                if _et_local(child.tag) in ("p", "h"):
+                    emitted.add(id(child))
+
         def add_block(element, location: str, kind: str = "paragraph"):
+            if id(element) in emitted:
+                return
             style = (element.get(_ODF_NS["text"] + "style-name")
                      or ("Heading" if _et_local(element.tag) == "h" else "Normal"))
+            mark_descendants(element)
             record(_odf_block_text(element), style, location, kind)
 
         for element in body.iter():
@@ -2798,49 +3264,30 @@ class OfficeFileReader(BaseReader):
                     if any(cells):
                         tables.append({"table_number": len(tables) + 1,
                                        "rows": [cells]})
-            elif tag == "annotation":
-                author = ""
-                for child in element.iter():
-                    if _et_local(child.tag) == "creator":
-                        author = _collapse(child.text or "")
-                        break
-                for para in element.iter():
-                    if _et_local(para.tag) in ("p", "h"):
-                        record(_odf_block_text(para), f"Comment ({author})" if author
-                               else "Comment", "office:annotation", "comment")
+            # Annotations are emitted once, below, by _apply_odf_annotations,
+            # which also keeps the timestamp and detaches the note from the
+            # sentence it is anchored to. Recording them here as well produced
+            # two comment paragraphs for one comment.
             elif tag == "note":
                 note_class = element.get(_ODF_NS["text"] + "note-class") or "footnote"
                 for para in element.iter():
                     if _et_local(para.tag) in ("p", "h"):
                         record(_odf_block_text(para), note_class.capitalize(),
                                f"text:{note_class}", note_class)
-            elif tag in ("deletion", "insertion"):
-                # Who changed what, and when, is forensic evidence, not chrome:
-                # a redline whose author and timestamp were dropped cannot be
-                # attributed. The author and date are stored with the text.
-                author, date = "", ""
-                for child in element.iter():
-                    local = _et_local(child.tag)
-                    if local == "creator":
-                        author = _collapse(child.text or "")
-                    elif local == "date":
-                        date = _collapse(child.text or "")
-                prefix = " ".join(part for part in (
-                    f"[{tag}: {author}" if author else f"[{tag}",
-                    f"on {date}]" if date else "]",
-                ) if part)
-                bodies = [_odf_block_text(para) for para in element.iter()
-                          if _et_local(para.tag) in ("p", "h")]
-                bodies = [body for body in bodies if body]
-                record(" ".join([prefix] + bodies), "Tracked change",
-                       f"text:{tag}", "tracked_change")
-                if not bodies:
-                    record(prefix, "Tracked change metadata",
-                           f"text:{tag}", "tracked_change")
+            # Tracked changes are emitted once, below, by the shared extractor,
+            # so the fallback and the odfpy path cannot disagree about them.
+
+        _apply_odf_annotations(
+            {"paragraphs": paragraphs, "tables": tables}, filepath)
+
+        changes = _odf_tracked_changes(filepath)
+        for change in changes:
+            record(_odf_change_line(change), "Tracked change",
+                   change["location"], "tracked_change")
 
         if not paragraphs and not tables:
             return None
-        return {
+        result = {
             "filepath": filepath,
             "paragraphs": paragraphs,
             "tables": tables,
@@ -2848,14 +3295,23 @@ class OfficeFileReader(BaseReader):
             "total_tables": len(tables),
             "method": "odt_content_xml",
         }
+        if changes:
+            result["tracked_changes"] = changes
+        return result
 
     def read_odt_file(self, filepath):
         """Independent ODT (OpenDocument Text) reader function."""
         try:
-            from odf.opendocument import load
-            from odf.text import P
-            from odf.table import Table, TableRow, TableCell
-            from odf.teletype import extractText
+            _odf_mod_3 = _odf("odf.opendocument")
+            load = _odf_mod_3.load
+            _odf_mod_4 = _odf("odf.text")
+            P = _odf_mod_4.P
+            _odf_mod_5 = _odf("odf.table")
+            Table = _odf_mod_5.Table
+            TableRow = _odf_mod_5.TableRow
+            TableCell = _odf_mod_5.TableCell
+            _odf_mod_6 = _odf("odf.teletype")
+            extractText = _odf_mod_6.extractText
         except ImportError:
             return {
                 "error": "odfpy not installed. Install with: pip install odfpy",
@@ -2898,7 +3354,24 @@ class OfficeFileReader(BaseReader):
                         "text": text,
                         "style": paragraph.getAttribute("stylename") or "Normal"
                     })
-            
+
+            # Tracked changes. odfpy happily loads a document full of redlines
+            # and never mentions them: getElementsByType(P) returns the body
+            # paragraphs, and office:change-info is not one. The same package
+            # handed to the content.xml fallback kept its authors, so whether
+            # a change could be attributed depended on which parser accepted
+            # the file. Both paths now use the shared extractor.
+            changes = _odf_tracked_changes(filepath)
+            if changes:
+                for change in changes:
+                    result["paragraphs"].append({
+                        "text": _odf_change_line(change),
+                        "style": "Tracked change",
+                        "location": change["location"],
+                        "kind": "tracked_change",
+                    })
+                result["tracked_changes"] = changes
+
             result["total_paragraphs"] = len(result["paragraphs"])
             
             # Extract tables
@@ -2956,7 +3429,9 @@ class OfficeFileReader(BaseReader):
                     logger.info(f"Extracted and processed {len(result['extracted_images'])} images from ODT")
             except Exception as e:
                 logger.debug(f"Image extraction from ODT failed (non-critical): {e}")
-            
+
+            _apply_odf_annotations(result, filepath)
+
             return result
         except Exception as e:
             return {"error": str(e), "filepath": filepath}
@@ -2965,8 +3440,12 @@ class OfficeFileReader(BaseReader):
     def read_ods_file(self, filepath):
         """Independent ODS (OpenDocument Spreadsheet) reader function."""
         try:
-            from odf.opendocument import load
-            from odf.table import Table, TableRow, TableCell
+            _odf_mod_7 = _odf("odf.opendocument")
+            load = _odf_mod_7.load
+            _odf_mod_8 = _odf("odf.table")
+            Table = _odf_mod_8.Table
+            TableRow = _odf_mod_8.TableRow
+            TableCell = _odf_mod_8.TableCell
         except ImportError:
             return {
                 "error": "odfpy not installed. Install with: pip install odfpy",
@@ -3002,18 +3481,25 @@ class OfficeFileReader(BaseReader):
                     "data": []
                 }
                 
+                # Repeated rows and cells are runs, not single nodes: the
+                # blank rows 2-3 of a sheet are written once with
+                # number-rows-repeated="2", and empty cells the same way.
+                # Collapsing them moved every address above the gap.
+                pending_blank_rows = 0
                 for row in table.getElementsByType(TableRow):
-                    row_data = []
-                    for cell in row.getElementsByType(TableCell):
-                        cell_text = ""
-                        # Get text from all paragraphs in cell
-                        for para in cell.childNodes:
-                            if hasattr(para, 'data'):
-                                cell_text += para.data
-                            elif hasattr(para, 'childNodes') and para.childNodes:
-                                cell_text += _odf_node_text(para)
-                        row_data.append(cell_text)
-                    sheet_data["data"].append(row_data)
+                    row_data = _ods_row_cells(row)
+                    repeat = _ods_repeat(row, "numberrowsrepeated", cap=100000)
+                    if not any(row_data):
+                        # Held back so a sheet padded to its limit does not
+                        # become a hundred thousand empty rows; flushed when a
+                        # row with content follows.
+                        pending_blank_rows += repeat
+                        continue
+                    while pending_blank_rows:
+                        sheet_data["data"].append([])
+                        pending_blank_rows -= 1
+                    for _ in range(min(repeat, 100000)):
+                        sheet_data["data"].append(list(row_data))
                 
                 result["sheets"][sheet_name] = sheet_data
             
@@ -3068,11 +3554,20 @@ class OfficeFileReader(BaseReader):
         Preserves original order of elements within slides.
         """
         try:
-            from odf.opendocument import load
-            from odf.draw import Page, TextBox
-            from odf.presentation import FooterDecl, HeaderDecl, Notes
-            from odf.text import P
-            from odf.table import TableRow, TableCell
+            _odf_mod_9 = _odf("odf.opendocument")
+            load = _odf_mod_9.load
+            _odf_mod_10 = _odf("odf.draw")
+            Page = _odf_mod_10.Page
+            TextBox = _odf_mod_10.TextBox
+            _odf_mod_11 = _odf("odf.presentation")
+            FooterDecl = _odf_mod_11.FooterDecl
+            HeaderDecl = _odf_mod_11.HeaderDecl
+            Notes = _odf_mod_11.Notes
+            _odf_mod_12 = _odf("odf.text")
+            P = _odf_mod_12.P
+            _odf_mod_13 = _odf("odf.table")
+            TableRow = _odf_mod_13.TableRow
+            TableCell = _odf_mod_13.TableCell
         except ImportError:
             return {
                 "error": "odfpy not installed. Install with: pip install odfpy",

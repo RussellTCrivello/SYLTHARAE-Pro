@@ -150,6 +150,49 @@ def _unique_conflict(exc):
     return getattr(exc, "pgcode", None) == "23505"
 
 
+def _revision_block(revision):
+    """The ``gazetteer_revision`` block of a response, and never an exception.
+
+    Every caller of this function has already committed. If describing the
+    result fails - the recorder returned something unexpected, a fingerprint
+    query fails, a future edit raises - the mutation has still happened, and
+    answering 5xx tells the client to retry a write it already made (the retry
+    is then answered 409 for a place the client believes it never created).
+
+    Measured with tests/integration/test_partial_write_faults.py: before this
+    wrapper, a raise in the revision step turned four committed writes
+    (create, update, delete, place-name create/update/delete) into 500s.
+    """
+    try:
+        return _revision_payload(revision)
+    except Exception:
+        logger.exception("gazetteer revision could not be rendered after a "
+                         "committed mutation; answering without a fingerprint")
+        return {"fingerprint": None, "changed": False}
+
+
+def _revision_payload(revision):
+    """The ``gazetteer_revision`` block of a response.
+
+    A mutation that reached the database can still fail to produce a revision -
+    ``record_curation_change`` is the only source of the fingerprint, and it is
+    allowed to have nothing to say. Subscripting it blind is what turned a
+    missing value into
+
+        TypeError: 'NoneType' object is not subscriptable
+
+    at the response line, after the write had already committed: the caller got
+    a 500 for a place that exists, and a retry was answered with 409. The shape
+    of the response does not change here; the values say the truth instead -
+    ``fingerprint`` is null and ``changed`` false when there is no revision.
+    """
+    if isinstance(revision, dict):
+        return {"fingerprint": revision.get("fingerprint"),
+                "changed": bool(revision.get("changed"))}
+    logger.warning("gazetteer revision missing for a committed mutation: %r", revision)
+    return {"fingerprint": None, "changed": False}
+
+
 def register_place_routes(app):
 
     @app.route("/api/gazetteer", methods=["GET"])
@@ -365,7 +408,18 @@ def register_place_routes(app):
             cur.execute("SELECT c.id FROM categorys c JOIN words w ON w.id = c.word_id WHERE w.word = %s", (feature_type,))
             cat_row = cur.fetchone()
             if not cat_row:
-                return None, "category not found", None
+                # geo_places.category_id references categorys, and those rows
+                # exist only after the gazetteer seed is applied - a database
+                # whose gazetteer was never loaded has none. That is a missing
+                # precondition, not a bad request: raising (rather than
+                # returning a third value of None) rolls the transaction back
+                # and reaches the route's existing 503 handler, instead of
+                # subscripting the None that used to be returned here.
+                from services.geo.gazetteer import GazetteerUnavailable
+
+                raise GazetteerUnavailable(
+                    f"the gazetteer has no category for feature_type {feature_type!r};"
+                    " load the gazetteer seed before adding places")
             category_id = cat_row[0]
 
             cur.execute(
@@ -389,20 +443,31 @@ def register_place_routes(app):
             if _unique_conflict(exc):
                 return _error("CONFLICT", "Place or alias already exists", 409)
             if type(exc).__name__ == "GazetteerUnavailable":
-                return _error("GAZETTEER_UNAVAILABLE", "Gazetteer is not ready for curation", 503)
+                # The exception says which precondition is missing ("no category
+                # for feature_type 'city'"); a generic sentence left an operator
+                # with a 503 and nothing to act on.
+                return _error("GAZETTEER_UNAVAILABLE",
+                              str(exc) or "Gazetteer is not ready for curation", 503)
             return _error("PLACES_UNAVAILABLE", "Failed to create place", 500)
         if error == "conflict":
-            return _error("CONFLICT", f"Place already exists", 409)
+            return _error("CONFLICT", "Place already exists", 409)
+        if error:
+            # Any other value the write step reports is an error the caller must
+            # see. Cases that used to land here (a missing category) now raise
+            # and are answered above; this is the guard that keeps the next one
+            # from being reported as a success path with a None revision.
+            return _error("VALIDATION_FAILED", str(error), 400)
 
+        revision_block = _revision_block(revision)
         _audit("places.create", place_id, {"label": label, "feature_type": feature_type,
                                              "country_codes": country_codes,
                                              "names_count": len(cleaned_names),
-                                             "fingerprint": revision["fingerprint"]})
+                                             "fingerprint": revision_block["fingerprint"]})
         return jsonify({"success": True, "place": {
             "id": place_id, "label": label, "feature_type": feature_type,
             "country_codes": country_codes, "latitude": latitude, "longitude": longitude,
             "retired": False, "names": cleaned_names,
-        }, "gazetteer_revision": {"fingerprint": revision["fingerprint"], "changed": revision["changed"]}}), 201
+        }, "gazetteer_revision": revision_block}), 201
 
     @app.route("/api/places/<int:place_id>", methods=["PUT"])
     @login_required
@@ -443,7 +508,11 @@ def register_place_routes(app):
                 cur.execute("SELECT c.id FROM categorys c JOIN words w ON w.id = c.word_id WHERE w.word = %s", (value,))
                 cat_row = cur.fetchone()
                 if not cat_row:
-                    return "category not found", 400, None
+                    from services.geo.gazetteer import GazetteerUnavailable
+
+                    raise GazetteerUnavailable(
+                        f"the gazetteer has no category for feature_type {value!r};"
+                        " load the gazetteer seed before changing a place type")
                 new_category_id = cat_row[0]
             if "country_codes" in data:
                 if not isinstance(data["country_codes"], list):
@@ -488,7 +557,7 @@ def register_place_routes(app):
                     "previous": {"label": label, "feature_type": feature_type,
                                  "country_codes": list(countries or []), "latitude": lat,
                                  "longitude": lon, "retired": retired},
-                    "fingerprint": revision["fingerprint"]}, 200, revision
+                    "fingerprint": _revision_block(revision)["fingerprint"]}, 200, revision
 
         try:
             result, code, revision = _write(do_update)
@@ -497,14 +566,21 @@ def register_place_routes(app):
             if _unique_conflict(exc):
                 return _error("CONFLICT", "Place alias already exists", 409)
             if type(exc).__name__ == "GazetteerUnavailable":
-                return _error("GAZETTEER_UNAVAILABLE", "Gazetteer is not ready for curation", 503)
+                # The exception says which precondition is missing ("no category
+                # for feature_type 'city'"); a generic sentence left an operator
+                # with a 503 and nothing to act on.
+                return _error("GAZETTEER_UNAVAILABLE",
+                              str(exc) or "Gazetteer is not ready for curation", 503)
             return _error("PLACES_UNAVAILABLE", "Failed to update place", 500)
         if code == 404:
             return _error("NOT_FOUND", "Place not found", 404)
         if code in (400, 403):
             return _error("FORBIDDEN" if code == 403 else "VALIDATION_FAILED", result, code)
+        revision_block = _revision_block(revision)
+        result["fingerprint"] = revision_block["fingerprint"]
         _audit("places.update", place_id, {k: v for k, v in result.items() if k != "previous"})
-        return jsonify({"success": True, "place": result, "gazetteer_revision": {"fingerprint": revision["fingerprint"], "changed": revision["changed"]}}), 200
+        return jsonify({"success": True, "place": result,
+                        "gazetteer_revision": revision_block}), 200
 
     @app.route("/api/places/<int:place_id>", methods=["DELETE"])
     @login_required
@@ -538,13 +614,19 @@ def register_place_routes(app):
         except Exception as exc:
             logger.exception("delete place failed for %s", place_id)
             if type(exc).__name__ == "GazetteerUnavailable":
-                return _error("GAZETTEER_UNAVAILABLE", "Gazetteer is not ready for curation", 503)
+                # The exception says which precondition is missing ("no category
+                # for feature_type 'city'"); a generic sentence left an operator
+                # with a 503 and nothing to act on.
+                return _error("GAZETTEER_UNAVAILABLE",
+                              str(exc) or "Gazetteer is not ready for curation", 503)
             return _error("PLACES_UNAVAILABLE", "Failed to delete place", 500)
         if code == 404:
             return _error("NOT_FOUND", "Place not found", 404)
-        _audit("places.delete", place_id, {"action": action, "fingerprint": revision["fingerprint"]})
+        revision_block = _revision_block(revision)
+        _audit("places.delete", place_id, {"action": action,
+                                           "fingerprint": revision_block["fingerprint"]})
         return jsonify({"success": True, "place_id": place_id,
-                        "action": action, "gazetteer_revision": {"fingerprint": revision["fingerprint"], "changed": revision["changed"]}}), 200
+                        "action": action, "gazetteer_revision": revision_block}), 200
 
     @app.route("/api/place-names", methods=["GET"])
     @login_required
@@ -665,14 +747,20 @@ def register_place_routes(app):
             if _unique_conflict(exc):
                 return _error("CONFLICT", "That normalized alias already exists for this place and language", 409)
             if type(exc).__name__ == "GazetteerUnavailable":
-                return _error("GAZETTEER_UNAVAILABLE", "Gazetteer is not ready for curation", 503)
+                # The exception says which precondition is missing ("no category
+                # for feature_type 'city'"); a generic sentence left an operator
+                # with a 503 and nothing to act on.
+                return _error("GAZETTEER_UNAVAILABLE",
+                              str(exc) or "Gazetteer is not ready for curation", 503)
             return _error("PLACES_UNAVAILABLE", "Place alias could not be created", 500)
         if code == 404:
             return _error("NOT_FOUND", "An active place with that id was not found", 404)
+        revision_block = _revision_block(revision)
         _audit("places.name.create", name_id,
                {"place_id": place_id, "name": name["name"], "language": name["language"],
-                "fingerprint": revision["fingerprint"]}, target_type="place_name")
-        return jsonify({"success": True, "id": name_id, "gazetteer_revision": {"fingerprint": revision["fingerprint"], "changed": revision["changed"]}}), 201
+                "fingerprint": revision_block["fingerprint"]}, target_type="place_name")
+        return jsonify({"success": True, "id": name_id,
+                        "gazetteer_revision": revision_block}), 201
 
     @app.route("/api/place-names/<int:name_id>", methods=["PUT"])
     @login_required
@@ -726,7 +814,11 @@ def register_place_routes(app):
             if _unique_conflict(exc):
                 return _error("CONFLICT", "That normalized alias already exists for this place and language", 409)
             if type(exc).__name__ == "GazetteerUnavailable":
-                return _error("GAZETTEER_UNAVAILABLE", "Gazetteer is not ready for curation", 503)
+                # The exception says which precondition is missing ("no category
+                # for feature_type 'city'"); a generic sentence left an operator
+                # with a 503 and nothing to act on.
+                return _error("GAZETTEER_UNAVAILABLE",
+                              str(exc) or "Gazetteer is not ready for curation", 503)
             return _error("PLACES_UNAVAILABLE", "Place alias could not be updated", 500)
         if code == 403:
             return _error("FORBIDDEN", "Seed-managed names are read-only; add a user alias instead", 403)
@@ -734,9 +826,12 @@ def register_place_routes(app):
             return _error("VALIDATION_FAILED", result, 400)
         if code == 404:
             return _error("NOT_FOUND", result or "Place name not found", 404)
-        _audit("places.name.update", name_id, {k: v for k, v in {**result, "fingerprint": revision["fingerprint"]}.items() if k != "previous"},
-               target_type="place_name")
-        return jsonify({"success": True, "name": result, "gazetteer_revision": {"fingerprint": revision["fingerprint"], "changed": revision["changed"]}}), 200
+        revision_block = _revision_block(revision)
+        _audit("places.name.update", name_id,
+               {k: v for k, v in {**result, "fingerprint": revision_block["fingerprint"]}.items()
+                if k != "previous"}, target_type="place_name")
+        return jsonify({"success": True, "name": result,
+                        "gazetteer_revision": revision_block}), 200
 
     @app.route("/api/place-names/<int:name_id>", methods=["DELETE"])
     @login_required
@@ -765,15 +860,22 @@ def register_place_routes(app):
         except Exception as exc:
             logger.exception("delete place alias failed for %s", name_id)
             if type(exc).__name__ == "GazetteerUnavailable":
-                return _error("GAZETTEER_UNAVAILABLE", "Gazetteer is not ready for curation", 503)
+                # The exception says which precondition is missing ("no category
+                # for feature_type 'city'"); a generic sentence left an operator
+                # with a 503 and nothing to act on.
+                return _error("GAZETTEER_UNAVAILABLE",
+                              str(exc) or "Gazetteer is not ready for curation", 503)
             return _error("PLACES_UNAVAILABLE", "Place alias could not be deleted", 500)
         if code == 403:
             return _error("FORBIDDEN", "Seed-managed names are read-only", 403)
         if code == 404:
             return _error("NOT_FOUND", "Place name not found", 404)
-        _audit("places.name.delete", name_id, {**name, "fingerprint": revision["fingerprint"]},
+        revision_block = _revision_block(revision)
+        _audit("places.name.delete", name_id,
+               {**name, "fingerprint": revision_block["fingerprint"]},
                target_type="place_name")
-        return jsonify({"success": True, "id": name_id, "gazetteer_revision": {"fingerprint": revision["fingerprint"], "changed": revision["changed"]}}), 200
+        return jsonify({"success": True, "id": name_id,
+                        "gazetteer_revision": revision_block}), 200
 
     @app.route("/api/places/<int:place_id>", methods=["GET"])
     @login_required

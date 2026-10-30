@@ -105,3 +105,49 @@ def test_the_client_catalog_survives_plural_entries(admin_client):
         assert body['count'] >= flat > 1000, (locale, body['count'], flat)
         assert plural.singular not in body['translations']
         assert body['translations']['Translation Management'], locale
+
+
+def test_resetting_an_override_changes_the_rendered_page_without_a_restart(admin_client):
+    """Deleting an edited translation has to be visible on the next request.
+
+    The overlay writes saved edits into the Babel catalog it is handed. That
+    catalog is cached for the process, so the first version of this bug left
+    the edit in place after the row was deleted: the editor said "reset", the
+    database agreed, and every page kept rendering the old text until the
+    service was restarted. Found from a module-order failure - a later module
+    asserted the checked-in translation and saw an earlier module's edit.
+    """
+    token = _csrf_token(admin_client)
+    headers = {'X-CSRFToken': token}
+    catalog = admin_client.get(
+        '/api/translations/manage/catalog?locale=ar&q=Translation%20Management&per_page=10'
+    ).get_json()
+    entry = next(row for row in catalog['items'] if row['msgid'] == 'Translation Management')
+    base = entry['base_translation']
+    assert base and base != 'Translation Management'
+
+    marker = 'ترجمة مؤقتة للاختبار'
+    reset_payload = {'locale': 'ar', 'translations': [{'id': entry['id'], 'reset': True}]}
+    with admin_client.session_transaction() as session:
+        session['language'] = 'ar'
+    try:
+        saved = admin_client.put(
+            '/api/translations/manage/catalog',
+            json={'locale': 'ar',
+                  'translations': [{'id': entry['id'], 'translation': marker}]},
+            headers=headers)
+        assert saved.status_code == 200, saved.get_data(as_text=True)
+        assert marker in admin_client.get('/translations/manage').get_data(as_text=True)
+
+        reset = admin_client.put('/api/translations/manage/catalog',
+                                 json=reset_payload, headers=headers)
+        assert reset.status_code == 200, reset.get_data(as_text=True)
+        rendered = admin_client.get('/translations/manage').get_data(as_text=True)
+        assert marker not in rendered, (
+            'the deleted override is still rendered: the catalog cache kept it')
+        assert base in rendered
+    finally:
+        admin_client.put('/api/translations/manage/catalog', json=reset_payload,
+                         headers=headers)
+        with admin_client.session_transaction() as session:
+            session['language'] = 'en'

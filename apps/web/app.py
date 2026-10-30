@@ -284,14 +284,61 @@ def _start_scheduler():
         from services.scheduling.scheduler import Scheduler, enabled_by_config
 
         if enabled_by_config():
-            Scheduler.get_instance().start()
-            logger.info("✅ Job scheduler started")
+            import atexit
+
+            runner = Scheduler.get_instance()
+            if runner.start():
+                logger.info("✅ Job scheduler started")
+            # A graceful exit hands the timers and the advisory lock back before
+            # the interpreter tears the threads down, so the next process starts
+            # firing immediately instead of waiting for the socket to close.
+            atexit.register(runner.stop)
     except Exception as exc:
         # Name the cause, not the exception class: "ModuleNotFoundError" alone
         # hid a missing dependency (apscheduler) on a clean install.
         logger.warning("Job scheduler not started: %s: %s", exc.__class__.__name__, exc)
 
 _start_scheduler()
+
+# The category workbook is authoritative (docs/DATA_ENTRY.md): at startup the
+# database is compared with classification/domain_data.xlsx, and - with
+# SYLTHARAE_TAXONOMY_SYNC=apply - brought into step, so an edit made while the
+# service was down reaches the database without anybody running a command. The
+# decision logic and its tests live in services/importing/taxonomy_startup.py.
+# Guarded like the scheduler: this may never stop the web app from serving.
+def _reconcile_taxonomy():
+    try:
+        from services.importing.taxonomy_startup import reconcile
+
+        outcome = reconcile()
+        action = outcome.get("action")
+        if action == "disabled":
+            logger.info("Taxonomy reconciliation disabled (SYLTHARAE_TAXONOMY_SYNC=0)")
+        elif action == "unchanged":
+            logger.info("Taxonomy matches the workbook (%s)",
+                        str(outcome.get("fingerprint"))[:12])
+        elif action == "already_in_sync":
+            logger.info("\u2705 Taxonomy matches %s", outcome.get("path"))
+        elif action == "applied":
+            logger.info("\u2705 Taxonomy reconciled with %s: %s",
+                        outcome.get("path"), outcome.get("written"))
+        elif action == "drift":
+            logger.warning(
+                "Taxonomy is out of step with %s: %s change(s) pending. Run "
+                "'python -m tools.i18n.sync_taxonomy --apply', or set "
+                "SYLTHARAE_TAXONOMY_SYNC=apply to reconcile on startup.",
+                outcome.get("path"), outcome.get("pending"))
+        elif action == "refused":
+            logger.warning("Taxonomy reconciliation refused: %s",
+                           "; ".join(outcome.get("errors") or []) or "unknown reason")
+        else:
+            logger.warning("Taxonomy reconciliation skipped: %s", outcome.get("error"))
+    except Exception as exc:  # pragma: no cover - this may never stop the app
+        logger.warning("Taxonomy reconciliation skipped: %s: %s",
+                       exc.__class__.__name__, exc)
+
+
+_reconcile_taxonomy()
 logger.info("✅ Rate limiting enabled (default 60/min, 600/hour per client)")
 
 # Enable gzip compression for all responses
@@ -380,7 +427,7 @@ def _validated_source_code_url(configured):
 
 @app.context_processor
 def inject_release_info():
-    from version import get_version
+    from core.app_version import get_version
     return {'version': get_version(), 'source_code_url': source_code_url()}
 
 
@@ -524,6 +571,12 @@ logger.info("✅ Interface registry views registered")
 from Api.routes.experience_api import register_experience_routes
 register_experience_routes(app)
 logger.info("✅ Experience contract views registered")
+
+# Register term names: the label read endpoint page scripts call, and the
+# curation API (list/create/update/delete/CSV import).
+from Api.routes.i18n_terms import register_i18n_term_routes
+register_i18n_term_routes(app)
+logger.info("✅ Term-name routes registered")
 
 # Register the shared list exports (one endpoint, every list interface)
 from Api.routes.exports import register_exports_routes

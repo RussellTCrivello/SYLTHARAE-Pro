@@ -2411,6 +2411,7 @@
         review: 'exportReview',
         structured: 'exportStructured',
         originals: 'exportOriginals',
+        'originals-zip': 'exportOriginalsZip',
         text: 'exportText'
     };
 
@@ -2442,42 +2443,73 @@
         return toCSV(columns, rows);
     }
 
+    /** A file name the reader can recognise: no event objects, no blanks. */
     function exportName(kind, format) {
+        var safeKind = /^[a-z]+$/.test(String(kind)) ? kind : 'export';
         var stamp = new Date().toISOString().slice(0, 10);
         var extension = format === 'md' ? 'md' : format === 'json' ? 'json' : format === 'tsv' ? 'tsv' : 'csv';
-        return 'lexis-' + kind + '-' + stamp + '.' + extension;
+        return 'lexis-' + safeKind + '-' + stamp + '.' + extension;
     }
+
+    var EXPORT_MIME = {
+        csv: 'text/csv', tsv: 'text/tab-separated-values',
+        json: 'application/json', md: 'text/markdown'
+    };
 
     /* ==================================================================
        Export modal
        ================================================================== */
 
-    var EXPORT_STATE = { kind: 'columns', format: 'csv', scope: 'view', preview: [], rows: [] };
+    var EXPORT_STATE = { kind: 'columns', format: 'csv', scope: 'view', preview: [], rows: [],
+                         loading: false, error: null };
+
+    /** The export choices, in the order the dialog offers them. */
+    var EXPORT_KINDS = [
+        { id: 'columns', label: t('Files and details'),
+          },
+        { id: 'review', label: t('Categories, terms and keywords'),
+          },
+        { id: 'structured', label: t('Structured (category folders)'),
+          },
+        { id: 'text', label: t('Extracted text'),
+          },
+        { id: 'originals', label: t('Original paths'),
+          },
+        { id: 'originals-zip', label: t('Original files') + ' (ZIP)' }
+    ];
 
     function openExporter(kind) {
-        EXPORT_STATE.kind = kind || 'columns';
+        // Called from a plain button as well as from a menu, so the first
+        // argument can be a click event. Treating it as a kind produced
+        // "lexis-[object PointerEvent]-2026-10-27.csv" as the file name.
+        EXPORT_STATE.kind = (typeof kind === 'string' && kind) ? kind : 'columns';
         EXPORT_STATE.format = 'csv';
         EXPORT_STATE.scope = S.sel.size ? 'selection' : 'view';
+        EXPORT_STATE.rows = [];
+        EXPORT_STATE.error = null;
         renderExporter();
         openModal('lexisExporter');
+    }
+
+    function exportKindMeta(kind) {
+        for (var i = 0; i < EXPORT_KINDS.length; i++) {
+            if (EXPORT_KINDS[i].id === kind) { return EXPORT_KINDS[i]; }
+        }
+        return EXPORT_KINDS[0];
     }
 
     function renderExporter() {
         var body = $('#lexisExportBody');
         var selectionCount = S.sel.size;
+        var isZip = EXPORT_STATE.kind === 'originals-zip';
         body.innerHTML =
             '<div class="lexis-radios" role="radiogroup" aria-label="' + esc(t('What to export')) + '">' +
-            ['columns', 'review', 'structured', 'text', 'originals'].map(function (kind) {
-                return '<label><input type="radio" name="lexisExportKind" value="' + kind + '"' +
-                    (EXPORT_STATE.kind === kind ? ' checked' : '') + '> ' +
-                    esc({
-                        columns: t('Files and details'),
-                        review: t('Categories, terms and keywords'),
-                        structured: t('Structured (category folders)'),
-                        text: t('Extracted text'),
-                        originals: t('Original paths')
-                    }[kind]) + '</label>';
+            EXPORT_KINDS.map(function (kind) {
+                return '<label title="' + esc(kind.hint) + '"><input type="radio" name="lexisExportKind" value="' +
+                    kind.id + '"' + (EXPORT_STATE.kind === kind.id ? ' checked' : '') + '> ' +
+                    esc(kind.label) + '</label>';
             }).join('') + '</div>' +
+            '<p class="muted" id="lexisExportHint">' + esc(exportKindMeta(EXPORT_STATE.kind).hint) + '</p>' +
             '<div class="lexis-radios" role="radiogroup" aria-label="' + esc(t('Which files')) + '">' +
             '<label><input type="radio" name="lexisExportScope" value="view"' +
             (EXPORT_STATE.scope === 'view' ? ' checked' : '') + '> ' +
@@ -2487,14 +2519,15 @@
             (selectionCount ? '' : ' disabled') + '> ' +
             esc(t('Only the selection')) + ' (' + selectionCount + ')</label>' +
             '</div>' +
+            (isZip ? '' :
             '<div class="lexis-fmt" role="radiogroup" aria-label="' + esc(t('Format')) + '">' +
             [['csv', 'CSV'], ['tsv', 'TSV'], ['json', 'JSON'], ['md', 'Markdown']].map(function (pair) {
                 return '<button type="button" class="' + (EXPORT_STATE.format === pair[0] ? 'on' : '') +
                     '" data-format="' + pair[0] + '">' + pair[1] +
                     '<small>' + esc(pair[0] === 'md' ? t('table in Markdown') : pair[0].toUpperCase()) +
                     '</small></button>';
-            }).join('') + '</div>' +
-            '<pre class="lexis-preview" id="lexisExportPreview">' + esc(t('Loading…')) + '</pre>' +
+            }).join('') + '</div>') +
+            (isZip ? '' : '<pre class="lexis-preview" id="lexisExportPreview">' + esc(t('Loading…')) + '</pre>') +
             '<div class="lexis-vrow"><span class="muted" id="lexisExportCount"></span>' +
             '<span><button type="button" id="lexisExportDownload" class="primary">' +
             esc(t('Download')) + '</button></span></div>';
@@ -2502,13 +2535,13 @@
         $$('[name="lexisExportKind"]', body).forEach(function (input) {
             input.addEventListener('change', function () {
                 EXPORT_STATE.kind = input.value;
-                loadExportPreview();
+                renderExporter();
             });
         });
         $$('[name="lexisExportScope"]', body).forEach(function (input) {
             input.addEventListener('change', function () {
                 EXPORT_STATE.scope = input.value;
-                loadExportPreview();
+                renderExporter();
             });
         });
         $$('[data-format]', body).forEach(function (button) {
@@ -2518,26 +2551,108 @@
             });
         });
         $('#lexisExportDownload').addEventListener('click', function () {
+            if (isZip) { downloadOriginalsZip(); return; }
+            if (!EXPORT_STATE.rows.length) {
+                toast(t('Nothing to export in this scope.'));
+                return;
+            }
             var text = serializeExport(EXPORT_STATE.kind, EXPORT_STATE.format, EXPORT_STATE.rows);
             download(exportName(EXPORT_STATE.kind, EXPORT_STATE.format), text,
-                EXPORT_STATE.format === 'json' ? 'application/json' : 'text/plain');
+                EXPORT_MIME[EXPORT_STATE.format] || 'text/plain');
             recordActivity('lexis.export', EXPORT_STATE.kind,
                 t('Exported') + ' ' + EXPORT_STATE.rows.length + ' ' + t('rows'));
         });
-        loadExportPreview();
+        if (!isZip) { loadExportPreview(); }
+    }
+
+    function exportScopeIds() {
+        return EXPORT_STATE.scope === 'selection' ? selectedIds() : null;
     }
 
     function loadExportPreview() {
         var preview = $('#lexisExportPreview');
-        var ids = EXPORT_STATE.scope === 'selection' ? selectedIds() : null;
+        if (!preview) { return; }
+        var ids = exportScopeIds();
         preview.textContent = t('Loading…');
+        EXPORT_STATE.loading = true;
         fetchExport(EXPORT_STATE.kind, ids).then(function (rows) {
+            EXPORT_STATE.loading = false;
             EXPORT_STATE.rows = rows;
-            $('#lexisExportCount').textContent = rows.length + ' ' + t('rows');
+            var countEl = $('#lexisExportCount');
+            if (countEl) { countEl.textContent = rows.length + ' ' + t('rows'); }
+            var downloadBtn = $('#lexisExportDownload');
+            if (downloadBtn) { downloadBtn.disabled = rows.length === 0; }
             var text = serializeExport(EXPORT_STATE.kind, EXPORT_STATE.format, rows.slice(0, 12));
-            preview.textContent = text || t('Nothing to export in this scope.');
+            preview.textContent = rows.length
+                ? text + (rows.length > 12 ? '\n…' : '')
+                : t('Nothing to export in this scope.');
         }).catch(function (error) {
+            EXPORT_STATE.loading = false;
+            EXPORT_STATE.rows = [];
+            var downloadBtn = $('#lexisExportDownload');
+            if (downloadBtn) { downloadBtn.disabled = true; }
             preview.textContent = error.message;
+        });
+    }
+
+    /**
+     * The source files themselves, as one ZIP.
+     *
+     * Fetched rather than posted as a form: a form POST navigates the page when
+     * the server answers with JSON (an empty scope, no original bytes on disk),
+     * which loses the reader's place and looks like a broken page. Here a
+     * refusal is a toast and the reader stays where they were.
+     */
+    function downloadOriginalsZip() {
+        var ids = exportScopeIds();
+        var payload = {
+            path_ids: ids && ids.length ? ids : null,
+            focus: S.focus,
+            basket: Array.from(S.basket),
+            hide_empty: S.hideEmpty,
+            file_types: S.filters.file_types,
+            sources: S.filters.sources,
+            sides: S.filters.sides,
+            date_from: S.filters.date_from,
+            date_to: S.filters.date_to,
+            q: S.filters.q
+        };
+        var button = $('#lexisExportDownload');
+        var original = button ? button.textContent : '';
+        if (button) { button.disabled = true; button.textContent = t('Processing'); }
+        toast(t('Processing'));
+        fetch(URLS[EXPORT_URLS['originals-zip']], {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken() },
+            body: JSON.stringify(payload)
+        }).then(function (response) {
+            var kind = response.headers.get('Content-Type') || '';
+            if (!response.ok || kind.indexOf('application/zip') === -1) {
+                return response.json().catch(function () { return {}; }).then(function (data) {
+                    throw new Error(data.error || (t('Request failed') + ' (' + response.status + ')'));
+                });
+            }
+            var included = response.headers.get('X-Export-Included');
+            var skipped = response.headers.get('X-Export-Skipped') || '0';
+            return response.blob().then(function (blob) {
+                var url = URL.createObjectURL(blob);
+                var link = document.createElement('a');
+                link.href = url;
+                link.download = 'lexis-originals-' + new Date().toISOString().slice(0, 10) + '.zip';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+                toast(t('Exported') + ' ' + (included || '?') + ' ' + t('files') +
+                    (skipped !== '0' ? ' · ' + skipped + ' ' + t('Missing') : ''));
+                recordActivity('lexis.export', 'originals-zip',
+                    t('Archive') + ': ' + (included || '?') + ' ' + t('Files'));
+            });
+        }).catch(function (error) {
+            toast(error.message);
+        }).then(function () {
+            if (button) { button.disabled = false; button.textContent = original; }
         });
     }
 
@@ -2554,7 +2669,7 @@
                 if (!target) { toast(t('Nothing to open')); return; }
                 openViewer(target);
             }, enabled: !!(S.files.length || ids.length) },
-            { label: t('Export…'), run: openExporter, enabled: true },
+            { label: t('Export…'), run: function () { openExporter(); }, enabled: true },
             { group: t('Export the scope') },
             { label: t('Categories, terms and keywords (CSV)'), run: function () {
                 runExport('review', 'csv');
@@ -2565,6 +2680,12 @@
                 runExport('structured', 'csv');
             } },
             { label: t('Files and details (CSV)'), run: function () { runExport('columns', 'csv'); } },
+            { label: t('Original files') + ' (ZIP)', run: function () {
+                EXPORT_STATE.kind = 'originals-zip';
+                EXPORT_STATE.scope = S.sel.size ? 'selection' : 'view';
+                downloadOriginalsZip();
+            }, enabled: true },
+            { label: t('Structure') + ' (JSON)', run: exportOutlineJson },
             { group: t('Change the files') },
             { label: t('Rename file…'), run: function () {
                 if (ids.length !== 1) { toast(t('Select exactly one file to rename.')); return; }
@@ -2663,105 +2784,382 @@
     }
 
     /* ==================================================================
-       Outline (Markdown) and print
+       Outline (Markdown), print, and the structure document
        ================================================================== */
 
-    function exportOutline() {
+    /**
+     * One model, three outputs.
+     *
+     * The outline (Markdown), the print sheet and the JSON outline all read the
+     * same structure: the taxonomy rows the server returns, grouped by lens,
+     * category and subcategory, with the totals the reader needs to check the
+     * document against the screen. Building it once is what keeps them from
+     * disagreeing - and a document that disagrees with the app is worse than no
+     * document.
+     *
+     * A taxonomy with no terms yet is a legitimate state: the sheet then says
+     * so (with the file count from the health endpoint) instead of producing a
+     * blank page. That is what the old print sheet did.
+     */
+    function structureModel(callback) {
         api(URLS.outline).then(function (data) {
             var rows = data.outline || [];
-            var lines = ['# ' + t('LEXIS taxonomy'), '',
-                '_' + t('Generated') + ' ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + '_', ''];
-            var currentLens = null;
+            var lenses = {};
+            var totals = { terms: 0, files: 0, categories: {}, subcategories: {} };
+            rows.forEach(function (row) {
+                var lens = row.lens || 'words';
+                if (!lenses[lens]) { lenses[lens] = { lens: lens, label: lensLabel(lens), rows: [], files: 0 }; }
+                lenses[lens].rows.push(row);
+                lenses[lens].files += Number(row.file_count || 0) || 0;
+                totals.terms += 1;
+                if (row.main_category_name && !totals.categories[row.main_category_name]) {
+                    totals.categories[row.main_category_name] = true;
+                }
+                if (row.subcategory_name) {
+                    var key = (row.main_category_name || '') + ' / ' + row.subcategory_name;
+                    totals.subcategories[key] = true;
+                }
+            });
+            var health = S.health || {};
+            totals.files = Number(health.total_files || 0);
+            var model = {
+                generated: new Date(),
+                scope: scopeLabel(),
+                focus: S.focus,
+                filters: activeFilterSummary(),
+                lenses: Object.keys(lenses).sort().map(function (key) { return lenses[key]; }),
+                totals: {
+                    terms: totals.terms,
+                    files: totals.files,
+                    categories: Object.keys(totals.categories).length,
+                    subcategories: Object.keys(totals.subcategories).length,
+                    keywords: Number(health.total_keywords || 0),
+                    words: Number(health.total_categorized_words || 0),
+                    database_bytes: Number(health.database_size_bytes || 0)
+                },
+                files: (S.files || []).slice()
+            };
+            callback(model);
+        }).catch(function (error) { toast(error.message); });
+    }
+
+    function scopeLabel() {
+        if (S.basket.size) { return t('Basket') + ' (' + S.basket.size + ')'; }
+        if (!S.focus || S.focus === 'root') { return t('Library'); }
+        var info = infoOf(S.focus);
+        return (info && (info.label || info.name)) || S.focus;
+    }
+
+    function activeFilterSummary() {
+        var parts = [];
+        if (S.filters.q) { parts.push(t('Search') + ': ' + S.filters.q); }
+        if (S.filters.file_types && S.filters.file_types.length) {
+            parts.push(t('File type') + ': ' + S.filters.file_types.join(', '));
+        }
+        if (S.filters.sources && S.filters.sources.length) {
+            parts.push(t('Source') + ': ' + S.filters.sources.join(', '));
+        }
+        if (S.filters.sides && S.filters.sides.length) {
+            parts.push(t('Side') + ': ' + S.filters.sides.join(', '));
+        }
+        if (S.filters.date_from || S.filters.date_to) {
+            parts.push(t('Date') + ': ' + (S.filters.date_from || '…') + ' – ' + (S.filters.date_to || '…'));
+        }
+        if (!S.hideEmpty) { parts.push(t('Empty items') + ': ' + t('Shown')); }
+        return parts;
+    }
+
+    function formatBytes(bytes) {
+        var value = Number(bytes || 0);
+        if (!value) { return '0 B'; }
+        var units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        var index = Math.min(units.length - 1, Math.floor(Math.log(value) / Math.log(1024)));
+        return (value / Math.pow(1024, index)).toFixed(index ? 1 : 0) + ' ' + units[index];
+    }
+
+    function structureMarkdown(model) {
+        var lines = ['# ' + t('LEXIS taxonomy'), ''];
+        lines.push('- ' + t('Scope') + ': ' + model.scope);
+        if (model.filters.length) { lines.push('- ' + t('Filters') + ': ' + model.filters.join(' · ')); }
+        lines.push('- ' + t('Generated') + ': ' +
+            model.generated.toISOString().slice(0, 16).replace('T', ' '));
+        lines.push('- ' + t('Total') + ': ' + model.totals.files + ' ' + t('files') + ' · ' +
+            model.totals.terms + ' ' + t('terms') + ' · ' +
+            model.totals.categories + ' ' + t('categories') + ' · ' +
+            model.totals.subcategories + ' ' + t('subcategories') + ' · ' +
+            formatBytes(model.totals.database_bytes));
+        lines.push('');
+
+        if (!model.lenses.length) {
+            lines.push('> ' + t('Empty items') + ': ' + t('None'),
+                '');
+        }
+        model.lenses.forEach(function (lens) {
+            lines.push('', '## ' + lens.label + ' — ' + lens.files + ' ' + t('files'), '');
             var currentCat = null;
             var currentSub = null;
-            rows.forEach(function (row) {
-                if (row.lens !== currentLens) {
-                    currentLens = row.lens;
-                    currentCat = null;
-                    currentSub = null;
-                    lines.push('', '## ' + lensLabel(row.lens), '');
-                }
+            lens.rows.forEach(function (row) {
                 if (row.main_category_name !== currentCat) {
                     currentCat = row.main_category_name;
                     currentSub = null;
-                    lines.push('', '### ' + (row.main_category_name || t('Uncategorised')), '');
+                    lines.push('', '### ' + (currentCat || t('Uncategorised')), '');
                 }
                 if ((row.subcategory_name || '') !== (currentSub || '')) {
                     currentSub = row.subcategory_name || '';
-                    lines.push('', '#### ' + (row.subcategory_name || t('Direct terms')), '');
+                    lines.push('', '#### ' + (currentSub || t('Direct terms')), '');
                 }
                 lines.push('- ' + (row.term_label || '') + ' — ' + row.file_count + ' ' + t('files'));
             });
-            download('lexis-outline-' + new Date().toISOString().slice(0, 10) + '.md',
-                lines.join('\n') + '\n', 'text/markdown');
-            toast(t('Outline downloaded'));
-        }).catch(function (error) { toast(error.message); });
+        });
+
+        if (model.files.length) {
+            lines.push('', '## ' + t('Files') + ' (' + model.files.length + ')', '');
+            lines.push('| ' + t('File') + ' | ' + t('Type') + ' | ' + t('Date') + ' | ' +
+                t('Source') + ' | ' + t('Side') + ' | ' + t('Hits') + ' |');
+            lines.push('| --- | --- | --- | --- | --- | --- |');
+            model.files.forEach(function (file) {
+                lines.push('| ' + [file.name, file.type || file.file_type, fmtDate(file.date),
+                    file.source, file.side, file.hits].map(function (value) {
+                    return String(value === null || value === undefined ? '' : value)
+                        .replace(/\|/g, '\\|');
+                }).join(' | ') + ' |');
+            });
+        }
+        return lines.join('\n') + '\n';
     }
+
+    function exportOutline() {
+        structureModel(function (model) {
+            download('lexis-outline-' + model.generated.toISOString().slice(0, 10) + '.md',
+                structureMarkdown(model), 'text/markdown');
+            toast(t('Outline downloaded'));
+            recordActivity('lexis.export', 'outline',
+                t('Outline') + ': ' + model.totals.terms + ' ' + t('Terms'));
+        });
+    }
+
+    /** The JSON twin of the outline, for a script rather than a reader. */
+    function exportOutlineJson() {
+        structureModel(function (model) {
+            var payload = {
+                generated_at: model.generated.toISOString(),
+                scope: model.scope,
+                focus: model.focus,
+                filters: model.filters,
+                totals: model.totals,
+                lenses: model.lenses,
+                files: model.files
+            };
+            download('lexis-structure-' + model.generated.toISOString().slice(0, 10) + '.json',
+                JSON.stringify(payload, null, 2), 'application/json');
+            toast(t('Outline downloaded'));
+        });
+    }
+
+    var PRINT_OPTIONS = {
+        includeChart: true,
+        includeFiles: true,
+        includeSummary: true,
+        landscape: false
+    };
 
     function openPrint() {
         var body = $('#lexisPrintBody');
         body.innerHTML =
-            '<p class="muted">' + esc(t('Print the taxonomy with the file count of every term. The browser print dialog opens next.')) + '</p>' +
+            '<fieldset class="lexis-print-opts"><legend>' + esc(t('Scope')) + '</legend>' +
+            '<label><input type="checkbox" id="lexisPrintChart"' + (PRINT_OPTIONS.includeChart ? ' checked' : '') + '> ' +
+            esc(t('Preview')) + '</label>' +
+            '<label><input type="checkbox" id="lexisPrintSummary"' + (PRINT_OPTIONS.includeSummary ? ' checked' : '') + '> ' +
+            esc(t('Total')) + '</label>' +
+            '<label><input type="checkbox" id="lexisPrintFiles"' + (PRINT_OPTIONS.includeFiles ? ' checked' : '') + '> ' +
+            esc(t('Files')) + '</label>' +
+            '<label>' + esc(t('Orientation')) + '</label>' +
+            '</fieldset>' +
             '<div class="lexis-vrow"><button type="button" id="lexisPrintCancel">' +
-            esc(t('Cancel')) + '</button><button type="button" class="primary" id="lexisPrintGo">' +
-            esc(t('Print')) + '</button></div>';
+            esc(t('Cancel')) + '</button>' +
+            '<button type="button" id="lexisPrintOutline">' + esc(t('Download') + ' ' + t('Outline')) + '</button>' +
+            '<button type="button" class="primary" id="lexisPrintGo">' + esc(t('Print')) + '</button></div>';
         $('#lexisPrintCancel').addEventListener('click', function () {
             $('#lexisPrint').classList.remove('open');
         });
+        $('#lexisPrintOutline').addEventListener('click', function () { exportOutline(); });
         $('#lexisPrintGo').addEventListener('click', function () {
+            PRINT_OPTIONS.includeChart = $('#lexisPrintChart').checked;
+            PRINT_OPTIONS.includeSummary = $('#lexisPrintSummary').checked;
+            PRINT_OPTIONS.includeFiles = $('#lexisPrintFiles').checked;
             $('#lexisPrint').classList.remove('open');
             printOutline();
         });
         openModal('lexisPrint');
     }
 
+    /** The on-screen chart, as a self-contained SVG for the printed page. */
+    function chartSnapshot() {
+        var chart = $('#lexisChart');
+        if (!chart) { return ''; }
+        var cards = $$('.lexis-card', chart);
+        if (!cards.length) { return ''; }
+        var width = chart.scrollWidth || chart.clientWidth || 900;
+        var height = chart.scrollHeight || chart.clientHeight || 400;
+        var COLORS = {}; // card id -> colour, so edges and boxes agree
+        var boxes = cards.map(function (card) {
+            var id = card.dataset.id;
+            var style = window.getComputedStyle(card);
+            // The card markup is `.k` (kicker), `.t` (title) and `.m` (meta).
+            // Falling back to the whole card merged all three into one string
+            // ("GalaxyWord galaxy1 terms · 3 files") in the first snapshot.
+            var kickerEl = card.querySelector('.k');
+            var titleEl = card.querySelector('.t') || card.querySelector('.lexis-card-title, .name, h4, strong');
+            var metaEl = card.querySelector('.m') || card.querySelector('.lexis-card-meta, .sub, small');
+            var title = (titleEl || card).textContent || '';
+            var kicker = kickerEl ? kickerEl.textContent : '';
+            var label = kicker ? kicker.trim() + ' · ' + title.trim() : title;
+            var meta = metaEl ? metaEl.textContent : '';
+            var rect = card.getBoundingClientRect();
+            var host = chart.getBoundingClientRect();
+            COLORS[id] = card.style.getPropertyValue('--c') || style.borderColor || '#7c8cf8';
+            var clean = function (value, limit) {
+                return String(value || '').replace(/\s+/g, ' ').trim().slice(0, limit);
+            };
+            return {
+                x: rect.left - host.left, y: rect.top - host.top,
+                w: rect.width, h: rect.height,
+                label: clean(label, 40),
+                meta: clean(meta, 30),
+                stroke: COLORS[id]
+            };
+        });
+        var parts = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + width + ' ' + height +
+            '" width="100%" preserveAspectRatio="xMidYMin meet" role="img" aria-label="' +
+            esc(t('The taxonomy galaxy')) + '">',
+            '<rect width="100%" height="100%" fill="#ffffff"/>'];
+        boxes.forEach(function (box) {
+            parts.push('<rect x="' + box.x + '" y="' + box.y + '" width="' + box.w + '" height="' + box.h +
+                '" rx="8" fill="#ffffff" stroke="' + esc(box.stroke) + '" stroke-width="2"/>');
+            parts.push('<text x="' + (box.x + 10) + '" y="' + (box.y + 22) +
+                '" font-family="sans-serif" font-size="12" font-weight="600" fill="#15193a">' +
+                esc(box.label) + '</text>');
+            if (box.meta) {
+                parts.push('<text x="' + (box.x + 10) + '" y="' + (box.y + 38) +
+                    '" font-family="sans-serif" font-size="10" fill="#5b6178">' + esc(box.meta) + '</text>');
+            }
+        });
+        parts.push('</svg>');
+        return parts.join('');
+    }
+
+    function renderPrintSheet(model) {
+        var host = $('#lexisPrintRoot');
+        var html = '<div class="p-page">' +
+            '<header class="p-head"><h1>' + esc(t('LEXIS taxonomy')) + '</h1>' +
+            '<div class="p-scope">' + esc(model.scope) + '</div>' +
+            '<div class="p-meta">' + esc(t('Generated')) + ' ' +
+            esc(model.generated.toISOString().slice(0, 16).replace('T', ' ')) +
+            (model.filters.length ? ' · ' + esc(model.filters.join(' · ')) : '') + '</div></header>';
+
+        if (PRINT_OPTIONS.includeSummary) {
+            html += '<table class="p-summary"><tbody>' +
+                '<tr><th>' + esc(t('Files')) + '</th><td>' + model.totals.files + '</td>' +
+                '<th>' + esc(t('Terms')) + '</th><td>' + model.totals.terms + '</td></tr>' +
+                '<tr><th>' + esc(t('Categories')) + '</th><td>' + model.totals.categories + '</td>' +
+                '<th>' + esc(t('Subcategories')) + '</th><td>' + model.totals.subcategories + '</td></tr>' +
+                '<tr><th>' + esc(t('Keywords')) + '</th><td>' + model.totals.keywords + '</td>' +
+                '<th>' + esc(t('Database')) + '</th><td>' + formatBytes(model.totals.database_bytes) + '</td></tr>' +
+                '</tbody></table>';
+        }
+
+        if (PRINT_OPTIONS.includeChart) {
+            var snapshot = chartSnapshot();
+            if (snapshot) {
+                html += '<figure class="p-figure">' + snapshot +
+                    '<figcaption>' + esc(t('Preview')) + '</figcaption></figure>';
+            }
+        }
+
+        if (!model.lenses.length) {
+            html += '<p class="p-empty">' +
+                esc(t('Empty items') + ': ' + t('None')) + '</p>';
+        }
+        model.lenses.forEach(function (lens) {
+            html += '<section class="p-lens-block"><h2>' + esc(lens.label) + ' <span class="p-count">' +
+                lens.files + ' ' + esc(t('files')) + '</span></h2>';
+            var currentCat = null;
+            var currentSub = null;
+            lens.rows.forEach(function (row) {
+                if (row.main_category_name !== currentCat) {
+                    if (currentSub !== null) { html += '</tbody></table>'; currentSub = null; }
+                    currentCat = row.main_category_name;
+                    html += '<h3 class="p-cat">' + esc(currentCat || t('Uncategorised')) + '</h3>';
+                }
+                if ((row.subcategory_name || '') !== (currentSub || '')) {
+                    if (currentSub !== null) { html += '</tbody></table>'; }
+                    currentSub = row.subcategory_name || '';
+                    html += '<h4 class="p-sub">' + esc(currentSub || t('Direct terms')) + '</h4>' +
+                        '<table><thead><tr><th>' + esc(t('Term')) + '</th><th class="num">' +
+                        esc(t('Files')) + '</th></tr></thead><tbody>';
+                }
+                html += '<tr><td>' + esc(row.term_label || '') + '</td><td class="num">' +
+                    row.file_count + '</td></tr>';
+            });
+            if (currentSub !== null) { html += '</tbody></table>'; }
+            html += '</section>';
+        });
+
+        if (PRINT_OPTIONS.includeFiles && model.files.length) {
+            html += '<section class="p-files"><h2>' + esc(t('Files')) + ' <span class="p-count">' +
+                model.files.length + '</span></h2>' +
+                '<table><thead><tr><th>' + esc(t('File')) + '</th><th>' + esc(t('Type')) + '</th><th>' +
+                esc(t('Date')) + '</th><th>' + esc(t('Source')) + '</th><th>' + esc(t('Side')) +
+                '</th></tr></thead><tbody>';
+            model.files.forEach(function (file) {
+                html += '<tr><td>' + esc(file.name || '') + '</td><td>' + esc(file.type || file.file_type || '') +
+                    '</td><td>' + esc(fmtDate(file.date)) + '</td><td>' + esc(file.source || '') +
+                    '</td><td>' + esc(file.side || '') + '</td></tr>';
+            });
+            html += '</tbody></table></section>';
+        }
+
+        // No page numbers: the CSS counter prints "1" on every page in this
+        // engine, and a wrong page number is worse than none.
+        html += '<footer class="p-foot"><span>LEXIS Cosmos</span><span>' + esc(model.scope) +
+            ' · ' + esc(model.generated.toISOString().slice(0, 16).replace('T', ' ')) +
+            '</span></footer></div>';
+        host.innerHTML = html;
+        return host.innerHTML.length;
+    }
+
     function printOutline() {
-        api(URLS.outline).then(function (data) {
-            var rows = data.outline || [];
+        structureModel(function (model) {
+            var length = renderPrintSheet(model);
+            if (!length) {
+                toast(t('None'));
+                return;
+            }
             var host = $('#lexisPrintRoot');
-            var lensBlocks = {};
-            rows.forEach(function (row) {
-                var lensKey = row.lens;
-                if (!lensBlocks[lensKey]) { lensBlocks[lensKey] = []; }
-                lensBlocks[lensKey].push(row);
-            });
-            var html = '<div class="p-page"><h1>' + esc(t('LEXIS taxonomy')) + '</h1>' +
-                '<div class="p-meta">' + esc(t('Generated')) + ' ' +
-                esc(new Date().toISOString().slice(0, 16).replace('T', ' ')) +
-                ' · ' + (S.health.total_files || 0) + ' ' + esc(t('files')) + '</div>';
-            Object.keys(lensBlocks).forEach(function (lens) {
-                html += '<div class="p-lens">' + esc(lensLabel(lens)) + '</div>';
-                var currentCat = null;
-                var currentSub = null;
-                lensBlocks[lens].forEach(function (row) {
-                    if (row.main_category_name !== currentCat) {
-                        if (currentSub !== null) { html += '</tbody></table>'; currentSub = null; }
-                        currentCat = row.main_category_name;
-                        html += '<div class="p-cat">' + esc(currentCat || t('Uncategorised')) + '</div>';
-                    }
-                    if ((row.subcategory_name || '') !== (currentSub || '')) {
-                        if (currentSub !== null) { html += '</tbody></table>'; }
-                        currentSub = row.subcategory_name || '';
-                        html += '<div class="p-sub">' + esc(currentSub || t('Direct terms')) + '</div>' +
-                            '<table><thead><tr><th>' + esc(t('Term')) + '</th><th>' +
-                            esc(t('Files')) + '</th></tr></thead><tbody>';
-                    }
-                    html += '<tr><td>' + esc(row.term_label || '') + '</td><td>' +
-                        row.file_count + '</td></tr>';
-                });
-                if (currentSub !== null) { html += '</tbody></table>'; }
-                currentCat = null;
-                currentSub = null;
-            });
-            html += '</div>';
-            host.innerHTML = html;
+            // The stylesheet hides everything that is not the print sheet, and
+            // it can only do that for a *direct child of <body>*. The sheet is
+            // declared inside the page, so before printing it is moved to the
+            // body and afterwards put back - without this the printed page was
+            // one blank rectangle (measured: a 1 KB, text-free PDF).
+            var originalParent = host.parentNode;
+            var originalNext = host.nextSibling;
+            document.body.appendChild(host);
             document.body.classList.add('lexis-printing');
-            window.print();
-            setTimeout(function () {
+            document.body.classList.toggle('lexis-printing-landscape', PRINT_OPTIONS.landscape);
+            var restore = function () {
                 document.body.classList.remove('lexis-printing');
-                host.innerHTML = '';
-            }, 500);
-        }).catch(function (error) { toast(error.message); });
+                document.body.classList.remove('lexis-printing-landscape');
+                if (originalParent) {
+                    originalParent.insertBefore(host, originalNext && originalNext.parentNode === originalParent
+                        ? originalNext : null);
+                }
+            };
+            // The sheet stays in the DOM while the dialog is open: emptying it
+            // in a timer is what made an earlier run measure an empty print
+            // root and a blank page.
+            window.print();
+            setTimeout(restore, 400);
+        });
     }
 
     function openHelp() {

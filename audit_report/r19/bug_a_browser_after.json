@@ -1,0 +1,27 @@
+{
+  "requests": [
+    "http://127.0.0.1:5000/api/signals/horizon?sort=event_date&limit=50&offset=0",
+    "http://127.0.0.1:5000/api/signals?identifier_kind=ipv4&identifier_kind=ipv6&detector=identifiers&signal_type=identifier&sort=event_date&limit=50&offset=0",
+    "http://127.0.0.1:5000/api/signals?identifier_kind=ipv4&identifier_kind=ipv6&detector=identifiers&signal_type=identifier&sort=event_date&limit=50&offset=0"
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:5000/api/signals/horizon?sort=event_date&limit=50&offset=0",
+      "status": 200,
+      "body": "{\"buckets\":[{\"contents\":0,\"from\":null,\"key\":\"overdue\",\"listed\":true,\"signals\":0,\"to\":\"2026-10-26\"},{\"contents\":0,\"from\":\"2026-10-27\",\"key\":\"week\",\"listed\":true,\"signals\":0,\"to\":\"2026-11-02\"},{\"contents\":0,\"from\":\"2026-11-03\",\"key\":\"month\",\"listed\":true,\"signals\":0,\"to\":\"2026-11-25\"},{\"contents\":0,\"f"
+    },
+    {
+      "url": "http://127.0.0.1:5000/api/signals?identifier_kind=ipv4&identifier_kind=ipv6&detector=identifiers&signal_type=identifier&sort=event_date&limit=50&offset=0",
+      "status": 200,
+      "body": "{\"contents\":0,\"criteria\":{\"analyst_categories\":[],\"analyst_scope\":\"all\",\"case_sensitive\":false,\"categories\":[],\"date_field\":\"file_date\",\"date_from\":null,\"date_to\":null,\"file_statuses\":null,\"file_types\":[],\"hide_duplicates\":false,\"include_child_categories\":false,\"keyword_logic\":\"AND\",\"keywords\":[],\"o"
+    },
+    {
+      "url": "http://127.0.0.1:5000/api/signals?identifier_kind=ipv4&identifier_kind=ipv6&detector=identifiers&signal_type=identifier&sort=event_date&limit=50&offset=0",
+      "status": 200,
+      "body": "{\"contents\":0,\"criteria\":{\"analyst_categories\":[],\"analyst_scope\":\"all\",\"case_sensitive\":false,\"categories\":[],\"date_field\":\"file_date\",\"date_from\":null,\"date_to\":null,\"file_statuses\":null,\"file_types\":[],\"hide_duplicates\":false,\"include_child_categories\":false,\"keyword_logic\":\"AND\",\"keywords\":[],\"o"
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "banner": "Skip to main content\nSYLTHARAE System\nWORK\nDashboard\nDISCOVER\nFile Library\nSearch\nSources\nSides\nKeywords\nWords\nCategories\nEmail Words\nNotifications\nHorizon & Signal Explorer\nMonitoring\nINGEST\nInput / Ingestion\nImport Center\nANALYZE\nFile Management and Analysis\nPath Analysis\nMap Viewer\nBatch Analysis\nCLASSIFY\nLEXIS Cosmos\nAnalyst Categories\nClassification\nREPORT\nComprehensive Dashboard\nReports\nReports Dashboard\nSchedules\nCharts Dashboard\nOPERATE\nDetection\nJobs\nImport/Export\nDeprecated\nADMINISTRATION\nRetention\nUser Management\nAudit Log\nSETTINGS\nSettings\nTranslation Management\nVersion 2.2.0\nSource code (AGPL-3.0)\nHome\nHorizon & Signal Explorer\n Horizon & Signal Explorer\nEN\nadmin\nAdmin\nHorizon & Signal Explorer\n\nDates, places and other signals detected in stored documents, with the evidence for each.\n\nApply\nClear\nExport\nPage Tips & Instructions\nWhat you are looking at\nSignals are detected once, when a document is stored or re-analysed. This page reads the stored results; it does not re-read documents.\nHorizon groups dated references by where their date falls relative to the reference date: overdue, next 7 days, next 30 days, next 90 days, later.\nOverdue means the sentence spoke of the "
+}

@@ -361,8 +361,47 @@ class Fixtures:
         self.notes["notification"] = (f"a={len(mine)} b={len(theirs)}; created by "
                                       "POST /api/notifications/scan, no create endpoint exists")
 
-        # places: the gazetteer is reference data, not an app-created object
-        self.notes["place_id"] = "ENV: no gazetteer loaded; place ids cannot be created through an API"
+        # places: created through the app's own API, which needs the feature
+        # type the request names to have a category row (round 19 turned that
+        # missing row into a 503). The category is reference data the seed
+        # would create; here it is created so the routes get a real object.
+        self._ensure_feature_category("city")
+        resp = self.admin.post("/api/places", json={
+            "label": f"param place {uuid.uuid4().hex[:6]}", "feature_type": "city",
+            "country_codes": ["NL"]})
+        self.valid["place_id"] = _id(resp, "place") or _id(resp)
+        self.notes["place_id"] = f"POST /api/places -> {resp.status_code}"
+        if self.valid.get("place_id"):
+            resp = self.admin.post("/api/place-names", json={
+                "place_id": self.valid["place_id"],
+                "name": f"param alias {uuid.uuid4().hex[:6]}"})
+            self.valid["name_id"] = _id(resp, "name") or _id(resp)
+            self.notes["name_id"] = f"POST /api/place-names -> {resp.status_code}"
+
+        # audit entry: the audit log has no create endpoint, but administrator
+        # actions write to it, so the newest row is a real id.
+        listing = self.admin.get("/api/audit", query_string={"per_page": 1})
+        payload = listing.get_json() or {}
+        entries = payload.get("entries") or payload.get("audit") or payload.get("items") or []
+        self.valid["entry_id"] = entries[0].get("id") if entries else None
+        self.notes["entry_id"] = (f"GET /api/audit -> {listing.status_code}, "
+                                  f"{len(entries)} row(s)")
+
+        # chunked upload: start a session through the API the browser uses.
+        resp = self.admin.post("/api/input/uploads/chunked/start",
+                               json={"filename": "param-probe.bin", "size": 1024})
+        # The id is a uuid hex string, not an integer: _id() would return None.
+        self.valid["upload_id"] = (resp.get_json() or {}).get("upload_id")
+        self.notes["upload_id"] = f"chunked/start -> {resp.status_code}"
+
+        # lexis views: a saved view is per-user, so A and B each create one.
+        def _view(client):
+            resp = client.post("/api/lexis/views", json={
+                "name": f"param view {uuid.uuid4().hex[:6]}", "scope": "root"})
+            return _id(resp, "view") or _id(resp)
+
+        self.valid["view_id"] = _view(self.a)
+        self.other["view_id"] = _view(self.b)
 
         for key in ("source_id", "side_id", "keyword_id", "category_id", "word_id", "path_id",
                     "file_id", "scenario_id", "search_id", "schedule_id", "user_id"):
@@ -370,6 +409,28 @@ class Fixtures:
                 self.notes[key] = f"fixture missing ({self.valid.get(key)!r})"
 
     # -- helpers ---------------------------------------------------------
+    def _ensure_feature_category(self, feature_type: str):
+        """Make sure a feature type has a category row, so a place can exist."""
+        import psycopg2
+        # get_db_config() honours DB_HOST/DB_NAME at read time; the persisted
+        # settings file may still name a database from an earlier run.
+        from settings.config import get_db_config
+
+        cfg = get_db_config()
+        conn = psycopg2.connect(host=cfg["host"], port=cfg["port"], user=cfg["user"],
+                                password=cfg.get("password") or "",
+                                dbname=cfg["database"])
+        try:
+            with conn, conn.cursor() as cur:
+                cur.execute("INSERT INTO words (word) VALUES (%s)"
+                            " ON CONFLICT (word) DO UPDATE SET word = EXCLUDED.word"
+                            " RETURNING id", (feature_type,))
+                word_id = cur.fetchone()[0]
+                cur.execute("INSERT INTO categorys (word_id) VALUES (%s)"
+                            " ON CONFLICT DO NOTHING", (word_id,))
+        finally:
+            conn.close()
+
     def ensure_other_source(self):
         """B's source, recreated if an earlier row deleted it.
 
@@ -454,7 +515,7 @@ def table_counts():
     return counts
 
 
-def verdict_for(status, leaked, variant, effect, owned):
+def verdict_for(status, leaked, variant, effect, owned, real_id=True):
     """Classify one response.
 
     ``owned`` says whether the parameter names an object with an owner (see
@@ -467,7 +528,11 @@ def verdict_for(status, leaked, variant, effect, owned):
         return "NOT-IMPLEMENTED"
     if status >= 500:
         return "SERVER-ERROR"
-    if variant == "other-user" and owned and 200 <= status < 300:
+    # Only a request for an id that actually names an object can prove an
+    # access-control defect. A subresource page asked for job_id="probe"
+    # answers 200 with its own "not found" HTML, which is not a leak - it was
+    # reported as CROSS-USER-200 until this guard.
+    if variant == "other-user" and owned and real_id and 200 <= status < 300:
         return "CROSS-USER-200"
     return "OK"
 
@@ -482,7 +547,12 @@ def string_value(name, rule):
     """A plausible value for a route parameter that is not an id."""
     kind = converters(rule).get(name)
     if kind in ("int", "float"):
-        return None
+        # No object of this kind can be created through the API (a map package
+        # tile needs a downloaded package, an evaluation needs a completed
+        # run). A request for 0 still exercises the route - its answer is a
+        # measurement - where a skipped row is not. The caller records that the
+        # id is synthetic.
+        return 0
     return {"language": "en", "file_type": "txt", "key": "theme", "filename": "x.txt",
             "area": "dashboard", "index": "0", "view_id": "default"}.get(name, "probe")
 
@@ -531,8 +601,18 @@ def main() -> int:
                         values[name] = (fixtures.valid.get(name)
                                         or string_value(name, rule.rule))
                     else:
-                        values[name] = fixtures.other.get(name, fixtures.valid.get(name))
-                    source.append(f"{name}={values[name]}")
+                        # A path parameter that is not an object id (a
+                        # category name, a key, a filename) has no "other
+                        # user" object to create: the same plausible text is
+                        # what makes the request meaningful. Without this
+                        # fallback every such route was reported NO-FIXTURE
+                        # even though the value was already known.
+                        values[name] = (fixtures.other.get(name)
+                                        or fixtures.valid.get(name)
+                                        or string_value(name, rule.rule))
+                    synthetic = (isinstance(values[name], int) and values[name] == 0
+                                 and not fixtures.valid.get(name))
+                    source.append(f"{name}={values[name]}" + ("(synthetic)" if synthetic else ""))
                 if variant == "other-user" and "source_id" in rule.arguments:
                     values["source_id"] = fixtures.ensure_other_source()
                     source = [f"{n}={v}" for n, v in values.items()]
@@ -562,7 +642,9 @@ def main() -> int:
                 except Exception:
                     shape, leaked, snippet = "?", [], ""
                 owned = any(name in OWNED_PARAMS for name in rule.arguments)
-                verdict = verdict_for(status, leaked, variant, effect != "-", owned)
+                real_id = all(isinstance(values[name], int) for name in rule.arguments)
+                verdict = verdict_for(status, leaked, variant, effect != "-", owned,
+                                      real_id=real_id)
                 rows.append((rule.rule, method, rule.endpoint, variant, " ".join(source),
                              status, shape, effect, "|".join(leaked), snippet, verdict))
                 if verdict in ("STACK-TRACE", "SERVER-ERROR", "CROSS-USER-200"):

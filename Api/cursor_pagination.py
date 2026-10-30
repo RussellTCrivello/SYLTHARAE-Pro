@@ -231,48 +231,21 @@ class CursorPagination:
         
         # Filter conditions
         if filters:
-            # Valid column name pattern (alphanumeric, underscore, dot for table.column)
-            valid_column_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_.]*$')
-            
             for column, value in filters.items():
-                # SECURITY: Validate column name to prevent SQL injection
-                if not valid_column_pattern.match(column):
-                    logger.warning(f"Invalid column name in filter, skipping: {column}")
+                if column == 'OR':
+                    # A group of filters joined by OR, e.g. "the text matches
+                    # OR the word id is one of these" - the shape a
+                    # cross-language search needs and a flat AND cannot express.
+                    group_sql, group_params = self._build_or_group(value)
+                    if group_sql:
+                        where_parts.append(group_sql)
+                        params.extend(group_params)
                     continue
-                
-                if isinstance(value, dict):
-                    # Advanced filter: {'op': '>', 'value': 100}
-                    op = value.get('op', '=')
-                    filter_value = value.get('value')
-                    
-                    # SECURITY: Validate operator to prevent SQL injection
-                    if op not in ('=', '!=', '>', '<', '>=', '<=', 'LIKE', 'ILIKE', 'IN', 'BETWEEN'):
-                        logger.warning(f"Invalid operator in filter, skipping: {op}")
-                        continue
-                    
-                    if op in ('=', '!=', '>', '<', '>=', '<=', 'LIKE', 'ILIKE'):
-                        where_parts.append(f"{column} {op} %s")
-                        params.append(filter_value)
-                    elif op == 'IN':
-                        if not isinstance(filter_value, (list, tuple)):
-                            logger.warning(f"IN operator requires list/tuple, got {type(filter_value)}, skipping")
-                            continue
-                        if len(filter_value) == 0:
-                            continue  # Empty IN clause
-                        placeholders = ','.join(['%s'] * len(filter_value))
-                        where_parts.append(f"{column} IN ({placeholders})")
-                        params.extend(filter_value)
-                    elif op == 'BETWEEN':
-                        if not isinstance(filter_value, (list, tuple)) or len(filter_value) != 2:
-                            logger.warning(f"BETWEEN operator requires list/tuple of 2 values, got {filter_value}, skipping")
-                            continue
-                        where_parts.append(f"{column} BETWEEN %s AND %s")
-                        params.extend([filter_value[0], filter_value[1]])
-                else:
-                    # Simple equality filter
-                    where_parts.append(f"{column} = %s")
-                    params.append(value)
-        
+                clause, clause_params = self._build_filter_clause(column, value)
+                if clause:
+                    where_parts.append(clause)
+                    params.extend(clause_params)
+
         where_clause = ''
         if where_parts:
             where_clause = 'WHERE ' + ' AND '.join(where_parts)
@@ -434,6 +407,73 @@ class CursorPagination:
         
         return query.strip(), tuple(params)
     
+    #: Column names a filter may name: alphanumeric, underscore, and a dot for
+    #: ``table.column``. Anything else is skipped with a warning.
+    _VALID_COLUMN = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_.]*$')
+
+    def _build_filter_clause(self, column: str, value):
+        """``(sql, params)`` for one filter entry, or ``('', [])`` when refused.
+
+        Extracted from ``_build_query`` so the OR group can reuse it verbatim:
+        two copies of this logic would drift, and this is where the SQL-injection
+        validation lives.
+        """
+        if not self._VALID_COLUMN.match(column):
+            logger.warning("Invalid column name in filter, skipping: %s", column)
+            return "", []
+        if isinstance(value, dict):
+            op = value.get('op', '=')
+            filter_value = value.get('value')
+            if op not in ('=', '!=', '>', '<', '>=', '<=', 'LIKE', 'ILIKE', 'IN', 'BETWEEN'):
+                logger.warning("Invalid operator in filter, skipping: %s", op)
+                return "", []
+            if op in ('=', '!=', '>', '<', '>=', '<=', 'LIKE', 'ILIKE'):
+                return f"{column} {op} %s", [filter_value]
+            if op == 'IN':
+                if not isinstance(filter_value, (list, tuple)):
+                    logger.warning("IN operator requires list/tuple, got %s, skipping",
+                                   type(filter_value))
+                    return "", []
+                if len(filter_value) == 0:
+                    return "", []
+                placeholders = ','.join(['%s'] * len(filter_value))
+                return f"{column} IN ({placeholders})", list(filter_value)
+            if op == 'BETWEEN':
+                if not isinstance(filter_value, (list, tuple)) or len(filter_value) != 2:
+                    logger.warning("BETWEEN operator requires list/tuple of 2 values,"
+                                   " got %s, skipping", filter_value)
+                    return "", []
+                return f"{column} BETWEEN %s AND %s", [filter_value[0], filter_value[1]]
+            return "", []
+        return f"{column} = %s", [value]
+
+    def _build_or_group(self, group):
+        """``(sql, params)`` for ``{'OR': [filter, filter, ...]}``.
+
+        Each element is a filter mapping built by :meth:`_build_filter_clause`;
+        the clauses are joined with ``OR`` and wrapped in parentheses, so the
+        group composes with the surrounding ``AND``s. A group where every element
+        was refused produces nothing rather than an empty ``()``, which would be
+        a syntax error.
+        """
+        if not isinstance(group, (list, tuple)):
+            logger.warning("OR group requires a list of filters, skipping")
+            return "", []
+        parts, params = [], []
+        for element in group:
+            if not isinstance(element, dict):
+                continue
+            for column, value in element.items():
+                sql, element_params = self._build_filter_clause(column, value)
+                if sql:
+                    parts.append(sql)
+                    params.extend(element_params)
+        if not parts:
+            return "", []
+        if len(parts) == 1:
+            return parts[0], params
+        return "(" + " OR ".join(parts) + ")", params
+
     def _validate_cursor(self, cursor: int) -> bool:
         """Validate that cursor value exists in table."""
         try:
@@ -482,30 +522,22 @@ class CursorPagination:
             if joins:
                 from_clause += ' ' + ' '.join(joins)
             
-            # Build WHERE clause with all filters
+            # Build WHERE clause with all filters, using the same builder as
+            # _build_query so the count and the page can never disagree.
             where_parts = []
             params = []
             if filters:
                 for column, value in filters.items():
-                    if isinstance(value, dict):
-                        # Advanced filter: {'op': '>', 'value': 100}
-                        op = value.get('op', '=')
-                        filter_value = value.get('value')
-                        
-                        if op in ('=', '!=', '>', '<', '>=', '<=', 'LIKE', 'ILIKE'):
-                            where_parts.append(f"{column} {op} %s")
-                            params.append(filter_value)
-                        elif op == 'IN':
-                            placeholders = ','.join(['%s'] * len(filter_value))
-                            where_parts.append(f"{column} IN ({placeholders})")
-                            params.extend(filter_value)
-                        elif op == 'BETWEEN':
-                            where_parts.append(f"{column} BETWEEN %s AND %s")
-                            params.extend([filter_value[0], filter_value[1]])
-                    else:
-                        # Simple equality filter
-                        where_parts.append(f"{column} = %s")
-                        params.append(value)
+                    if column == 'OR':
+                        group_sql, group_params = self._build_or_group(value)
+                        if group_sql:
+                            where_parts.append(group_sql)
+                            params.extend(group_params)
+                        continue
+                    clause, clause_params = self._build_filter_clause(column, value)
+                    if clause:
+                        where_parts.append(clause)
+                        params.extend(clause_params)
             
             where_clause = ''
             if where_parts:

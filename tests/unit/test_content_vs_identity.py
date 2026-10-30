@@ -27,8 +27,14 @@ from pipeline.storage_pipeline import StoragePipeline  # noqa: E402
 
 
 def _text(content):
-    """Run the real content-extraction path (``self`` is unused by it)."""
-    return StoragePipeline._extract_text_from_content(None, content)
+    """Run the real content-extraction path on a real, uninitialised instance.
+
+    The method reads ``self._media_metadata_text`` (reader provenance, 1c60be5),
+    so passing ``None`` used to raise inside a broad ``except`` and return "";
+    ``object.__new__`` gives a real instance without opening a database.
+    """
+    return StoragePipeline._extract_text_from_content(
+        object.__new__(StoragePipeline), content)
 
 
 def _detection_payload():

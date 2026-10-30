@@ -20,6 +20,7 @@ from Api.performance_utils import batch_load_keywords
 from datetime import datetime
 import logging
 from core.serialization import pack_int_list
+from services.i18n.term_search import expand_for_search
 from Api.blueprints.files import _documents_panel_response, unpack_int_list
 from core.errors import client_error, client_safe_message
 
@@ -621,11 +622,16 @@ def register_keywords_routes(app):
                 # Bounded search (core/keyword_search.py): the keywords are
                 # streamed and only the requested page is kept in memory. The
                 # matches, their order and the total are unchanged.
+                # Cross-language recall: the query also matches a keyword one
+                # of whose words is the translation of what was typed.
+                expansion = expand_for_search(query)
+                needle_ids = list(expansion.word_ids) or None
                 result = fetch_page(
                     lambda p, n: keyword_page(
                         execute_query, page=p, size=n, needle=query.lower(),
                         conditions=where_conditions, params=params,
-                        rank=api_rank(sort_by, sort_order == 'desc')),
+                        rank=api_rank(sort_by, sort_order == 'desc'),
+                        needle_ids=needle_ids),
                     req)
                 page_rows = result.rows
                 keywords_rows = page_rows  # read by the empty-result diagnostics below

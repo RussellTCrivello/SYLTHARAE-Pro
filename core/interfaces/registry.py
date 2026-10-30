@@ -189,7 +189,7 @@ REGISTRY: Tuple[Interface, ...] = (
         # switching Categories off must hide it too (an unregistered page
         # endpoint is refused outright by the request gate).
         aliases=("category_words", "category_add", "category_documents",
-                 "categories_tree_page"),
+                 "categories_tree_page", "category_names"),
         help_topic="discover/categories",
     ),
     _if(

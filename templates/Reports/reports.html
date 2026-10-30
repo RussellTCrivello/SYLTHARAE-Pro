@@ -15,6 +15,7 @@
 {% block title %}{{ _('Reports') }}{% endblock %}
 
 {% block content %}
+{% from 'components/table.html' import data_table %}
 <div class="page-container" id="reportsPage">
     <div class="page-header">
         <div>
@@ -116,8 +117,7 @@
         <div class="card-header">
             <h5 class="mb-0">{{ _('File type') }}</h5>
         </div>
-        <div class="table-responsive">
-            <table class="table table-sm table-hover align-middle mb-0" id="reportByType">
+        {% call data_table(id='reportByType', variant='sm table-hover align-middle', extra_class='mb-0') %}
                 <thead>
                     <tr>
                         <th scope="col">{{ _('File type') }}</th>
@@ -142,8 +142,8 @@
                     </tr>
                     {% endfor %}
                 </tbody>
-            </table>
-        </div>
+            
+        {% endcall %}
     </div>
 
     <div class="row g-3">

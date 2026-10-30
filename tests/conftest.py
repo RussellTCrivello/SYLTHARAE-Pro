@@ -22,6 +22,40 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 # Isolated application data root for tests (Phase 19).
 os.environ.setdefault("APP_DATA_DIR", str(PROJECT_ROOT / ".test_runtime"))
+# The map tree is tracked in the checkout (map_data/registry.db is the 15 MB
+# tile cache), so a run that opened it left a modified binary in `git status`
+# and made "did this run change anything?" unanswerable. The writable tree is
+# moved into the same ignored runtime directory the rest of the test state
+# uses; the shipped catalog is copied in, because the tests read it.
+_MAP_DATA = PROJECT_ROOT / ".test_runtime" / "map_data"
+os.environ.setdefault("MAP_DATA_DIR", str(_MAP_DATA))
+_MAP_DATA.mkdir(parents=True, exist_ok=True)
+_SHIPPED_CATALOG = PROJECT_ROOT / "map_data" / "catalog.json"
+if _SHIPPED_CATALOG.is_file() and not (_MAP_DATA / "catalog.json").exists():
+    (_MAP_DATA / "catalog.json").write_bytes(_SHIPPED_CATALOG.read_bytes())
+# What the checkout looked like before this run touched it. A developer running
+# the suite from a dirty tree is normal; a run that *adds* to that dirt is not.
+# ``tests/unit/test_run_leaves_no_tracked_changes.py`` compares the two, so
+# "the suite does not write the repository" is measured per run instead of
+# assumed.
+GIT_STATUS_AT_START = _MAP_DATA.parent / "git_status_at_start.txt"
+
+
+def _record_git_status() -> None:
+    import subprocess
+
+    try:
+        completed = subprocess.run(["git", "status", "--porcelain", "--untracked-files=all"],
+                                   cwd=str(PROJECT_ROOT), capture_output=True,
+                                   text=True, timeout=120)
+    except Exception:                                    # noqa: BLE001 - no git, no test
+        return
+    if completed.returncode == 0:
+        GIT_STATUS_AT_START.write_text(completed.stdout, encoding="utf-8")
+
+
+_record_git_status()
+
 os.environ.setdefault("FLASK_SECRET_KEY", "test-secret-key-not-for-production-0123456789")
 os.environ.setdefault("FLASK_ENV", "development")
 
@@ -317,6 +351,43 @@ def pg_db(pg_settings, tmp_path_factory):
     yield cfg
 
 
+# The isolation helpers live in tests/suite_isolation.py so they can be tested
+# without pytest; this file only wires them into the session.
+from suite_isolation import (  # noqa: E402  (import after PROJECT_ROOT is on sys.path)
+    application_tables,
+    module_needs_database,
+    reset_database,
+    restore_reference_data,
+)
+
+
+@pytest.fixture(scope="module", autouse=True)
+def database_state_is_module_local(request):
+    """Start and end every database module against an empty application schema.
+
+    Module scope, not session scope: a module is the unit that seeds its own
+    data, so it is the unit that has to see only its own. Modules that never
+    ask for ``pg_db`` are untouched and never start a server.
+
+    The administrative user is a module-scoped fixture as well (see
+    ``admin_credentials``), so it is recreated after each reset instead of
+    disappearing with the rows that created it.
+    """
+    # pytest no longer keeps the collected items on the node, so the module's
+    # tests are read from the session: only modules that actually ask for
+    # ``pg_db`` pay for a reset (and for starting a server).
+    if not module_needs_database(getattr(request.node, "path", ""),
+                                 request.session.items):
+        yield
+        return
+    cfg = request.getfixturevalue("pg_db")
+    reset_database(cfg)
+    try:
+        yield
+    finally:
+        reset_database(cfg)
+
+
 _WEB_APP_PREPARED = False
 _WEB_APP = None
 
@@ -443,9 +514,14 @@ def client(app):
     return app.test_client()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def admin_credentials(pg_db):
-    """Ensure an initial admin exists; return (username, password)."""
+    """Ensure an initial admin exists; return (username, password).
+
+    Module scope, matching ``database_state_is_module_local``: each module
+    starts from an empty schema, so the admin has to be created again for each
+    one. The fixture is idempotent, so the cost is one lookup per module.
+    """
     from core.security.service import get_auth_service
 
     auth = get_auth_service()

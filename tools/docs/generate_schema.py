@@ -51,6 +51,26 @@ def _type(data_type: str, length) -> str:
     return f"{data_type}({length})" if length else data_type
 
 
+#: Control characters that cannot appear inside a one-line markdown entry.
+_CONTROL = {"\t": "\\t", "\n": "\\n", "\r": "\\r", "\f": "\\f", "\v": "\\v"}
+
+
+def _visible(text: str) -> str:
+    """Escape control characters so a definition stays on one line.
+
+    ``pg_get_constraintdef`` returns the expression verbatim, so a CHECK that
+    compares against an explicit whitespace class - ``btrim(name, E' \\t\\n\\r\\f\\v')``,
+    which ``m0005`` adds - arrives with real control characters in it. Written
+    as-is they end the markdown line, and reading the file back (text mode,
+    universal newlines) rewrites the CR as an LF, so the stored file could
+    never equal what the generator produced and
+    ``tests/integration/test_schema_reference.py`` failed even against a file
+    that had just been regenerated. Escaping keeps one line per definition and
+    makes the round trip stable.
+    """
+    return "".join(_CONTROL.get(ch, ch) for ch in text)
+
+
 def _default(value) -> str:
     if value is None:
         return ""
@@ -88,13 +108,13 @@ def render(columns, constraints, indexes, migrations) -> str:
         if cons.get(table):
             out += ["", "Constraints:", ""]
             for name, kind, definition in cons[table]:
-                out.append(f"- {_KIND.get(kind, kind)} `{name}`: `{definition}`")
+                out.append(f"- {_KIND.get(kind, kind)} `{name}`: `{_visible(definition)}`")
         extra = [(n, d) for n, d in idx.get(table, [])
                  if n not in {c[0] for c in cons.get(table, [])}]
         if extra:
             out += ["", "Indexes:", ""]
             for name, definition in extra:
-                using = definition.split(" USING ", 1)[-1]
+                using = _visible(definition).split(" USING ", 1)[-1]
                 unique = "unique " if definition.startswith("CREATE UNIQUE") else ""
                 out.append(f"- {unique}`{name}` - {using}")
         out.append("")

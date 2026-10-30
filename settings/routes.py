@@ -1130,7 +1130,7 @@ def settings_page():
     from .settings_adapter import get_interface_manager
     
     try:
-        from version import get_version
+        from core.app_version import get_version
     except ImportError:
         def get_version():
             return "3.0.0"
@@ -1162,7 +1162,7 @@ def register_settings_page_route(app):
     from .settings_adapter import get_interface_manager
     
     try:
-        from version import get_version
+        from core.app_version import get_version
     except ImportError:
         def get_version():
             return "3.0.0"

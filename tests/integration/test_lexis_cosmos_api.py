@@ -516,6 +516,82 @@ def test_every_export_returns_rows_for_the_scope(admin_client, page_data, corpus
     assert payload["rows"], f"{kind} export returned nothing for three seeded files"
 
 
+def test_an_empty_scope_answers_with_an_empty_row_set(admin_client, page_data):
+    """A taxonomy with no terms yet must still produce a file, not a 400.
+
+    Measured before the fix: the export dialog on an empty installation read
+    "Request failed (400) / no files were supplied" and the Download button
+    wrote a 46-byte CSV containing that error. A data export of nothing is an
+    empty table, which is a legitimate answer; only the ZIP refuses.
+    """
+    urls = page_data["urls"]
+    # A filter that matches nothing is a scope with no files in it, whatever the
+    # database already contains.
+    empty_scope = {"focus": "root", "q": "no-such-term-in-this-installation"}
+    for key in ("exportColumns", "exportReview", "exportText",
+                "exportOriginals", "exportStructured"):
+        payload = admin_client.post(urls[key], json=empty_scope).get_json()
+        assert payload["success"] is True, key
+        assert payload["rows"] == [], key
+        assert payload["row_count"] == 0, key
+
+
+def test_the_originals_zip_contains_the_files_and_a_manifest(
+        admin_client, page_data, corpus, pg_db, tmp_path):
+    """The archive carries the bytes, and says what it could not carry.
+
+    The seeded rows point at ``/seed/...``, which does not exist here, so the
+    test writes two real files and moves the two rows onto them: one file the
+    archive must contain, and one it must *report* (a path that is deliberately
+    missing) rather than silently drop.
+    """
+    import io
+    import zipfile
+
+    from tests.integration._seed import connect
+
+    present, missing = corpus["paths"][0], corpus["paths"][1]
+    payload = b"lexis original bytes\n"
+    real = tmp_path / "lexis-original.txt"
+    real.write_bytes(payload)
+    absent = tmp_path / "gone.txt"
+    conn = connect(pg_db)
+    try:
+        with conn, conn.cursor() as cur:
+            cur.execute("UPDATE paths SET file_path = %s, file_name = %s WHERE id = %s",
+                        (str(real), "lexis-original.txt", present))
+            cur.execute("UPDATE paths SET file_path = %s, file_name = %s WHERE id = %s",
+                        (str(absent), "gone.txt", missing))
+    finally:
+        conn.close()
+
+    urls = page_data["urls"]
+    assert "exportOriginalsZip" in urls, "the page data must offer the ZIP"
+    response = admin_client.post(urls["exportOriginalsZip"],
+                                 json={"path_ids": [present, missing]})
+    assert response.status_code == 200, response.get_data(as_text=True)[:300]
+    assert response.mimetype == "application/zip"
+    assert response.headers["X-Export-Included"] == "1"
+    assert response.headers["X-Export-Skipped"] == "1"
+
+    with zipfile.ZipFile(io.BytesIO(response.get_data())) as archive:
+        names = archive.namelist()
+        assert "lexis-original.txt" in names
+        assert archive.read("lexis-original.txt") == payload
+        assert "_manifest.txt" in names
+        manifest = archive.read("_manifest.txt").decode("utf-8")
+        assert "LEXIS original files" in manifest
+        assert "gone.txt" in manifest, "a file that could not be included must be named"
+
+
+def test_the_originals_zip_refuses_an_empty_scope(admin_client, page_data):
+    response = admin_client.post(
+        page_data["urls"]["exportOriginalsZip"],
+        json={"focus": "root", "q": "no-such-term-in-this-installation"})
+    assert response.status_code == 400
+    assert "no files" in response.get_json()["error"]
+
+
 def test_a_rename_is_recorded_and_reversible(admin_client, page_data, corpus):
     urls = page_data["urls"]
     path_id = corpus["paths"][1]

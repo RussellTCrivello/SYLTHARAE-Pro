@@ -126,6 +126,11 @@ async function askFilename(promptText, suggested) {
     return String(answer).trim();
 }
 
+/**
+ * POST an export and save the answer. Resolves true when a file was saved,
+ * false when the reader dismissed the save picker, so callers can avoid
+ * announcing success for an export that never reached the disk.
+ */
 async function postDownload(url, body, suggestedName) {
     let destination = null;
     try {
@@ -156,8 +161,7 @@ async function postDownload(url, body, suggestedName) {
         try { filename = decodeURIComponent(match[1].replace(/"/g, '')); }
         catch (_e) { filename = match[1].replace(/"/g, ''); }
     }
-    await saveExportBlob(blob, filename, destination);
-    return true;
+    return (await saveExportBlob(blob, filename, destination)) !== false;
 }
 
 /** Export selected originals/text as ZIP with a chosen name and destination. */
@@ -172,11 +176,12 @@ export async function exportSelectionZip(mode = 'text') {
     );
     if (name === null) return;
     try {
-        await postDownload('/files/export', {
+        const saved = await postDownload('/files/export', {
             file_ids: ids,
             mode: kind,
             filename: name,
         }, ensureExportExtension(name || suggested, 'zip', suggested));
+        if (saved === false) return;  // the reader dismissed the save dialog
         notify('success', t('selectedExportReady', 'Selected-file export ready.'));
     } catch (error) {
         notify('error', (t('selectedExportFailed', 'Selected-file export failed.') + ' ' + error.message).trim());
@@ -400,11 +405,11 @@ export async function exportFileNames({
     const extension = format === 'excel' || format === 'xlsx' ? 'xlsx' : 'csv';
     const suggested = suggestedName
         || `${scope === 'all' ? 'all_indexed' : 'selected'}_filenames_${new Date().toISOString().slice(0, 10)}`;
-    const name = await askFilename(
-        t('filenameExportPrompt', 'Name this filename export (leave blank for an automatic name):'),
-        suggested
-    );
-    if (name === null) return;
+    // No name prompt: the button is a one-click export and the filename is
+    // already descriptive (scope + date). Ctrl/⌘-click asks for a name first,
+    // for the reader who wants one. A prompt in the middle of a toolbar action
+    // was the difference between "export" and "nothing happened".
+    const name = '';
     try {
         const body = {
             scope,
@@ -412,8 +417,9 @@ export async function exportFileNames({
             filename: name,
         };
         if (scope === 'selected') body.file_ids = ids;
-        await postDownload('/api/files/names/export', body,
+        const saved = await postDownload('/api/files/names/export', body,
             ensureExportExtension(name || suggested, extension, suggested));
+        if (saved === false) return;  // the reader dismissed the save dialog
         notify('success', t('selectedNamesReady', 'Filename export ready.'));
     } catch (error) {
         notify('error', error.message || t('exportFailed', 'Export failed'));
@@ -450,6 +456,7 @@ function ensureDetailsDialog() {
                     <select id="fmasDetailsFormat" class="form-select">
                         <option value="csv">CSV</option>
                         <option value="excel">Excel (XLSX)</option>
+                        <option value="json">JSON (one document, keys per column)</option>
                     </select>
                 </div>
                 <div class="fmas-ops-field">
@@ -505,18 +512,19 @@ function ensureDetailsDialog() {
             ids = selectedIdsOrWarn();
             if (!ids) return;
         }
-        const extension = format === 'excel' ? 'xlsx' : 'csv';
+        const extension = format === 'excel' ? 'xlsx' : (format === 'json' ? 'json' : 'csv');
         const suggested = `${scope === 'all' ? 'all_indexed' : 'selected'}_file_details_${new Date().toISOString().slice(0, 10)}`;
         try {
             const body = {
                 scope,
                 columns,
-                format: format === 'excel' ? 'excel' : 'csv',
+                format,          // csv | excel | json, as chosen in the dialog
                 filename: filename || suggested,
             };
             if (scope === 'selected') body.file_ids = ids;
-            await postDownload('/api/files/details/export', body,
+            const saved = await postDownload('/api/files/details/export', body,
                 ensureExportExtension(filename || suggested, extension, suggested));
+            if (saved === false) return;  // the reader dismissed the save dialog
             notify('success', t('detailsExportReady', 'File details export ready.'));
             dialog.hidden = true;
         } catch (error) {
@@ -675,13 +683,14 @@ export async function exportSelectionWithManifest(mode = 'text') {
     // naming_template uses {name} from server; pass explicit map via filename only for archive.
     // Per-file renames are applied client-side for folder exports; for ZIP we send naming_template.
     try {
-        await postDownload('/files/export', {
+        const saved = await postDownload('/files/export', {
             file_ids: resolved.map((r) => r.id),
             mode: kind,
             filename: name,
             naming_template: '{name}',
             rename_map: Object.fromEntries(resolved.map((r) => [String(r.id), r.exportAs])),
         }, ensureExportExtension(name || suggested, 'zip', suggested));
+        if (saved === false) return;  // the reader dismissed the save dialog
         notify('success', t('selectedExportReady', 'Selected-file export ready.'));
     } catch (error) {
         notify('error', (t('selectedExportFailed', 'Selected-file export failed.') + ' ' + error.message).trim());

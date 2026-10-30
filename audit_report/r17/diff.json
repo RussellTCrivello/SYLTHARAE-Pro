@@ -1,0 +1,131 @@
+{
+ "baseline_files": 698,
+ "final_files": 698,
+ "only_in_baseline": [],
+ "only_in_final": [],
+ "verdict_counts_baseline": {
+  "COMPLETE": 328,
+  "OK-NO-ORACLE": 148,
+  "EMPTY-PLAUSIBLE": 143,
+  "ERROR": 50,
+  "UNVERIFIABLE": 20,
+  "NEAR-COMPLETE": 6,
+  "PARTIAL": 2,
+  "EMPTY-AGREED": 1
+ },
+ "verdict_counts_final": {
+  "COMPLETE": 331,
+  "OK-NO-ORACLE": 148,
+  "EMPTY-PLAUSIBLE": 140,
+  "ERROR": 52,
+  "UNVERIFIABLE": 20,
+  "NEAR-COMPLETE": 5,
+  "PARTIAL": 1,
+  "EMPTY-AGREED": 1
+ },
+ "verdict_changes": [
+  {
+   "path": "Documents/protected_normal_case.docx",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "ERROR",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Documents/protected_upper_case.docx",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "ERROR",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Documents/testWORD_2006ml.docx",
+   "baseline": "NEAR-COMPLETE",
+   "final": "COMPLETE",
+   "baseline_recall": 0.9863,
+   "final_recall": 1.0
+  },
+  {
+   "path": "Documents/testWORD_protected_passtika.docx",
+   "baseline": "EMPTY-PLAUSIBLE",
+   "final": "ERROR",
+   "baseline_recall": null,
+   "final_recall": null
+  },
+  {
+   "path": "Other/testWORD_template.dotx",
+   "baseline": "PARTIAL",
+   "final": "COMPLETE",
+   "baseline_recall": 0.8387,
+   "final_recall": 1.0
+  },
+  {
+   "path": "Spreadsheets/testRecordSizeExceeded.xlsx",
+   "baseline": "ERROR",
+   "final": "COMPLETE",
+   "baseline_recall": null,
+   "final_recall": 1.0
+  }
+ ],
+ "recall_changes": [
+  {
+   "path": "Other/testWORD_template.dotx",
+   "baseline": 0.8387,
+   "final": 1.0,
+   "delta": 0.1613
+  },
+  {
+   "path": "Documents/testWORD_2006ml.docx",
+   "baseline": 0.9863,
+   "final": 1.0,
+   "delta": 0.0137
+  }
+ ],
+ "recall_regressions": [],
+ "storage_changes": [
+  {
+   "path": "Documents/testWORD_tableInRunInsideParagraph.docx",
+   "baseline": 939,
+   "final": 1291,
+   "delta_pct": 37.5
+  },
+  {
+   "path": "Other/testWORD_template.dotx",
+   "baseline": 1159,
+   "final": 1437,
+   "delta_pct": 24.0
+  },
+  {
+   "path": "Documents/testWORD_template.docx",
+   "baseline": 1177,
+   "final": 1364,
+   "delta_pct": 15.9
+  },
+  {
+   "path": "Documents/testWORD_formattingFlipUnderlineOrder.docx",
+   "baseline": 10197,
+   "final": 11790,
+   "delta_pct": 15.6
+  },
+  {
+   "path": "Documents/testWORD_missing_text.docx",
+   "baseline": 272,
+   "final": 294,
+   "delta_pct": 8.1
+  },
+  {
+   "path": "Documents/testWORD_2006ml.docx",
+   "baseline": 2996,
+   "final": 3230,
+   "delta_pct": 7.8
+  },
+  {
+   "path": "Documents/testWORD_numbered_list.docx",
+   "baseline": 2142,
+   "final": 2286,
+   "delta_pct": 6.7
+  }
+ ],
+ "stored_chars_baseline": 13555354,
+ "stored_chars_final": 13558676
+}

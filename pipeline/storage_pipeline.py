@@ -1508,6 +1508,73 @@ class StoragePipeline:
         if detection:
             provenance["detection"] = detection
 
+        # ---- scale: was a cap reached? ----
+        # Not diagnostics about a failure but about how much of the container
+        # was read: a sheet stopped at the cell cap and a sheet that ended
+        # there both store text, and only this record keeps the difference.
+        scale = {key: content.get(key)
+                 for key in ("truncated", "cells_read", "cells_available",
+                             "rows_read", "members_skipped")
+                 if content.get(key) is not None}
+        # A reader that caps per container reports the cap per container; sum
+        # it here rather than losing it, and let the total say "a cap was hit"
+        # even when no single sheet flags itself.
+        sheets = content.get("sheets")
+        if isinstance(sheets, dict):
+            sheet_list = [s for s in sheets.values() if isinstance(s, dict)]
+            if sheet_list:
+                if "cells_read" not in scale:
+                    read = [s.get("cells_read") for s in sheet_list
+                            if isinstance(s.get("cells_read"), int)]
+                    if read:
+                        scale["cells_read"] = sum(read)
+                if "cells_available" not in scale:
+                    available = [s.get("cells_available") for s in sheet_list
+                                 if isinstance(s.get("cells_available"), int)]
+                    if available:
+                        scale["cells_available"] = sum(available)
+                if "truncated" not in scale and any(s.get("truncated")
+                                                    for s in sheet_list):
+                    scale["truncated"] = True
+        if scale:
+            provenance["scale"] = scale
+
+        # ---- container forensics ----
+        # PDF incremental updates are a *count* (how many times the file was
+        # appended to, so how many earlier revisions are still inside it), not
+        # a name and not a sentence. Round 17 recorded this key as dropped
+        # text; measuring the reader showed there is no text in it, so it is
+        # stored here as structure instead of being pushed into the body where
+        # "3" would be noise.
+        forensics: Dict[str, Any] = {}
+        revisions = content.get("revisions")
+        if isinstance(revisions, dict) and revisions:
+            forensics["revisions"] = {
+                key: revisions.get(key) for key in
+                ("incremental_updates", "eof_markers", "scan_bytes", "scan_truncated")
+                if revisions.get(key) is not None
+            }
+        if forensics:
+            provenance["forensics"] = forensics
+
+        # ---- media containers ----
+        # Duration, streams and the container's own tags are structure, so they
+        # are queryable here; the searchable copy is in the text channel (see
+        # _media_metadata_text). speech_extracted is recorded even when it is
+        # False: "we read the container and not the speech" is a fact about the
+        # artifact that must survive storage.
+        media: Dict[str, Any] = {}
+        for key in ("duration_seconds", "duration_formatted", "resolution",
+                    "width", "height", "codec", "fps", "audio_codec",
+                    "audio_sample_rate", "has_audio", "metadata_source",
+                    "metadata_only", "speech_extracted", "missing_dependency"):
+            if content.get(key) is not None:
+                media[key] = content.get(key)
+        if isinstance(content.get("tags"), dict) and content["tags"]:
+            media["tags"] = content["tags"]
+        if media:
+            provenance["media"] = media
+
         # ---- extraction diagnostics ----
         info = content.get("extraction_info")
         if isinstance(info, dict) and info:
@@ -1521,6 +1588,13 @@ class StoragePipeline:
                     # often), so the condition is queryable after the run.
                     "decoder_missing", "members_total", "members_read",
                     "members_unreadable",
+                    # Scale: whether a cap was reached, and how much of the
+                    # container was read. A spreadsheet stopped at 250 000
+                    # cells and one that ended there both store text; without
+                    # these keys the archive cannot tell them apart, and a
+                    # capped read silently claims completeness.
+                    "truncated", "cells_read", "cells_available",
+                    "rows_read", "members_skipped",
                     # HTML: where a document's characters went (visible text
                     # versus inline script/style and excluded comments).
                     "visible_text_chars", "script_chars", "style_chars",
@@ -1749,6 +1823,69 @@ class StoragePipeline:
         
         return str(title)
     
+    #: Reader keys that describe a media container rather than text inside it.
+    _MEDIA_FIELDS = (
+        ("duration_formatted", "Duration"),
+        ("resolution", "Resolution"),
+        ("codec", "Video codec"),
+        ("fps", "Frame rate"),
+        ("frame_count", "Frame count"),
+        ("audio_codec", "Audio codec"),
+        ("audio_sample_rate", "Audio sample rate"),
+        ("has_audio", "Has audio"),
+        ("quality", "Quality"),
+        ("file_size_formatted", "File size"),
+        ("metadata_source", "Metadata source"),
+    )
+
+    def _media_metadata_text(self, content: Dict) -> str:
+        """The container facts of an audio/video artifact, as stored text.
+
+        A video or audio read produces metadata, not prose, and the text
+        builder used to drop all of it: the readers reported duration,
+        resolution, codec and container tags, and the store kept zero
+        characters for every media file in the corpus. Duration and codec are
+        facts an examiner searches for, so they are stored as labelled lines;
+        the honest scope of the read is stored with them.
+        """
+        if not isinstance(content, dict):
+            return ""
+        if not (content.get("extraction_scope") == "container_metadata"
+                or content.get("duration_seconds") is not None
+                or content.get("resolution")
+                or content.get("audio_codec")):
+            return ""
+        if any(isinstance(content.get(key), list) and content.get(key)
+               for key in ("pages", "slides", "sheets", "paragraphs")):
+            # A container that also yielded text (an embedded transcript, for
+            # instance) is handled by its own branch; the metadata is added
+            # alongside, not instead.
+            pass
+        parts: List[str] = []
+        lines: List[str] = []
+        for key, label in self._MEDIA_FIELDS:
+            value = content.get(key)
+            if value in (None, "", False) and key != "has_audio":
+                continue
+            if key == "has_audio" and value is None:
+                continue
+            if key == "duration_formatted" and content.get("duration_seconds"):
+                value = f"{value} ({content['duration_seconds']:.2f} s)"
+            lines.append(f"{label}: {value}")
+        tags = content.get("tags")
+        if isinstance(tags, dict):
+            for key, value in tags.items():
+                if value:
+                    lines.append(f"Tag {key}: {value}")
+        if content.get("speech_extracted") is False:
+            lines.append("Speech: not extracted (no transcription engine)")
+        if lines:
+            parts.append("\n".join(lines))
+        note = content.get("extraction_note")
+        if isinstance(note, str) and note.strip():
+            parts.append(note.strip())
+        return "\n".join(parts)
+
     def _extract_text_from_content(self, content: Dict) -> str:
         """
         Extract text from content dictionary (all types)
@@ -1776,7 +1913,13 @@ class StoragePipeline:
             # spatial_position: numeric value for sorting (page_number * 1000000 + y_coord * 1000 + x_coord)
             # coordinates: optional dict with x, y, width, height for spatial reference
             ordered_content = []
-            
+
+            # 0. MEDIA CONTAINER METADATA
+            # Before any body text: a media artifact's facts are its content.
+            media_text = self._media_metadata_text(content)
+            if media_text:
+                ordered_content.append((-1, 'media_metadata', 0, media_text, None))
+
             # 1. IMAGES (OCR text only - no metadata)
             # Store ONLY the OCR text, preserving formatting
             # Detect images by checking for OCR-related keys (ocr_attempted, ocr_successful, ocr_language)
@@ -1926,6 +2069,21 @@ class StoragePipeline:
                         pdf_metadata_parts.append(f"Creator: {meta['creator']}")
                     if meta.get('producer'):
                         pdf_metadata_parts.append(f"Producer: {meta['producer']}")
+                    # The rest of the document information dictionary. Keywords
+                    # are words an analyst searches for and the two dates say
+                    # when the document was written and last changed; all five
+                    # were read by the reader and dropped here. Labelled, so a
+                    # consumer can tell them from body text.
+                    for key, label in (("keywords", "Keywords"),
+                                       ("creationDate", "Created"),
+                                       ("modDate", "Modified"),
+                                       ("format", "PDF version"),
+                                       ("trapped", "Trapped")):
+                        value = meta.get(key)
+                        if isinstance(value, (list, tuple)):
+                            value = ", ".join(str(item) for item in value if item)
+                        if value and str(value).strip():
+                            pdf_metadata_parts.append(f"{label}: {str(value).strip()}")
                 
                 if pdf_metadata_parts:
                     # Metadata at position 0 (before all pages)
@@ -2005,7 +2163,14 @@ class StoragePipeline:
                         # Extract data if available - ensure row order is preserved
                         sheet_text = ""
                         if 'data' in sheet_data:
-                            sheet_text = self._extract_sheet_text(sheet_data['data'])
+                            # Blank rows are not stored as rows (they are not
+                            # content), but they are addresses: the reader
+                            # records which row numbers it kept so the gap can
+                            # be written back as empty lines. Without it a value
+                            # in Sheet1!D6 was cited as Sheet1!D4 - the shift
+                            # is exactly the number of blank rows above it.
+                            sheet_text = self._extract_sheet_text(
+                                sheet_data['data'], sheet_data.get('row_numbers'))
                         
                         # Combine all parts
                         combined_sheet_text = sheet_header + headers_text + sheet_text
@@ -2603,17 +2768,22 @@ class StoragePipeline:
             text = re.sub(r'[\r\n\t]+', ' ', text)
         return text
 
-    def _extract_sheet_text(self, data: List[List]) -> str:
-        """
-        Extract text from Excel/ODS sheet data - comprehensive extraction
-        Uses tab delimiters for clear cell separation to enable accurate display
+    def _extract_sheet_text(self, data: List[List], row_numbers: Optional[List[int]] = None) -> str:
+        """Extract text from a sheet grid, one line per row, tab-delimited.
+
+        ``row_numbers`` are the sheet's own 1-based row numbers for ``data``
+        (when the reader skipped entirely empty rows). They are used to write
+        the skipped rows back as empty lines, because the address of every
+        cell below them depends on those lines existing. A format that keeps
+        empty rows in the grid simply passes nothing.
         """
         text_parts = []
         
         if not data:
             return ""
-        
-        for row in data:
+
+        previous_number = 0
+        for position, row in enumerate(data):
             # Handle both list of cells and other formats
             if isinstance(row, (list, tuple)):
                 # Convert to strings; a cell never spans a line
@@ -2625,9 +2795,19 @@ class StoragePipeline:
                 # Single value row
                 row_text = self._cell_text(row)
             
+            number = None
+            if row_numbers and position < len(row_numbers):
+                try:
+                    number = int(row_numbers[position])
+                except (TypeError, ValueError):
+                    number = None
+            if number is not None and number > previous_number + 1:
+                text_parts.extend([''] * (number - previous_number - 1))
             # Include all rows (even empty ones) to preserve structure
             text_parts.append(row_text)
-        
+            if number is not None:
+                previous_number = number
+
         return '\n'.join(text_parts)
     
     def _extract_table_text(self, rows: List[List]) -> str:

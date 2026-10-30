@@ -1689,6 +1689,102 @@
     "internal": true
   },
   {
+    "endpoint": "api_taxonomy_status",
+    "rule": "/api/taxonomy/status",
+    "methods": [
+      "GET"
+    ],
+    "blueprint": "(app)",
+    "module": "taxonomy_api",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "api_taxonomy_sync",
+    "rule": "/api/taxonomy/sync",
+    "methods": [
+      "POST"
+    ],
+    "blueprint": "(app)",
+    "module": "taxonomy_api",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "api_term_labels",
+    "rule": "/api/i18n/term-labels",
+    "methods": [
+      "GET"
+    ],
+    "blueprint": "(app)",
+    "module": "i18n_terms",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "api_term_names_create",
+    "rule": "/api/term-names",
+    "methods": [
+      "POST"
+    ],
+    "blueprint": "(app)",
+    "module": "i18n_terms",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "api_term_names_delete",
+    "rule": "/api/term-names/<int:name_id>",
+    "methods": [
+      "DELETE"
+    ],
+    "blueprint": "(app)",
+    "module": "i18n_terms",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "api_term_names_import",
+    "rule": "/api/term-names/import",
+    "methods": [
+      "POST"
+    ],
+    "blueprint": "(app)",
+    "module": "i18n_terms",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "api_term_names_list",
+    "rule": "/api/term-names",
+    "methods": [
+      "GET"
+    ],
+    "blueprint": "(app)",
+    "module": "i18n_terms",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "api_term_names_update",
+    "rule": "/api/term-names/<int:name_id>",
+    "methods": [
+      "PUT"
+    ],
+    "blueprint": "(app)",
+    "module": "i18n_terms",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
     "endpoint": "api_update_saved_search",
     "rule": "/api/search/saved/<int:search_id>",
     "methods": [
@@ -2123,6 +2219,18 @@
   {
     "endpoint": "category_documents",
     "rule": "/categories/<int:category_id>/documents",
+    "methods": [
+      "GET"
+    ],
+    "blueprint": "(app)",
+    "module": "categories",
+    "classification": "USER_INTERFACE",
+    "owned_by": "categories",
+    "internal": false
+  },
+  {
+    "endpoint": "category_names",
+    "rule": "/categories/<int:category_id>/names",
     "methods": [
       "GET"
     ],
@@ -3869,6 +3977,19 @@
   {
     "endpoint": "lexis_export_originals",
     "rule": "/api/lexis/export/originals",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "blueprint": "(app)",
+    "module": "lexis_cosmos",
+    "classification": "API_ENDPOINT",
+    "owned_by": null,
+    "internal": true
+  },
+  {
+    "endpoint": "lexis_export_originals_zip",
+    "rule": "/api/lexis/export/originals.zip",
     "methods": [
       "GET",
       "POST"

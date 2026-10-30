@@ -1,0 +1,254 @@
+........................................................................ [  6%]
+.......................................................................s [ 12%]
+...................................................................F.F.. [ 18%]
+........................................................................ [ 24%]
+..........................................................s............. [ 30%]
+........................................................................ [ 36%]
+........................................................................ [ 42%]
+.............F.......................................................... [ 48%]
+........................................................................ [ 54%]
+........................................................................ [ 60%]
+s............................................ssssssssssssssssssssssssss. [ 66%]
+........................................................................ [ 72%]
+........................................................................ [ 78%]
+........................................................................ [ 84%]
+........................................................................ [ 90%]
+......FFFF.............................................................. [ 96%]
+.......................................                                  [100%]
+=================================== FAILURES ===================================
+__________________ test_stored_rows_preserve_exact_positions ___________________
+
+ingested = {'xlsx': 40, 'csv': 39, 'eml': 41}
+
+    def test_stored_rows_preserve_exact_positions(ingested):
+        from Api.utils.utils import load_text_content
+    
+        text = load_text_content(ingested["xlsx"])
+        lines = text.split("\n")
+        # After "Sheet: Sheet1" + Rows/Columns metadata: rows 1..4 in order,
+        # row 3 stored as an EMPTY line (position preserved), row 4 keeps its
+        # leading empty cell (line starts with a tab).
+        sheet_start = next(i for i, ln in enumerate(lines) if ln.startswith("Sheet: Sheet1"))
+        data = lines[sheet_start + 3:sheet_start + 7]
+        assert data[0] == "Region\tRevenue"            # row 1
+        assert data[1] == "EMEA\t4400"                 # row 2
+        # row 3 is blank (kept as a whitespace-only line: empty cells, no data)
+>       assert data[2].strip() == "" and "\t" not in data[2].strip()
+E       AssertionError: assert ('AZUREHERON89d45f89 value' == ''
+E         
+E         + AZUREHERON89d45f89 value)
+
+tests/integration/test_cell_locations_and_recipients.py:162: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+
+📂 Reading directory tree...
+Found 3 files
+  📄 Priority files: 3
+  📑 PDF files: 0 (will be processed second-to-last)
+  🖼️  Image files: 0 (will be processed last)
+
+📄 PHASE 1: Processing 3 priority files...
+✓ No attachments found in {pytest-tmp}/cells_corpus0/broadcast-89d45f89.eml
+----------------------------------------
+Task: Reading file: broadcast-89d45f89.eml
+Elapsed time: 5.47 milliseconds
+----------------------------------------
+----------------------------------------
+Task: Reading file: table-89d45f89.csv
+Elapsed time: 5.39 milliseconds
+----------------------------------------
+
+[33m📈 File Metrics:[0m
+  File:     table-89d45f89.csv
+  Size:     50 B
+  Status:   [32m✓ Success[0m
+  Time:     0.0068 seconds
+
+----------------------------------------
+Task: Reading file: cells-89d45f89.xlsx
+Elapsed time: 17.98 milliseconds
+----------------------------------------
+
+[33m📈 File Metrics:[0m
+  File:     cells-89d45f89.xlsx
+  Size:     5.25 KB
+  Status:   [32m✓ Success[0m
+  Time:     0.0200 seconds
+
+
+[33m📈 File Metrics:[0m
+  File:     broadcast-89d45f89.eml
+  Size:     464 B
+  Status:   [32m✓ Success[0m
+  Time:     0.0410 seconds
+
+✅ PHASE 1 complete: 3 priority files processed
+
+📊 Processing Summary:
+   Total files found: 3
+   Files processed: 2
+   Files skipped (already processed): 1
+   Files stored in database: 3
+      of which new copies of content already stored: 0
+   Files already recorded (nothing new written): 1
+   Storage failures: 0
+------------------------------ Captured log setup ------------------------------
+WARNING  database.services.contents_db_service:contents_db_service.py:1532 Detector places could not run for 'table-89d45f89.csv' (path_id=39): no gazetteer is loaded (migration m0001 not applied?)
+WARNING  pipeline.storage_pipeline:storage_pipeline.py:895 [STORAGE] ⚠️  'table-89d45f89.csv' stored with degraded data: places detector unavailable: no gazetteer is loaded (migration m0001 not applied?)
+WARNING  database.services.contents_db_service:contents_db_service.py:1532 Detector places could not run for 'cells-89d45f89.xlsx' (path_id=40): no gazetteer is loaded (migration m0001 not applied?)
+WARNING  pipeline.storage_pipeline:storage_pipeline.py:895 [STORAGE] ⚠️  'cells-89d45f89.xlsx' stored with degraded data: places detector unavailable: no gazetteer is loaded (migration m0001 not applied?)
+WARNING  database.services.contents_db_service:contents_db_service.py:1532 Detector places could not run for 'broadcast-89d45f89.eml' (path_id=41): no gazetteer is loaded (migration m0001 not applied?)
+WARNING  pipeline.storage_pipeline:storage_pipeline.py:895 [STORAGE] ⚠️  'broadcast-89d45f89.eml' stored with degraded data: places detector unavailable: no gazetteer is loaded (migration m0001 not applied?)
+_____________________ test_search_results_cite_exact_cell ______________________
+
+ingested = {'xlsx': 40, 'csv': 39, 'eml': 41}
+
+    def test_search_results_cite_exact_cell(ingested):
+        from Api.services.search_service import SearchService
+    
+        # The marker sits in Sheet1!B4 (blank row 3 preserved, leading empty
+        # cell preserved).
+        results, _ = SearchService.full_text_search(query=_MARKER, limit=10)
+        hit = next(r for r in results if r["id"] == ingested["xlsx"])
+        assert hit.get("line_matches"), "no line matches for spreadsheet hit"
+        loc = hit["line_matches"][0].get("location")
+>       assert loc == "Sheet1 - B4", f"wrong cell location: {loc!r}"
+E       AssertionError: wrong cell location: 'Sheet1 - B3'
+E       assert 'Sheet1 - B3' == 'Sheet1 - B4'
+E         
+E         - Sheet1 - B4
+E         ?           ^
+E         + Sheet1 - B3
+E         ?           ^
+
+tests/integration/test_cell_locations_and_recipients.py:188: AssertionError
+____ TestTheEvidenceReport.test_the_evidence_report_matches_the_application ____
+
+self = <test_interface_coverage.TestTheEvidenceReport object at 0x7f700251c590>
+app = <Flask 'apps.web.app'>
+admin_client = <FlaskClient <Flask 'apps.web.app'>>
+
+    def test_the_evidence_report_matches_the_application(self, app, admin_client):
+        from core.interfaces.evidence import (
+            BEGIN_APPLICATION,
+            END_APPLICATION,
+            application_block,
+            navigation_observation,
+        )
+    
+>       document = self.REPORT.read_text()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_interface_coverage.py:464: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1059: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('{tmp}/final_base/docs/REGISTRY_EVIDENCE.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '{tmp}/final_base/docs/REGISTRY_EVIDENCE.md'
+
+/usr/lib/python3.11/pathlib.py:1045: FileNotFoundError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[ar] __________________
+
+lang = 'ar'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [ar] 309 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[he] __________________
+
+lang = 'he'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [he] 284 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[fa] __________________
+
+lang = 'fa'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [fa] 284 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+_________________ test_no_catalog_entry_is_empty_or_fuzzy[hr] __________________
+
+lang = 'hr'
+
+    @pytest.mark.parametrize("lang", MAINTAINED)
+    def test_no_catalog_entry_is_empty_or_fuzzy(lang):
+        """A catalog with gaps is a page that silently falls back to English."""
+        catalog = _catalog(lang)
+        bad = []
+        for message in catalog:
+            if not message.id:
+                continue  # the header entry
+            if not message.string or message.fuzzy:
+                bad.append(message.id)
+>       assert not bad, f"[{lang}] {len(bad)} untranslated/fuzzy entries, e.g. {bad[:6]}"
+E       AssertionError: [hr] 359 untranslated/fuzzy entries, e.g. ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name']
+E       assert not ['The extracted text was exported.', 'The extracted text could not be exported.', 'The record was deleted.', 'The record could not be deleted.', 'Screen Inspector', 'Interface name', ...]
+
+tests/integration/test_translation_coverage.py:177: AssertionError
+=============================== warnings summary ===============================
+tests/integration/test_admin_password_recovery.py::test_list_names_the_accounts_that_can_log_in
+  {venv}/lib/python3.11/site-packages/platformdirs/api.py:459: RuntimeDirWarning: XDG_RUNTIME_DIR is not set, falling back to {tmp}
+    return Path(self.user_runtime_dir)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_cell_locations_and_recipients.py::test_stored_rows_preserve_exact_positions
+FAILED tests/integration/test_cell_locations_and_recipients.py::test_search_results_cite_exact_cell
+FAILED tests/integration/test_interface_coverage.py::TestTheEvidenceReport::test_the_evidence_report_matches_the_application
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[ar]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[he]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[fa]
+FAILED tests/integration/test_translation_coverage.py::test_no_catalog_entry_is_empty_or_fuzzy[hr]

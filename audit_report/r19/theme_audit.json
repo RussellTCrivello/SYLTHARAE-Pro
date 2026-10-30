@@ -1,0 +1,1276 @@
+[
+  {
+    "path": "/",
+    "system": "light",
+    "mode": "light",
+    "title": "Comprehensive File Analytics",
+    "lightSurfaces": [
+      {
+        "element": "ol.breadcrumb.mb-0",
+        "bg": "rgb(255, 255, 255)",
+        "area": 42852
+      },
+      {
+        "element": "div#opsWidget.card.shadow-sm.mb-3",
+        "bg": "rgb(255, 255, 255)",
+        "area": 221640
+      },
+      {
+        "element": "div.card-header.d-flex.justify-content-between",
+        "bg": "rgb(248, 250, 252)",
+        "area": 44536
+      },
+      {
+        "element": "table.table.table-sm.mb-0",
+        "bg": "rgb(255, 255, 255)",
+        "area": 45733
+      },
+      {
+        "element": "div.page-header",
+        "bg": "rgb(255, 255, 255)",
+        "area": 122793
+      },
+      {
+        "element": "div.tips-warning",
+        "bg": "rgba(254, 226, 226, 0.7)",
+        "area": 78780
+      },
+      {
+        "element": "div.dashboard-navigation.section-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 86839
+      },
+      {
+        "element": "div.stat-card.primary",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.success",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.warning",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.info",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.primary",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.warning",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.success",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.stat-card.info",
+        "bg": "rgb(255, 255, 255)",
+        "area": 52177
+      },
+      {
+        "element": "div.section-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 1003770
+      },
+      {
+        "element": "button.btn-control",
+        "bg": "rgb(255, 255, 255)",
+        "area": 2769
+      },
+      {
+        "element": "div.chart-container.large",
+        "bg": "rgb(255, 255, 255)",
+        "area": 792400
+      },
+      {
+        "element": "div.chart-controls-wrapper",
+        "bg": "rgba(255, 255, 255, 0.6)",
+        "area": 68166
+      },
+      {
+        "element": "select#chartTypeSelect_timelineChart.chart-type-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 32893
+      },
+      {
+        "element": "div.section-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 425279
+      },
+      {
+        "element": "div.chart-container",
+        "bg": "rgb(255, 255, 255)",
+        "area": 317400
+      },
+      {
+        "element": "div.chart-controls-wrapper",
+        "bg": "rgba(255, 255, 255, 0.6)",
+        "area": 30177
+      },
+      {
+        "element": "select#chartTypeSelect_fileTypeChart.chart-type-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 10582
+      },
+      {
+        "element": "div.section-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 425279
+      },
+      {
+        "element": "div.chart-container",
+        "bg": "rgb(255, 255, 255)",
+        "area": 317400
+      },
+      {
+        "element": "div.chart-controls-wrapper",
+        "bg": "rgba(255, 255, 255, 0.6)",
+        "area": 30177
+      },
+      {
+        "element": "select#chartTypeSelect_processingChart.chart-type-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 10582
+      }
+    ],
+    "lightControls": [
+      {
+        "element": "button.btn-control",
+        "bg": "rgb(255, 255, 255)",
+        "area": 2418,
+        "text": "24H"
+      },
+      {
+        "element": "button.btn-control",
+        "bg": "rgb(255, 255, 255)",
+        "area": 2769,
+        "text": "Week"
+      },
+      {
+        "element": "button.btn-control",
+        "bg": "rgb(255, 255, 255)",
+        "area": 2496,
+        "text": "Year"
+      },
+      {
+        "element": "select#chartTypeSelect_timelineChart.chart-type-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 32893,
+        "text": "BarLinePieDoughnutRadarPolar A"
+      },
+      {
+        "element": "button.chart-export-toggle",
+        "bg": "rgba(255, 255, 255, 0.9)",
+        "area": 1296,
+        "text": ""
+      },
+      {
+        "element": "button.chart-customize-toggle",
+        "bg": "rgba(255, 255, 255, 0.9)",
+        "area": 1296,
+        "text": ""
+      },
+      {
+        "element": "select#chartTypeSelect_fileTypeChart.chart-type-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 10582,
+        "text": "BarLinePieDoughnutRadarPolar A"
+      },
+      {
+        "element": "button.chart-export-toggle",
+        "bg": "rgba(255, 255, 255, 0.9)",
+        "area": 1296,
+        "text": ""
+      },
+      {
+        "element": "button.chart-customize-toggle",
+        "bg": "rgba(255, 255, 255, 0.9)",
+        "area": 1296,
+        "text": ""
+      },
+      {
+        "element": "select#chartTypeSelect_processingChart.chart-type-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 10582,
+        "text": "BarLinePieDoughnutRadarPolar A"
+      },
+      {
+        "element": "button.chart-export-toggle",
+        "bg": "rgba(255, 255, 255, 0.9)",
+        "area": 1296,
+        "text": ""
+      },
+      {
+        "element": "button.chart-customize-toggle",
+        "bg": "rgba(255, 255, 255, 0.9)",
+        "area": 1296,
+        "text": ""
+      }
+    ],
+    "lowContrast": [
+      {
+        "element": "span.sidebar-nav-badge",
+        "ink": "rgb(15, 23, 42)",
+        "bg": "rgb(30, 41, 59)",
+        "ratio": 1.22,
+        "need": 4.5,
+        "text": "Deprecated"
+      },
+      {
+        "element": "span.text-muted.small.topbar-page-identity",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "Dashboard"
+      },
+      {
+        "element": "span#opsActive.small.text-muted",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "0 active \u00b7"
+      },
+      {
+        "element": "a.btn.btn-sm.btn-primary",
+        "ink": "rgb(255, 255, 255)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 1,
+        "need": 4.5,
+        "text": "New Ingestion"
+      },
+      {
+        "element": "div#filesChange.change.positive",
+        "ink": "rgb(16, 185, 129)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 2.54,
+        "need": 4.5,
+        "text": "3 this week"
+      }
+    ],
+    "counts": {
+      "lightSurfaces": 28,
+      "lightControls": 12,
+      "lowContrast": 5
+    }
+  },
+  {
+    "path": "/files",
+    "system": "light",
+    "mode": "light",
+    "title": "File Library",
+    "lightSurfaces": [
+      {
+        "element": "ol.breadcrumb.mb-0",
+        "bg": "rgb(255, 255, 255)",
+        "area": 42820
+      },
+      {
+        "element": "div.page-header",
+        "bg": "rgb(255, 255, 255)",
+        "area": 102152
+      },
+      {
+        "element": "div.stat-card.stat-card-total",
+        "bg": "rgb(255, 255, 255)",
+        "area": 32341
+      },
+      {
+        "element": "div.stat-card.stat-card-analyzed",
+        "bg": "rgb(255, 255, 255)",
+        "area": 32341
+      },
+      {
+        "element": "div.stat-card.stat-card-pending",
+        "bg": "rgb(255, 255, 255)",
+        "area": 32341
+      },
+      {
+        "element": "div.stat-card.stat-card-selected",
+        "bg": "rgb(255, 255, 255)",
+        "area": 32341
+      },
+      {
+        "element": "div.file-filters-section",
+        "bg": "rgb(255, 255, 255)",
+        "area": 388631
+      },
+      {
+        "element": "input#smartSearch.form-control.search-input",
+        "bg": "rgb(255, 255, 255)",
+        "area": 56200
+      },
+      {
+        "element": "select#sourceFilter.form-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8268
+      },
+      {
+        "element": "select#sideFilter.form-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8268
+      },
+      {
+        "element": "button.msdd-trigger.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 6144
+      },
+      {
+        "element": "select#statusFilter.form-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8268
+      },
+      {
+        "element": "div.action-bar",
+        "bg": "rgb(248, 250, 252)",
+        "area": 78715
+      },
+      {
+        "element": "div.view-mode-toggle",
+        "bg": "rgb(248, 250, 252)",
+        "area": 2592
+      },
+      {
+        "element": "div.files-display-container",
+        "bg": "rgb(255, 255, 255)",
+        "area": 341762
+      },
+      {
+        "element": "select#filesTablePerPage.form-select.form-select-sm.ut-per-page-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 3600
+      },
+      {
+        "element": "table#filesTable.table.table-hover.align-middle",
+        "bg": "rgb(255, 255, 255)",
+        "area": 198717
+      },
+      {
+        "element": "thead.ut-head",
+        "bg": "rgb(248, 250, 252)",
+        "area": 56100
+      },
+      {
+        "element": "th.ut-col.ut-col-index",
+        "bg": "rgb(248, 250, 252)",
+        "area": 3080
+      },
+      {
+        "element": "th.ut-col.ut-col-name.ut-sortable",
+        "bg": "rgb(248, 250, 252)",
+        "area": 7152
+      },
+      {
+        "element": "th.ut-col.ut-col-type",
+        "bg": "rgb(248, 250, 252)",
+        "area": 5381
+      },
+      {
+        "element": "th.ut-col.ut-col-size.ut-sortable",
+        "bg": "rgb(248, 250, 252)",
+        "area": 5474
+      },
+      {
+        "element": "th.ut-col.ut-col-source",
+        "bg": "rgb(248, 250, 252)",
+        "area": 7206
+      },
+      {
+        "element": "th.ut-col.ut-col-side",
+        "bg": "rgb(248, 250, 252)",
+        "area": 7131
+      },
+      {
+        "element": "th.ut-col.ut-col-status",
+        "bg": "rgb(248, 250, 252)",
+        "area": 6282
+      },
+      {
+        "element": "th.ut-col.ut-col-date.ut-sortable",
+        "bg": "rgb(248, 250, 252)",
+        "area": 6405
+      },
+      {
+        "element": "th.ut-col.ut-col-actions",
+        "bg": "rgb(248, 250, 252)",
+        "area": 5815
+      }
+    ],
+    "lightControls": [
+      {
+        "element": "input#smartSearch.form-control.search-input",
+        "bg": "rgb(255, 255, 255)",
+        "area": 56200,
+        "text": ""
+      },
+      {
+        "element": "select#sourceFilter.form-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8268,
+        "text": "All Sources\n                  "
+      },
+      {
+        "element": "select#sideFilter.form-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8268,
+        "text": "All Sides\n                    "
+      },
+      {
+        "element": "button.msdd-trigger.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 6144,
+        "text": "All types0"
+      },
+      {
+        "element": "select#statusFilter.form-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8268,
+        "text": "All Status\n                   "
+      },
+      {
+        "element": "button#bulkStructuredExportBtn.btn-action.btn-outline-secondary.btn-action-icon-only",
+        "bg": "rgb(255, 255, 255)",
+        "area": 1296,
+        "text": "Structured Export"
+      },
+      {
+        "element": "button#bulkAllNamesBtn.btn-action.btn-outline-secondary.btn-action-icon-only",
+        "bg": "rgb(255, 255, 255)",
+        "area": 1296,
+        "text": "Loaded names"
+      },
+      {
+        "element": "button#removeSameContextDuplicatesBtn.btn-action.btn-outline-warning.btn-action-icon-only",
+        "bg": "rgb(255, 255, 255)",
+        "area": 1296,
+        "text": "Remove exact repeats"
+      },
+      {
+        "element": "select#filesTablePerPage.form-select.form-select-sm.ut-per-page-select",
+        "bg": "rgb(255, 255, 255)",
+        "area": 3600,
+        "text": "10\n                \n          "
+      }
+    ],
+    "lowContrast": [
+      {
+        "element": "span.sidebar-nav-badge",
+        "ink": "rgb(15, 23, 42)",
+        "bg": "rgb(30, 41, 59)",
+        "ratio": 1.22,
+        "need": 4.5,
+        "text": "Deprecated"
+      },
+      {
+        "element": "span.text-muted.small.topbar-page-identity",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "File Library"
+      }
+    ],
+    "counts": {
+      "lightSurfaces": 27,
+      "lightControls": 9,
+      "lowContrast": 2
+    }
+  },
+  {
+    "path": "/archives",
+    "system": "light",
+    "mode": "light",
+    "title": "Archives - File Analysis System",
+    "lightSurfaces": [
+      {
+        "element": "ol.breadcrumb.mb-0",
+        "bg": "rgb(255, 255, 255)",
+        "area": 37089
+      },
+      {
+        "element": "div.page-header",
+        "bg": "rgb(255, 255, 255)",
+        "area": 127814
+      },
+      {
+        "element": "div.analysis-view-navigation",
+        "bg": "rgb(248, 250, 252)",
+        "area": 77447
+      },
+      {
+        "element": "div.navigation-bar",
+        "bg": "rgb(255, 255, 255)",
+        "area": 103312
+      },
+      {
+        "element": "input#globalSearch",
+        "bg": "rgb(255, 255, 255)",
+        "area": 9750
+      },
+      {
+        "element": "select#sortBy.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8977
+      },
+      {
+        "element": "select#perPageSection.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 3760
+      },
+      {
+        "element": "div.view-toggle",
+        "bg": "rgb(241, 245, 249)",
+        "area": 2888
+      },
+      {
+        "element": "div#fileManagerSidebar.file-manager-sidebar",
+        "bg": "rgb(248, 250, 252)",
+        "area": 156960
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523
+      },
+      {
+        "element": "div#unifiedContentView.unified-content-view",
+        "bg": "rgb(255, 255, 255)",
+        "area": 591192
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908
+      }
+    ],
+    "lightControls": [
+      {
+        "element": "button#archiveNavBackBtn.nav-btn",
+        "bg": "rgb(255, 255, 255)",
+        "area": 1296,
+        "text": ""
+      },
+      {
+        "element": "button#archiveNavForwardBtn.nav-btn",
+        "bg": "rgb(241, 245, 249)",
+        "area": 1296,
+        "text": ""
+      },
+      {
+        "element": "button.nav-btn",
+        "bg": "rgb(255, 255, 255)",
+        "area": 1296,
+        "text": ""
+      },
+      {
+        "element": "input#globalSearch",
+        "bg": "rgb(255, 255, 255)",
+        "area": 9750,
+        "text": ""
+      },
+      {
+        "element": "select#sortBy.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8977,
+        "text": "ID (Ascending)\n               "
+      },
+      {
+        "element": "select#perPageSection.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 3760,
+        "text": "10\n                    25\n    "
+      },
+      {
+        "element": "button.view-toggle-btn",
+        "bg": "rgb(255, 255, 255)",
+        "area": 962,
+        "text": ""
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523,
+        "text": "Category\n                     "
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523,
+        "text": "Keywords\n                     "
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523,
+        "text": "Titles\n                       "
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523,
+        "text": "Sources\n                      "
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523,
+        "text": "Sides\n                        "
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523,
+        "text": "Relations\n                    "
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523,
+        "text": "Geolocation\n                  "
+      },
+      {
+        "element": "div.sidebar-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 14523,
+        "text": "File Types\n                   "
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908,
+        "text": "Category\n            1 items"
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908,
+        "text": "Keywords\n            1 items"
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908,
+        "text": "Titles\n            3 items"
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908,
+        "text": "Sources\n            1 items"
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908,
+        "text": "Sides\n            1 items"
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908,
+        "text": "Relations\n            0 items"
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908,
+        "text": "Geolocation\n            0 item"
+      },
+      {
+        "element": "div.explorer-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 33908,
+        "text": "File Types\n            3 items"
+      }
+    ],
+    "lowContrast": [
+      {
+        "element": "span.sidebar-nav-badge",
+        "ink": "rgb(15, 23, 42)",
+        "bg": "rgb(30, 41, 59)",
+        "ratio": 1.22,
+        "need": 4.5,
+        "text": "Deprecated"
+      },
+      {
+        "element": "span.text-muted.small.topbar-page-identity",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "File Management and Analysis"
+      },
+      {
+        "element": "a.btn.btn-outline-primary.analysis-view-btn",
+        "ink": "rgb(255, 255, 255)",
+        "bg": "rgb(102, 126, 234)",
+        "ratio": 3.66,
+        "need": 4.5,
+        "text": "File Analysis"
+      }
+    ],
+    "counts": {
+      "lightSurfaces": 26,
+      "lightControls": 23,
+      "lowContrast": 3
+    }
+  },
+  {
+    "path": "/lexis",
+    "system": "light",
+    "mode": "light",
+    "title": "LEXIS Cosmos",
+    "lightSurfaces": [
+      {
+        "element": "ol.breadcrumb.mb-0",
+        "bg": "rgb(255, 255, 255)",
+        "area": 41909
+      }
+    ],
+    "lightControls": [],
+    "lowContrast": [
+      {
+        "element": "span.sidebar-nav-badge",
+        "ink": "rgb(15, 23, 42)",
+        "bg": "rgb(30, 41, 59)",
+        "ratio": 1.22,
+        "need": 4.5,
+        "text": "Deprecated"
+      },
+      {
+        "element": "span.text-muted.small.topbar-page-identity",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "LEXIS Cosmos"
+      }
+    ],
+    "counts": {
+      "lightSurfaces": 1,
+      "lightControls": 0,
+      "lowContrast": 2
+    }
+  },
+  {
+    "path": "/settings",
+    "system": "light",
+    "mode": "light",
+    "title": "Settings",
+    "lightSurfaces": [
+      {
+        "element": "ol.breadcrumb.mb-0",
+        "bg": "rgb(255, 255, 255)",
+        "area": 43743
+      },
+      {
+        "element": "div.page-header",
+        "bg": "rgb(255, 255, 255)",
+        "area": 127814
+      },
+      {
+        "element": "div.setting-group.mb-4",
+        "bg": "rgb(248, 250, 252)",
+        "area": 722813
+      },
+      {
+        "element": "div.card.border.mb-3",
+        "bg": "rgb(255, 255, 255)",
+        "area": 561040
+      },
+      {
+        "element": "div.setting-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 77219
+      },
+      {
+        "element": "input#appName.form-control",
+        "bg": "rgb(255, 255, 255)",
+        "area": 25150
+      },
+      {
+        "element": "div.setting-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 146878
+      },
+      {
+        "element": "input#logoUpload.form-control.form-control-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 25150
+      },
+      {
+        "element": "input#appIcon.form-control",
+        "bg": "rgb(255, 255, 255)",
+        "area": 21246
+      },
+      {
+        "element": "div.mt-3.p-3.bg-light",
+        "bg": "rgb(248, 249, 250)",
+        "area": 116834
+      },
+      {
+        "element": "div.setting-group",
+        "bg": "rgb(248, 250, 252)",
+        "area": 786242
+      },
+      {
+        "element": "div.setting-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 201126
+      },
+      {
+        "element": "button.language-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 22805
+      },
+      {
+        "element": "button.language-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 22805
+      },
+      {
+        "element": "button.language-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 22805
+      },
+      {
+        "element": "div.setting-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 132436
+      },
+      {
+        "element": "select.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8900
+      },
+      {
+        "element": "div.setting-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 132436
+      },
+      {
+        "element": "select.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 7150
+      },
+      {
+        "element": "div.setting-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 132436
+      },
+      {
+        "element": "select.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8200
+      },
+      {
+        "element": "div.setting-group",
+        "bg": "rgb(248, 250, 252)",
+        "area": 342637
+      },
+      {
+        "element": "div.setting-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 100554
+      },
+      {
+        "element": "div.setting-item",
+        "bg": "rgb(255, 255, 255)",
+        "area": 100554
+      }
+    ],
+    "lightControls": [
+      {
+        "element": "input#appName.form-control",
+        "bg": "rgb(255, 255, 255)",
+        "area": 25150,
+        "text": ""
+      },
+      {
+        "element": "input#logoUpload.form-control.form-control-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 25150,
+        "text": ""
+      },
+      {
+        "element": "input#appIcon.form-control",
+        "bg": "rgb(255, 255, 255)",
+        "area": 21246,
+        "text": ""
+      },
+      {
+        "element": "button.language-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 22805,
+        "text": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629\n                      "
+      },
+      {
+        "element": "button.language-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 22805,
+        "text": "\u05e2\u05d1\u05e8\u05d9\u05ea\n                        "
+      },
+      {
+        "element": "button.language-card",
+        "bg": "rgb(255, 255, 255)",
+        "area": 22805,
+        "text": "\u0641\u0627\u0631\u0633\u06cc\n                        "
+      },
+      {
+        "element": "select.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8900,
+        "text": "UTC\n                          "
+      },
+      {
+        "element": "select.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 7150,
+        "text": "YYYY-MM-DD\n                   "
+      },
+      {
+        "element": "select.form-select.form-select-sm",
+        "bg": "rgb(255, 255, 255)",
+        "area": 8200,
+        "text": "24-hour\n                      "
+      }
+    ],
+    "lowContrast": [
+      {
+        "element": "span.sidebar-nav-badge",
+        "ink": "rgb(15, 23, 42)",
+        "bg": "rgb(30, 41, 59)",
+        "ratio": 1.22,
+        "need": 4.5,
+        "text": "Deprecated"
+      },
+      {
+        "element": "span.text-muted.small.topbar-page-identity",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "Settings"
+      },
+      {
+        "element": "button#display-tab.nav-link",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "Display"
+      },
+      {
+        "element": "button#themes-tab.nav-link",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "Themes"
+      },
+      {
+        "element": "button#search-tab.nav-link",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "Search"
+      },
+      {
+        "element": "button#processing-tab.nav-link",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "Processing"
+      },
+      {
+        "element": "button#navigation-tab.nav-link",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "Navigation"
+      },
+      {
+        "element": "button#places-tab.nav-link",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "Geographic Locations"
+      },
+      {
+        "element": "button#notifications-tab.nav-link",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "Notifications"
+      },
+      {
+        "element": "button#database-tab.nav-link",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "Database"
+      },
+      {
+        "element": "button#storage-tab.nav-link",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "Storage"
+      },
+      {
+        "element": "button#system-tab.nav-link",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 250, 252)",
+        "ratio": 2.45,
+        "need": 4.5,
+        "text": "System"
+      },
+      {
+        "element": "div.setting-description.mt-2",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 2.56,
+        "need": 4.5,
+        "text": "The name displayed in the sidebar and br"
+      },
+      {
+        "element": "label.form-label.small.text-muted",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 2.56,
+        "need": 4.5,
+        "text": "Upload Logo Image"
+      },
+      {
+        "element": "label.form-label.small.text-muted",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 2.56,
+        "need": 4.5,
+        "text": "Or Use Bootstrap Icon"
+      },
+      {
+        "element": "label.form-label.small.text-muted",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(248, 249, 250)",
+        "ratio": 2.43,
+        "need": 4.5,
+        "text": "Preview"
+      },
+      {
+        "element": "div.setting-description.mt-1",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 2.56,
+        "need": 4.5,
+        "text": "Select your preferred language for the i"
+      },
+      {
+        "element": "div.setting-description",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 2.56,
+        "need": 4.5,
+        "text": "Set your timezone for date and time disp"
+      },
+      {
+        "element": "div.setting-description",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 2.56,
+        "need": 4.5,
+        "text": "Choose how dates are displayed throughou"
+      },
+      {
+        "element": "div.setting-description",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 2.56,
+        "need": 4.5,
+        "text": "Select 12-hour or 24-hour time format"
+      },
+      {
+        "element": "div.setting-description",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 2.56,
+        "need": 4.5,
+        "text": "Automatically save changes without confi"
+      },
+      {
+        "element": "div.setting-description",
+        "ink": "rgb(148, 163, 184)",
+        "bg": "rgb(255, 255, 255)",
+        "ratio": 2.56,
+        "need": 4.5,
+        "text": "Show confirmation dialogs for important "
+      }
+    ],
+    "counts": {
+      "lightSurfaces": 24,
+      "lightControls": 9,
+      "lowContrast": 22
+    }
+  },
+  {
+    "path": "/",
+    "system": "dark",
+    "mode": "dark",
+    "title": "Comprehensive File Analytics",
+    "lightSurfaces": [],
+    "lightControls": [],
+    "lowContrast": [],
+    "counts": {
+      "lightSurfaces": 0,
+      "lightControls": 0,
+      "lowContrast": 0
+    }
+  },
+  {
+    "path": "/files",
+    "system": "dark",
+    "mode": "dark",
+    "title": "File Library",
+    "lightSurfaces": [],
+    "lightControls": [],
+    "lowContrast": [],
+    "counts": {
+      "lightSurfaces": 0,
+      "lightControls": 0,
+      "lowContrast": 0
+    }
+  },
+  {
+    "path": "/archives",
+    "system": "dark",
+    "mode": "dark",
+    "title": "Archives - File Analysis System",
+    "lightSurfaces": [],
+    "lightControls": [],
+    "lowContrast": [],
+    "counts": {
+      "lightSurfaces": 0,
+      "lightControls": 0,
+      "lowContrast": 0
+    }
+  },
+  {
+    "path": "/lexis",
+    "system": "dark",
+    "mode": "dark",
+    "title": "LEXIS Cosmos",
+    "lightSurfaces": [],
+    "lightControls": [],
+    "lowContrast": [],
+    "counts": {
+      "lightSurfaces": 0,
+      "lightControls": 0,
+      "lowContrast": 0
+    }
+  },
+  {
+    "path": "/settings",
+    "system": "dark",
+    "mode": "dark",
+    "title": "Settings",
+    "lightSurfaces": [],
+    "lightControls": [],
+    "lowContrast": [],
+    "counts": {
+      "lightSurfaces": 0,
+      "lightControls": 0,
+      "lowContrast": 0
+    }
+  }
+]

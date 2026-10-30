@@ -56,6 +56,53 @@ def _looks_like_header(row: List[Any]) -> bool:
     return any(any(h in c for h in _HEADER_HINTS) for c in cells)
 
 
+def _has_term_headers(sheets) -> bool:
+    """True when a single worksheet uses the ``Term`` / ``Keyword`` header."""
+    from apps.importing.validators.workbook_rules import KEYWORD_HEADER, TERM_HEADER
+
+    if len(sheets) != 1:
+        return False
+    first = next(sheets[0].iter_rows(values_only=True, max_row=1), None)
+    if not first:
+        return False
+    cells = list(first) + [None, None]
+    return (str(cells[0] or "").strip().casefold().startswith(TERM_HEADER.casefold())
+            or str(cells[1] or "").strip().casefold().startswith(KEYWORD_HEADER.casefold()))
+
+
+def _load_category_workbook(path: Path) -> RawRows:
+    """Read the category workbook through the shared rules, or refuse it.
+
+    Raises:
+        DataLoadException: the workbook breaks a data-entry rule. The message
+            names the sheet and the cell, because "import failed" is not
+            something an operator can act on.
+    """
+    from apps.importing.validators.workbook_rules import read
+
+    workbook = read(str(path))
+    if not workbook.ok:
+        problems = "; ".join(str(v) for v in workbook.errors[:5])
+        more = len(workbook.errors) - 5
+        if more > 0:
+            problems += f"; and {more} more"
+        raise DataLoadException(
+            f"{path.name} breaks the category data rules: {problems}"
+        )
+    rows: RawRows = []
+    for category in workbook.categories:
+        terms = category.term_texts + category.keyword_texts
+        if terms:
+            rows.append((category.name, terms))
+    if not rows:
+        raise DataLoadException(
+            f"{path.name}: no worksheet contains a term or a keyword"
+        )
+    for decision in workbook.decisions:
+        logger.warning(f"{path.name}: {decision}")
+    return rows
+
+
 class DataLoaderFactory:
     """Loads a domain data file in any supported format."""
 
@@ -115,22 +162,21 @@ class DataLoaderFactory:
                 if ws.title.strip().lower() not in INDEX_SHEET_NAMES
             ]
 
-            # Sheet-per-domain layout: sheet title = domain, column A = terms.
-            if len(sheets) > 1:
-                rows: RawRows = []
-                for sheet in sheets:
-                    terms: List[str] = []
-                    for row in sheet.iter_rows(values_only=True):
-                        cells = list(row) + [None]
-                        value = cells[0]
-                        if value is None:
-                            continue
-                        text = str(value).strip()
-                        if text:
-                            terms.append(text)
-                    if terms:
-                        rows.append((sheet.title.strip(), terms))
-                return rows
+            # Sheet-per-category layout: worksheet name = category name, and
+            # the worksheet's two columns are its terms (one word each) and its
+            # keywords (two or more words). The shape rules live in
+            # ``apps.importing.validators.workbook_rules`` so the importer, the
+            # sync tool and the tests cannot disagree about them; a file that
+            # breaks a rule is refused with the cell that broke it, rather than
+            # imported approximately.
+            category_sheets = [
+                ws for ws in sheets
+                if ws.title.strip().lower() not in INDEX_SHEET_NAMES
+                and not ws.title.strip().startswith("_")
+            ]
+            if len(category_sheets) > 1 or _has_term_headers(category_sheets):
+                return _load_category_workbook(path)
+
 
             # Flat fallback: a single sheet of ``domain, term`` columns.
             rows = []

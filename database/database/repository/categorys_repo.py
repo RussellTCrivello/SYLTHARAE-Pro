@@ -32,13 +32,19 @@ class CategorysRepository(BaseRepository):
             fetchall=True
         )
 
-    def search_categories(self, search: str | None, limit: int, offset: int):
+    def search_categories(self, search: str | None, limit: int, offset: int,
+                          word_ids=None):
         """
-        Search categories with optional search term
+        Search categories with optional search term.
+
+        ``word_ids`` are the words whose *translation* matches the same query
+        (services/i18n/term_labels.py). Empty or ``None`` means the predicate is
+        what it always was.
         """
+        ids = list(word_ids) if word_ids else None
         return self.execute(
             CategoryQueries.search_categories(),
-            (search, f"%{search}%" if search else None, limit, offset),
+            (search, f"%{search}%" if search else None, ids, ids, limit, offset),
             fetchall=True
         )
 

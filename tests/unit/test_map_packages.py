@@ -83,3 +83,29 @@ def test_geolocation_export_spec_registered():
     from Api.routes.exports import EXPORT_SPECS
 
     assert "geolocation" in EXPORT_SPECS
+
+
+def test_the_suite_never_writes_the_tracked_map_registry():
+    """A test run must not dirty a tracked binary in the checkout.
+
+    ``map_data/registry.db`` is 15 MB and tracked: the tile cache lives in it.
+    ``test_map_registry_syncs_sqlite`` above opens and syncs it, which is why
+    every full run left the file modified in ``git status`` and made "did this
+    run change anything?" unanswerable. ``MAP_DATA_DIR`` moves the whole tree
+    (and ``tests/conftest.py`` points it at an ignored temporary directory).
+    """
+    from services import map_registry
+
+    from core.app_paths import get_project_root
+
+    path = map_registry.registry_path().resolve()
+    tracked = (get_project_root() / "map_data").resolve()
+    assert not path.is_relative_to(tracked), (
+        f"the registry is inside the tracked map tree: {path}")
+
+
+def test_the_map_data_root_can_be_moved(monkeypatch, tmp_path):
+    monkeypatch.setenv(map_packages.MAP_DATA_DIR_ENV, str(tmp_path / "map"))
+    root = map_packages.map_data_root()
+    assert root == (tmp_path / "map").resolve()
+    assert (root / "packages").is_dir()

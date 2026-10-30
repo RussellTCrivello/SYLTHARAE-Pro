@@ -141,6 +141,7 @@ def client_error(
     public_message: str = "An internal error occurred",
     extra: Optional[Dict[str, Any]] = None,
     success_key: Optional[str] = None,
+    code: Optional[str] = None,
 ):
     """Log server-side and produce a client-safe JSON error response.
 
@@ -171,6 +172,11 @@ def client_error(
         body[success_key] = False
     body["error"] = public_message
     body["correlation_id"] = correlation_id
+    # A stable, caller-branchable code. It is a constant from the call site,
+    # never anything derived from the exception, so it cannot carry internals
+    # the fixed sentence withholds.
+    if code:
+        body["code"] = code
     return jsonify(body), status
 
 

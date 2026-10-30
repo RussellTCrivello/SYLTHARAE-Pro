@@ -157,7 +157,14 @@ def test_alert_index_migration_has_a_unique_version():
     # hierarchy (it replaces the two-level trigger body with a cycle guard);
     # m0001-m0003 are untouched. A fifth version would mean the freeze moved
     # again, which is what this assertion is here to catch.
+    #
+    # 0005 is the *second* such exception, approved on 2026-10-27 for the
+    # multilingual term names (docs/plans/CATEGORY_TERM_I18N.md, D1): one new
+    # table plus its indexes, nothing altered in m0001-m0004. Adding it here is
+    # the deliberate, reviewed change of the freeze gate - the diff is this
+    # dict and the comment above it, not an exemption.
     assert versions == {"0001": "m0001_baseline.py",
                         "0002": "m0002_category_parent_id.py",
                         "0003": "m0003_sources_attachments.py",
-                        "0004": "m0004_category_hierarchy_depth.py"}, versions
+                        "0004": "m0004_category_hierarchy_depth.py",
+                        "0005": "m0005_term_names.py"}, versions

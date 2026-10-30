@@ -49,6 +49,11 @@ for _stream in (sys.stdout, sys.stderr):
 # The job scheduler (step 20) runs in this same single process; tests and
 # import-only processes keep it off by not going through run_web.py.
 os.environ.setdefault('SYLTHARAE_SCHEDULER', '1')
+# The category workbook is authoritative (docs/DATA_ENTRY.md). On this entry
+# point the database is reconciled with it at startup, so an edit made while
+# the service was down reaches the database without anybody running a command.
+# Set SYLTHARAE_TAXONOMY_SYNC=check to only be told, or =0 to turn it off.
+os.environ.setdefault('SYLTHARAE_TAXONOMY_SYNC', 'apply')
 
 if os.environ.get('AUTO_INSTALL', '1') == '1':
     try:

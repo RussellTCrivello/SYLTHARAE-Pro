@@ -1,0 +1,365 @@
+kind,file,line,detail
+sql,Api/blueprints/analytics.py,635,selects w.word as word
+sql,Api/blueprints/analytics.py,823,selects w.word as word
+sql,Api/blueprints/analytics.py,992,selects w.word as word
+sql,Api/blueprints/analytics.py,992,selects w.word as word
+sql,Api/blueprints/analytics.py,1154,selects w.word as word
+sql,Api/blueprints/analytics.py,1154,selects w.word as word
+sql,Api/blueprints/analytics.py,1239,selects w.word as word
+sql,Api/blueprints/analytics.py,1239,selects w.word as word
+sql,Api/blueprints/analytics.py,1375,selects w.word as word
+sql,Api/blueprints/analytics.py,1452,selects w.word as word
+sql,Api/blueprints/analytics.py,1452,selects w.word as word
+sql,Api/blueprints/analytics.py,1355,selects w.word as word
+sql,Api/blueprints/analytics.py,1535,selects w.word as word
+sql,Api/blueprints/analytics.py,1535,selects w.word as word
+sql,Api/blueprints/analytics.py,1550,selects w.word as word
+sql,Api/blueprints/analytics.py,1550,selects w.word as word
+module,Api/blueprints/analytics.py,635,10 label literal(s)
+routes,Api/blueprints/analytics.py,104,/api/analytics/paths/hierarchical
+routes,Api/blueprints/analytics.py,105,/api/analytics/paths/structure
+routes,Api/blueprints/analytics.py,340,/api/analytics/storage-stats
+routes,Api/blueprints/analytics.py,469,/api/analytics/processing-statistics
+routes,Api/blueprints/analytics.py,578,/api/analytics/sources
+routes,Api/blueprints/analytics.py,606,/api/analytics/sides
+routes,Api/blueprints/analytics.py,618,/api/analytics/word-frequency
+routes,Api/blueprints/analytics.py,655,/api/analytics/path-hierarchy
+routes,Api/blueprints/analytics.py,717,/api/analytics/search-files
+routes,Api/blueprints/analytics.py,789,/api/analytics/content-statistics
+routes,Api/blueprints/analytics.py,858,/api/analytics/path/analytics
+routes,Api/blueprints/analytics.py,956,/api/analytics/path/words
+routes,Api/blueprints/analytics.py,1020,/api/analytics/path/files
+routes,Api/blueprints/analytics.py,1097,/api/analytics/path/classifications
+routes,Api/blueprints/analytics.py,1203,/api/analytics/path/category-words-analysis
+routes,Api/blueprints/analytics.py,1301,/api/analytics/path/category-files
+routes,Api/blueprints/analytics.py,1423,/api/analytics/path/category-words-detail
+routes,Api/blueprints/analytics.py,1476,/api/analytics/path/word-files
+routes,Api/blueprints/analytics.py,1604,/api/analytics/dashboard-summary
+routes,Api/blueprints/analytics.py,1690,/api/analytics/timeline-data
+routes,Api/blueprints/analytics.py,1751,/api/analytics/category-distribution
+routes,Api/blueprints/analytics.py,1784,/api/analytics/file-type-distribution
+sql,Api/blueprints/files.py,175,selects w.word as word
+module,Api/blueprints/files.py,175,1 label literal(s)
+routes,Api/blueprints/files.py,306,/upload
+routes,Api/blueprints/files.py,334,/upload/progress/<task_id>
+routes,Api/blueprints/files.py,356,/upload/active-tasks
+routes,Api/blueprints/files.py,386,/upload/pause/<task_id>
+routes,Api/blueprints/files.py,410,/upload/resume/<task_id>
+routes,Api/blueprints/files.py,434,/upload/cancel/<task_id>
+routes,Api/blueprints/files.py,638,/files
+routes,Api/blueprints/files.py,839,/files/types/<file_type>/documents
+routes,Api/blueprints/files.py,895,/files/types
+routes,Api/blueprints/files.py,914,/api/files/types
+routes,Api/blueprints/files.py,936,/file/<int:file_id>
+routes,Api/blueprints/files.py,1159,/file/<int:file_id>/content
+routes,Api/blueprints/files.py,1179,/api/files/<int:file_id>/export
+routes,Api/blueprints/files.py,1223,/files/export
+routes,Api/blueprints/files.py,1463,/api/files/names/export
+routes,Api/blueprints/files.py,1616,/api/files/details/export
+routes,Api/blueprints/files.py,1794,/api/files/first-pages/export
+routes,Api/blueprints/files.py,1908,/api/files/excerpt/export
+routes,Api/blueprints/files.py,2034,/api/files/extract-contacts/export
+routes,Api/blueprints/files.py,2199,/api/search/group-similar
+routes,Api/blueprints/files.py,2240,/file/<int:file_id>/content/page
+routes,Api/blueprints/files.py,2277,/api/file/<int:file_id>/analysis
+routes,Api/blueprints/files.py,2292,/api/files/analysis
+routes,Api/blueprints/files.py,2311,/file/<int:file_id>/chart-data
+routes,Api/blueprints/files.py,2400,/file/<int:file_id>/search
+routes,Api/blueprints/files.py,2538,/file/<int:file_id>/full-content
+routes,Api/blueprints/files.py,2697,/api/file/serve
+routes,Api/blueprints/files.py,2756,/api/file/<int:file_id>/serve
+routes,Api/blueprints/files.py,2809,/api/file/<int:file_id>/original
+routes,Api/blueprints/files.py,2832,/api/file/<int:file_id>/original/content
+routes,Api/blueprints/files.py,2868,/file/<int:file_id>/delete
+routes,Api/blueprints/files.py,2913,/api/files/same-context-duplicates
+routes,Api/blueprints/files.py,2951,/api/files/same-context-duplicates/remove
+routes,Api/blueprints/files.py,2981,/files/bulk-delete
+sql,Api/routes/api.py,938,selects w.word as word
+sql,Api/routes/api.py,963,selects w.word as word
+sql,Api/routes/api.py,1219,selects w.word as word
+sql,Api/routes/api.py,1239,selects w.word as word
+sql,Api/routes/api.py,1247,selects w.word as word
+sql,Api/routes/api.py,796,selects w.word as word
+sql,Api/routes/api.py,796,selects w.word as word
+sql,Api/routes/api.py,812,selects w.word as word
+sql,Api/routes/api.py,816,selects w.word as word
+sql,Api/routes/api.py,816,selects w.word as word
+module,Api/routes/api.py,796,8 label literal(s)
+routes,Api/routes/api.py,38,/api/dashboard/stats
+routes,Api/routes/api.py,61,/api/formats/overview
+routes,Api/routes/api.py,85,/api/sources
+routes,Api/routes/api.py,181,/api/sources/<int:source_id>
+routes,Api/routes/api.py,391,/api/sources/<int:source_id>/duplicate
+routes,Api/routes/api.py,472,/api/sources/<int:source_id>/export
+routes,Api/routes/api.py,540,/api/sides
+routes,Api/routes/api.py,592,/api/sides/<int:side_id>
+routes,Api/routes/api.py,675,/api/sides/<int:side_id>/duplicate
+routes,Api/routes/api.py,724,/api/categories
+routes,Api/routes/api.py,747,/api/categories/search
+routes,Api/routes/api.py,775,/api/words/search
+routes,Api/routes/api.py,859,/api/dashboard/files-filtered
+routes,Api/routes/api.py,928,/api/dashboard/categories-filtered
+routes,Api/routes/api.py,988,/api/dashboard/keywords-filtered
+routes,Api/routes/api.py,1065,/api/dashboard/sources-filtered
+routes,Api/routes/api.py,1135,/api/dashboard/sides-filtered
+routes,Api/routes/api.py,1213,/api/dashboard/words
+routes,Api/routes/api.py,1333,/api/dashboard/similar-files
+routes,Api/routes/api.py,1583,/api/file/<int:file_id>/details
+sql,Api/routes/archives.py,1239,selects w.word as word
+sql,Api/routes/archives.py,1396,selects w.word as word
+sql,Api/routes/archives.py,425,selects w.word as word
+sql,Api/routes/archives.py,440,selects w.word as word
+module,Api/routes/archives.py,425,4 label literal(s)
+routes,Api/routes/archives.py,141,/archives
+routes,Api/routes/archives.py,411,/api/archives/search
+routes,Api/routes/archives.py,620,/api/archives/files
+routes,Api/routes/archives.py,1226,/api/archives/source-categories-keywords
+routes,Api/routes/archives.py,1383,/api/archives/side-categories-keywords
+sql,Api/routes/archives_api.py,176,selects w.word as word
+sql,Api/routes/archives_api.py,188,selects w.word as word
+sql,Api/routes/archives_api.py,371,selects w.word as word
+sql,Api/routes/archives_api.py,1554,selects w.word as word
+sql,Api/routes/archives_api.py,183,selects w.word as word
+sql,Api/routes/archives_api.py,1560,selects w.word as word
+sql,Api/routes/archives_api.py,1582,selects w.word as word
+sql,Api/routes/archives_api.py,314,selects w.word as word
+module,Api/routes/archives_api.py,176,8 label literal(s)
+routes,Api/routes/archives_api.py,102,/api/archives/categories
+routes,Api/routes/archives_api.py,396,/api/archives/keywords
+routes,Api/routes/archives_api.py,577,/api/archives/titles
+routes,Api/routes/archives_api.py,790,/api/archives/titles/all
+routes,Api/routes/archives_api.py,928,/api/archives/titles/count
+routes,Api/routes/archives_api.py,945,/api/archives/sources
+routes,Api/routes/archives_api.py,1139,/api/archives/sides
+routes,Api/routes/archives_api.py,1434,/api/archives/hashs
+routes,Api/routes/archives_api.py,1529,/api/archives/addresses
+routes,Api/routes/archives_api.py,1611,/api/archives/geolocation
+routes,Api/routes/archives_api.py,1829,/api/archives/filetypes
+routes,Api/routes/archives_api.py,1938,/api/archives/geolocation/export
+sql,Api/routes/categories.py,33,selects w.word as word
+sql,Api/routes/categories.py,192,selects w.word as word
+sql,Api/routes/categories.py,225,selects w.word as word
+sql,Api/routes/categories.py,415,selects w.word as word
+sql,Api/routes/categories.py,479,selects w.word as word
+module,Api/routes/categories.py,33,5 label literal(s)
+routes,Api/routes/categories.py,44,/categories
+routes,Api/routes/categories.py,109,/categories/<int:category_id>/documents
+routes,Api/routes/categories.py,128,/categories/<int:category_id>/words
+routes,Api/routes/categories.py,181,/api/category/check
+routes,Api/routes/categories.py,214,/category/add
+routes,Api/routes/categories.py,267,/api/categories/<int:category_id>
+routes,Api/routes/categories.py,280,/api/categories/all-words
+routes,Api/routes/categories.py,299,/api/categories/<int:category_id>/words
+routes,Api/routes/categories.py,309,/api/categories/<int:category_id>/words/<int:word_id>
+routes,Api/routes/categories.py,329,/api/words-categorys/add
+routes,Api/routes/categories.py,386,/api/categories/<int:category_id>
+routes,Api/routes/categories.py,410,/api/categories/find-duplicates
+routes,Api/routes/categories.py,474,/api/categories/remove-duplicates
+sql,Api/routes/exports.py,131,selects w.word as word
+sql,Api/routes/exports.py,484,selects w.word as word
+sql,Api/routes/exports.py,484,selects w.word as word
+sql,Api/routes/exports.py,595,selects w.word as word
+module,Api/routes/exports.py,131,3 label literal(s)
+routes,Api/routes/exports.py,879,/api/export/<interface_id>
+routes,Api/routes/exports.py,909,/api/export/structured/plan
+sql,Api/routes/file_analysis.py,276,selects w.word as word
+sql,Api/routes/file_analysis.py,347,selects w.word as word
+sql,Api/routes/file_analysis.py,359,selects w.word as word
+sql,Api/routes/file_analysis.py,359,selects w.word as word
+sql,Api/routes/file_analysis.py,480,selects w.word as word
+sql,Api/routes/file_analysis.py,279,selects w.word as word
+sql,Api/routes/file_analysis.py,397,selects w.word as word
+sql,Api/routes/file_analysis.py,397,selects w.word as word
+sql,Api/routes/file_analysis.py,618,selects w.word as word
+sql,Api/routes/file_analysis.py,618,selects w.word as word
+sql,Api/routes/file_analysis.py,649,selects w.word as word
+sql,Api/routes/file_analysis.py,649,selects w.word as word
+module,Api/routes/file_analysis.py,276,8 label literal(s)
+routes,Api/routes/file_analysis.py,185,/api/file-analysis/overview
+routes,Api/routes/file_analysis.py,248,/api/file-analysis/categories
+routes,Api/routes/file_analysis.py,344,/api/file-analysis/categories/<int:category_id>
+routes,Api/routes/file_analysis.py,420,/api/file-analysis/categories/<int:category_id>/keywords
+routes,Api/routes/file_analysis.py,433,/api/file-analysis/categories/<int:category_id>/words
+routes,Api/routes/file_analysis.py,452,/api/file-analysis/keywords
+routes,Api/routes/file_analysis.py,474,/api/file-analysis/words
+routes,Api/routes/file_analysis.py,494,/api/file-analysis/titles
+routes,Api/routes/file_analysis.py,564,/api/file-analysis/sources
+routes,Api/routes/file_analysis.py,591,/api/file-analysis/sides
+routes,Api/routes/file_analysis.py,673,/api/file-analysis/sources/<int:source_id>/categories
+routes,Api/routes/file_analysis.py,684,/api/file-analysis/sources/<int:source_id>/words
+routes,Api/routes/file_analysis.py,696,/api/file-analysis/sources/<int:source_id>/keywords
+routes,Api/routes/file_analysis.py,708,/api/file-analysis/sides/<int:side_id>/categories
+routes,Api/routes/file_analysis.py,719,/api/file-analysis/sides/<int:side_id>/words
+routes,Api/routes/file_analysis.py,731,/api/file-analysis/sides/<int:side_id>/keywords
+routes,Api/routes/file_analysis.py,747,/api/file-analysis/relations
+routes,Api/routes/file_analysis.py,805,/api/file-analysis/geolocation/places
+routes,Api/routes/file_analysis.py,830,/api/file-analysis/geolocation/scan
+routes,Api/routes/file_analysis.py,852,/api/file-analysis/rows
+sql,Api/routes/places.py,235,selects w.word as word
+sql,Api/routes/places.py,281,selects w.word as word
+sql,Api/routes/places.py,408,selects w.word as word
+sql,Api/routes/places.py,552,selects w.word as word
+sql,Api/routes/places.py,894,selects w.word as word
+sql,Api/routes/places.py,297,selects w.word as word
+sql,Api/routes/places.py,508,selects w.word as word
+module,Api/routes/places.py,235,7 label literal(s)
+routes,Api/routes/places.py,198,/api/gazetteer
+routes,Api/routes/places.py,215,/api/places
+routes,Api/routes/places.py,341,/api/places
+routes,Api/routes/places.py,472,/api/places/<int:place_id>
+routes,Api/routes/places.py,585,/api/places/<int:place_id>
+routes,Api/routes/places.py,631,/api/place-names
+routes,Api/routes/places.py,712,/api/place-names
+routes,Api/routes/places.py,765,/api/place-names/<int:name_id>
+routes,Api/routes/places.py,836,/api/place-names/<int:name_id>
+routes,Api/routes/places.py,880,/api/places/<int:place_id>
+sql,Api/routes/reports.py,175,selects w.word as word
+module,Api/routes/reports.py,175,1 label literal(s)
+routes,Api/routes/reports.py,259,/reports
+routes,Api/routes/reports.py,290,/reports/dashboard
+routes,Api/routes/reports.py,318,/reports/entries/print
+routes,Api/routes/reports.py,347,/api/reports/overview
+routes,Api/routes/reports.py,363,/api/reports/dashboard
+sql,Api/routes/sources.py,57,selects w.word as word
+sql,Api/routes/sources.py,57,selects w.word as word
+module,Api/routes/sources.py,57,1 label literal(s)
+routes,Api/routes/sources.py,19,/sources
+routes,Api/routes/sources.py,137,/source/add
+routes,Api/routes/sources.py,143,/sources/<int:source_id>
+routes,Api/routes/sources.py,161,/sources/<int:source_id>/categories-keywords
+routes,Api/routes/sources.py,178,/sources/<int:source_id>/edit
+sql,Api/services/lexis_queries.py,258,selects w.word as word
+sql,Api/services/lexis_queries.py,319,selects w.word as word
+sql,Api/services/lexis_queries.py,436,selects w.word as word
+sql,Api/services/lexis_queries.py,508,selects w.word as word
+sql,Api/services/lexis_queries.py,578,selects w.word as word
+sql,Api/services/lexis_queries.py,758,selects w.word as word
+sql,Api/services/lexis_queries.py,822,selects w.word as word
+sql,Api/services/lexis_queries.py,1057,selects w.word as word
+sql,Api/services/lexis_queries.py,1178,selects w.word as word
+sql,Api/services/lexis_queries.py,1294,selects w.word as word
+module,Api/services/lexis_queries.py,258,10 label literal(s)
+sql,Api/services/search_service.py,417,selects w.word as word
+sql,Api/services/search_service.py,1061,selects w.word as word
+sql,Api/services/search_service.py,2060,selects w.word as word
+sql,Api/services/search_service.py,366,selects w.word as word
+sql,Api/services/search_service.py,1025,selects w.word as word
+sql,Api/services/search_service.py,273,selects w.word as word
+sql,Api/services/search_service.py,1442,selects w.word as word
+sql,Api/services/search_service.py,1471,selects w.word as word
+sql,Api/services/search_service.py,1513,selects w.word as word
+module,Api/services/search_service.py,273,9 label literal(s)
+sql,Api/utils/utils.py,687,selects w.word as word
+sql,Api/utils/utils.py,1322,selects w.word as word
+sql,Api/utils/utils.py,1605,selects w.word as word
+sql,Api/utils/utils.py,1049,selects w.word as word
+sql,Api/utils/utils.py,1155,selects w.word as word
+sql,Api/utils/utils.py,1283,selects w.word as word
+sql,Api/utils/utils.py,1430,selects w.word as word
+sql,Api/utils/utils.py,1461,selects w.word as word
+sql,Api/utils/utils.py,1505,selects w.word as word
+sql,Api/utils/utils.py,1575,selects w.word as word
+sql,Api/utils/utils.py,1841,selects w.word as word
+sql,Api/utils/utils.py,990,selects w.word as word
+sql,Api/utils/utils.py,1368,selects w.word as word
+sql,Api/utils/utils.py,1384,selects w.word as word
+sql,Api/utils/utils.py,1384,selects w.word as word
+sql,Api/utils/utils.py,1384,selects w.word as word
+sql,Api/utils/utils.py,1668,selects w.word as word
+sql,Api/utils/utils.py,1668,selects w.word as word
+sql,Api/utils/utils.py,1668,selects w.word as word
+sql,Api/utils/utils.py,1783,selects w.word as word
+sql,Api/utils/utils.py,1790,selects w.word as word
+sql,Api/utils/utils.py,1790,selects w.word as word
+sql,Api/utils/utils.py,1651,selects w.word as word
+sql,Api/utils/utils.py,1770,selects w.word as word
+sql,Api/utils/utils.py,2405,selects w.word as word
+sql,Api/utils/utils.py,2469,selects w.word as word
+sql,Api/utils/utils.py,2508,selects w.word as word
+sql,Api/utils/utils.py,929,selects w.word as word
+sql,Api/utils/utils.py,1783,selects w.word as word
+module,Api/utils/utils.py,687,23 label literal(s)
+sql,core/criteria/sql.py,222,selects w.word as word
+module,core/criteria/sql.py,222,1 label literal(s)
+sql,core/keyword_search.py,108,selects w.word as word
+module,core/keyword_search.py,108,1 label literal(s)
+sql,core/search/boolean_or_flat.py,95,selects w.word as word
+module,core/search/boolean_or_flat.py,95,1 label literal(s)
+sql,services/categories/tree.py,48,selects w.word as name
+sql,services/categories/tree.py,100,selects w.word as name
+sql,services/categories/tree.py,133,selects w.word as name
+sql,services/categories/tree.py,627,selects w.word as name
+sql,services/categories/tree.py,296,selects w.word as word
+sql,services/categories/tree.py,379,selects w.word as word
+sql,services/categories/tree.py,669,selects w.word as word
+sql,services/categories/tree.py,693,selects w.word as word
+sql,services/categories/tree.py,543,selects w.word as word
+module,services/categories/tree.py,48,9 label literal(s)
+sql,services/geo/gazetteer.py,86,selects w.word as word
+sql,services/geo/gazetteer.py,102,selects w.word as word
+module,services/geo/gazetteer.py,86,2 label literal(s)
+sql,services/monitoring/scenario_engine.py,588,selects w.word as name
+module,services/monitoring/scenario_engine.py,588,1 label literal(s)
+sql,services/reporting/processing.py,35,selects w.word as word
+module,services/reporting/processing.py,35,1 label literal(s)
+sql,database/__init__.py,813,selects w.word as word
+sql,database/__init__.py,426,selects w.word as word
+sql,database/__init__.py,1081,selects w.word as word
+module,database/__init__.py,426,3 label literal(s)
+sql,database/database/queries/category_queries.py,9,selects w.word as word
+sql,database/database/queries/category_queries.py,19,selects w.word as word
+sql,database/database/queries/category_queries.py,52,selects w.word as word
+sql,database/database/queries/category_queries.py,70,selects w.word as word
+sql,database/database/queries/category_queries.py,88,selects w.word as word
+sql,database/database/queries/category_queries.py,121,selects w.word as word
+sql,database/database/queries/category_queries.py,138,selects w.word as word
+sql,database/database/queries/category_queries.py,149,selects w.word as word
+module,database/database/queries/category_queries.py,9,8 label literal(s)
+sql,database/database/queries/keyword_queries.py,121,selects w.word as word
+module,database/database/queries/keyword_queries.py,121,1 label literal(s)
+sql,database/database/queries/path_queries.py,80,selects w.word as word
+sql,database/database/queries/path_queries.py,92,selects w.word as word
+module,database/database/queries/path_queries.py,80,2 label literal(s)
+sql,database/database/queries/source_queries.py,89,selects w.word as word
+module,database/database/queries/source_queries.py,89,1 label literal(s)
+sql,database/database/queries/word_category_queries.py,26,selects w.word as word
+sql,database/database/queries/word_category_queries.py,38,selects w.word as word
+module,database/database/queries/word_category_queries.py,26,2 label literal(s)
+sql,database/database/queries/word_queries.py,78,selects w.word as word
+sql,database/database/queries/word_queries.py,95,selects w.word as word
+sql,database/database/queries/word_queries.py,128,selects w.word as word
+sql,database/database/queries/word_queries.py,162,selects w.word as word
+sql,database/database/queries/word_queries.py,203,selects w.word as word
+module,database/database/queries/word_queries.py,78,5 label literal(s)
+sql,database/database/repository/words_repo.py,352,selects w.word as word
+sql,database/database/repository/words_repo.py,354,selects w.word as word
+module,database/database/repository/words_repo.py,352,2 label literal(s)
+templates,templates/Analyst/analyst_categorization.html,103,"3 line(s); first: <option value=""{{ cat.id }}"">{{ cat.name }} ({{ cat.file_count }})</option>"
+templates,templates/Category/categories_list.html,178,"7 line(s); first: data-name=""{{ category.name|lower }}"""
+templates,templates/Category/categories_tree.html,143,"1 line(s); first: name=""category_name"" required maxlength=""255"">"
+templates,templates/Category/category_words.html,3,10 line(s); first: {% block title %}{{ _('Words in Category') }} - {{ category.name }}{% endblock %}
+templates,templates/Keyword/keywords_list.html,234,"2 line(s); first: <span class=""ut-muted"">{{ keyword.category_name|default(_('Uncategorized')) }}</span>"
+templates,templates/Search/search_enhanced.html,197,"1 line(s); first: <option value=""{{ category[0] if category is iterable and category is not string else cate"
+templates,templates/Sources/source_detail.html,164,2 line(s); first: {% if source.category_name %}
+templates,templates/Sources/sources_list.html,218,"1 line(s); first: <td>{% if source.category_name %}<span class=""ut-badge ut-badge-success"">{{ source.categor"
+templates,templates/Word/Word_detail.html,18,2 line(s); first: {{ word.word if word else _('Word Details') }}
+templates,templates/Word/Word_list.html,217,"2 line(s); first: aria-label=""{{ _('Select word') }}: {{ word.word }}"">"
+templates,templates/components/analyst_classify.html,50,"2 line(s); first: <i class=""bi bi-person-fill me-1"" aria-hidden=""true""></i>{{ cat.name }}"
+templates,templates/file/File_Management_Analysis_System.html,263,"4 line(s); first: <option value=""{{ cat.id }}"">{{ cat.name }}</option>"
+js,static/js/bootstrap.bundle.min.js,6,"1 line(s); first: !function(t,e){""object""==typeof exports&&""undefined""!=typeof module?module.exports=e():""fu"
+js,static/js/jquery.min.js,2,"1 line(s); first: !function(e,t){""use strict"";""object""==typeof module&&""object""==typeof module.exports?modul"
+js,static/js/jspdf.umd.min.js,117,"2 line(s); first: function(t){var e=function(){var t=void 0;Object.defineProperty(this,""pdf"",{get:function()"
+js,static/js/modules/core/declarative-events.js,356,1 line(s); first: case 'identifier': return resolveIdentifier(node.name);
+js,static/js/modules/documents/document-analysis.js,65,1 line(s); first: const text = item[textKey] || item.name || item.term || item.phrase || '';
+js,static/js/modules/modals/modal-manager.js,355,1 line(s); first: const name = item.name || item.text || item.word || 'Unnamed';
+js,static/js/modules/modals/select2-initializers.js,385,"2 line(s); first: text: item.name || item.word || 'Unnamed',"
+js,static/js/modules/views/source-categories-keywords-view.js,101,2 line(s); first: const categoryName = escapeHtml(category.name || 'Unnamed Category');
+js,static/js/pages/analyst-categorization-page.js,260,1 line(s); first: name = known ? known.name : `#${categoryId}`;
+js,static/js/pages/categories-list-page.js,322,1 line(s); first: if (event.target && event.target.name === 'categoryMode') { syncCategoryMode(); }
+js,static/js/pages/categories-tree-page.js,349,5 line(s); first: label.textContent = node.name;
+js,static/js/pages/dashboard-page.js,612,1 line(s); first: const labels = categories.map(c => c.name || c.category_name || 'Unknown');
+js,static/js/pages/keywords-list-page.js,1126,2 line(s); first: return Promise.resolve(category.name);
+js,static/js/pages/lexis-cosmos-page.js,3342,2 line(s); first: '<b>' + esc(cat.name || t('Uncategorised')) + '</b>' +
+js,static/js/pages/path-analysis-page.js,410,10 line(s); first: const fullPath = node.fullPath || node.full_path || node.name;
+js,static/js/pages/side-categories-keywords-page.js,95,"2 line(s); first: <h6 class=""mb-1"">${escapeHtml(category.name)}</h6>"
+js,static/js/pages/source-categories-keywords-page.js,95,"2 line(s); first: <h6 class=""mb-1"">${escapeHtml(category.name)}</h6>"

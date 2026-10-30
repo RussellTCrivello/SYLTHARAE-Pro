@@ -1,0 +1,15 @@
+site,variant,execution_ms,planning_ms,plan_rows,node,index_used,id_set,term,shared_hit,shared_read
+category-list,text-only,45.663,0.343,0,Limit,idx_categorys_word_id,500,Computer networks,706,0
+category-list,expanded,53.718,0.345,1,Limit,idx_words_word;idx_categorys_word_id,500,Computer networks,11544,0
+category-api,text-only,44.886,0.347,0,Limit,idx_categorys_word_id;idx_wc_category_id,500,Computer networks,706,0
+category-api,expanded,54.693,0.406,1,Limit,idx_words_word;idx_categorys_word_id;idx_wc_category_id,500,Computer networks,11547,0
+tree-search,text-only,44.963,0.179,0,Limit,idx_categorys_word_id,500,Computer networks,706,0
+tree-search,expanded,59.233,0.299,1,Limit,,500,Computer networks,1147,0
+word-picker,text-only,44.193,0.081,1,Limit,,500,Computer networks,704,0
+word-picker,expanded,0.033,0.178,20,Limit,,500,Computer networks,1,0
+keyword-scan,text-only,44.707,0.276,0,Limit,idx_keywords_category_id,500,Computer networks,706,0
+keyword-scan,expanded,0.115,0.283,20,Limit,idx_keywords_category_id,500,Computer networks,173,0
+file-analysis,text-only,44.453,0.164,1,Limit,idx_wc_word_id,500,Computer networks,707,0
+file-analysis,expanded,0.087,0.292,50,Limit,idx_wc_word_id,500,Computer networks,94,0
+resolver-lookup,text-only,0.024,0.256,1,Limit,idx_term_names_key;words_pkey,1,Computer networks,7,0
+resolver-lookup,expanded,0.035,0.157,1,Limit,idx_term_names_key;words_pkey,2,Computer networks,13,0

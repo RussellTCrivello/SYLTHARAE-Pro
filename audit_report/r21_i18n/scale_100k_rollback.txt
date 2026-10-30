@@ -1,0 +1,10 @@
+100 000-row scale measurement - transaction rollback proof
+command: {venv}/bin/python {tmp} (script kept verbatim in the report)
+database: taxonomy_scratch on a disposable pgserver instance
+
+before         words=10566 term_names=10566 categorys=56 words_categorys=11054 keywords=0
+after_insert   words=110566 term_names=110566 categorys=100056 words_categorys=111054 keywords=100000
+after_rollback words=10566 term_names=10566 categorys=56 words_categorys=11054 keywords=0
+
+unchanged: True
+inserted: 100000  id_set_cap: 500
