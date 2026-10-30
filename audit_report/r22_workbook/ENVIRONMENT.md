@@ -120,3 +120,83 @@ What the provisioned environment still does not fix, and why it is not an
 environment question: the 4 translation-coverage ids (they read `.po` files),
 the 3 NEEDS-DECISION ids and the 2 licensing ids (they read metadata), and the 2
 `test_no_machine_paths` ids (they read committed historical evidence).
+
+## Final pass — the lock itself carries working OCR (supersedes the section above)
+
+Measured 2026-10-29/30 at commit `8a81a69`, python 3.11.2, sandbox with no
+system `ffmpeg` and no system `tesseract`.
+
+**What was wrong.** `requirements.lock` listed both `opencv-python==5.0.0.93`
+(the GUI build) and `opencv-python-headless==5.0.0.93`. Both wheels unpack
+into the same `cv2/` directory, and a plain `pip install -r requirements.lock`
+lets the resolution win for the GUI build, so `import cv2` raised
+`ImportError: libGL.so.1: cannot open shared object file`. That single fact
+produced the 31 ENV-OCR failures and the 84 OCR skips recorded above.
+
+**What changed.** The GUI build is out of the lock, and the lock states how it
+must be installed - `pip install --no-deps -r requirements.lock`, because the
+file is a complete freeze and re-resolving it reintroduces rapidocr's GUI
+dependency. Three guards, all measured:
+
+| guard | behaviour |
+|---|---|
+| `tools/audit/rebuild_lock_env.py` | builds the venv from the lock, refuses unless exactly `opencv-python-headless` owns `cv2/` **and** `import cv2` works, then runs `env_lock.py --check` |
+| `tools/audit/env_lock.py --check` | reports `opencv usable <version> (owners: …)` and exits **3** when the lock carries OpenCV that cannot be imported - a lock whose OpenCV cannot load now fails loudly instead of quietly skipping 84 tests |
+| `tools/audit/r22_baseline.py` | refuses to classify a run whose environment carries unusable OpenCV |
+
+| property | value |
+|---|---|
+| packages | 117 (was 118: the GUI OpenCV build) |
+| installed-set hash | `6d1421aeb8dd44ffd012d1a059553b0cd23bd901601fe526d8be9ecae7b2fe93` |
+| `cv2` | 5.0.0, imports, owner `opencv-python-headless` |
+| engines usable | rapidocr_onnxruntime, pytesseract, fitz, docx, pptx, openpyxl, mutagen |
+| engines absent | `tesseract` binary, `ffmpeg` binary |
+| `env_lock.py --check` | match yes, exit 0 |
+
+**The provisioned venv is retired as a category.** It is not reproducible in
+this sandbox any more (it was destroyed with the sandbox and is not rebuilt
+here), and it is no longer needed: the 31 ids that only passed in it now pass
+in the lock, per id. What it provided beyond the lock was an `ffmpeg` binary.
+That is measured separately and honestly, by putting a static ffmpeg on `PATH`
+(unpacked from the `imageio-ffmpeg` wheel into `/tmp/ffbin`, **not** installed
+into the venv, so the lock's set hash is unchanged):
+
+| suite | environment | tests | passed | failed | errors | skipped |
+|---|---|---|---|---|---|---|
+| unit | lock, `8a81a69` | 3796 | 3765 | 6 | 0 | 25 |
+| unit | same lock + `ffmpeg` on `PATH` | 3796 | 3779 | 6 | 0 | 11 |
+| integration | lock, `8a81a69` | 1487 | 1479 | 4 | 0 | 4 |
+
+Both runs cover the same commit, `8a81a69`. The `ffmpeg` column differs by
+exactly the 14 media ids (`test_video_metadata_only` 7, `test_audio_metadata_fallback`
+7) and by no failure: putting a binary on `PATH` fixes skips, not failures.
+The one EXTERNAL-BINARY skip left in both is `test_deploy_nginx` (no `nginx`,
+no `openssl`).
+
+Against the previous record in this file:
+
+| suite | before | now | delta |
+|---|---|---|---|
+| unit passed | 3670 | 3765 | +95 |
+| unit failed | 38 | 6 | −32 |
+| unit skipped | 41 | 25 | −16 |
+| integration passed | 1395 | 1479 | +84 |
+| integration failed | 4 | 4 | 0 |
+| integration skipped | 88 | 4 | −84 |
+| skips, both suites (the pin) | 129 | 29 | −100 |
+
+**Every failing id at `8a81a69`, classified.** Unit (6):
+
+| id | class | evidence |
+|---|---|---|
+| `test_identifiers_intel::test_detects_email_phone_ipv4_and_links_to_sentence` | NEEDS-DECISION (owner) | the detector sets `signal_type="identifier"` for every hit and carries the kind in `evidence["kind"]` (`core/detection/identifiers_intel.py:24-35`); the test asserts the kind as the signal type. Carried from the previous round under D-4 (do not edit the test) |
+| `test_identifiers_intel::test_email_not_double_counted_as_ipv4_fragment` | NEEDS-DECISION (owner) | same |
+| `test_licensing::test_installed_dependencies_are_agpl_compatible` | ENVIRONMENT | two PyMuPDF sub-distributions publish no licence metadata, so the checker reports `unknown` for them |
+| `test_licensing::test_checker_cli_exits_zero_on_this_environment` | ENVIRONMENT | same finding, via the CLI |
+| `test_no_machine_paths::test_no_file_contains_the_checkout_path` | portability gate | the gate scans the checkout path and the committed audit artefacts; documented as permanently red in this round's report |
+| `test_no_machine_paths::test_no_machine_specific_paths_or_hosts` | portability gate | same |
+
+Integration (4): `test_translation_coverage::test_no_catalog_entry_is_empty_or_fuzzy[ar|he|fa|hr]` - the four owner-reserved translation ids, decision due 2026-11-05; they read the `.po` catalogues, not the database, so no environment changes them.
+
+Nothing on this list is unexplained, and no id changed class because the
+environment changed: the six unit ids fail identically with `ffmpeg` on `PATH`.

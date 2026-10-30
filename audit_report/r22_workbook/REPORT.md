@@ -380,3 +380,47 @@ by parsing every product module for bare imports, and the answer is short:
 | `odf` | third-party | **ticketed**: the `odf` wheel inserts its own directory on `sys.path` on every import. It cannot shadow a repository module by name (`odf` is not one), so it is a wart rather than a hazard today |
 | `core`, `database`, `pipeline`, `reader_file`, `services`, `settings`, `config`, `concurrency`, `Hdg_Err_Ex_Log` | repository packages | **guarded**: a test asserts each resolves inside the repository, and that importing the product adds no `sys.path` entry inside `site-packages` |
 
+
+## Final pass — the lock yields working OCR, and the claims are traced
+
+Measured at commit `8a81a69`, one run each, in `requirements.lock` alone
+(117 packages, set hash `6d1421ae…`, `cv2` 5.0.0 owned by
+`opencv-python-headless`). Full detail and per-id classification in
+`ENVIRONMENT.md`; expectation changes in `TEST_EDITS.md`; the document
+traceability table in `DOC_TRACE.md`.
+
+| suite | tests | passed | failed | errors | skipped |
+|---|---|---|---|---|---|
+| unit | 3796 | 3765 | 6 | 0 | 25 |
+| integration | 1487 | 1479 | 4 | 0 | 4 |
+
+The "provisioned venv" that earlier sections of this report used to answer
+"would these pass with an engine?" is retired: the lock now carries working
+OCR, so the 31 ENV-OCR failures and the 84 OCR skips are gone *in the lock*,
+per id, and no run in this pass needed a second environment. The one thing the
+lock cannot supply is an `ffmpeg` binary; that is measured by unpacking a
+static ffmpeg onto `PATH` without touching the venv, and the result is 14
+fewer skips and the same 6 failures.
+
+### What this pass fixed, by item
+
+| item | finding | fix | evidence |
+|---|---|---|---|
+| A | both OpenCV builds were in the lock, so `import cv2` failed and 31 ids failed / 84 skipped | GUI build removed, `--no-deps` install, `rebuild_lock_env.py` refuses a broken venv, `env_lock.py --check` exits 3 on unloadable OpenCV | 235 OCR tests pass in the lock, 0 skipped |
+| B | two export ids skipped for want of a row | seeded the row, asserted 200 | 29 ids in the module, 0 skipped, no export defect |
+| C | `docs/ARCHITECTURE.md` claimed to be checked; the read sequence named a method that never existed and put OCR in the wrong layer; the layer table's core rule was already false | two honest sequences, the OCR arrow moved to the reader, six violations tabulated and pinned, domain concepts mapped to tables, both documents name a reviewer | 19 new ids in `test_architecture_claims.py`, all passing |
+| D | the audit counted 12 hand-written tables where the test said 9, and that assertion hid two further drifts (search 12 vs 10, chips 39 vs 32) | the three tables **migrated** onto `data_table`; the counts parametrised so one drift cannot hide another; the inventory behind each number pinned by name | `pattern_table` 9 (met by migration), search 12 and chips 39 recorded with every member named |
+| E | `_FFMPEG_PROBE_TIMEOUT` was declared and never used | honoured by `_runs()`; a hang, a non-zero exit and a missing binary are all covered; 100 cache hits run 0 subprocesses | 8 ids, each measured |
+| F | `odfpy` appends `site-packages/odf` to `sys.path` on import, 7 times for the 4 submodules `read_office` touches | `import_clean()` restores `sys.path`, all 13 import sites rewritten, identifiers unchanged | 6 odf/office modules: 34 passed, 2 skipped |
+| G | the reference docs were stale by three files | all seven generators run once at the final commit | `test_reference_docs` passes; `COMPONENT_LIBRARY.md` shows table adoption 57% → 68% |
+
+### What is still open, and who owns it
+
+| item | owner | due |
+|---|---|---|
+| the four translation-coverage ids (`ar`, `he`, `fa`, `hr`) | repository owner | 2026-11-05 |
+| `test_identifiers_intel` (2 ids): the detector reports `signal_type="identifier"` and carries the kind in `evidence["kind"]`; the test asserts the kind as the type | repository owner | 2026-11-05 |
+| whether `docs/ARCHITECTURE.md` and `docs/DOMAIN_MODEL.md` stay as authored documents now that both are traced by tests | repository owner | 2026-11-05 |
+| `test_no_machine_paths` (2 ids) and `test_licensing` (2 ids) | environment / portability policy | not this round |
+
+Nothing above was made green by weakening a gate, and no migration was added.
