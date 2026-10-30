@@ -1,3 +1,4 @@
+{% from 'components/table.html' import data_table %}
 {#-
     The manual translation panel.
 
@@ -49,8 +50,7 @@
     <div class="card-body">
         <p class="small text-muted mb-2" data-translation-engine></p>
         <p class="small text-danger d-none" data-translation-error role="alert"></p>
-        <div class="table-responsive">
-            <table class="table table-sm align-middle mb-0">
+        {% call data_table(variant='sm align-middle', extra_class='mb-0') %}
                 <thead>
                     <tr>
                         <th scope="col" style="width:45%">{{ _('Original') }}</th>
@@ -59,8 +59,8 @@
                     </tr>
                 </thead>
                 <tbody data-translation-rows></tbody>
-            </table>
-        </div>
+            
+        {% endcall %}
         <p class="small text-muted mt-2 mb-0">
             {{ _('Note: the machine translation is not verified') }}
         </p>

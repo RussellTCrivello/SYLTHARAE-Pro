@@ -483,20 +483,18 @@ class TestAdoption:
         assert {"normal", "empty", "filtered", "selected", "loading",
                 "error"} <= set(table.states)
 
-    def test_the_audit_counts_the_hand_written_markup(self):
-        """The measure of this phase is a number, not an impression."""
-        from core.frontend.component_audit import counts, users
-
-        assert counts()["pattern_empty_state"] == len(users(
-            next(p for p in __import__(
-                "core.frontend.component_audit", fromlist=["PATTERNS"]
-            ).PATTERNS if p.key == "empty_state")))
-        assert counts()["pattern_empty_state"] < 7, (
-            "adoption has not started; the baseline was seven templates")
-        assert counts()["pattern_empty_state"] == 3, (
-            "the raw empty-state blocks the card grids carried went with the "
-            "grids when sources and sides moved onto record_table; what is "
-            "left are the three dashboards that have not been migrated")
+    #: What is still hand-written, checked one number at a time.
+    #:
+    #: Each entry carries the reason it is where it is, because a count with
+    #: no inventory behind it is a number nobody can audit. The four family
+    #: keys are the audit's pattern names; `status` and `chip` are badges.
+    #:
+    #: Every count here was re-derived from the templates, not copied from the
+    #: previous run: `python3 -c "from core.frontend.component_audit import
+    #: counts; print(counts())"` is the reproduction, and the per-template
+    #: inventory for the two badge families is pinned in
+    #: `HAND_WRITTEN_CHIPS` / `HAND_WRITTEN_SEARCH` below.
+    HAND_WRITTEN = {
         # The seven list interfaces render through record_table now, and the
         # File Types dashboard's formats list has followed (its documents
         # panel embeds the shared file-library table); what is left
@@ -509,38 +507,130 @@ class TestAdoption:
         # component itself, and `components/operations_widget.html` renders a
         # `<table>` its script fills - a mount, like the pagination mounts the
         # audit counts separately. `users()` reports user-facing templates.
-        assert counts()["pattern_table"] == 9
-        # charts_dashboard, comprehensive_dashboard, path_analysis,
-        # analyst_categorization, search_advanced, email_words and the file
-        # management analysis screen.
-        assert counts()["pattern_filter"] == 7
-        # Two bars are still hand-written, and both are waiting for the layer
-        # that owns them: the file list (record actions on a richer model) and
-        # the full-content reader (document/viewer controls). Keywords, Words,
-        # Sources, Sides and email words now render through the component. The
-        # pattern is anchored to a class attribute: before it was, `base.html`
-        # counted as an extra because a script src reads `action-toolbar.js`.
-        assert counts()["pattern_toolbar"] == 2
-        # Ten templates still hand-write a search control: the two chart
-        # dashboards, the operations dashboard, the notifications list, the
-        # ingestion input screen, the advanced search page, the Settings tables
-        # (their search fields and the Gazetteer field), the translation
-        # manager, the file detail panel and the map viewer.
-        assert counts()["pattern_search"] == 10
-        # Status badges are counted by what a badge *shows*: a status word or
-        # a status variable is a status badge, a count or an id is a chip, and
-        # conflating them said "22 status badges" when most were numbers.
+        #
+        # It was twelve: monitoring (the scenarios list), reports (the
+        # file-type table) and the translation selection panel still wrote the
+        # frame by hand, and now call `data_table`. The assertion below was
+        # already nine, so the audit had drifted *above* its own expectation
+        # for four days without failing - the first mismatch it hit was this
+        # one, which is why the numbers are now checked one at a time.
+        "pattern_table": 9,
+        "pattern_filter": 7,
+        "pattern_toolbar": 2,
+        "pattern_search": 12,
+        "pattern_empty_state": 3,
+        "badges_status": 0,
+        "badges_chip": 39,
+    }
+
+    #: The two search boxes the audit counts that are not filter bars over a
+    #: list, named rather than inferred: the category tree's finder and the
+    #: Lexis cosmos finder. Both are page-local widgets - their own CSS file,
+    #: their own key handling, a popup result listbox, and `flex` rules that
+    #: target the `input` as a direct child of their own container
+    #: (`.lexis-pbar input { flex: 1 }`, `.lexis-find-wrap input`,
+    #: `.tree-search`). The shared box renders its input inside
+    #: `.search-input-wrapper`, so adopting it would change those pages'
+    #: layout with no test able to see the change. They stay hand-written and
+    #: counted: the audit says twelve, not ten.
+    HAND_WRITTEN_SEARCH = [
+        "templates/Analysis/charts_dashboard.html",
+        "templates/Analysis/comprehensive_dashboard.html",
+        "templates/Analysis/dashboard.html",
+        "templates/Category/categories_tree.html",
+        "templates/Lexis/cosmos.html",
+        "templates/Notifications/notifications.html",
+        "templates/Operations/input.html",
+        "templates/Search/search_advanced.html",
+        "templates/Settings/settings.html",
+        "templates/Settings/translation_manager.html",
+        "templates/file/file_detail.html",
+        "templates/map/map_viewer.html",
+    ]
+
+    #: Every hand-written count/id/method chip, by template, so the total is
+    #: an inventory rather than an impression. `analysis_batch` alone carries
+    #: nine, `settings` five. (It was 68: the id/count chips the sources and
+    #: sides card grids rendered were deleted with the grids when both lists
+    #: moved onto record_table - the markup moved, it was not migrated; the
+    #: File Types formats table followed, and the search results moved onto
+    #: the table with theirs.) Thirty-two was the last recorded total and 39
+    #: is what the templates hold; the difference is `base.html` (three: the
+    #: page identity badge and the two actor badges), `Reports/reports.html`
+    #: (two: the paths-per-type counts), `Translation/_selection_panel.html`
+    #: (one: the "machine translation, not verified" marker),
+    #: `file/file_detail.html` (three), `file/files_list.html`,
+    #: `file/full_content.html`, `Search/search.html`, `Search/saved_searches.html`
+    #: and `Category/category_names.html`. Each is a number, an id or an
+    #: HTTP method: migrating one would be busy-work dressed up as progress,
+    #: which is what `badge_usage` says it will not count as work.
+    HAND_WRITTEN_CHIPS = {
+        "templates/Analysis/analysis_batch.html": 9,
+        "templates/Category/category_names.html": 1,
+        "templates/Keyword/keyword_detail.html": 2,
+        "templates/Operations/import_center.html": 1,
+        "templates/Reports/dashboard.html": 2,
+        "templates/Reports/reports.html": 2,
+        "templates/Search/saved_searches.html": 1,
+        "templates/Search/search.html": 1,
+        "templates/Settings/settings.html": 5,
+        "templates/Translation/_selection_panel.html": 1,
+        "templates/Word/Word_detail.html": 1,
+        "templates/base.html": 3,
+        "templates/email_words/email_words.html": 3,
+        "templates/file/File_Management_Analysis_System.html": 2,
+        "templates/file/file_detail.html": 3,
+        "templates/file/files_list.html": 1,
+        "templates/file/full_content.html": 1,
+    }
+
+    @pytest.mark.parametrize("name", sorted(HAND_WRITTEN))
+    def test_the_audit_counts_the_hand_written_markup(self, name):
+        """The measure of this phase is a number, not an impression.
+
+        One number per case: the first mismatch used to abort the test and
+        hide every count behind it, and two of them had drifted unnoticed.
+        """
+        from core.frontend.component_audit import counts
+
+        expected = self.HAND_WRITTEN[name]
+        assert counts()[name] == expected
+
+    def test_the_empty_state_count_is_the_baseline_measure(self):
+        from core.frontend.component_audit import counts, users
+
+        pattern = next(p for p in __import__(
+            "core.frontend.component_audit", fromlist=["PATTERNS"]).PATTERNS
+            if p.key == "empty_state")
+        assert counts()["pattern_empty_state"] == len(users(pattern))
+        assert counts()["pattern_empty_state"] < 7, (
+            "adoption has not started; the baseline was seven templates")
+        assert counts()["pattern_empty_state"] == 3, (
+            "the raw empty-state blocks the card grids carried went with the "
+            "grids when sources and sides moved onto record_table; what is "
+            "left are the three dashboards that have not been migrated")
+
+    def test_the_search_count_names_every_box_it_counts(self):
+        from core.frontend.component_audit import PATTERNS, users
+
+        counted = users(next(p for p in PATTERNS if p.key == "search"))
+        assert counted == self.HAND_WRITTEN_SEARCH
+
+    def test_the_chip_count_names_every_template_it_counts(self):
+        from core.frontend.component_audit import badge_usage, counts
+
+        per_template = {}
+        for path in sorted((PROJECT_ROOT / "templates").rglob("*.html")):
+            if COMPONENTS in path.parents:
+                continue
+            chip = badge_usage(path.read_text(errors="ignore"))[1]
+            if chip:
+                per_template[str(path.relative_to(PROJECT_ROOT))] = chip
+        assert per_template == self.HAND_WRITTEN_CHIPS
+        assert sum(per_template.values()) == counts()["badges_chip"]
         assert counts()["badges_status"] == 0, (
             "a hand-written status badge is back; every one of them now "
             "renders through the component and the vocabulary")
-        # Current inventory: 32 non-status count/id/method chips remain
-        # hand-written, spread over thirteen templates - analysis_batch alone
-        # carries nine, settings five. (It was 68: the id/count chips the
-        # sources and sides card grids rendered were deleted with the grids
-        # when both lists moved onto record_table - the markup moved, it was
-        # not migrated; the File Types formats table followed, and the
-        # search results moved onto the table with theirs.)
-        assert counts()["badges_chip"] == 32
 
 
 class TestTheComponentsRenderWhatTheyPromised:
